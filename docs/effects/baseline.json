@@ -1,0 +1,95 @@
+{
+  "schema": 2,
+  "capturedAt": "2026-09-07T15:51:03.352Z",
+  "sourceHead": "45b0bd055061ee32ad8cc75a59025d9ab438d16f",
+  "sourceSha256": "822ac16a1c46c630091350d63e1700ae6574f7309550df2ab4e83db7cd870fa8",
+  "workload": "live AI crossfire",
+  "testedVersion": "orchestra-12",
+  "browser": "152.0.7977.76",
+  "platform": "darwin",
+  "arch": "arm64",
+  "cpu": "Apple M4 Max",
+  "osRelease": "25.6.0",
+  "url": "http://127.0.0.1:4174",
+  "conditions": "Production React; headless Chrome default GPU; 1366x900 DPR1; crossfire, AI, ATB 3/s max8, enemyPower .2; all HP 50000; warmup 3s, sample 10s x3; real rAF, no fake clock; sound off; particles/paint sampled every15 frames",
+  "results": [
+    {
+      "run": 1,
+      "frames": 600,
+      "medianMs": 16.7,
+      "p95Ms": 16.7,
+      "p99Ms": 16.8,
+      "over25msPercent": 0,
+      "longTasks": 0,
+      "maxLongTaskMs": 0,
+      "maxEffectNodes": 61,
+      "maxCues": 5,
+      "maxParticles": 0,
+      "canvasPaintP95Ms": null,
+      "battleClockEnd": "00:13.0",
+      "bundleHashes": [
+        {
+          "path": "/assets/index-DSDO_Kb0.js",
+          "sha256": "c3820f149572bb3587d890dce1ae41e3869b360e8104a184825b519c77c082f4"
+        },
+        {
+          "path": "/assets/index-C4H8p-VF.css",
+          "sha256": "37d19f4781e27f1598659c70d1c7e0c13ec6c3564e3b891c5443fe1f21ca27ad"
+        }
+      ],
+      "errors": []
+    },
+    {
+      "run": 2,
+      "frames": 600,
+      "medianMs": 16.7,
+      "p95Ms": 16.8,
+      "p99Ms": 16.8,
+      "over25msPercent": 0,
+      "longTasks": 0,
+      "maxLongTaskMs": 0,
+      "maxEffectNodes": 61,
+      "maxCues": 5,
+      "maxParticles": 0,
+      "canvasPaintP95Ms": null,
+      "battleClockEnd": "00:13.0",
+      "bundleHashes": [
+        {
+          "path": "/assets/index-DSDO_Kb0.js",
+          "sha256": "c3820f149572bb3587d890dce1ae41e3869b360e8104a184825b519c77c082f4"
+        },
+        {
+          "path": "/assets/index-C4H8p-VF.css",
+          "sha256": "37d19f4781e27f1598659c70d1c7e0c13ec6c3564e3b891c5443fe1f21ca27ad"
+        }
+      ],
+      "errors": []
+    },
+    {
+      "run": 3,
+      "frames": 600,
+      "medianMs": 16.7,
+      "p95Ms": 16.7,
+      "p99Ms": 16.8,
+      "over25msPercent": 0,
+      "longTasks": 0,
+      "maxLongTaskMs": 0,
+      "maxEffectNodes": 61,
+      "maxCues": 5,
+      "maxParticles": 0,
+      "canvasPaintP95Ms": null,
+      "battleClockEnd": "00:13.0",
+      "bundleHashes": [
+        {
+          "path": "/assets/index-DSDO_Kb0.js",
+          "sha256": "c3820f149572bb3587d890dce1ae41e3869b360e8104a184825b519c77c082f4"
+        },
+        {
+          "path": "/assets/index-C4H8p-VF.css",
+          "sha256": "37d19f4781e27f1598659c70d1c7e0c13ec6c3564e3b891c5443fe1f21ca27ad"
+        }
+      ],
+      "errors": []
+    }
+  ]
+}
