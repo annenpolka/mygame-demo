@@ -1,3 +1,4 @@
+import { spatialTarget, type Direction } from './field-navigation';
 import { partyBonus, bonusText } from '../sim/bonuses';
 import { SKILLS, WEAPONS, ROW_NAMES } from '../content/data';
 import {
@@ -228,6 +229,18 @@ export function choices(s: State, ui: BattlePad): BattleChoice[] {
         command: { type: 'time', mode: s.timeMode === 'stop' ? 'normal' : 'stop' },
       },
       { key: 'log', title: '戦闘ログ', detail: '記録を読む', action: 'log' },
+      {
+        key: 'targetAllies',
+        title: '味方を対象にする',
+        detail: '味方の対象候補へ戻る',
+        action: 'targetAllies',
+      },
+      {
+        key: 'targetEnemies',
+        title: '敵を対象にする',
+        detail: '敵の対象候補へ戻る',
+        action: 'targetEnemies',
+      },
     ];
   if (ui.page === 'move')
     return (['back', 'front'] as const).map((row) => ({
@@ -367,7 +380,12 @@ export function confirmChoice(
   }
   if (!choice)
     return feedback('状態が変わりました。選び直してください。', { ...ui, key: list[0]?.key ?? '' });
-  if (choice.action) return battleInput(s, ui, choice.action);
+  if (choice.action)
+    return battleInput(
+      s,
+      choice.action === 'targetAllies' || choice.action === 'targetEnemies' ? home(ui) : ui,
+      choice.action,
+    );
   if (choice.skillId) {
     const reason = unavailable(s, choice.skillId);
     return reason
@@ -488,30 +506,31 @@ export function battleInput(
     const w = WEAPONS[s.allies[s.selected].weapons[projectedSlot(s.allies[s.selected])]];
     if (action === 'confirm' || action === 'skill')
       return addPaletteSkill(s, ui, w.skills[action === 'confirm' ? 0 : 1]);
+    if (action === 'targetAllies' || action === 'targetEnemies') {
+      const side = action === 'targetAllies' ? 'ally' : 'enemy';
+      const units = side === 'ally' ? s.allies : s.enemies;
+      const remembered = ui.candidates?.[`${s.selected}:${side}`];
+      const id =
+        remembered && units.some((u) => u.id === remembered.id && u.hp > 0)
+          ? remembered.id
+          : units.find((u) => u.hp > 0)?.id;
+      return id === undefined ? result() : result(selectCandidate(s, ui, side, { kind: side, id }));
+    }
     if (['up', 'down', 'left', 'right'].includes(action)) {
       const cursor = paletteCursor(s, ui);
-      const side =
-        action === 'up' || action === 'down'
-          ? cursor.side === 'enemy'
-            ? 'ally'
-            : 'enemy'
-          : cursor.side;
-      const units = side === 'enemy' ? s.enemies : s.allies;
-      const candidates: Target[] = [
-        ...units.filter((x) => x.hp > 0).map((x) => ({ kind: side, id: x.id })),
-      ];
-      if (!candidates.length) return result();
-      const remembered = ui.candidates?.[`${s.selected}:${side}`];
-      const current = candidates.findIndex((t) => targetKey(t) === targetKey(cursor.target));
-      const target =
-        side !== cursor.side
-          ? (remembered ?? candidates[0])
-          : candidates[
-              (current + (action === 'left' ? candidates.length - 1 : 1)) % candidates.length
-            ];
-      return result(selectCandidate(s, ui, side, target));
+      const id = spatialTarget(s, cursor.side, cursor.target.id, action as Direction);
+      return result(selectCandidate(s, ui, cursor.side, { kind: cursor.side, id }));
     }
+
     return result();
+  }
+  if (ui.page === 'target' && ['up', 'down', 'left', 'right'].includes(action)) {
+    const list = choices(s, ui),
+      current = selectedChoice(s, ui)?.target;
+    if (!current || current.kind === 'row') return result();
+    const ids = list.flatMap((c) => (c.target && c.target.kind !== 'row' ? [c.target.id] : []));
+    const id = spatialTarget(s, current.kind, current.id, action as Direction, ids);
+    return result({ ...ui, key: `${current.kind}:${id}`, message: '' });
   }
   if (ui.page === 'log') {
     if (action === 'up' || action === 'down')

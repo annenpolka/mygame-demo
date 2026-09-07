@@ -106,6 +106,8 @@ export function PadBattleConsole({
     down: '↓',
     left: '←',
     right: '→',
+    targetAllies: ',',
+    targetEnemies: '.',
     queue: 'T',
     log: 'L',
     menu: 'I',
@@ -480,7 +482,7 @@ export function PadBattleConsole({
             <span>
               {keyboard
                 ? 'H 行動開始 · B 後続取消 · U 全体指示 · I 補助'
-                : '左スティックで対象 · 補助に移動・武器・薬'}
+                : `${navigationName}で対象 · ${bindings.sideAxis < 0 ? '補助で敵味方' : '右スティックで敵味方'}`}
             </span>
           </>
         ) : (

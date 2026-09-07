@@ -1,3 +1,4 @@
+import { FIELD_COLUMNS } from '../input/field-navigation';
 import { targetName } from '../sim/plan';
 import type { PaletteCursor } from '../input/battle-pad';
 import { COMBAT_RULES, percent } from '../content/rules';
@@ -8,7 +9,7 @@ import { useEffect, useRef, type CSSProperties } from 'react';
 import { BattleEffects } from './effects/BattleEffects';
 import { BATTLE_TIMING, ROW_NAMES } from '../content/data';
 import { weaponOf } from '../sim/engine';
-import type { State, Skill, Target, Row } from '../sim/types';
+import type { State, Skill, Target } from '../sim/types';
 const keyOf = (t: Target) => (t.kind === 'row' ? `row-${t.row}` : `${t.kind}-${t.id}`);
 export function Battlefield({
   state: s,
@@ -22,7 +23,7 @@ export function Battlefield({
   onBack,
   confirmLabel = 'Enter',
   backLabel = 'Esc',
-  navigationLabel = '← → 候補を巡る · ↑ ↓ 敵／味方',
+  navigationLabel = '矢印：駒の位置へ移動 · , 味方 / . 敵',
 }: {
   state: State;
   pending: Skill | null;
@@ -103,241 +104,238 @@ export function Battlefield({
         tabIndex={active ? 0 : undefined}
         aria-activedescendant={active && aim ? `field-target-${keyOf(aim)}` : undefined}
       >
-        {(['ally', 'enemy'] as const).map((side) =>
-          (side === 'ally' ? ['back', 'front'] : ['front', 'back']).map((r) => {
-            const row = r as Row;
-            const danger =
-              side === 'ally' &&
-              s.enemies.some(
-                (e) =>
-                  e.hp > 0 &&
-                  e.cast &&
-                  (e.cast.target === 'all' || (e.cast.target === 'row' && e.cast.row === row)),
-              );
-            const rowName = `${side === 'ally' ? '味方' : '敵'}${ROW_NAMES[row]}`;
-            return (
-              <section
-                key={`${side}-${row}`}
-                className={`battle-lane ${side} ${row} ${danger ? 'danger-lane' : ''} ${active && side !== sideForSkill ? 'outside-target' : ''}`}
-                aria-label={rowName}
-              >
-                <button className="lane-heading" disabled>
-                  {rowName}
-                  {side === 'ally' && row === 'front' && !danger && (
-                    <small className="front-bonus">
-                      威力・崩し＋{percent(COMBAT_RULES.frontDamage - 1)}%
-                    </small>
-                  )}
-                  {danger && <small>⚠ 攻撃予告</small>}
-                </button>
-                {side === 'ally'
-                  ? s.allies
-                      .filter((a) => a.row === row)
-                      .map((a) => {
-                        const w = weaponOf(a),
-                          targetable =
-                            !!palette ||
-                            (active &&
-                              (pending?.target.startsWith('ally') ||
-                                (pending?.target === 'self' && a.id === s.selected)));
-                        const aimed = targetable && aim?.kind === 'ally' && aim.id === a.id;
-                        const cast = s.enemies.find(
-                          (e) => e.hp > 0 && e.cast?.target === 'single' && e.cast.allyId === a.id,
-                        )?.cast;
-                        return (
-                          <button
-                            key={a.id}
-                            id={targetable ? `field-target-ally-${a.id}` : undefined}
-                            data-unit={`a${a.id}`}
-                            role={targetable ? 'option' : undefined}
-                            aria-selected={targetable ? aimed : undefined}
-                            style={{ '--unit-color': a.color } as CSSProperties}
-                            className={`field-unit friend ${a.id === s.selected ? 'selected' : ''} ${targetable ? 'can-target' : ''} ${a.hp <= 0 ? 'fallen' : ''} ${aimed ? 'aimed' : ''} ${active && !targetable ? 'outside-target' : ''}`}
-                            disabled={
-                              a.hp <= 0 ||
-                              s.phase !== 'battle' ||
-                              s.controlMode === 'ai' ||
-                              (active && (!targetable || full))
-                            }
-                            aria-label={
-                              palette
-                                ? `${a.name}を対象候補にする`
-                                : targetable
-                                  ? `${a.name}に${pending?.name}を積む`
-                                  : `${a.name}を選択`
-                            }
-                            onPointerMove={(event) =>
-                              !palette &&
-                              (event.movementX || event.movementY) &&
-                              targetable &&
-                              onAim({ kind: 'ally', id: a.id })
-                            }
-                            onClick={() =>
-                              palette
-                                ? onCandidate('ally', { kind: 'ally', id: a.id })
-                                : targetable
-                                  ? onTarget({ kind: 'ally', id: a.id })
-                                  : onAlly(a.id)
-                            }
-                          >
-                            <span className="field-symbol">{w.glyph}</span>
-                            <span className="field-unit-info">
-                              <strong>
-                                {a.name} <b className={`role role-${w.role}`}>{w.role}</b>
-                                {a.id === s.selected && s.controlMode === 'manual' && (
-                                  <i className="manual-tag">手動</i>
-                                )}
-                              </strong>
-                              <small
-                                title={
-                                  a.action
-                                    ? `${executionStatus(a, s.config, s)} → ${targetName(s, a.action.target)}`
-                                    : undefined
-                                }
-                              >
-                                {targetable && !palette
-                                  ? `HP ${Math.ceil(a.hp)} / ${a.maxHp}`
-                                  : s.phase === 'battle'
-                                    ? a.action && (s.controlMode === 'ai' || a.id !== s.selected)
-                                      ? `AI → ${targetName(s, a.action.target)} · ${executionStatus(a, s.config, s)}`
-                                      : executionStatus(a, s.config, s)
-                                    : w.archetype}
-                              </small>
-                              <span className="unit-gauges">
-                                <UnitGauge
-                                  label={`${a.name}のHP`}
-                                  value={a.hp}
-                                  max={a.maxHp}
-                                  kind="hp"
-                                  text={`${Math.ceil(a.hp)} / ${a.maxHp}`}
-                                />
-                                <UnitGauge
-                                  label={`${a.name}のATB`}
-                                  value={a.atb}
-                                  max={s.config.atbMax}
-                                  kind="atb"
-                                  text={`ATB ${a.atb.toFixed(1)} / ${s.config.atbMax}`}
-                                />
-                              </span>
-                              {cast && <em>追尾 {cast.remaining.toFixed(1)}秒</em>}
-                            </span>
-                          </button>
-                        );
-                      })
-                  : s.enemies
-                      .filter((e) => e.row === row)
-                      .map((e) => {
-                        const targetable =
-                            !!palette || (active && pending?.target.startsWith('enemy')),
-                          aimed = targetable && aim?.kind === 'enemy' && aim.id === e.id;
-                        return (
-                          <button
-                            key={e.id}
-                            id={targetable ? `field-target-enemy-${e.id}` : undefined}
-                            data-unit={`e${e.id}`}
-                            role={targetable ? 'option' : undefined}
-                            aria-selected={targetable ? aimed : undefined}
-                            className={`field-unit foe ${e.broken ? 'broken' : ''} ${targetable ? 'can-target' : ''} ${e.hp <= 0 ? 'fallen' : ''} ${aimed ? 'aimed' : ''}`}
-                            disabled={
-                              e.hp <= 0 ||
-                              s.phase !== 'battle' ||
-                              s.controlMode === 'ai' ||
-                              (active && (!targetable || full))
-                            }
-                            aria-label={
-                              palette
-                                ? `${e.name}を対象候補にする`
-                                : targetable
-                                  ? `${e.name}に${pending?.name}を積む`
-                                  : `${e.name}を狙う`
-                            }
-                            onPointerMove={(event) =>
-                              !palette &&
-                              (event.movementX || event.movementY) &&
-                              targetable &&
-                              onAim({ kind: 'enemy', id: e.id })
-                            }
-                            onClick={() =>
-                              palette
-                                ? onCandidate('enemy', { kind: 'enemy', id: e.id })
-                                : targetable
-                                  ? onTarget({ kind: 'enemy', id: e.id })
-                                  : undefined
-                            }
-                          >
-                            <span className="field-symbol">{e.glyph}</span>
-                            <span className="field-unit-info">
-                              <strong>{e.name}</strong>
-                              <span className="unit-gauges">
-                                <UnitGauge
-                                  label={`${e.name}のHP`}
-                                  value={e.hp}
-                                  max={e.maxHp}
-                                  kind="enemy-hp"
-                                  text={`${Math.ceil(e.hp)} / ${e.maxHp}`}
-                                />
-                                <UnitGauge
-                                  label={`${e.name}のチェイン`}
-                                  value={e.broken || e.chain - 100}
-                                  max={
-                                    e.broken
-                                      ? BATTLE_TIMING.breakDuration
-                                      : COMBAT_RULES.breakThreshold - 100
-                                  }
-                                  kind={e.broken ? 'break' : 'chain'}
-                                  text={
-                                    e.broken
-                                      ? `BREAK ${e.broken.toFixed(1)}s`
-                                      : `CHAIN ${e.chain.toFixed(0)}% / ${COMBAT_RULES.breakThreshold}%`
-                                  }
-                                />
-                              </span>
-                              <span className="unit-telegraph">
-                                {e.cast ? (
-                                  <>
-                                    <span>
-                                      <b>{e.cast.name}</b> <b>{e.cast.remaining.toFixed(1)}s</b>
-                                    </span>
-                                    <UnitGauge
-                                      label={`${e.name}の行動予告`}
-                                      value={e.cast.total - e.cast.remaining}
-                                      max={e.cast.total}
-                                      kind="danger"
-                                    />
-                                    <small>
-                                      {e.cast.target === 'row'
-                                        ? `列固定：${ROW_NAMES[e.cast.row]}`
-                                        : e.cast.target === 'all'
-                                          ? '全員：列移動で回避不可'
-                                          : `追尾：${s.allies[e.cast.allyId].name}`}
-                                      {e.cast.movable &&
-                                        (e.kind === 'guard' && !e.broken
-                                          ? '・重装で移動不可'
-                                          : e.steadfast > 0
-                                            ? '・踏ん張り中'
-                                            : '・移動で中断可')}
-                                    </small>
-                                  </>
-                                ) : (
-                                  <small>
-                                    {e.hp <= 0
-                                      ? '撃破'
-                                      : e.kind === 'guard' && !e.broken
-                                        ? '重装・後列を防護'
-                                        : e.steadfast > 0
-                                          ? '踏ん張り中'
-                                          : '強制移動可'}
-                                  </small>
-                                )}
-                              </span>
-                            </span>
-                          </button>
-                        );
-                      })}
-              </section>
+        {FIELD_COLUMNS.map(({ side, row }) => {
+          const danger =
+            side === 'ally' &&
+            s.enemies.some(
+              (e) =>
+                e.hp > 0 &&
+                e.cast &&
+                (e.cast.target === 'all' || (e.cast.target === 'row' && e.cast.row === row)),
             );
-          }),
-        )}
+          const rowName = `${side === 'ally' ? '味方' : '敵'}${ROW_NAMES[row]}`;
+          return (
+            <section
+              key={`${side}-${row}`}
+              className={`battle-lane ${side} ${row} ${danger ? 'danger-lane' : ''} ${active && side !== sideForSkill ? 'outside-target' : ''}`}
+              aria-label={rowName}
+            >
+              <button className="lane-heading" disabled>
+                {rowName}
+                {side === 'ally' && row === 'front' && !danger && (
+                  <small className="front-bonus">
+                    威力・崩し＋{percent(COMBAT_RULES.frontDamage - 1)}%
+                  </small>
+                )}
+                {danger && <small>⚠ 攻撃予告</small>}
+              </button>
+              {side === 'ally'
+                ? s.allies
+                    .filter((a) => a.row === row)
+                    .map((a) => {
+                      const w = weaponOf(a),
+                        targetable =
+                          !!palette ||
+                          (active &&
+                            (pending?.target.startsWith('ally') ||
+                              (pending?.target === 'self' && a.id === s.selected)));
+                      const aimed = targetable && aim?.kind === 'ally' && aim.id === a.id;
+                      const cast = s.enemies.find(
+                        (e) => e.hp > 0 && e.cast?.target === 'single' && e.cast.allyId === a.id,
+                      )?.cast;
+                      return (
+                        <button
+                          key={a.id}
+                          id={targetable ? `field-target-ally-${a.id}` : undefined}
+                          data-unit={`a${a.id}`}
+                          role={targetable ? 'option' : undefined}
+                          aria-selected={targetable ? aimed : undefined}
+                          style={{ '--unit-color': a.color } as CSSProperties}
+                          className={`field-unit friend ${a.id === s.selected ? 'selected' : ''} ${targetable ? 'can-target' : ''} ${a.hp <= 0 ? 'fallen' : ''} ${aimed ? 'aimed' : ''} ${active && !targetable ? 'outside-target' : ''}`}
+                          disabled={
+                            a.hp <= 0 ||
+                            s.phase !== 'battle' ||
+                            s.controlMode === 'ai' ||
+                            (active && (!targetable || full))
+                          }
+                          aria-label={
+                            palette
+                              ? `${a.name}を対象候補にする`
+                              : targetable
+                                ? `${a.name}に${pending?.name}を積む`
+                                : `${a.name}を選択`
+                          }
+                          onPointerMove={(event) =>
+                            !palette &&
+                            (event.movementX || event.movementY) &&
+                            targetable &&
+                            onAim({ kind: 'ally', id: a.id })
+                          }
+                          onClick={() =>
+                            palette
+                              ? onCandidate('ally', { kind: 'ally', id: a.id })
+                              : targetable
+                                ? onTarget({ kind: 'ally', id: a.id })
+                                : onAlly(a.id)
+                          }
+                        >
+                          <span className="field-symbol">{w.glyph}</span>
+                          <span className="field-unit-info">
+                            <strong>
+                              {a.name} <b className={`role role-${w.role}`}>{w.role}</b>
+                              {a.id === s.selected && s.controlMode === 'manual' && (
+                                <i className="manual-tag">手動</i>
+                              )}
+                            </strong>
+                            <small
+                              title={
+                                a.action
+                                  ? `${executionStatus(a, s.config, s)} → ${targetName(s, a.action.target)}`
+                                  : undefined
+                              }
+                            >
+                              {targetable && !palette
+                                ? `HP ${Math.ceil(a.hp)} / ${a.maxHp}`
+                                : s.phase === 'battle'
+                                  ? a.action && (s.controlMode === 'ai' || a.id !== s.selected)
+                                    ? `AI → ${targetName(s, a.action.target)} · ${executionStatus(a, s.config, s)}`
+                                    : executionStatus(a, s.config, s)
+                                  : w.archetype}
+                            </small>
+                            <span className="unit-gauges">
+                              <UnitGauge
+                                label={`${a.name}のHP`}
+                                value={a.hp}
+                                max={a.maxHp}
+                                kind="hp"
+                                text={`${Math.ceil(a.hp)} / ${a.maxHp}`}
+                              />
+                              <UnitGauge
+                                label={`${a.name}のATB`}
+                                value={a.atb}
+                                max={s.config.atbMax}
+                                kind="atb"
+                                text={`ATB ${a.atb.toFixed(1)} / ${s.config.atbMax}`}
+                              />
+                            </span>
+                            {cast && <em>追尾 {cast.remaining.toFixed(1)}秒</em>}
+                          </span>
+                        </button>
+                      );
+                    })
+                : s.enemies
+                    .filter((e) => e.row === row)
+                    .map((e) => {
+                      const targetable =
+                          !!palette || (active && pending?.target.startsWith('enemy')),
+                        aimed = targetable && aim?.kind === 'enemy' && aim.id === e.id;
+                      return (
+                        <button
+                          key={e.id}
+                          id={targetable ? `field-target-enemy-${e.id}` : undefined}
+                          data-unit={`e${e.id}`}
+                          role={targetable ? 'option' : undefined}
+                          aria-selected={targetable ? aimed : undefined}
+                          className={`field-unit foe ${e.broken ? 'broken' : ''} ${targetable ? 'can-target' : ''} ${e.hp <= 0 ? 'fallen' : ''} ${aimed ? 'aimed' : ''}`}
+                          disabled={
+                            e.hp <= 0 ||
+                            s.phase !== 'battle' ||
+                            s.controlMode === 'ai' ||
+                            (active && (!targetable || full))
+                          }
+                          aria-label={
+                            palette
+                              ? `${e.name}を対象候補にする`
+                              : targetable
+                                ? `${e.name}に${pending?.name}を積む`
+                                : `${e.name}を狙う`
+                          }
+                          onPointerMove={(event) =>
+                            !palette &&
+                            (event.movementX || event.movementY) &&
+                            targetable &&
+                            onAim({ kind: 'enemy', id: e.id })
+                          }
+                          onClick={() =>
+                            palette
+                              ? onCandidate('enemy', { kind: 'enemy', id: e.id })
+                              : targetable
+                                ? onTarget({ kind: 'enemy', id: e.id })
+                                : undefined
+                          }
+                        >
+                          <span className="field-symbol">{e.glyph}</span>
+                          <span className="field-unit-info">
+                            <strong>{e.name}</strong>
+                            <span className="unit-gauges">
+                              <UnitGauge
+                                label={`${e.name}のHP`}
+                                value={e.hp}
+                                max={e.maxHp}
+                                kind="enemy-hp"
+                                text={`${Math.ceil(e.hp)} / ${e.maxHp}`}
+                              />
+                              <UnitGauge
+                                label={`${e.name}のチェイン`}
+                                value={e.broken || e.chain - 100}
+                                max={
+                                  e.broken
+                                    ? BATTLE_TIMING.breakDuration
+                                    : COMBAT_RULES.breakThreshold - 100
+                                }
+                                kind={e.broken ? 'break' : 'chain'}
+                                text={
+                                  e.broken
+                                    ? `BREAK ${e.broken.toFixed(1)}s`
+                                    : `CHAIN ${e.chain.toFixed(0)}% / ${COMBAT_RULES.breakThreshold}%`
+                                }
+                              />
+                            </span>
+                            <span className="unit-telegraph">
+                              {e.cast ? (
+                                <>
+                                  <span>
+                                    <b>{e.cast.name}</b> <b>{e.cast.remaining.toFixed(1)}s</b>
+                                  </span>
+                                  <UnitGauge
+                                    label={`${e.name}の行動予告`}
+                                    value={e.cast.total - e.cast.remaining}
+                                    max={e.cast.total}
+                                    kind="danger"
+                                  />
+                                  <small>
+                                    {e.cast.target === 'row'
+                                      ? `列固定：${ROW_NAMES[e.cast.row]}`
+                                      : e.cast.target === 'all'
+                                        ? '全員：列移動で回避不可'
+                                        : `追尾：${s.allies[e.cast.allyId].name}`}
+                                    {e.cast.movable &&
+                                      (e.kind === 'guard' && !e.broken
+                                        ? '・重装で移動不可'
+                                        : e.steadfast > 0
+                                          ? '・踏ん張り中'
+                                          : '・移動で中断可')}
+                                  </small>
+                                </>
+                              ) : (
+                                <small>
+                                  {e.hp <= 0
+                                    ? '撃破'
+                                    : e.kind === 'guard' && !e.broken
+                                      ? '重装・後列を防護'
+                                      : e.steadfast > 0
+                                        ? '踏ん張り中'
+                                        : '強制移動可'}
+                                </small>
+                              )}
+                            </span>
+                          </span>
+                        </button>
+                      );
+                    })}
+            </section>
+          );
+        })}
         <BattleEffects
           state={s}
           field={field}

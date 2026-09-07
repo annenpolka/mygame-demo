@@ -12,7 +12,7 @@ import {
   type PadFamily,
   type PadSnapshot,
 } from '../input/gamepad';
-const STORAGE = 'orchestra-gamepad-v5';
+const STORAGE = 'orchestra-gamepad-v6';
 interface Saved {
   family: PadFamily | 'auto';
   display: 'auto' | 'pad' | 'pointer';
@@ -22,6 +22,7 @@ function readSaved(): Saved {
   try {
     const x = JSON.parse(
       localStorage.getItem(STORAGE) ??
+        localStorage.getItem('orchestra-gamepad-v5') ??
         localStorage.getItem('orchestra-gamepad-v4') ??
         localStorage.getItem('orchestra-gamepad-v3') ??
         localStorage.getItem('orchestra-gamepad-v2') ??
@@ -189,6 +190,11 @@ export function useGamepad(
     usePadDisplay: saved.display === 'pad' || (saved.display === 'auto' && supported),
     setDisplay: (display: Saved['display']) => setSaved((s) => ({ ...s, display })),
     update: (b: PadBindings) => {
+      if (!validBindings(b)) {
+        setError('敵味方切替の軸は、対象移動の横軸・縦軸とは別に割り当ててください。');
+        return;
+      }
+      setError('');
       if (pad) {
         reader.reset();
         setSaved((s) => ({ ...s, custom: { ...s.custom, [pad.id]: b } }));

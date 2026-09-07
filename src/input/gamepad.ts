@@ -19,6 +19,8 @@ export const PAD_ACTIONS = [
   'right',
   'queue',
   'mark',
+  'targetAllies',
+  'targetEnemies',
 ] as const;
 export type PadAction = (typeof PAD_ACTIONS)[number];
 export type PadFamily = 'xbox' | 'playstation' | 'switch';
@@ -28,6 +30,8 @@ export type PadBindings = Record<PadAction, number> & {
   axisY: number;
   invertX: boolean;
   invertY: boolean;
+  sideAxis: number;
+  invertSideAxis: boolean;
 };
 export interface PadSnapshot {
   id: string;
@@ -71,6 +75,10 @@ export function defaultBindings(family: PadFamily): PadBindings {
     axisY: 1,
     invertX: false,
     invertY: false,
+    targetAllies: -1,
+    targetEnemies: -1,
+    sideAxis: 2,
+    invertSideAxis: false,
   };
 }
 /** Both presets retain execute/cutoff/back and the auxiliary menu button. */
@@ -160,12 +168,14 @@ export class PadReader {
   private identity = '';
   private held = new Set<PadAction>();
   private repeats = new Map<PadAction, number>();
-  private axisHeld = { x: 0, y: 0 };
+  private sideTransition = false;
+  private axisHeld = { x: 0, y: 0, side: 0 };
   reset() {
     this.identity = '';
+    this.sideTransition = false;
     this.held.clear();
     this.repeats.clear();
-    this.axisHeld = { x: 0, y: 0 };
+    this.axisHeld = { x: 0, y: 0, side: 0 };
   }
   read(
     pad: PadSnapshot | null,
@@ -180,19 +190,25 @@ export class PadReader {
     }
     const identity = `${pad.index}:${pad.id}`;
     const rawX = (pad.axes[bindings.axisX] ?? 0) * (bindings.invertX ? -1 : 1),
-      rawY = (pad.axes[bindings.axisY] ?? 0) * (bindings.invertY ? -1 : 1);
+      rawY = (pad.axes[bindings.axisY] ?? 0) * (bindings.invertY ? -1 : 1),
+      rawSide = (pad.axes[bindings.sideAxis] ?? 0) * (bindings.invertSideAxis ? -1 : 1);
     const axis = (value: number, previous: number) =>
       Math.abs(value) < 0.35 ? 0 : Math.abs(value) >= 0.55 ? Math.sign(value) : previous;
-    this.axisHeld = { x: axis(rawX, this.axisHeld.x), y: axis(rawY, this.axisHeld.y) };
+    this.axisHeld = {
+      x: axis(rawX, this.axisHeld.x),
+      y: axis(rawY, this.axisHeld.y),
+      side: axis(rawSide, this.axisHeld.side),
+    };
     const down = new Set(
       PAD_ACTIONS.filter(
         (a) => pad.buttons[bindings[a]]?.pressed || (pad.buttons[bindings[a]]?.value ?? 0) > 0.55,
       ),
     );
-    if (this.axisHeld.x < 0) down.add('left');
-    if (this.axisHeld.x > 0) down.add('right');
-    if (this.axisHeld.y < 0) down.add('up');
-    if (this.axisHeld.y > 0) down.add('down');
+    const vertical = this.axisHeld.y && (!this.axisHeld.x || Math.abs(rawY) > Math.abs(rawX));
+    if (vertical) down.add(this.axisHeld.y < 0 ? 'up' : 'down');
+    else if (this.axisHeld.x) down.add(this.axisHeld.x < 0 ? 'left' : 'right');
+    if (this.axisHeld.side < 0) down.add('targetAllies');
+    if (this.axisHeld.side > 0) down.add('targetEnemies');
     if (!enabled || identity !== this.identity) {
       this.identity = identity;
       this.held = down;
@@ -215,6 +231,22 @@ export class PadReader {
     }
     for (const a of this.held) if (!down.has(a)) this.repeats.delete(a);
     this.held = down;
+    const side = output.find((a) => a === 'targetAllies' || a === 'targetEnemies');
+    if (side) {
+      this.sideTransition = true;
+      // Apply the side first; defer simultaneous navigation/actions to the next poll.
+      for (const action of output)
+        if (action !== 'targetAllies' && action !== 'targetEnemies') this.held.delete(action);
+      return [side];
+    }
+    if (this.sideTransition) {
+      this.sideTransition = false;
+      const nav = output.find((a) => directions.has(a));
+      if (nav) {
+        for (const action of output) if (!directions.has(action)) this.held.delete(action);
+        return [nav];
+      }
+    }
     // A diagonal is a single navigation choice; avoid jumping twice per frame.
     const nav = output.find((a) => directions.has(a));
     return output.filter((a) => !directions.has(a) || a === nav);
@@ -229,11 +261,13 @@ export function validBindings(input: unknown): input is PadBindings {
       PAD_ACTIONS.filter((k) => b[k] >= 0).length &&
     ['stick', 'dpad'].includes(b.navigation) &&
     ['confirm', 'back', 'execute', 'cutQueue', 'menu'].every((k) => b[k as PadAction] >= 0) &&
-    ['axisX', 'axisY'].every(
-      (k) => Number.isInteger(b[k as 'axisX']) && b[k as 'axisX'] >= -1 && b[k as 'axisX'] <= 15,
+    (['axisX', 'axisY', 'sideAxis'] as const).every(
+      (k) => Number.isInteger(b[k]) && b[k] >= -1 && b[k] <= 15,
     ) &&
     typeof b.invertX === 'boolean' &&
-    typeof b.invertY === 'boolean'
+    typeof b.invertY === 'boolean' &&
+    typeof b.invertSideAxis === 'boolean' &&
+    (b.sideAxis < 0 || (b.sideAxis !== b.axisX && b.sideAxis !== b.axisY))
   );
 }
 
@@ -242,9 +276,19 @@ export function migrateBindings(input: unknown): PadBindings | null {
   if (validBindings(input)) return input;
   if (!input || typeof input !== 'object' || Array.isArray(input)) return null;
   const old = input as Record<string, unknown>;
-  if (old.execute !== undefined) return null;
+  const sideDefaults = {
+    targetAllies: -1,
+    targetEnemies: -1,
+    sideAxis: old.axisX === 0 && old.axisY === 1 ? 2 : -1,
+    invertSideAxis: false,
+  };
+  if (old.execute !== undefined) {
+    const migrated = { ...sideDefaults, ...old };
+    return validBindings(migrated) ? migrated : null;
+  }
   const early = old.skill === undefined;
   const b = {
+    ...sideDefaults,
     ...old,
     navigation: 'stick',
     back: old.back ?? old.cancel,

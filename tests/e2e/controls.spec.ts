@@ -23,7 +23,7 @@ async function virtualPad(page: Page, id: string, mapping = 'standard') {
         index: 0,
         connected: true,
         buttons: Array.from({ length: 24 }, () => ({ pressed: false, value: 0 })),
-        axes: [0, 0],
+        axes: [0, 0, 0, 0],
       };
       Object.defineProperty(navigator, 'getGamepads', {
         configurable: true,
@@ -179,8 +179,13 @@ test('unit targets support mixed skills and wrap without entering a row selectio
   await page.keyboard.press('h');
   await page.keyboard.press('b');
   await expect(field.getByRole('option', { name: /敵.*列を対象候補にする/ })).toHaveCount(0);
-  for (const name of ['灰の砲術師', '鐘楼の衛兵', '灰の砲術師', '鐘楼の衛兵']) {
-    await page.keyboard.press('ArrowRight');
+  for (const [key, name] of [
+    ['ArrowRight', '灰の砲術師'],
+    ['ArrowRight', '灰の砲術師'],
+    ['ArrowLeft', '鐘楼の衛兵'],
+    ['ArrowLeft', '鐘楼の衛兵'],
+  ]) {
+    await page.keyboard.press(key);
     await expect(page.getByRole('button', { name: '基本技：斬撃', exact: true })).toBeEnabled();
     await expect(page.getByRole('button', { name: '基本技：斬撃', exact: true })).toContainText(
       name,
@@ -264,7 +269,7 @@ for (const [id, label, confirm, back] of [
     await press(page, 7); // No draft, so the highlighted potion is not added.
     await expect(live(page)).toHaveCount(0);
     await press(page, confirm);
-    await stick(page, 0, 1);
+    await stick(page, -1, 0); // Ally behind the manual actor, at the top of the rear column.
     await press(page, confirm);
     await expect(drafts(page)).toContainText('救急薬');
     await expect(drafts(page)).toContainText('リネ');
@@ -313,6 +318,19 @@ test('digital navigation preset reaches time and auxiliary commands without anal
   await press(page, 7);
   await press(page, 6);
   await expect(live(page)).toHaveCount(0);
+  await press(page, 8);
+  await press(page, 12); // Wrap to the final enemy-side item.
+  await press(page, 12); // Ally-side item.
+  await press(page, 0);
+  await expect(
+    page.getByRole('option', { name: 'アルトを対象候補にする', selected: true }),
+  ).toBeVisible();
+  await press(page, 8);
+  await press(page, 12);
+  await press(page, 0);
+  await expect(
+    page.getByRole('option', { name: '灰の砲術師を対象候補にする', selected: true }),
+  ).toBeVisible();
   await page.reload();
   await virtualPad(page, 'Xbox Wireless Controller');
   await page.getByRole('button', { name: 'ゲームパッド設定', exact: true }).click();
@@ -323,6 +341,7 @@ test('v4 custom physical slots and axes migrate to the palette and remain editab
   page,
 }) => {
   await page.evaluate(() => {
+    localStorage.removeItem('orchestra-gamepad-v6');
     localStorage.removeItem('orchestra-gamepad-v5');
     localStorage.setItem(
       'orchestra-gamepad-v4',
@@ -364,7 +383,7 @@ test('v4 custom physical slots and axes migrate to the palette and remain editab
   await press(page, 7);
   await expect(confirmed(page)).toHaveCount(1);
   const saved = await page.evaluate(() =>
-    JSON.parse(localStorage.getItem('orchestra-gamepad-v5')!),
+    JSON.parse(localStorage.getItem('orchestra-gamepad-v6')!),
   );
   expect(saved.custom['Custom USB']).toMatchObject({
     confirm: 20,
@@ -375,6 +394,7 @@ test('v4 custom physical slots and axes migrate to the palette and remain editab
     execute: 7,
     axisX: 2,
     axisY: 3,
+    sideAxis: -1,
     invertX: true,
   });
   await page.getByRole('button', { name: 'ゲームパッド設定', exact: true }).click();
@@ -391,9 +411,129 @@ test('v4 custom physical slots and axes migrate to the palette and remain editab
     'いずれかが未割当になります',
   );
   const retained = await page.evaluate(() =>
-    JSON.parse(localStorage.getItem('orchestra-gamepad-v5')!),
+    JSON.parse(localStorage.getItem('orchestra-gamepad-v6')!),
   );
   expect(retained.custom['Custom USB']).toMatchObject({ execute: 7, up: -1, confirm: 21 });
+});
+
+for (const [id, label, confirm] of [
+  ['Xbox Wireless Controller', 'Xbox', 0],
+  ['DualSense Wireless Controller (054c)', 'PS', 0],
+  ['Nintendo Switch Pro Controller (057e)', 'Switch', 1],
+] as const) {
+  test(`${label}: right stick switches sides and left stick follows the visible positions`, async ({
+    page,
+  }) => {
+    await page.setViewportSize(
+      label === 'Switch' ? { width: 390, height: 844 } : { width: 1366, height: 752 },
+    );
+    await virtualPad(page, id);
+    await page.getByRole('button', { name: '交差砲火', exact: true }).click();
+    await start(page);
+    await press(page, 15);
+    const selected = (name: string) =>
+      page.getByRole('option', { name: `${name}を対象候補にする`, selected: true });
+    const sideStick = async (x: number) => {
+      await page.evaluate((x) => ((window as any).testPad.axes = [0, 0, x, 0]), x);
+      await page.clock.runFor(64);
+      await page.evaluate(() => ((window as any).testPad.axes = [0, 0, 0, 0]));
+      await page.clock.runFor(32);
+    };
+    await stick(page, 1, 0);
+    await expect(selected('後列狙いの砲手')).toBeVisible();
+    const upper = await selected('後列狙いの砲手').boundingBox();
+    await stick(page, 0, 1);
+    await expect(selected('前列狙いの砲手')).toBeVisible();
+    const lower = await selected('前列狙いの砲手').boundingBox();
+    expect(lower!.y).toBeGreaterThan(upper!.y);
+    expect(lower!.x).toBeCloseTo(upper!.x, 0);
+    await stick(page, 0, 1); // Bottom edge stays on the same target.
+    await expect(selected('前列狙いの砲手')).toBeVisible();
+    await sideStick(-1);
+    await expect(selected('アルト')).toBeVisible();
+    await stick(page, -1, 0);
+    await expect(selected('リネ')).toBeVisible();
+    await stick(page, 0, 1);
+    await expect(selected('セナ')).toBeVisible();
+    await sideStick(1);
+    await expect(selected('前列狙いの砲手')).toBeVisible();
+    await stick(page, -1, 0);
+    await expect(selected('砲列の衛兵')).toBeVisible();
+    await sideStick(-1);
+    await expect(selected('セナ')).toBeVisible();
+    // A burst applies side, then location, then the skill: never attack the old candidate.
+    await page.evaluate((confirm) => {
+      (window as any).testPad.axes = [1, 0, 1, 0];
+      (window as any).testPad.buttons[confirm] = { pressed: true, value: 1 };
+    }, confirm);
+    await page.clock.runFor(100);
+    await expect(drafts(page)).toContainText('後列狙いの砲手');
+    await page.evaluate(() => ((window as any).testPad.axes = [0, 0, 0, 0]));
+    await release(page);
+    await press(page, 13);
+    await sideStick(-1);
+    await expect(page.getByRole('heading', { name: '補助メニュー', exact: true })).toBeVisible();
+    await page.getByRole('option', { name: /味方を対象にする/ }).click();
+    await expect(selected('セナ')).toBeVisible();
+    await expect(drafts(page)).toHaveCount(1);
+    await page.screenshot({ path: `test-results/spatial-${label}.png`, fullPage: true });
+  });
+}
+
+test('v5 settings add a configurable right stick and preserve its inversion after reload', async ({
+  page,
+}) => {
+  await page.evaluate(() => {
+    const stored = JSON.parse(localStorage.getItem('orchestra-gamepad-v6')!);
+    stored.custom['Xbox Wireless Controller'] = {
+      confirm: 0,
+      back: 1,
+      skill: 2,
+      guard: 3,
+      execute: 7,
+      cutQueue: 6,
+      previous: 4,
+      next: 5,
+      slow: 14,
+      stop: 15,
+      pause: 9,
+      menu: 8,
+      tactics: 12,
+      aux: 13,
+      up: -1,
+      down: -1,
+      left: -1,
+      right: -1,
+      queue: 11,
+      mark: 10,
+      navigation: 'stick',
+      axisX: 0,
+      axisY: 1,
+      invertX: false,
+      invertY: false,
+    };
+    localStorage.setItem('orchestra-gamepad-v5', JSON.stringify(stored));
+    localStorage.removeItem('orchestra-gamepad-v6');
+  });
+  await page.reload();
+  await virtualPad(page, 'Xbox Wireless Controller');
+  await page.getByRole('button', { name: 'ゲームパッド設定', exact: true }).click();
+  await expect(page.getByLabel('敵味方切替の軸', { exact: true })).toHaveValue('2');
+  await page.getByLabel('敵味方切替の軸', { exact: true }).selectOption('0');
+  await expect(page.getByRole('dialog', { name: 'ゲームパッド設定' })).toContainText(
+    '別に割り当て',
+  );
+  await expect(page.getByLabel('敵味方切替の軸', { exact: true })).toHaveValue('2');
+  await page.getByLabel('敵味方切替の左右を反転', { exact: true }).check();
+  await page.getByRole('button', { name: '設定を閉じる ×', exact: true }).click();
+  await page.reload();
+  await virtualPad(page, 'Xbox Wireless Controller');
+  await start(page);
+  await page.evaluate(() => ((window as any).testPad.axes = [0, 0, 1, 0]));
+  await page.clock.runFor(64);
+  await expect(
+    page.getByRole('option', { name: 'アルトを対象候補にする', selected: true }),
+  ).toBeVisible();
 });
 
 for (const [width, height] of [

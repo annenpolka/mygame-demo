@@ -110,11 +110,16 @@ describe('target palette and explicit sequences', () => {
       step: { skillId: 'guard', target: { kind: 'ally', id: 0 } },
     });
   });
-  it('cycles only living units and never loses the single target to a row entry', () => {
+  it('stops at the visual edge and never loses the single target to a row entry', () => {
     const x = session();
     let ui = newBattlePad();
-    for (const id of [1, 0, 1, 0]) {
-      ui = battleInput(x.state, ui, 'right').ui;
+    for (const [direction, id] of [
+      ['right', 1],
+      ['right', 1],
+      ['left', 0],
+      ['left', 0],
+    ] as const) {
+      ui = battleInput(x.state, ui, direction).ui;
       expect(paletteCursor(x.state, ui).target).toEqual({ kind: 'enemy', id });
       expect(battleInput(x.state, ui, 'confirm').commands[0]).toMatchObject({
         step: { skillId: 'slash', target: { kind: 'enemy', id } },

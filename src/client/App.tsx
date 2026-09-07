@@ -455,6 +455,8 @@ export function App() {
           ArrowDown: 'down',
           ArrowLeft: 'left',
           ArrowRight: 'right',
+          ',': 'targetAllies',
+          '.': 'targetEnemies',
           Enter: 'confirm',
           z: 'confirm',
           x: 'skill',
@@ -976,7 +978,7 @@ export function App() {
             }
             navigationLabel={
               padActive
-                ? `${gamepad.bindings.navigation === 'dpad' ? '十字キー' : '左スティック'}：左右で候補・上下で敵／味方`
+                ? `${gamepad.bindings.navigation === 'dpad' ? '十字キー' : '左スティック'}：駒の位置へ · ${gamepad.bindings.sideAxis < 0 ? '補助で敵／味方' : '右スティック ← 味方 / → 敵'}`
                 : undefined
             }
             backLabel={padActive ? buttonName(gamepad.bindings.back, gamepad.family) : 'Esc'}
@@ -1470,7 +1472,7 @@ export function App() {
                 </p>
                 <p>
                   パッドでは×／Aが基本技、□／Xが主力技、△／Yが防御。○／Bは戻る専用。
-                  右トリガーで行動開始、左トリガーで後続取消。左スティックで対象候補を選び、十字キーの左でスロー、右で戦術停止、上で全体指示、下で補助を開きます。
+                  右トリガーで行動開始、左トリガーで後続取消。左スティックで駒の配置に沿って対象を選び、右スティックの左で味方・右で敵へ切り替えます。キーボードは矢印で移動、コンマで味方・ピリオドで敵。十字キーの左でスロー、右で戦術停止、上で全体指示、下で補助を開きます。
                   薬・移動・武器変更は補助メニュー。十字キーで選択する代替配置も設定できます。
                 </p>
               </div>

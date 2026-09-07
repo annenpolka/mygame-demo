@@ -43,6 +43,65 @@ const legacy = () => ({
   invertY: false,
 });
 describe('separate analog navigation and physical control edges', () => {
+  it('maps right stick left/right to absolute side choices without repeating or using its vertical axis', () => {
+    const b = defaultBindings('xbox'),
+      r = new PadReader();
+    r.read(pad([], [0, 0, 0, 0]), b, 0);
+    expect(r.read(pad([], [0, 0, -0.7, 0]), b, 20)).toEqual(['targetAllies']);
+    expect(r.read(pad([], [0, 0, -0.45, 0]), b, 800)).toEqual([]);
+    expect(r.read(pad([], [0, 0, 0.7, 0]), b, 900)).toEqual(['targetEnemies']);
+    expect(r.read(pad([], [0, 0, 0, 1]), b, 1000)).toEqual([]);
+  });
+  it('applies side changes before simultaneous left-stick navigation and action edges', () => {
+    const b = defaultBindings('xbox'),
+      r = new PadReader();
+    r.read(pad(), b, 0);
+    const input = pad([b.confirm], [-1, 0, -1, 0]);
+    expect(r.read(input, b, 20)).toEqual(['targetAllies']);
+    expect(r.read(input, b, 36)).toEqual(['left']);
+    expect(r.read(input, b, 52)).toEqual(['confirm']);
+    expect(r.read(input, b, 68)).toEqual([]);
+  });
+  it('prefers a mostly vertical left-stick gesture over a smaller horizontal tilt', () => {
+    const b = defaultBindings('xbox'),
+      r = new PadReader();
+    r.read(pad(), b, 0);
+    expect(r.read(pad([], [0.6, 0.9, 0, 0]), b, 20)).toEqual(['down']);
+  });
+  it('supports a remapped or inverted side axis and rejects overlap with target navigation', () => {
+    const b = { ...defaultBindings('xbox'), sideAxis: 4, invertSideAxis: true },
+      r = new PadReader();
+    expect(validBindings(b)).toBe(true);
+    expect(validBindings({ ...b, sideAxis: b.axisY })).toBe(false);
+    r.read(pad(), b, 0);
+    expect(r.read(pad([], [0, 0, 0, 0, 0.9]), b, 20)).toEqual(['targetAllies']);
+    r.read(null, b, 30);
+    expect(r.read(pad([], [0, 0, 0, 0, 0.9]), b, 40)).toEqual([]);
+    r.read(pad(), b, 50);
+    expect(r.read(pad([], [0, 0, 0, 0, -0.9]), b, 60)).toEqual(['targetEnemies']);
+  });
+  it('migrates v5 bindings while preserving custom axes, physical slots and the digital preset', () => {
+    const { sideAxis, invertSideAxis, targetAllies, targetEnemies, ...old } =
+      defaultBindings('xbox');
+    expect(migrateBindings(old)).toEqual(defaultBindings('xbox'));
+    const custom = { ...old, axisX: 2, axisY: 3, confirm: 20 };
+    expect(migrateBindings(custom)).toMatchObject({
+      axisX: 2,
+      axisY: 3,
+      confirm: 20,
+      sideAxis: -1,
+    });
+    const digital = navigationPreset(defaultBindings('xbox'), 'dpad');
+    const {
+      sideAxis: x,
+      invertSideAxis: y,
+      targetAllies: t,
+      targetEnemies: e,
+      ...oldDigital
+    } = digital;
+    expect(migrateBindings(oldDigital)).toEqual(digital);
+    expect(migrateBindings({ ...digital, sideAxis: undefined })).toBeNull();
+  });
   it.each([
     ['Xbox Wireless', 'xbox', 0],
     ['DualSense Wireless (054c)', 'playstation', 0],

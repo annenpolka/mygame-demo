@@ -19,6 +19,8 @@ const names = {
   down: '下へ',
   left: '左へ',
   right: '右へ',
+  targetAllies: '味方を対象にする',
+  targetEnemies: '敵を対象にする',
   queue: '予約一覧・取消',
   mark: '今のところに印・休憩中は印一覧',
 };
@@ -75,7 +77,7 @@ export function PadSettings({
           </select>
         </label>
         <p className="muted">
-          右トリガーで行動開始、左トリガーで後続取消。4ボタンは基本技・主力技・防御・戻る。左スティックで対象を選び、十字キーで時間操作とメニュー。十字キー選択の配置では時間操作も補助メニューから選べます。
+          右トリガーで行動開始、左トリガーで後続取消。4ボタンは基本技・主力技・防御・戻る。左スティックは駒の配置に沿って移動。右スティックの左で味方、右で敵へ切り替えます。十字キーは時間操作とメニュー。十字キー選択の配置では時間操作も補助メニューから選べます。敵味方の切替も補助から行えます。
         </p>
         <label className="pad-family">
           選択の操作方式
@@ -106,11 +108,11 @@ export function PadSettings({
         </div>
         {c.capture && <button onClick={() => c.setCapture(null)}>割り当てを中止</button>}
         <div className="pad-axes">
-          {(['axisX', 'axisY'] as const).map((k, i) => (
+          {(['axisX', 'axisY', 'sideAxis'] as const).map((k, i) => (
             <label key={k}>
-              {i ? '縦軸' : '横軸'}
+              {['対象移動・横軸', '対象移動・縦軸', '敵味方切替・右スティック横軸'][i]}
               <select
-                aria-label={i ? 'スティック縦軸' : 'スティック横軸'}
+                aria-label={['スティック横軸', 'スティック縦軸', '敵味方切替の軸'][i]}
                 value={c.bindings[k]}
                 disabled={!c.pad}
                 onChange={(e) => c.update({ ...c.bindings, [k]: Number(e.target.value) })}
@@ -124,7 +126,7 @@ export function PadSettings({
               </select>
             </label>
           ))}
-          {(['invertX', 'invertY'] as const).map((k, i) => (
+          {(['invertX', 'invertY', 'invertSideAxis'] as const).map((k, i) => (
             <label key={k}>
               <input
                 type="checkbox"
@@ -132,7 +134,7 @@ export function PadSettings({
                 checked={c.bindings[k]}
                 onChange={(e) => c.update({ ...c.bindings, [k]: e.target.checked })}
               />
-              {i ? '上下' : '左右'}を反転
+              {['対象移動の左右', '対象移動の上下', '敵味方切替の左右'][i]}を反転
             </label>
           ))}
         </div>
