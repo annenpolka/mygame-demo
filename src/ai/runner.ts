@@ -1,3 +1,4 @@
+import { prepareLoadout, LOADOUT_MODES, type LoadoutMode } from './composition';
 import { BONUS_MODES } from '../sim/bonuses';
 import { createQueuePolicy, QUEUE_POLICY_VERSION } from './queue-policy';
 import { planned } from '../sim/plan';
@@ -13,6 +14,8 @@ import { createPolicy, POLICY_VERSION, type PolicyId, type Ablation } from './po
 
 export type PlanningMode = 'legacy' | 'next' | 'queue';
 export interface RunOptions {
+  loadout?: LoadoutMode;
+  fullInventory?: boolean;
   bonusMode?: BonusMode;
   enemyHpScale?: number;
   planning?: PlanningMode;
@@ -68,6 +71,9 @@ export interface EnemyOutcome {
   targetsHit: number;
 }
 export interface RunSummary {
+  loadout: LoadoutMode;
+  fullInventory: boolean;
+  loadoutWeapons: string[][];
   bonusMode: BonusMode;
   enemyHpScale: number;
   planning: PlanningMode;
@@ -100,6 +106,7 @@ export interface RunSummary {
   actions: Record<string, number>;
   enemyOutcomes: Record<EnemyOutcome['outcome'], number>;
   roleSeconds: Record<string, number>;
+  activeRoleSeconds: Record<string, number>;
   rowPersonSeconds: { front: number; back: number };
   actorSeconds: { acting: number; moving: number; shifting: number; waiting: number };
   minHpFraction: number;
@@ -139,6 +146,11 @@ function difference(now: Metrics, before: Metrics): Metrics {
 }
 export function runPolicy(options: RunOptions): RunResult {
   const opts = {
+    loadout:
+      options.policy === 'adaptive' || options.policy === 'assault'
+        ? options.policy
+        : ('legacy' as LoadoutMode),
+    fullInventory: false,
     bonusMode: DEFAULT_CONFIG.bonusMode,
     enemyHpScale: 1,
     seed: 1307,
@@ -152,6 +164,7 @@ export function runPolicy(options: RunOptions): RunResult {
     ...options,
   };
   if (
+    !LOADOUT_MODES.includes(opts.loadout) ||
     !BONUS_MODES.includes(opts.bonusMode) ||
     !Number.isFinite(opts.enemyHpScale) ||
     opts.enemyHpScale < 0.5 ||
@@ -229,6 +242,7 @@ export function runPolicy(options: RunOptions): RunResult {
     initialMetrics = copy(s.metrics);
   const actions: Record<string, number> = {},
     roleSeconds: Record<string, number> = {};
+  const activeRoleSeconds: Record<string, number> = {};
   const rowPersonSeconds = { front: 0, back: 0 },
     actorSeconds = { acting: 0, moving: 0, shifting: 0, waiting: 0 };
   const drain = (encounter = s.encounter) => {
@@ -294,19 +308,16 @@ export function runPolicy(options: RunOptions): RunResult {
       metrics: difference(s.metrics, initialMetrics),
     });
 
-  send([{ type: 'start' }], '共通条件で第一戦を開始');
+  if (opts.fullInventory) send([{ type: 'labWeapons' }], '比較用の全武器を共通に追加');
+  send(prepareLoadout(s, opts.loadout), '持ち込みとオプティマを準備');
+  send([{ type: 'start' }], '第一戦を開始');
   sample();
   for (let ticks = 0; ticks < Math.round(opts.maxSeconds / DT); ticks++) {
     if (s.phase === 'loot') {
       endEncounter();
-      // All policies receive exactly the same update. No policy gets free weapons or extra slots.
       send(
-        [
-          { type: 'equip', id: 0, slot: 1, weaponId: 'hammer' },
-          { type: 'equip', id: 1, slot: 1, weaponId: 'starbow' },
-          { type: 'next' },
-        ],
-        '共通の武器更新：盾槍→槌、弓→流星の弓。第二戦へ',
+        [...prepareLoadout(s, opts.loadout), { type: 'next' }],
+        '装備方針に従って戦利品とオプティマを更新し、第二戦へ',
       );
       startTime = s.time;
       startRealTime = s.realTime;
@@ -337,12 +348,16 @@ export function runPolicy(options: RunOptions): RunResult {
         }) as const,
     );
     const roles = ROLES(s).join('');
+    const activeRoles = s.allies
+      .map((a) => (a.hp > 0 ? WEAPONS[a.weapons[a.slot]].role : '-'))
+      .join('');
     const casts = s.enemies
       .filter((e) => e.hp > 0 && e.cast)
       .map((e) => ({ id: e.id, name: e.name, row: e.row, cast: copy(e.cast!) }));
     step(s);
     const dt = s.time - beforeTime;
     roleSeconds[roles] = (roleSeconds[roles] ?? 0) + dt;
+    activeRoleSeconds[activeRoles] = (activeRoleSeconds[activeRoles] ?? 0) + dt;
     for (const a of beforeActors)
       if (a.alive) {
         rowPersonSeconds[a.row] += dt;
@@ -386,6 +401,9 @@ export function runPolicy(options: RunOptions): RunResult {
   if (opts.verifyReplay && !replayVerified)
     throw new Error(`AI ${opts.policy} seed=${opts.seed} のリプレイが一致しません。`);
   const summary: RunSummary = {
+    loadout: opts.loadout,
+    fullInventory: opts.fullInventory,
+    loadoutWeapons: s.allies.map((a) => [...a.weapons]),
     planning,
     queuedDuringAction,
     appendedPlans,
@@ -423,6 +441,7 @@ export function runPolicy(options: RunOptions): RunResult {
       ]),
     ) as RunSummary['enemyOutcomes'],
     roleSeconds,
+    activeRoleSeconds,
     rowPersonSeconds,
     actorSeconds,
     minHpFraction,

@@ -1,3 +1,4 @@
+import { partyBonus, bonusText } from '../sim/bonuses';
 import { useState, type CSSProperties } from 'react';
 import { SKILLS, WEAPONS } from '../content/data';
 import type { Command, Row, Slot, State, Weapon } from '../sim/types';
@@ -211,6 +212,16 @@ export function Loadout({
             <h3>{tab === 'presets' ? preset.name : f.name}</h3>
             <span>名前は{tab === 'presets' ? '役割の組み合わせ' : '前後列の配置'}から自動更新</span>
           </div>
+          {tab === 'presets' && (
+            <p className="loadout-note active-bonus">
+              {bonusText(
+                partyBonus(
+                  s.allies.map((a, id) => ({ ...a, slot: preset.slots[id] })),
+                  s.config.bonusMode,
+                ),
+              )}
+            </p>
+          )}
           {tab === 'presets' && !linked && (
             <p className="loadout-note">
               このモードのオプティマは武器構成を切り替えます。前後列は「一括隊列」で編集できます。

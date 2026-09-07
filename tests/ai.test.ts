@@ -33,7 +33,16 @@ describe('AI observation and command contract', () => {
           const d = policy.decide(view);
           expect(view).toEqual(before);
           for (const c of d.commands) {
-            expect(['target', 'optima', 'move', 'formation', 'skill', 'time']).toContain(c.type);
+            expect([
+              'target',
+              'optima',
+              'move',
+              'formation',
+              'skill',
+              'time',
+              'enqueue',
+              'removePlan',
+            ]).toContain(c.type);
             expect(command(s, c)).toBe(true);
           }
         }

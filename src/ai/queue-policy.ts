@@ -1,14 +1,12 @@
+import { createAdaptivePolicy } from './adaptive-policy';
 import { planned, planTiming, canAppend } from '../sim/plan';
 import { DT, SKILLS, WEAPONS } from '../content/data';
 import type { Command, Row, Target } from '../sim/types';
 import type { Observation } from './observation';
 
-export const QUEUE_POLICY_VERSION = 'queue-policy-2';
+export const QUEUE_POLICY_VERSION = 'queue-policy-3';
 import { ABLATIONS, POLICY_IDS, type PolicyId, type Ablation } from './policies';
-export type CombatCommand = Extract<
-  Command,
-  { type: 'target' | 'optima' | 'move' | 'formation' | 'skill' | 'time' | 'enqueue' | 'removePlan' }
->;
+export type CombatCommand = Command;
 export interface Decision {
   reason: string;
   commands: CombatCommand[];
@@ -60,6 +58,10 @@ export function createQueuePolicy(
   ablation: Ablation = 'none',
   depth = 3,
 ): Policy {
+  if ((id === 'adaptive' || id === 'assault') && ablation !== 'none')
+    throw new Error('新AIでは切除比較は未対応です。noneを指定してください。');
+  if (id === 'adaptive' || id === 'assault')
+    return createAdaptivePolicy(id, reactionSeconds, depth);
   if (!POLICY_IDS.includes(id)) throw new Error(`不明なAI: ${id}`);
   if (!ABLATIONS.includes(ablation)) throw new Error(`不明な切除条件: ${ablation}`);
   let healing = false;

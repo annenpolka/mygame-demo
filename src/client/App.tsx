@@ -1,3 +1,4 @@
+import { prepareLoadout } from '../ai/composition';
 import { BONUS_LABELS, BONUS_MODES } from '../sim/bonuses';
 import { AtbTimeline } from './AtbTimeline';
 import { Loadout } from './Loadout';
@@ -68,7 +69,11 @@ export function App() {
     weapon = WEAPONS[ally.weapons[projectedSlot(ally)]];
   const refresh = () => render((x) => x + 1);
   const send = (...commands: Command[]) => {
-    session.send(...commands);
+    for (const c of commands) {
+      if (c.type === 'start' && session.state.controlMode === 'ai')
+        session.send(...prepareLoadout(session.state, player.loadout));
+      session.send(c);
+    }
     refresh();
   };
   const switchControl = () => {
@@ -621,6 +626,17 @@ export function App() {
                     {BONUS_LABELS[mode]}
                   </button>
                 ))}
+                <button
+                  aria-pressed={s.config.bonusMode === 'strong' && s.config.enemyHpScale === 1.45}
+                  title="標準ABSの戦闘時間を揃える比較。敵HPは1.45倍です。"
+                  onClick={() => {
+                    const next = { ...s.config, bonusMode: 'strong' as const, enemyHpScale: 1.45 };
+                    setConfig(next);
+                    restart(next, false);
+                  }}
+                >
+                  強め・速度比較
+                </button>
                 <small>現在出ているロールが、全員へ効果を与えます。</small>
               </div>
               <div className="level-choices" aria-label="戦闘の強度">

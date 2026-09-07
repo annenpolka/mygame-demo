@@ -32,11 +32,12 @@ export class Session {
   }
   send(...commands: Command[]) {
     this.gestures++;
+    const accepted: boolean[] = [];
     for (const c of commands) {
       if (c.type === 'start' && this.state.phase === 'ready')
         this.encounterStart = copy(this.state);
       this.inputs.push({ tick: this.state.tick, order: this.inputs.length, command: copy(c) });
-      command(this.state, c);
+      accepted.push(command(this.state, c));
       this.capture();
       if (c.type === 'next' && this.state.phase === 'battle') {
         this.encounterStart = copy(this.state);
@@ -57,6 +58,7 @@ export class Session {
         };
       }
     }
+    return accepted;
   }
   advance(elapsed: number, beforeStep?: () => void) {
     if (this.state.paused || this.state.phase !== 'battle') {

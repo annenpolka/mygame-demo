@@ -1,3 +1,4 @@
+import { LOADOUT_MODES, LOADOUT_NAMES, type LoadoutMode } from '../ai/composition';
 import { POLICY_IDS, POLICY_INFO, type PolicyId } from '../ai/policies';
 import { WatchPlayer, type WatchPlanning } from '../ai/watch-player';
 import { ROW_NAMES } from '../content/data';
@@ -50,6 +51,23 @@ export function WatchConsole({
             <option value="legacy">従来AI・1手</option>
             <option value="next">予約AI・1手</option>
             <option value="queue">予約AI・3手</option>
+          </select>
+        </label>
+        <label>
+          装備方針
+          <select
+            aria-label="AI装備方針"
+            value={player.loadout}
+            onChange={(e) => {
+              player.loadout = e.target.value as LoadoutMode;
+              refresh();
+            }}
+          >
+            {LOADOUT_MODES.map((mode) => (
+              <option key={mode} value={mode}>
+                {LOADOUT_NAMES[mode]}
+              </option>
+            ))}
           </select>
         </label>
         <label>

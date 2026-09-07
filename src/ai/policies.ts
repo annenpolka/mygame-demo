@@ -1,16 +1,22 @@
+import { createAdaptivePolicy } from './adaptive-policy';
 import { DT, SKILLS, WEAPONS } from '../content/data';
 import type { Command, Row, Target } from '../sim/types';
 import type { Observation } from './observation';
 
-export const POLICY_VERSION = 'policies-2';
+export const POLICY_VERSION = 'policies-3';
 export const ABLATIONS = ['none', 'no-pull', 'no-row', 'no-defense'] as const;
 export type Ablation = (typeof ABLATIONS)[number];
-export const POLICY_IDS = ['autopilot', 'rush', 'balanced', 'rear', 'tactician', 'focus'] as const;
+export const LEGACY_POLICY_IDS = [
+  'autopilot',
+  'rush',
+  'balanced',
+  'rear',
+  'tactician',
+  'focus',
+] as const;
+export const POLICY_IDS = [...LEGACY_POLICY_IDS, 'adaptive', 'assault'] as const;
 export type PolicyId = (typeof POLICY_IDS)[number];
-export type CombatCommand = Extract<
-  Command,
-  { type: 'target' | 'optima' | 'move' | 'formation' | 'skill' | 'time' }
->;
+export type CombatCommand = Command;
 export interface Decision {
   reason: string;
   commands: CombatCommand[];
@@ -19,6 +25,15 @@ export interface Policy {
   decide(view: Observation): Decision;
 }
 export const POLICY_INFO: Record<PolicyId, { name: string; description: string }> = {
+  adaptive: {
+    name: '編成適応',
+    description:
+      '8通りの武器構成を評価。ロールの波及・HP・予告・ブレイクに応じて武器とオプティマを変更する。',
+  },
+  assault: {
+    name: '攻勢特化',
+    description: '攻撃とチェインを重視して構成を評価。必要な場面の退避・防御・救急薬は使う。',
+  },
   autopilot: {
     name: '自動行動任せ',
     description: '初期ABS・初期隊列・初期標的のまま。戦闘中の外部指示なし。',
@@ -89,6 +104,7 @@ export function createPolicy(
   reactionSeconds = 0.35,
   ablation: Ablation = 'none',
 ): Policy {
+  if (id === 'adaptive' || id === 'assault') return createAdaptivePolicy(id, reactionSeconds, 1);
   if (!POLICY_IDS.includes(id)) throw new Error(`不明なAI: ${id}`);
   if (!ABLATIONS.includes(ablation)) throw new Error(`不明な切除条件: ${ablation}`);
   let healing = false;

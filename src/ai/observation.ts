@@ -1,3 +1,4 @@
+import { partyBonus } from '../sim/bonuses';
 import type { Ally, Enemy, Preset, State } from '../sim/types';
 
 export type ReadonlyDeep<T> = T extends object
@@ -34,7 +35,10 @@ export interface Observation {
   >;
   presets: ReadonlyDeep<Preset[]>;
   rules: ReadonlyDeep<
-    Pick<State['config'], 'atbMax' | 'atbRate' | 'moveTime' | 'shiftTime' | 'enemyPower'>
+    Pick<
+      State['config'],
+      'atbMax' | 'atbRate' | 'moveTime' | 'shiftTime' | 'enemyPower' | 'bonusMode'
+    > & { baseAtbRate: number }
   >;
 }
 
@@ -68,7 +72,9 @@ export function observe(s: State): Observation {
     presets: s.presets,
     rules: {
       atbMax: s.config.atbMax,
-      atbRate: s.config.atbRate,
+      atbRate: s.config.atbRate * partyBonus(s.allies, s.config.bonusMode).atb,
+      baseAtbRate: s.config.atbRate,
+      bonusMode: s.config.bonusMode,
       moveTime: s.config.moveTime,
       shiftTime: s.config.shiftTime,
       enemyPower: s.config.enemyPower,

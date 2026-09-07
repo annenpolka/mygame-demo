@@ -47,8 +47,11 @@ const hash = (path: string) =>
     .update(readFileSync(new URL(`../${path}`, import.meta.url)))
     .digest('hex');
 const frozen = {
-  'src/ai/policies.ts': '292513ec6b6d8e1d8205fc4f44b0ec574278f6944cc79e0fe8cefed4c4097d67',
-  'src/ai/observation.ts': 'f9a24a431eba8c724d0de11ab78a7718d97a97840448ed99196c32f6d39c1347',
+  'src/ai/policies.ts': '1b4722e815973cafd706df6fbd61ba7a43bd0c730ad9a81810a3acce09dc4357',
+  'src/ai/observation.ts': 'd0b6928fa7b1bd1067893353a6c15aefeb01460f571337e2983d2eacfc643533',
+  'src/ai/adaptive-policy.ts': '5b9a053cae75e3763b8ce73441387fa790c6f49c7484a6183500e653c0418d9a',
+  'src/ai/composition.ts': 'e6633f3813651398361c9792c0560a326087f9f0998e0b747b31c6154bc4c673',
+  'src/ai/queue-policy.ts': 'dcca45f5dd1d26d60d88a87656b799f4ebf4f0514c275361ef240439eb0e479d',
 };
 for (const [path, expected] of Object.entries(frozen))
   if (hash(path) !== expected) throw new Error(`固定した現行AIが変更されています: ${path}`);
@@ -56,6 +59,9 @@ const paths = [
   ...Object.keys(frozen),
   'src/ai/runner.ts',
   'src/ai/report.ts',
+  'src/sim/bonuses.ts',
+  'src/ai/adaptive-policy.ts',
+  'src/ai/composition.ts',
   'src/sim/engine.ts',
   'src/sim/types.ts',
   'src/sim/plan.ts',

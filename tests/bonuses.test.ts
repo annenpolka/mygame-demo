@@ -137,3 +137,18 @@ describe('current party role bonuses', () => {
     expect(runReplay(parseRecording(JSON.stringify(session.recording())))).toEqual(session.state);
   });
 });
+
+it('reports accepted and rejected player commands without changing their recording order', () => {
+  const s = new Session();
+  s.send({ type: 'start' });
+  const results = s.send(
+    ...Array.from({ length: 5 }, () => ({
+      type: 'enqueue' as const,
+      id: 0,
+      step: { kind: 'skill' as const, skillId: 'guard', target: { kind: 'ally' as const, id: 0 } },
+    })),
+  );
+  expect(results).toEqual([true, true, true, true, false]);
+  expect(s.recording().inputs).toHaveLength(6);
+  expect(runReplay(s.recording())).toEqual(s.state);
+});

@@ -46,7 +46,7 @@ test('AI viewing offers all policies, visible decisions, pause, speed, and manua
   await page.getByRole('button', { name: 'AI鑑賞', exact: true }).click();
   await expect(
     page.getByRole('combobox', { name: 'AI方針', exact: true }).locator('option'),
-  ).toHaveCount(6);
+  ).toHaveCount(8);
   await page.getByRole('combobox', { name: 'AI再生速度', exact: true }).selectOption('4');
   await page.getByRole('button', { name: 'AI鑑賞を開始 →', exact: true }).click();
   await page.clock.runFor(800);

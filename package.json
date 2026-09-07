@@ -13,7 +13,8 @@
     "sim": "tsx scripts/headless.ts",
     "sim:limits": "tsx scripts/limits.ts",
     "sim:queue": "tsx scripts/queue-study.ts",
-    "sim:scenarios": "tsx scripts/scenario-study.ts"
+    "sim:scenarios": "tsx scripts/scenario-study.ts",
+    "sim:bonuses": "tsx scripts/bonus-study.ts"
   },
   "dependencies": {
     "react": "^19.2.8",

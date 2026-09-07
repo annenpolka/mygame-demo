@@ -38,6 +38,9 @@ const sets: EncounterSetId[] = ['bulwark', 'crossfire', 'pursuit', 'attrition'],
   modes: PlanningMode[] = ['legacy', 'next', 'queue'],
   policies = ['tactician', 'focus'] as const;
 const paths = [
+  'src/sim/bonuses.ts',
+  'src/ai/adaptive-policy.ts',
+  'src/ai/composition.ts',
   'src/sim/engine.ts',
   'src/sim/plan.ts',
   'src/sim/tactics.ts',

@@ -1,3 +1,4 @@
+import type { LoadoutMode } from '../src/ai/composition';
 import { DEFAULT_CONFIG } from '../src/content/data';
 import type { EncounterSetId } from '../src/content/encounters';
 import { performance } from 'node:perf_hooks';
@@ -18,8 +19,9 @@ import { aggregate, makeComparisonReport, makeTraceReport } from '../src/ai/repo
 import type { Config, BonusMode } from '../src/sim/types';
 
 const args = process.argv.slice(2);
-const flags = new Set(['--compare', '--study', '--help', '--list']);
+const flags = new Set(['--compare', '--study', '--help', '--list', '--full-inventory']);
 const values = new Set([
+  '--loadout',
   '--bonus',
   '--enemy-hp',
   '--planning',
@@ -67,6 +69,8 @@ function saveTrace(dir: string, run: RunResult) {
 function sourceHashes() {
   return Object.fromEntries(
     [
+      'src/ai/composition.ts',
+      'src/ai/adaptive-policy.ts',
       'src/sim/bonuses.ts',
       'src/sim/engine.ts',
       'src/sim/types.ts',
@@ -96,10 +100,12 @@ if (args.includes('--help') || args.includes('--list')) {
       'npm run sim -- --compare --seeds 20 --seed 1307 --powers 1,2,3 --dir artifacts/ai-comparison\n' +
       'npm run sim -- --study --seeds 30 --seed 1307 --dir artifacts/ai-study\n' +
       'npm run sim -- --replay path/to/replay.json [--atb 1.2 --enemy-power 2]\n' +
-      '追加設定: --bonus none|modest|strong --enemy-hp 0.5〜4 --planning legacy|next|queue --atb-max 2〜8 --set belfry|bulwark|crossfire|pursuit|attrition --level 1〜10 --interval 0.25 --reaction 0.35 --max-seconds 180 --ablation none|no-pull|no-row|no-defense\n',
+      '追加設定: --loadout legacy|keep|adaptive|assault --full-inventory --bonus none|modest|strong --enemy-hp 0.5〜4 --planning legacy|next|queue --atb-max 2〜8 --set belfry|bulwark|crossfire|pursuit|attrition --level 1〜10 --interval 0.25 --reaction 0.35 --max-seconds 180 --ablation none|no-pull|no-row|no-defense\n',
   );
   console.log(POLICY_IDS.map((id) => `${id}: ${POLICY_INFO[id].description}`).join('\n'));
 } else if (value('--replay')) {
+  if (value('--loadout') || args.includes('--full-inventory'))
+    throw new Error('持ち込み条件は新しい戦闘へ指定してください。');
   if (value('--bonus') || value('--enemy-hp'))
     throw new Error('--bonus / --enemy-hpは新しい戦闘へ指定してください。');
   const start = performance.now();
@@ -138,6 +144,8 @@ if (args.includes('--help') || args.includes('--list')) {
   if (!ABLATIONS.includes(ablation)) throw new Error(`不明な切除条件: ${ablation}`);
   const seed = Number(value('--seed') ?? 1307);
   const opts = {
+    ...(value('--loadout') ? { loadout: value('--loadout') as LoadoutMode } : {}),
+    fullInventory: args.includes('--full-inventory'),
     planning: (value('--planning') ?? 'legacy') as import('../src/ai/runner').PlanningMode,
     encounterSet: value('--set') as EncounterSetId | undefined,
     encounterLevel: value('--level') ? Number(value('--level')) : undefined,

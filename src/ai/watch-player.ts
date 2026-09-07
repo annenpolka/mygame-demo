@@ -1,3 +1,4 @@
+import { prepareLoadout, type LoadoutMode } from './composition';
 import { DT, SKILLS, WEAPONS, ROW_NAMES } from '../content/data';
 import { observe } from './observation';
 import { createPolicy, type PolicyId } from './policies';
@@ -15,6 +16,8 @@ export interface WatchDecision {
 function describe(s: State, c: Command): string {
   if (c.type === 'enqueue')
     return `${s.allies[c.id].name}：${c.step.kind === 'skill' ? SKILLS[c.step.skillId].name : c.step.kind === 'move' ? `${ROW_NAMES[c.step.row]}へ` : WEAPONS[s.allies[c.id].weapons[c.step.slot]].name}`;
+  if (c.type === 'equip') return `${s.allies[c.id].name}：${WEAPONS[c.weaponId].name}を装備`;
+  if (c.type === 'editPreset') return `オプティマ${c.index + 1}を更新`;
   if (c.type === 'skill') return `${s.allies[c.id].name}：${SKILLS[c.skillId].name}`;
   if (c.type === 'optima') return s.presets[c.index].name;
   if (c.type === 'formation') return s.formations[c.index].name;
@@ -25,25 +28,13 @@ function describe(s: State, c: Command): string {
     return c.mode === 'normal' ? '通常速度' : c.mode === 'slow' ? 'スロー' : '戦術停止';
   return '';
 }
-export function nextEncounterCommands(s: State): Command[] {
-  const commands: Command[] = [];
-  for (const [id, weaponId] of [
-    [0, 'hammer'],
-    [1, 'starbow'],
-  ] as const) {
-    if (
-      s.inventory.includes(weaponId) &&
-      !s.allies.some((a) =>
-        a.weapons.some((w, slot) => w === weaponId && (a.id !== id || slot !== 1)),
-      )
-    )
-      commands.push({ type: 'equip', id, slot: 1, weaponId });
-  }
-  return [...commands, { type: 'next' }];
+export function nextEncounterCommands(s: State, mode: LoadoutMode = 'legacy'): Command[] {
+  return [...prepareLoadout(s, mode), { type: 'next' }];
 }
 /** Browser-safe live playback of the same policies, through recorded simulation commands. */
 export class WatchPlayer {
-  policyId: PolicyId = 'tactician';
+  policyId: PolicyId = 'adaptive';
+  loadout: LoadoutMode = 'adaptive';
   planning: WatchPlanning = 'queue';
   speed: 1 | 2 | 4 = 1;
   paused = false;
@@ -62,6 +53,8 @@ export class WatchPlayer {
       : createQueuePolicy(this.policyId, 0.35, 'none', this.planning === 'next' ? 1 : 3);
   }
   configure(policyId = this.policyId, planning = this.planning) {
+    if (policyId !== this.policyId)
+      this.loadout = policyId === 'adaptive' || policyId === 'assault' ? policyId : 'legacy';
     this.policyId = policyId;
     this.planning = planning;
     this.policy = this.makePolicy();
@@ -84,7 +77,7 @@ export class WatchPlayer {
     if (s.controlMode === 'ai' && s.phase === 'loot') {
       this.lootWait += dt * this.speed;
       if (this.lootWait >= 1.2) {
-        session.send(...nextEncounterCommands(s));
+        session.send(...nextEncounterCommands(s, this.loadout));
         this.lootWait = 0;
         this.nextDecision = s.tick;
       }
