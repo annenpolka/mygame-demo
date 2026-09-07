@@ -1,6 +1,6 @@
 # 横向き戦闘UIと、現行AIの攻略境界
 
-この比較は防御0 ATBの `orchestra-1` 時点の記録。現行の `orchestra-2` は防御1 ATBであり、下記の攻略結果は新ルールで再測定していない。
+この比較は防御0 ATBの `orchestra-1` 時点の記録。下記の数値は旧ルールの実測として保持する。防御1 ATB・硬直ありの `orchestra-3` による再測定は[戦闘テンポとシナリオ傾向](tempo-study.md)を参照。
 
 2026-09-07。実行条件と全強度の勝敗集計は [ai-limits-results.json](ai-limits-results.json) に保存した。6 AIの判断・観測コードは以前の `policies-2` と同一のSHA-256で固定している。
 

@@ -3,7 +3,7 @@ import { planned } from '../sim/plan';
 import { ENCOUNTER_SET_IDS, type EncounterSetId } from '../content/encounters';
 import { createHash } from 'node:crypto';
 import { isDeepStrictEqual } from 'node:util';
-import { DT, SKILLS, VERSION, WEAPONS } from '../content/data';
+import { DEFAULT_CONFIG, DT, SKILLS, VERSION, WEAPONS } from '../content/data';
 import { command, copy, createState, step } from '../sim/engine';
 import { runReplay } from '../lab/session';
 import type { BattleEvent, Command, Metrics, Recording, State } from '../sim/types';
@@ -20,6 +20,7 @@ export interface RunOptions {
   seed?: number;
   enemyPower?: number;
   atbRate?: number;
+  atbMax?: number;
   decisionInterval?: number;
   reactionSeconds?: number;
   maxSeconds?: number;
@@ -75,6 +76,7 @@ export interface RunSummary {
   seed: number;
   enemyPower: number;
   atbRate: number;
+  atbMax: number;
   decisionInterval: number;
   reactionSeconds: number;
   maxSeconds: number;
@@ -134,7 +136,8 @@ export function runPolicy(options: RunOptions): RunResult {
   const opts = {
     seed: 1307,
     enemyPower: 1,
-    atbRate: 0.85,
+    atbRate: DEFAULT_CONFIG.atbRate,
+    atbMax: DEFAULT_CONFIG.atbMax,
     decisionInterval: 0.25,
     reactionSeconds: 0.35,
     maxSeconds: 180,
@@ -148,6 +151,9 @@ export function runPolicy(options: RunOptions): RunResult {
     !Number.isFinite(opts.enemyPower) ||
     opts.enemyPower < 0.2 ||
     opts.enemyPower > 3 ||
+    !Number.isInteger(opts.atbMax) ||
+    opts.atbMax < 2 ||
+    opts.atbMax > 8 ||
     !Number.isFinite(opts.atbRate) ||
     opts.atbRate < 0.2 ||
     opts.atbRate > 3 ||
@@ -174,6 +180,7 @@ export function runPolicy(options: RunOptions): RunResult {
     seed: opts.seed,
     enemyPower: opts.enemyPower,
     atbRate: opts.atbRate,
+    atbMax: opts.atbMax,
     ...(opts.encounterSet ? { encounterSet: opts.encounterSet } : {}),
     ...(opts.encounterLevel ? { encounterLevel: opts.encounterLevel } : {}),
   });
@@ -377,6 +384,7 @@ export function runPolicy(options: RunOptions): RunResult {
     seed: opts.seed,
     enemyPower: opts.enemyPower,
     atbRate: opts.atbRate,
+    atbMax: opts.atbMax,
     decisionInterval: opts.decisionInterval,
     reactionSeconds: opts.reactionSeconds,
     maxSeconds: opts.maxSeconds,

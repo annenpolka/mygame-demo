@@ -1,5 +1,5 @@
 import { SKILLS, WEAPONS, ROW_NAMES } from '../content/data';
-import { PLAN_LIMIT, planned, projectedSlot, pendingPotions } from '../sim/plan';
+import { canAppend, planned, projectedSlot, projectedRow, pendingPotions } from '../sim/plan';
 import type { Command, State, Target } from '../sim/types';
 import type { PadAction } from './gamepad';
 
@@ -120,10 +120,11 @@ export function selectedChoice(s: State, ui: BattlePad) {
   return items.find((c) => c.key === ui.key) ?? items[0];
 }
 export function unavailable(s: State, skillId?: string) {
+  if (s.pendingSelect !== null) return '交代を予約中です。先頭取消で予約を戻せます。';
   const a = s.allies[s.selected];
   if (a.hp <= 0) return '戦闘不能です。肩ボタンで仲間を選んでください。';
-  if (planned(a).length >= PLAN_LIMIT)
-    return '予約は6手までです。↓で予約を選び、不要な手を取り消せます。';
+  if (!canAppend(a, s.config, skillId ? (SKILLS[skillId]?.cost ?? Infinity) : 0))
+    return `先行入力は合計${s.config.atbMax} ATB・${s.config.atbMax}手までです。不要な予約を取り消せます。`;
   if (skillId === 'potion' && pendingPotions(s.allies) >= s.potions)
     return '未予約の救急薬がありません。';
   if (
@@ -206,13 +207,14 @@ export function battleInput(
   if (s.phase !== 'battle' || s.paused) return result();
   if (action === 'previous' || action === 'next') {
     const ids = s.allies.filter((a) => a.hp > 0).map((a) => a.id),
-      i = ids.indexOf(s.selected);
+      i = ids.indexOf(s.pendingSelect ?? s.selected);
     return ids.length
       ? result(home(ui), [
           { type: 'select', id: ids[(i + (action === 'next' ? 1 : ids.length - 1)) % ids.length] },
         ])
       : result();
   }
+  if (action === 'queue') return result(ui.page === 'queue' ? home(ui) : openPage(s, ui, 'queue'));
   if (action === 'pause') return result(ui, [{ type: 'pause', value: true }]);
   if (action === 'slow' || action === 'stop')
     return result(ui, [{ type: 'time', mode: s.timeMode === action ? 'normal' : action }]);
@@ -220,7 +222,39 @@ export function battleInput(
     return result(ui.page === 'log' ? home(ui) : { ...openPage(s, ui, 'log'), logOffset: 0 });
   if (ui.page === 'command') {
     const w = WEAPONS[s.allies[s.selected].weapons[projectedSlot(s.allies[s.selected])]];
-    const pages = { up: 'tactics', down: 'queue', left: 'move', right: 'weapon' } as const;
+    if (action === 'left') {
+      const reason = unavailable(s);
+      const row = projectedRow(s.allies[s.selected]) === 'front' ? 'back' : 'front';
+      return result(
+        { ...ui, message: reason || `${ROW_NAMES[row]}への移動を末尾に追加`, stamp: ui.stamp + 1 },
+        reason ? [] : [{ type: 'toggleRow', id: s.selected }],
+      );
+    }
+    if (action === 'cancel') {
+      const first = planned(s.allies[s.selected])[0];
+      return result(
+        {
+          ...ui,
+          message: first ? '先頭の予約を取り消しました。' : '取り消す予約はありません。',
+          stamp: ui.stamp + 1,
+        },
+        first ? [{ type: 'cancelFirst', id: s.selected }] : [],
+      );
+    }
+    if (action === 'right') {
+      const reason = unavailable(s),
+        a = s.allies[s.selected],
+        w = WEAPONS[a.weapons[projectedSlot(a) === 0 ? 1 : 0]];
+      return result(
+        {
+          ...ui,
+          message: reason || `${w.archetype}〈${w.role}〉への変更を末尾に追加`,
+          stamp: ui.stamp + 1,
+        },
+        reason ? [] : [{ type: 'toggleWeapon', id: s.selected }],
+      );
+    }
+    const pages = { up: 'tactics' } as const;
     if (action in pages) return result(openPage(s, ui, pages[action as keyof typeof pages]));
     const id =
       action === 'confirm'
@@ -229,7 +263,7 @@ export function battleInput(
           ? w.skills[1]
           : action === 'item'
             ? 'potion'
-            : action === 'cancel'
+            : action === 'down'
               ? 'guard'
               : null;
     if (!id) return result();

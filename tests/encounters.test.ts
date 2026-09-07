@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import { createState, command, advance, copy } from '../src/sim/engine';
-import { DT } from '../src/content/data';
+import { BATTLE_TIMING, DT } from '../src/content/data';
 import { ENCOUNTER_SET_IDS, pressure } from '../src/content/encounters';
 import { Session, runReplay } from '../src/lab/session';
 import { parseRecording, parseSnapshot } from '../src/lab/validation';
@@ -75,20 +75,20 @@ describe('fixed encounter pressure sets', () => {
   it('crossfire warns both rows simultaneously, pursuit homes, and ash cannon targets everyone', () => {
     const crossfire = createState({ encounterSet: 'crossfire' });
     command(crossfire, { type: 'start' });
-    advance(crossfire, 2.9);
+    advance(crossfire, 2.8 * BATTLE_TIMING.enemyIntervalScale + 2 * DT);
     expect(crossfire.enemies.slice(1).map((e) => [e.cast?.target, e.cast?.row])).toEqual([
       ['row', 'back'],
       ['row', 'front'],
     ]);
     const pursuit = createState({ encounterSet: 'pursuit' });
     command(pursuit, { type: 'start' });
-    advance(pursuit, 3.3);
+    advance(pursuit, 3.2 * BATTLE_TIMING.enemyIntervalScale + 2 * DT);
     expect(
       pursuit.enemies.every((e) => e.cast?.target === 'single' && e.cast.movable === false),
     ).toBe(true);
     const ash = createState({ encounterSet: 'attrition' });
     command(ash, { type: 'start' });
-    advance(ash, 4.1);
+    advance(ash, 4 * BATTLE_TIMING.enemyIntervalScale + 2 * DT);
     expect(ash.enemies[1].cast?.target).toBe('all');
     // All-target attack damages both rows, including a member moved after its warning.
     const cast = ash.enemies[1].cast!;

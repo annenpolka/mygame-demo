@@ -1,6 +1,7 @@
+import { DT, SKILLS } from '../src/content/data';
 import { describe, it, expect } from 'vitest';
 import { createState, command, step, advance, copy } from '../src/sim/engine';
-import { planned, projectedSlot, PLAN_LIMIT } from '../src/sim/plan';
+import { planned, projectedSlot } from '../src/sim/plan';
 import { Session, runReplay } from '../src/lab/session';
 import { parseRecording, parseSnapshot } from '../src/lab/validation';
 import { runPolicy } from '../src/ai/runner';
@@ -30,14 +31,13 @@ describe('human and AI ordered plans', () => {
       atb = a.atb;
     expect(add(s, skill('guard'))).toBe(true);
     expect(add(s, skill('potion'))).toBe(true);
-    command(s, { type: 'select', id: 1 });
     expect(a.action).toEqual(before);
     expect(a.atb).toBe(atb);
     const potionKey = a.plan![1].key;
     command(s, { type: 'removePlan', id: 0, key: potionKey });
     expect(planned(a).map((p) => (p.kind === 'skill' ? p.skillId : p.kind))).toEqual(['guard']);
     expect(a.action).toEqual(before);
-    advance(s, 1.2);
+    advance(s, SKILLS.sweep.cast + SKILLS.sweep.recovery + SKILLS.guard.cast + 0.8 + 2 * DT);
     expect(a.shield).toBeGreaterThan(0);
     expect(s.potions).toBe(3);
   });
@@ -55,10 +55,10 @@ describe('human and AI ordered plans', () => {
     advance(s, 0.5);
     expect(a.row).toBe('front');
     expect(a.slot).toBe(0);
-    advance(s, 0.25);
+    advance(s, s.config.moveTime - 0.5 + 2 * DT);
     expect(a.row).toBe('back');
     expect(a.slot).toBe(0);
-    advance(s, 1);
+    advance(s, s.config.shiftTime + SKILLS.ward.cast + 4 * DT);
     expect(a.slot).toBe(1);
     expect(a.shield).toBeGreaterThan(0);
     const actions = s.events.filter((e) => e.type === 'action' && e.source === 'a0');
@@ -78,12 +78,12 @@ describe('human and AI ordered plans', () => {
   it('has a finite queue, stable cancellation IDs, and no potion overbooking across allies', () => {
     const s = battle(),
       a = s.allies[0];
-    for (let i = 0; i < PLAN_LIMIT; i++) expect(add(s, skill('guard'))).toBe(true);
+    for (let i = 0; i < s.config.atbMax; i++) expect(add(s, skill('guard'))).toBe(true);
     expect(add(s, skill('guard'))).toBe(false);
     const oldKey = a.plan![0].key;
     step(s);
     expect(command(s, { type: 'removePlan', id: 0, key: oldKey })).toBe(false);
-    expect(a.plan).toHaveLength(5);
+    expect(a.plan).toHaveLength(s.config.atbMax - 1);
     command(s, { type: 'cancel', id: 0 });
     expect(a.plan).toEqual([]);
     expect(a.action?.skillId).toBe('guard');
@@ -100,7 +100,7 @@ describe('human and AI ordered plans', () => {
     s.enemies[0].hp = 0;
     step(s);
     expect(planned(a)).toHaveLength(1);
-    advance(s, 0.3);
+    advance(s, SKILLS.guard.cast + 0.8 + 2 * DT);
     expect(a.shield).toBeGreaterThan(0);
     add(s, skill('guard'));
     s.enemies[1].hp = 0;
@@ -148,6 +148,7 @@ describe('AI planning with the same queue controls', () => {
     add(s, { kind: 'skill', skillId: 'sweep', target: { kind: 'row', row: 'front' } });
     step(s);
     s.allies[0].action!.remaining = 0.1;
+    s.allies[0].action!.resolved = true;
     add(s, { kind: 'skill', skillId: 'sweep', target: { kind: 'row', row: 'front' } });
     s.enemies.forEach(
       (e, i) =>
@@ -157,7 +158,7 @@ describe('AI planning with the same queue controls', () => {
           row: i === 0 ? 'front' : 'back',
           allyId: 0,
           total: 2,
-          remaining: 0.5,
+          remaining: 0.65,
           power: 200,
           movable: false,
           push: false,
@@ -180,7 +181,7 @@ describe('AI planning with the same queue controls', () => {
       });
       expect(r.summary.queuedDuringAction).toBeGreaterThan(0);
       expect(r.summary.appendedPlans).toBeGreaterThan(0);
-      expect(r.summary.maxQueueDepth).toBe(planning === 'queue' ? 3 : 1);
+      expect(r.summary.maxQueueDepth).toBe(planning === 'queue' ? 2 : 1);
       expect(r.summary.replayVerified).toBe(true);
       expect(r.summary.rejectedCommands).toBe(0);
       expect(runReplay(parseRecording(JSON.stringify(r.recording)))).toEqual(r.finalState);

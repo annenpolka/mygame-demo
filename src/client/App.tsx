@@ -1,3 +1,5 @@
+import { Loadout } from './Loadout';
+import { BATTLE_TIMING } from '../content/data';
 import { WatchPlayer, type WatchPlanning } from '../ai/watch-player';
 import type { PolicyId } from '../ai/policies';
 import { WatchConsole } from './WatchConsole';
@@ -11,7 +13,6 @@ import {
   choices,
   selectedChoice,
 } from '../input/battle-pad';
-import { ActionConsole } from './ActionConsole';
 import { PadSettings } from './PadSettings';
 import { useGamepad } from './useGamepad';
 import {
@@ -25,40 +26,15 @@ import { buttonName, type PadAction } from '../input/gamepad';
 import { projectedSlot } from '../sim/plan';
 import { ENCOUNTER_SET_IDS, ENCOUNTER_SETS, encounterSet, pressure } from '../content/encounters';
 import { useEffect, useRef, useState } from 'react';
-import { DEFAULT_CONFIG, ROLE_NAMES, ROW_NAMES, SKILLS, WEAPONS } from '../content/data';
-import type { Command, Config, Enemy, Row, State, Target } from '../sim/types';
+import { DEFAULT_CONFIG, SKILLS, WEAPONS } from '../content/data';
+import type { Command, Config, Target } from '../sim/types';
 import { Session } from '../lab/session';
 import { Battlefield } from './Battlefield';
 import { CombatLog } from './CombatLog';
 
-const rowList: Row[] = ['front', 'back'];
 const fmt = (n: number) => n.toFixed(1);
 function Key({ children }: { children: React.ReactNode }) {
   return <kbd>{children}</kbd>;
-}
-function Meter({
-  value,
-  max,
-  type = '',
-  label,
-}: {
-  value: number;
-  max: number;
-  type?: string;
-  label?: string;
-}) {
-  return (
-    <div
-      className={`meter ${type}`}
-      role="meter"
-      aria-label={label}
-      aria-valuemin={0}
-      aria-valuemax={max}
-      aria-valuenow={Math.round(value)}
-    >
-      <i style={{ width: `${Math.min(100, Math.max(0, (value / max) * 100))}%` }} />
-    </div>
-  );
 }
 function download(name: string, text: string) {
   const url = URL.createObjectURL(new Blob([text], { type: 'application/json' }));
@@ -74,6 +50,7 @@ export function App() {
   const [player] = useState(() => new WatchPlayer());
   const [, render] = useState(0);
   const [labOpen, setLabOpen] = useState(false);
+  const [loadoutOpen, setLoadoutOpen] = useState(false);
   const [help, setHelp] = useState(false);
   const [padOpen, setPadOpen] = useState(false);
   const [pending, setPending] = useState<string | null>(null);
@@ -180,6 +157,7 @@ export function App() {
   }, [session, player]);
   useEffect(() => {
     const blocked =
+      loadoutOpen ||
       s.paused ||
       help ||
       padOpen ||
@@ -210,7 +188,7 @@ export function App() {
     };
     document.addEventListener('keydown', trap);
     return () => document.removeEventListener('keydown', trap);
-  }, [s.paused, s.phase, help, padOpen]);
+  }, [s.paused, s.phase, help, padOpen, loadoutOpen]);
   useEffect(() => {
     if (pending)
       document
@@ -227,7 +205,7 @@ export function App() {
         (event.target instanceof Element && event.target.closest('input,select,textarea'))
       )
         return;
-      if (watching && !s.paused && !help && !padOpen && !labOpen) {
+      if (watching && !s.paused && !help && !padOpen && !labOpen && !loadoutOpen) {
         if (event.key === ' ' && ['battle', 'loot'].includes(s.phase)) {
           event.preventDefault();
           player.paused = !player.paused;
@@ -241,7 +219,15 @@ export function App() {
         )
           return;
       }
-      if ((padActive || pending) && !watching && !s.paused && !help && !padOpen && !labOpen) {
+      if (
+        s.phase === 'battle' &&
+        !watching &&
+        !s.paused &&
+        !help &&
+        !padOpen &&
+        !labOpen &&
+        !loadoutOpen
+      ) {
         const keys: Record<string, PadAction> = {
           ArrowUp: 'up',
           ArrowDown: 'down',
@@ -250,12 +236,18 @@ export function App() {
           Enter: 'confirm',
           z: 'confirm',
           x: 'skill',
-          c: 'cancel',
+          c: battleUI.page === 'command' ? 'down' : 'cancel',
           v: 'item',
           q: 'previous',
           e: 'next',
           ' ': 'slow',
           f: 'stop',
+          Backspace: 'cancel',
+          Delete: 'cancel',
+          r: 'left',
+          w: 'right',
+          t: 'queue',
+          l: 'log',
         };
         const action =
           event.key === 'Escape'
@@ -271,6 +263,10 @@ export function App() {
       }
       if (event.key === 'Escape') {
         event.preventDefault();
+        if (loadoutOpen) {
+          setLoadoutOpen(false);
+          return;
+        }
         if (padOpen) {
           setPadOpen(false);
           return;
@@ -289,20 +285,26 @@ export function App() {
         navigate(event.key.slice(5).toLowerCase() as 'up' | 'down' | 'left' | 'right');
         return;
       }
-      if (s.paused || s.phase !== 'battle' || help || padOpen) return;
+      if (s.paused || s.phase !== 'battle' || help || padOpen || labOpen || loadoutOpen) return;
       const key = event.key.toLowerCase();
       if ([' ', 'arrowup', 'arrowdown', 'arrowleft', 'arrowright'].includes(key))
         event.preventDefault();
       if (/^[1-3]$/.test(key)) select(Number(key) - 1);
       else if (key === 'q' || key === 'e') {
         const alive = s.allies.filter((a) => a.hp > 0).map((a) => a.id),
-          index = alive.indexOf(s.selected);
+          index = alive.indexOf(s.pendingSelect ?? s.selected);
         select(alive[(index + (key === 'q' ? alive.length - 1 : 1)) % alive.length]);
       } else if (key === 'z') useSkill(weapon.skills[0]);
       else if (key === 'x') useSkill(weapon.skills[1]);
       else if (key === 'c') useSkill('guard');
       else if (key === 'v') useSkill('potion');
-      else if (key === ' ') send({ type: 'time', mode: s.timeMode === 'slow' ? 'normal' : 'slow' });
+      else if (key === 'w') send({ type: 'toggleWeapon', id: s.selected });
+      else if (key === 'r') send({ type: 'toggleRow', id: s.selected });
+      else if (key === 'backspace' || key === 'delete') {
+        event.preventDefault();
+        send({ type: 'cancelFirst', id: s.selected });
+      } else if (key === ' ')
+        send({ type: 'time', mode: s.timeMode === 'slow' ? 'normal' : 'slow' });
       else if (key === 'f') send({ type: 'time', mode: s.timeMode === 'stop' ? 'normal' : 'stop' });
       else if (/^[7-9]$/.test(key) && s.config.uiMode !== 'individual')
         send({ type: 'formation', index: Number(key) - 7 });
@@ -325,17 +327,18 @@ export function App() {
     if (r.commands.length) send(...r.commands);
   };
   const applyBattleInput = (action: PadAction) => {
-    if (!padActive && pending && action === 'confirm') {
-      const result = confirmChoice(s, battleUI);
-      applyBattleResult(result);
-      if (result.commands.length) setPending(null);
-      return;
-    }
-    if (!padActive && ['cancel', 'previous', 'next'].includes(action)) setPending(null);
     applyBattleResult(battleInput(s, battleUI, action));
   };
   const handlePad = (action: PadAction) => {
-    if ((padActive || pending) && !watching && !s.paused && !help && !padOpen && !labOpen) {
+    if (
+      s.phase === 'battle' &&
+      !watching &&
+      !s.paused &&
+      !help &&
+      !padOpen &&
+      !labOpen &&
+      !loadoutOpen
+    ) {
       applyBattleInput(action);
       return;
     }
@@ -348,7 +351,8 @@ export function App() {
       return;
     }
     if (action === 'cancel') {
-      if (padOpen) setPadOpen(false);
+      if (loadoutOpen) setLoadoutOpen(false);
+      else if (padOpen) setPadOpen(false);
       else if (help) {
         setHelp(false);
         if (s.paused) send({ type: 'pause', value: false });
@@ -367,7 +371,7 @@ export function App() {
         return;
       }
       const ids = s.allies.filter((a) => a.hp > 0).map((a) => a.id),
-        i = ids.indexOf(s.selected);
+        i = ids.indexOf(s.pendingSelect ?? s.selected);
       select(ids[(i + (action === 'next' ? 1 : ids.length - 1)) % ids.length]);
       return;
     }
@@ -399,9 +403,17 @@ export function App() {
       }
     },
     padOpen,
+    battleUI.page !== 'command' ||
+      s.phase !== 'battle' ||
+      loadoutOpen ||
+      s.paused ||
+      help ||
+      padOpen ||
+      labOpen ||
+      watching,
   );
   const padActive = gamepad.usePadDisplay && s.phase === 'battle' && !watching;
-  const shownPending = padActive ? (battleUI.page === 'target' ? battleUI.skillId : null) : pending;
+  const shownPending = battleUI.page === 'target' ? battleUI.skillId : null;
   const aim = shownPending ? (selectedChoice(s, battleUI)?.target ?? null) : null;
   const aimTarget = (target: Target) => {
     const choice = choices(s, battleUI).find(
@@ -425,7 +437,7 @@ export function App() {
   useEffect(() => {
     setBattleUI(home);
     setPending(null);
-  }, [s.phase, gamepad.usePadDisplay]);
+  }, [s.phase, s.selected, gamepad.usePadDisplay]);
   useEffect(() => {
     if (pending && ![...weapon.skills, 'guard', 'potion'].includes(pending)) setPending(null);
   }, [weapon.id, pending]);
@@ -454,6 +466,7 @@ export function App() {
       <header
         className="topbar"
         inert={
+          loadoutOpen ||
           s.paused ||
           help ||
           padOpen ||
@@ -479,7 +492,7 @@ export function App() {
             {gamepad.supported ? (
               <>
                 <b>{buttonName(gamepad.bindings.confirm, gamepad.family)}</b> 基本技・決定{' '}
-                <b>{buttonName(gamepad.bindings.cancel, gamepad.family)}</b> 防御・戻る{' '}
+                <b>{buttonName(gamepad.bindings.cancel, gamepad.family)}</b> 先頭取消・戻る{' '}
                 <b>
                   {buttonName(gamepad.bindings.previous, gamepad.family)} /{' '}
                   {buttonName(gamepad.bindings.next, gamepad.family)}
@@ -508,7 +521,11 @@ export function App() {
               ? `🎮 ${gamepad.family === 'playstation' ? 'PS' : gamepad.family === 'switch' ? 'Switch' : 'Xbox'}`
               : '🎮 パッド'}
           </button>
-          <button className={labOpen ? 'active' : ''} onClick={() => setLabOpen(!labOpen)}>
+          {s.phase === 'ready' && <button onClick={() => setLoadoutOpen(true)}>編成</button>}
+          <button
+            className={labOpen ? 'active' : ''}
+            onClick={() => setLabOpen(!labOpen && !loadoutOpen)}
+          >
             ⚙ 実験室
           </button>
           <button
@@ -530,8 +547,9 @@ export function App() {
       </header>
 
       <main
-        className={`battle-layout ${padActive || watching ? 'pad-layout' : ''} ${watching ? 'watch-layout' : ''}`}
+        className={`battle-layout pad-layout ${!padActive && !watching ? 'keyboard-layout' : ''} ${watching ? 'watch-layout' : ''}`}
         inert={
+          loadoutOpen ||
           s.paused ||
           help ||
           padOpen ||
@@ -626,23 +644,6 @@ export function App() {
             </div>
           )}
 
-          <section className="enemy-strip" aria-label="敵の状態">
-            {s.enemies.map((e) => (
-              <EnemyCard
-                key={e.id}
-                enemy={e}
-                selected={s.target === e.id}
-                onClick={() =>
-                  shownPending && SKILLS[shownPending].target === 'enemy'
-                    ? chooseTarget({ kind: 'enemy', id: e.id })
-                    : shownPending && SKILLS[shownPending].target === 'enemyRow'
-                      ? chooseTarget({ kind: 'row', row: e.row })
-                      : !watching && send({ type: 'target', id: e.id })
-                }
-              />
-            ))}
-          </section>
-
           <Battlefield
             state={s}
             pending={shownPending ? SKILLS[shownPending] : null}
@@ -661,105 +662,6 @@ export function App() {
           />
         </section>
 
-        {!padActive && !watching && (
-          <aside className="command-sidebar">
-            <section className="focus-panel">
-              <div className="section-label">
-                <span>FOCUS</span>
-                <b>集中力</b>
-                <strong>
-                  {Math.ceil(s.focus)}
-                  <small> / 100</small>
-                </strong>
-              </div>
-              <Meter value={s.focus} max={100} type="focus" label="集中力" />
-              <div className="time-buttons">
-                {(['normal', 'slow', 'stop'] as const).map((mode, i) => (
-                  <button
-                    key={mode}
-                    className={s.timeMode === mode ? 'active' : ''}
-                    disabled={
-                      s.phase !== 'battle' ||
-                      (mode !== 'normal' && s.focus <= 4 && s.timeMode === 'normal')
-                    }
-                    onClick={() => send({ type: 'time', mode })}
-                  >
-                    <span>{['通常', 'スロー', '停止'][i]}</span>
-                    <small>{['×1.00', '×0.25', '×0.00'][i]}</small>
-                  </button>
-                ))}
-              </div>
-              <div className="focus-note">
-                <span>
-                  {s.timeMode === 'normal'
-                    ? '開始時 −4 / 戦闘ごとに全回復'
-                    : `あと ${fmt(s.focus / (s.timeMode === 'slow' ? s.config.slowDrain : s.config.stopDrain))} 秒 · 実時間で消費`}
-                </span>
-                <Key>{s.timeMode === 'stop' ? 'F' : 'Space'}</Key>
-              </div>
-            </section>
-
-            <div className="lower-controls">
-              <section className="optima-panel">
-                <div className="section-label">
-                  <span>01 / OPTIMA</span>
-                  <b>戦い方を替える</b>
-                  <small>
-                    {s.config.uiMode === 'linked' ? '武器＋隊列を同時指示' : '武器だけを切り替え'}
-                  </small>
-                </div>
-                <div className="optima-buttons">
-                  {s.presets.map((p, i) => (
-                    <button
-                      key={i}
-                      disabled={!['ready', 'battle'].includes(s.phase)}
-                      className={`optima ${s.activePreset === i && p.slots.every((slot, id) => slot === (s.allies[id].nextSlot ?? s.allies[id].slot)) ? 'active' : ''}`}
-                      onClick={() => pickOptima(i)}
-                    >
-                      <span>
-                        <Key>{['A', 'S', 'D', 'G'][i]}</Key>
-                        {p.name}
-                      </span>
-                      <div>
-                        {p.slots.map((slot, id) => (
-                          <b
-                            key={id}
-                            className={`role role-${WEAPONS[s.allies[id].weapons[slot]].role}`}
-                          >
-                            {WEAPONS[s.allies[id].weapons[slot]].role}
-                          </b>
-                        ))}
-                      </div>
-                    </button>
-                  ))}
-                </div>
-              </section>
-              <section className="formation-panel">
-                <div className="section-label">
-                  <span>02 / FORMATION</span>
-                  <b>立ち位置を替える</b>
-                </div>
-                {s.config.uiMode === 'individual' ? (
-                  <p className="muted">個別操作モード：行動の「移動」から予約</p>
-                ) : (
-                  <div className="formation-buttons">
-                    {s.formations.map((f, i) => (
-                      <button
-                        disabled={!['ready', 'battle'].includes(s.phase)}
-                        key={i}
-                        onClick={() => send({ type: 'formation', index: i })}
-                      >
-                        <FormationGlyph rows={f.rows} />
-                        <span>{f.name}</span>
-                        <Key>{i + 7}</Key>
-                      </button>
-                    ))}
-                  </div>
-                )}
-              </section>
-            </div>
-          </aside>
-        )}
         {watching ? (
           <WatchConsole
             state={s}
@@ -768,9 +670,10 @@ export function App() {
             configure={configureAI}
             select={select}
           />
-        ) : padActive ? (
+        ) : s.phase === 'battle' ? (
           <PadBattleConsole
             state={s}
+            keyboard={!padActive}
             ui={battleUI}
             bindings={gamepad.bindings}
             family={gamepad.family}
@@ -783,21 +686,13 @@ export function App() {
             open={(page) => setBattleUI(openPage(s, battleUI, page))}
             select={select}
           />
-        ) : (
-          <ActionConsole
-            state={s}
-            pending={pending}
-            onChoose={useSkill}
-            onBack={() => setPending(null)}
-            onSelect={select}
-            send={send}
-          />
-        )}
+        ) : null}
       </main>
 
       <div
         className="log-container"
         inert={
+          loadoutOpen ||
           s.paused ||
           help ||
           padOpen ||
@@ -821,6 +716,7 @@ export function App() {
           className="lab-drawer"
           aria-label="実験室"
           inert={
+            loadoutOpen ||
             s.paused ||
             help ||
             padOpen ||
@@ -896,6 +792,7 @@ export function App() {
             {(
               [
                 ['seed', '乱数seed', 0, 999999, 1],
+                ['atbMax', '最大ATB・先行入力枠', 2, 8, 1],
                 ['atbRate', 'ATB / 秒', 0.2, 3, 0.05],
                 ['moveTime', '移動時間 / 秒', 0.1, 2, 0.1],
                 ['shiftTime', '武器変更 / 秒', 0.1, 2, 0.05],
@@ -934,7 +831,14 @@ export function App() {
           {(s.phase === 'ready' || s.phase === 'loot') && (
             <>
               <button onClick={() => send({ type: 'labWeapons' })}>検証用に全武器を追加</button>
-              <Loadout state={s} send={send} onCompare={setCompare} />
+              <button
+                onClick={() => {
+                  setLabOpen(false);
+                  setLoadoutOpen(true);
+                }}
+              >
+                編成を編集
+              </button>
             </>
           )}
           <div className="lab-section">
@@ -1032,6 +936,21 @@ export function App() {
             </div>
           </div>
         </aside>
+      )}
+
+      {loadoutOpen && s.phase === 'ready' && (
+        <div className="modal-backdrop">
+          <section className="loadout-modal" role="dialog" aria-modal="true" aria-label="編成編集">
+            <header>
+              <div>
+                <span className="eyebrow">PARTY SETUP</span>
+                <h2>武器から、戦い方を組む。</h2>
+              </div>
+              <button onClick={() => setLoadoutOpen(false)}>編成を閉じる</button>
+            </header>
+            <Loadout state={s} send={send} onCompare={setCompare} />
+          </section>
+        </div>
       )}
 
       {s.phase === 'loot' && !watching && (
@@ -1164,7 +1083,8 @@ export function App() {
             <span className="eyebrow">HOW TO PLAY</span>
             <h2>全体を指揮し、一手を差し込む。</h2>
             <p>
-              選択中の仲間は、予約が空なら指示を待ちます。ほかの仲間は装備中の武器で自動行動します。AはHP削りとチェイン維持、Bはチェイン上昇、Sは回復や防護。敵のチェインが200%になると8秒間ブレイクします。
+              選択中の仲間は、予約が空なら指示を待ちます。ほかの仲間は装備中の武器で自動行動します。AはHP削りとチェイン維持、Bはチェイン上昇、Dは被害を受け止める防護、Sは回復・強化・弱体。敵のチェインが200%になると
+              {BATTLE_TIMING.breakDuration}秒間ブレイクします。
             </p>
             <div className="help-grid">
               <div>
@@ -1173,15 +1093,16 @@ export function App() {
                   <Key>1</Key>
                   <Key>2</Key>
                   <Key>3</Key> または <Key>Q</Key>
-                  <Key>E</Key> で操作キャラを選択。切り替えても行動や予約は残ります。
+                  <Key>E</Key> で交代を先頭に予約。1
+                  ATBで交代し、開始時に後続の予約を解除します。満杯でも交代を積めます。
                 </p>
                 <p>
                   <Key>Z</Key> 基本技を選ぶ。<Key>X</Key>{' '}
                   主力技を選び、対象をクリックして末尾へ追加。<Key>C</Key> 防御。<Key>V</Key>{' '}
-                  救急薬。一人6手まで積めます。
+                  救急薬。先行入力は合計最大ATBまで、移動・武器・薬を含む手数も最大ATBと同じです。
                 </p>
                 <p>
-                  パッドでは4つのボタンから技・防御・薬を直接選択。対象を選んだ後は決定のたびに1手追加し、戻るでコマンドへ。肩ボタンで仲間、↓で予約取消です。
+                  パッドでは×／Aが基本技、△／Yが主力技、□／Xが薬。○／Bはコマンド画面で先頭予約を取消、選択画面で戻る。↓で防御、R3で予約一覧を開きます。
                 </p>
               </div>
               <div>
@@ -1191,14 +1112,14 @@ export function App() {
                   <Key>S</Key>
                   <Key>D</Key>
                   <Key>G</Key>{' '}
-                  で武器構成を切り替え。個別の移動・武器変更は行動タブから順番に積めます。
+                  で武器構成を切り替え。Rで前後移動を積み、Backspaceで先頭予約を取り消せます。Wで武器切替も一押しで積めます。
                   <Key>7</Key>
                   <Key>8</Key>
                   <Key>9</Key> で一括隊列。
                 </p>
                 <p>前列は近接威力・崩し効率が上がり、後列は被害を28%軽減。全員後列でも戦えます。</p>
                 <p>
-                  パッドのコマンド画面では↑が全員への指示、←が移動、→が武器変更。画面下に今使えるボタンが表示されます。
+                  パッドのコマンド画面では↑が全員への指示、←の一押しで前後移動を積み、→の一押しで表示された役割へ武器を切り替えます。画面下に今使えるボタンが表示されます。
                 </p>
               </div>
               <div>
@@ -1209,7 +1130,7 @@ export function App() {
                 </p>
                 <p>
                   <Key>Esc</Key>{' '}
-                  は休憩ポーズ。戦場を隠し、すべての時計を止めます。別タブへの移動でも休憩に入ります。
+                  は休憩ポーズ。戦場を隠し、すべての時計を止めます。別タブへの移動でも休憩に入ります。交代後は毎回0.8秒間の無料スローで状況を確認できます。再発動待ちはありません。
                 </p>
                 <p>
                   パッドは左トリガーでスロー、右トリガーで戦術停止。メニューを開くだけでは時間は止まりません。
@@ -1243,247 +1164,6 @@ export function App() {
           {notice}
         </div>
       )}
-    </div>
-  );
-}
-
-function EnemyCard({
-  enemy: e,
-  selected,
-  onClick,
-}: {
-  enemy: Enemy;
-  selected: boolean;
-  onClick: () => void;
-}) {
-  return (
-    <button
-      className={`enemy-card ${selected ? 'active' : ''} ${e.hp <= 0 ? 'fallen' : ''}`}
-      onClick={onClick}
-      disabled={e.hp <= 0}
-      aria-label={`${e.name}の情報`}
-    >
-      <div className="enemy-title">
-        <span className="enemy-number">0{e.id + 1}</span>
-        <strong>{e.name}</strong>
-        <small>{ROW_NAMES[e.row]}</small>
-        {selected && <span className="target-mark">◎</span>}
-      </div>
-      <div className="hp-label">
-        <span>HP</span>
-        <span>
-          {Math.ceil(e.hp)} <i>/ {e.maxHp}</i>
-        </span>
-      </div>
-      <Meter value={e.hp} max={e.maxHp} type="enemy-hp" label={`${e.name}のHP`} />
-      <div className={`chain-label ${e.broken ? 'is-broken' : ''}`}>
-        <span>{e.broken ? `BREAK ${fmt(e.broken)}s` : 'CHAIN'}</span>
-        <strong>
-          {e.chain.toFixed(0)}
-          <small>%</small>
-        </strong>
-        <span>{e.broken ? 'DAMAGE UP' : '/ 200%'}</span>
-      </div>
-      <Meter
-        value={e.broken || e.chain - 100}
-        max={e.broken ? 8 : 100}
-        type={e.broken ? 'break' : 'chain'}
-        label={`${e.name}のチェイン`}
-      />
-      <div className="enemy-status">
-        {e.broken
-          ? '構えを中断・ダメージ倍率上昇'
-          : e.hold > 0
-            ? `チェイン維持 あと${fmt(e.hold)}秒`
-            : '攻撃でチェインをつなぐ'}
-      </div>
-      {e.cast ? (
-        <div className="telegraph">
-          <div>
-            <b>{e.cast.name}</b>
-            <strong>{fmt(e.cast.remaining)}s</strong>
-          </div>
-          <Meter value={e.cast.total - e.cast.remaining} max={e.cast.total} type="danger" />
-          <small>
-            {e.cast.target === 'row'
-              ? `列固定：${ROW_NAMES[e.cast.row]}`
-              : e.cast.target === 'all'
-                ? '全員：列移動では回避不可'
-                : `個体追尾：${['アルト', 'リネ', 'セナ'][e.cast.allyId]}`}
-            {e.cast.movable &&
-              (e.kind === 'guard' && !e.broken
-                ? ' / 重装：移動不可'
-                : e.steadfast > 0
-                  ? ' / 踏ん張り中'
-                  : ' / 移動で中断可')}
-          </small>
-        </div>
-      ) : (
-        <div className="no-telegraph">
-          {e.hp <= 0
-            ? 'DEFEATED'
-            : e.kind === 'guard'
-              ? '重装：ブレイク中に移動可能'
-              : '強制移動の後、2秒間は踏ん張る'}
-        </div>
-      )}
-    </button>
-  );
-}
-function FormationGlyph({ rows }: { rows: Row[] }) {
-  return (
-    <svg viewBox="0 0 48 30" width="36" height="24" aria-hidden="true">
-      <path d="M15 2V28M34 2V28" stroke="currentColor" opacity=".2" />
-      {rows.map((row, i) => (
-        <circle key={i} cx={row === 'front' ? 34 : 15} cy={5 + i * 10} r="3" fill="currentColor" />
-      ))}
-    </svg>
-  );
-}
-function Loadout({
-  state: s,
-  send,
-  onCompare,
-}: {
-  state: State;
-  send: (...commands: Command[]) => void;
-  onCompare: (id: string) => void;
-}) {
-  const [comparison, setComparison] = useState('');
-  return (
-    <div className="loadout lab-section">
-      <h3>
-        持ち込み武器 <small>一人2本・武器個体の重複なし</small>
-      </h3>
-      <div className="equipment-grid">
-        {s.allies.map((a) => (
-          <div key={a.id} className="equipment-character">
-            <strong>{a.name}</strong>
-            {a.weapons.map((id, slot) => (
-              <label key={slot}>
-                <span>枠 {slot + 1}</span>
-                <select
-                  aria-label={`${a.name}の武器枠${slot + 1}`}
-                  value={id}
-                  onChange={(e) => {
-                    const before = WEAPONS[id],
-                      after = WEAPONS[e.target.value];
-                    const affected = s.presets
-                      .filter((p) => p.slots[a.id] === slot)
-                      .map((p) => p.name)
-                      .join('・');
-                    setComparison(
-                      `${a.name}：${before.archetype}〈${before.role}・${before.specialty}〉→ ${after.archetype}〈${after.role}・${after.specialty}〉。失う技：${SKILLS[before.skills[1]].name}。得る技：${SKILLS[after.skills[1]].name}。反映先：${affected || '未登録'}。`,
-                    );
-                    onCompare(after.id);
-                    send({ type: 'equip', id: a.id, slot: slot as 0 | 1, weaponId: after.id });
-                  }}
-                >
-                  {s.inventory.map((w) => (
-                    <option
-                      key={w}
-                      value={w}
-                      disabled={s.allies.some((other) =>
-                        other.weapons.some((x, i) => x === w && (other.id !== a.id || i !== slot)),
-                      )}
-                    >
-                      {WEAPONS[w].name} / {WEAPONS[w].role} {WEAPONS[w].specialty}
-                    </option>
-                  ))}
-                </select>
-              </label>
-            ))}
-          </div>
-        ))}
-      </div>
-      {comparison && (
-        <p className="comparison" role="status">
-          {comparison}
-        </p>
-      )}
-      <details open={s.phase === 'loot'}>
-        <summary>オプティマ・一括隊列を編集</summary>
-        <div className="preset-editor">
-          {s.presets.map((p, i) => (
-            <div key={i}>
-              <strong>{p.name}</strong>
-              {s.allies.map((a) => (
-                <label key={a.id}>
-                  {a.name}
-                  <select
-                    aria-label={`${p.name}の${a.name}`}
-                    value={p.slots[a.id]}
-                    onChange={(e) =>
-                      send({
-                        type: 'editPreset',
-                        index: i,
-                        id: a.id,
-                        slot: Number(e.target.value) as 0 | 1,
-                      })
-                    }
-                  >
-                    {a.weapons.map((w, slot) => (
-                      <option key={slot} value={slot}>
-                        {WEAPONS[w].archetype}〈{WEAPONS[w].role}〉
-                      </option>
-                    ))}
-                  </select>
-                  {s.config.uiMode === 'linked' && (
-                    <select
-                      aria-label={`${p.name}の${a.name}の列`}
-                      value={p.rows[a.id]}
-                      onChange={(e) =>
-                        send({
-                          type: 'editPresetRow',
-                          index: i,
-                          id: a.id,
-                          row: e.target.value as Row,
-                        })
-                      }
-                    >
-                      {rowList.map((row) => (
-                        <option key={row} value={row}>
-                          {ROW_NAMES[row]}
-                        </option>
-                      ))}
-                    </select>
-                  )}
-                </label>
-              ))}
-            </div>
-          ))}
-        </div>
-        <div className="formation-editor">
-          {s.formations.map((f, i) => (
-            <div key={i}>
-              <strong>{f.name}</strong>
-              {s.allies.map((a) => (
-                <label key={a.id}>
-                  {a.name}
-                  <select
-                    value={f.rows[a.id]}
-                    aria-label={`${f.name}の${a.name}の列`}
-                    onChange={(e) =>
-                      send({
-                        type: 'editFormation',
-                        index: i,
-                        id: a.id,
-                        row: e.target.value as Row,
-                      })
-                    }
-                  >
-                    {rowList.map((row) => (
-                      <option key={row} value={row}>
-                        {ROW_NAMES[row]}
-                      </option>
-                    ))}
-                  </select>
-                </label>
-              ))}
-            </div>
-          ))}
-        </div>
-      </details>
     </div>
   );
 }

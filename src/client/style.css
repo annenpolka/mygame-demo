@@ -3328,3 +3328,40 @@ button.text-button {
   padding: 10px 14px;
   font-size: 12px;
 }
+.quick-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-bottom: 8px;
+}
+.quick-actions button {
+  flex: 1;
+  padding: 5px 10px;
+  font-size: 11px;
+}
+.handoff-target {
+  outline: 1px dashed var(--gold);
+  outline-offset: -3px;
+}
+.field-footer {
+  min-height: 34px;
+  display: flex;
+  align-items: center;
+}
+.field-footer > * {
+  width: 100%;
+}
+.handoff-status {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 3px 8px;
+  padding: 4px 10px;
+  font-size: 10px;
+  color: var(--gold);
+}
+.handoff-status button {
+  margin-left: auto;
+  padding: 3px 6px;
+  font-size: 10px;
+}

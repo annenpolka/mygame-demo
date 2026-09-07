@@ -24,19 +24,25 @@ test('keyboard selection, tactical stop, command reservation, and opaque system 
     ),
   ).toBeLessThan(focus - 20);
   await page.keyboard.press('3');
-  await expect(page.locator('.console-choices > .console-label')).toContainText('セナ');
+  await expect(page.locator('.pad-plan-list')).toContainText('キャラ交代');
+  await page.keyboard.press('f');
+  await page.clock.runFor(700);
+  await page.keyboard.press('f');
+  await expect(page.locator('.pad-page-heading')).toContainText('セナ');
   await page.keyboard.press('x');
-  await expect(page.locator('.target-heading h2')).toBeVisible();
+  await expect(page.locator('.field-target-guide')).toBeVisible();
   await page
     .getByRole('listbox', { name: '戦場で対象を選ぶ' })
     .getByRole('option', { name: /アルト/ })
     .click();
-  await expect(page.locator('.plan-list')).toContainText('祝福の鐘');
+  await expect(page.locator('.pad-plan-list')).toContainText('祝福の鐘');
   await page.keyboard.press('1');
-  await expect(page.locator('.party-card').nth(2)).toContainText('祝福の鐘');
-  await page.getByRole('tab', { name: '移動', exact: true }).click();
-  await page.getByRole('button', { name: '← 後列へ 0.6秒 · 末尾に積む', exact: true }).click();
-  await expect(page.locator('.party-card').nth(0)).toContainText('前列');
+  await expect(page.locator('.pad-actor').nth(2)).toContainText('キャラ交代');
+  await page.keyboard.press('f');
+  await page.clock.runFor(1600);
+  await page.keyboard.press('f');
+  await page.getByRole('button', { name: '前後移動を積む', exact: true }).click();
+  await expect(page.locator('.pad-actor').nth(0)).toContainText('前列');
   await page.keyboard.press('Escape');
   await expect(page.getByRole('dialog', { name: '休憩ポーズ' })).toBeVisible();
   const pausedFocus = await page
@@ -51,7 +57,7 @@ test('keyboard selection, tactical stop, command reservation, and opaque system 
   await page.getByRole('button', { name: '戦場へ戻る Esc' }).click();
   await page.keyboard.press('f');
   await page.clock.runFor(1000);
-  await expect(page.locator('.party-card').nth(0)).toContainText('後列');
+  await expect(page.locator('.pad-actor').nth(0)).toContainText('後列');
 });
 
 test('first battle, equipment update, preset edit, second battle and victory', async ({ page }) => {
@@ -61,22 +67,26 @@ test('first battle, equipment update, preset edit, second battle and victory', a
   page.on('pageerror', (error) => errors.push(error.message));
   await page.getByRole('button', { name: '戦闘開始 →', exact: true }).click();
   await page.keyboard.press('3');
-  await page.getByRole('button', { name: '灰の砲術師の情報' }).click();
-  await page.getByRole('button', { name: 'S 崩しの連奏 A B B', exact: true }).click();
-  await page.clock.runFor(35000);
+  await page.getByRole('button', { name: '灰の砲術師を狙う' }).click();
+  await page.keyboard.press('s');
+  await page.clock.runFor(45000);
   const loot = page.getByRole('dialog', { name: '戦利品と編成' });
   await expect(loot).toBeVisible();
-  await loot.getByRole('combobox', { name: 'アルトの武器枠2', exact: true }).selectOption('hammer');
-  await expect(loot.getByRole('status')).toContainText(
-    '守護騎士〈S・防護〉→ 破砕士〈B・押し出し〉',
-  );
-  await loot.getByRole('combobox', { name: 'リネの武器枠2', exact: true }).selectOption('starbow');
-  await loot.getByRole('combobox', { name: '崩しの連奏のアルト', exact: true }).selectOption('1');
+  await loot.getByRole('button', { name: 'アルトの武器枠2を編集', exact: true }).click();
+  await loot.getByRole('button', { name: '轟砕の槌をアルトの枠2に装備', exact: true }).click();
+  await expect(loot.getByRole('status')).toContainText('守護騎士 D｜防護 → 破砕士 B｜押し出し');
+  await loot.getByRole('button', { name: 'リネの武器枠2を編集', exact: true }).click();
+  await loot.getByRole('button', { name: '流星の弓をリネの枠2に装備', exact: true }).click();
+  await loot.getByRole('tab', { name: 'オプティマ', exact: true }).click();
+  await loot.getByRole('button', { name: 'オプティマ2を編集', exact: true }).click();
+  await loot.getByRole('button', { name: 'オプティマ2のアルトを枠2に変更', exact: true }).click();
   await loot.getByRole('button', { name: '次の戦闘へ →' }).click();
   await expect(page.getByRole('heading', { level: 1 })).toContainText('夜渡りの包囲陣');
-  await expect(page.getByRole('button', { name: 'S 崩しの連奏 B B B', exact: true })).toBeVisible();
-  await page.getByRole('button', { name: '夜渡りの砲術師の情報' }).click();
-  await page.getByRole('button', { name: 'A 均衡の調べ A B S', exact: true }).click();
+  await page.keyboard.press('ArrowUp');
+  await expect(page.getByRole('option').filter({ hasText: '総崩し' })).toBeVisible();
+  await page.keyboard.press('Escape');
+  await page.getByRole('button', { name: '夜渡りの砲術師を狙う' }).click();
+  await page.keyboard.press('a');
   await page.clock.runFor(75000);
   await expect(page.getByRole('dialog', { name: '戦闘結果' })).toContainText('境界を、越えた。');
   expect(errors).toEqual([]);
@@ -89,29 +99,29 @@ test('lab snapshot roundtrip, invalid JSON and linked/individual control modes',
   await page.getByLabel('操作方式', { exact: true }).selectOption('linked');
   await page.getByRole('button', { name: '条件を反映して再開始' }).click();
   await page.getByRole('button', { name: '戦闘開始 →', exact: true }).click();
-  await page.getByRole('button', { name: 'G 守りの祈り S B S', exact: true }).click();
+  await page.keyboard.press('g');
   await page.clock.runFor(1000);
-  await expect(page.locator('.party-card').nth(0)).toContainText('後列');
-  await expect(page.locator('.party-card').nth(0)).toContainText('守護騎士');
+  await expect(page.locator('.pad-actor').nth(0)).toContainText('後列');
+  await expect(page.locator('[data-unit=a0]')).toContainText('D');
   await page.getByRole('button', { name: '⚙ 実験室', exact: true }).click();
   await page.getByRole('button', { name: '状態を保存', exact: true }).click();
   const savedTime = await page.locator('.battle-clock strong').innerText();
   await page.clock.runFor(5000);
   await page.getByRole('button', { name: '保存状態へ戻る', exact: true }).click();
-  await expect(page.getByRole('status')).toContainText('保存時点へ戻りました');
+  await expect(page.locator('.toast')).toContainText('保存時点へ戻りました');
   await expect(page.locator('.battle-clock strong')).toHaveText(savedTime);
   await page.locator('input[type=file]').setInputFiles({
     name: 'invalid.json',
     mimeType: 'application/json',
     buffer: Buffer.from('{"kind":"snapshot","state":{}}'),
   });
-  await expect(page.getByRole('status')).toContainText('不正');
+  await expect(page.locator('.toast')).toContainText('不正');
   await page.getByLabel('操作方式', { exact: true }).selectOption('individual');
   await page.getByRole('button', { name: '条件を反映して再開始' }).click();
-  await expect(
-    page.getByText('個別操作モード：行動の「移動」から予約', { exact: true }),
-  ).toBeVisible();
-  await expect(page.getByRole('button', { name: '全員後列 7', exact: true })).toHaveCount(0);
+  await page.getByRole('button', { name: '戦闘開始 →', exact: true }).click();
+  await page.keyboard.press('ArrowUp');
+  await page.keyboard.press('ArrowRight');
+  await expect(page.locator('.pad-no-choices')).toContainText('個別操作モード');
 });
 
 test('mobile layout and touch controls stay within the viewport', async ({ page }) => {
@@ -121,11 +131,12 @@ test('mobile layout and touch controls stay within the viewport', async ({ page 
     true,
   );
   await page.getByRole('button', { name: '戦闘開始 →', exact: true }).click();
-  await page.getByRole('button', { name: 'S 崩しの連奏 A B B', exact: true }).click();
+  await page.keyboard.press('s');
   await page.clock.runFor(1000);
-  await page.getByRole('button', { name: 'セナを選択', exact: true }).click();
-  await page.getByRole('button', { name: '引き寄せを選ぶ', exact: true }).click();
-  await expect(page.locator('.target-picker')).toBeVisible();
+  await page.getByRole('button', { name: 'セナに指示', exact: true }).click();
+  await page.clock.runFor(1600);
+  await page.getByRole('button', { name: '主力技：引き寄せ', exact: true }).click();
+  await expect(page.locator('.field-target-guide')).toBeVisible();
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(
     true,
   );
@@ -141,10 +152,10 @@ test('horizontal battlefield, direct row targeting, and a glanceable desktop', a
     nodes.map((n) => ({ x: n.getBoundingClientRect().x, y: n.getBoundingClientRect().y })),
   );
   expect(boxes.every((b, i) => i === 0 || (b.x > boxes[i - 1].x && b.y === boxes[0].y))).toBe(true);
-  await page.getByRole('button', { name: '停止 ×0.00', exact: true }).click();
-  await page.getByRole('button', { name: '円弧斬りを選ぶ', exact: true }).click();
+  await page.keyboard.press('f');
+  await page.getByRole('button', { name: '主力技：円弧斬り', exact: true }).click();
   await page.getByRole('option', { name: '敵前列に円弧斬りを積む', exact: true }).click();
-  await expect(page.locator('.plan-list')).toContainText('円弧斬り');
+  await expect(page.locator('.pad-plan-list')).toContainText('円弧斬り');
   const logBox = await page.locator('.log-container').boundingBox();
   expect(logBox!.y + logBox!.height).toBeLessThanOrEqual(900);
   await page.screenshot({ path: 'test-results/horizontal-desktop.png', fullPage: true });
@@ -182,21 +193,24 @@ test('encounter sets and strength change the actual enemies', async ({ page }) =
     page.getByRole('meter', { name: '後列狙いの砲手のHP', exact: true }),
   ).toHaveAttribute('aria-valuemax', '2746');
   await page.getByRole('button', { name: '戦闘開始 →', exact: true }).click();
-  await page.clock.runFor(2900);
+  await page.clock.runFor(4500);
   await expect(page.getByText('前列への交差砲撃', { exact: true })).toBeVisible();
   await expect(page.getByText('後列への交差砲撃', { exact: true })).toBeVisible();
   expect(await page.locator('.danger-lane').count()).toBe(2);
 });
 
-test('mobile crossfire keeps all three enemy cards beside each other', async ({ page }) => {
+test('mobile crossfire shows all three enemies and their gauges in the formation', async ({
+  page,
+}) => {
   await page.setViewportSize({ width: 390, height: 844 });
   await page.getByRole('button', { name: '交差砲火', exact: true }).click();
   await page.getByRole('button', { name: '戦闘開始 →', exact: true }).click();
-  await page.clock.runFor(2900);
+  await page.clock.runFor(4500);
   const cards = await page
-    .locator('.enemy-card')
+    .locator('.field-unit.foe')
     .evaluateAll((nodes) => nodes.map((n) => n.getBoundingClientRect().y));
-  expect(new Set(cards).size).toBe(1);
+  expect(cards).toHaveLength(3);
+  await expect(page.locator('.field-unit.foe [role=meter]')).toHaveCount(9);
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
   await page.screenshot({ path: 'test-results/crossfire-mobile.png', fullPage: true });
 });

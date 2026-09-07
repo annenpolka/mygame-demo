@@ -1,6 +1,7 @@
 import { ENCOUNTER_SET_IDS } from '../content/encounters';
 import { z } from 'zod';
 import { SKILLS, VERSION, WEAPONS } from '../content/data';
+import { plannedCost, planned, isHandoff } from '../sim/plan';
 import type { Recording, State } from '../sim/types';
 
 const n = z.number().finite().nonnegative();
@@ -16,7 +17,14 @@ const target = z.discriminatedUnion('kind', [
   z.object({ kind: z.literal('ally'), id }),
   z.object({ kind: z.literal('row'), row }),
 ]);
-const action = z.object({ skillId: skill, target, remaining: n, total: n, weaponId: weapon });
+const action = z.object({
+  skillId: skill,
+  target,
+  remaining: n,
+  total: n,
+  weaponId: weapon,
+  resolved: z.boolean(),
+});
 const planStep = z.discriminatedUnion('kind', [
   z.object({ kind: z.literal('skill'), skillId: skill, target }),
   z.object({ kind: z.literal('move'), row }),
@@ -24,6 +32,7 @@ const planStep = z.discriminatedUnion('kind', [
 ]);
 const plannedStep = z.intersection(planStep, z.object({ key: n.int().positive() }));
 const config = z.object({
+  atbMax: z.number().int().min(2).max(8),
   encounterSet: z.enum(ENCOUNTER_SET_IDS).optional(),
   encounterLevel: z.number().int().min(1).max(10).optional(),
   seed: z.number().int().min(0).max(4294967295),
@@ -61,6 +70,8 @@ const stateSchema = z
     config,
     encounter: z.union([z.literal(1), z.literal(2)]),
     selected: id,
+    pendingSelect: id.nullable(),
+    handoffSlow: n.max(0.8),
     target: id,
     allies: z
       .array(
@@ -71,7 +82,7 @@ const stateSchema = z
           color: z.string().regex(/^#[0-9a-f]{6}$/i),
           hp: n,
           maxHp: n.positive(),
-          atb: n.max(4),
+          atb: n.max(8),
           row,
           weapons: z.tuple([weapon, weapon]),
           slot,
@@ -81,7 +92,7 @@ const stateSchema = z
           move: n,
           action: action.nullable(),
           queued: z.object({ skillId: skill, target }).nullable(),
-          plan: z.array(plannedStep).max(6).optional(),
+          plan: z.array(plannedStep).max(9).optional(),
           shield: n,
         }),
       )
@@ -139,7 +150,7 @@ const stateSchema = z
   })
   .superRefine((s, ctx) => {
     if (
-      s.allies.some((a, i) => a.id !== i || a.hp > a.maxHp) ||
+      s.allies.some((a, i) => a.id !== i || a.hp > a.maxHp || a.atb > s.config.atbMax) ||
       s.enemies.some((e, i) => e.id !== i || e.hp > e.maxHp) ||
       s.target >= s.enemies.length
     )
@@ -149,11 +160,51 @@ const stateSchema = z
       new Set(keys).size !== keys.length ||
       keys.some((k) => k > (s.planSeq ?? 0)) ||
       s.allies.some(
-        (a) => (a.plan?.length ?? 0) + (a.queued ? 1 : 0) > 6 || (!!a.queued && !!a.plan?.length),
+        (a) =>
+          planned(a).length > s.config.atbMax + (planned(a).some(isHandoff) ? 1 : 0) ||
+          plannedCost(a) > s.config.atbMax + (planned(a).some(isHandoff) ? 1 : 0) ||
+          (!!a.queued && !!a.plan?.length),
       )
     )
       ctx.addIssue({ code: 'custom', message: '予約キューの識別子・件数が不正です。' });
+    if (
+      (s.pendingSelect !== null &&
+        (s.pendingSelect === s.selected || s.controlMode !== 'manual' || s.phase !== 'battle')) ||
+      (s.handoffSlow > 0 && (s.controlMode !== 'manual' || s.phase !== 'battle'))
+    )
+      ctx.addIssue({ code: 'custom', message: 'キャラ交代の状態が不正です。' });
     const equipped = s.allies.flatMap((a) => a.weapons);
+    for (const a of s.allies) {
+      const handoffs = (a.plan ?? []).filter(isHandoff);
+      const h = handoffs[0];
+      if (
+        handoffs.length > 1 ||
+        a.queued?.skillId === 'handoff' ||
+        (h &&
+          (h !== a.plan?.[0] ||
+            a.id !== s.selected ||
+            s.controlMode !== 'manual' ||
+            s.phase !== 'battle' ||
+            h.kind !== 'skill' ||
+            h.target.kind !== 'ally' ||
+            h.target.id === a.id ||
+            h.target.id !== s.pendingSelect))
+      )
+        ctx.addIssue({ code: 'custom', message: '交代は操作キャラの先頭に1件だけ予約できます。' });
+    }
+    if (s.pendingSelect !== null) {
+      const a = s.allies[s.selected],
+        h = a.plan?.[0];
+      if (
+        !(h && isHandoff(h)) &&
+        !(
+          a.action?.skillId === 'handoff' &&
+          a.action.target.kind === 'ally' &&
+          a.action.target.id === s.pendingSelect
+        )
+      )
+        ctx.addIssue({ code: 'custom', message: '交代先と予約が一致しません。' });
+    }
     if (new Set(equipped).size !== 6 || equipped.some((w) => !s.inventory.includes(w)))
       ctx.addIssue({
         code: 'custom',
@@ -173,6 +224,9 @@ const cmdSchema = z.discriminatedUnion('type', [
   z.object({ type: z.literal('optima'), index: n.int().max(3) }),
   z.object({ type: z.literal('skill'), id, skillId: skill, target }),
   z.object({ type: z.literal('cancel'), id }),
+  z.object({ type: z.literal('cancelFirst'), id }),
+  z.object({ type: z.literal('toggleRow'), id }),
+  z.object({ type: z.literal('toggleWeapon'), id }),
   z.object({ type: z.literal('enqueue'), id, step: planStep }),
   z.object({ type: z.literal('removePlan'), id, key: n.int() }),
   z.object({ type: z.literal('equip'), id, slot, weaponId: weapon }),

@@ -1,4 +1,13 @@
-import { PLAN_LIMIT, planned, projectedSlot, pendingPotions, stepName } from './plan';
+import { renameTactics } from './tactics';
+import {
+  canAppend,
+  isHandoff,
+  planned,
+  projectedSlot,
+  projectedRow,
+  pendingPotions,
+  stepName,
+} from './plan';
 import { createEnemies, enemyRecipe, pressure } from '../content/encounters';
 import {
   DEFAULT_CONFIG,
@@ -8,6 +17,7 @@ import {
   ROW_NAMES,
   SKILLS,
   VERSION,
+  BATTLE_TIMING,
   WEAPONS,
 } from '../content/data';
 import type {
@@ -44,7 +54,7 @@ export function createState(
   controlMode: State['controlMode'] = 'manual',
 ): State {
   const c = { ...DEFAULT_CONFIG, ...config };
-  return {
+  const state: State = {
     version: VERSION,
     controlMode,
     config: c,
@@ -58,6 +68,8 @@ export function createState(
     rng: c.seed >>> 0,
     encounter: c.encounter,
     selected: 0,
+    pendingSelect: null,
+    handoffSlow: 0,
     target: 0,
     allies: [
       { name: 'アルト', initial: 'A', color: '#ddaa63', weapons: ['sword', 'shield'], maxHp: 1300 },
@@ -89,6 +101,8 @@ export function createState(
     eventSeq: 0,
     metrics: { damage: 0, taken: 0, healed: 0, breaks: 0, inputs: 0, focusUsed: 0 },
   };
+  renameTactics(state);
+  return state;
 }
 function reject(s: State, text: string) {
   emit(s, 'system', text);
@@ -120,6 +134,9 @@ export function command(s: State, c: Command): boolean {
   if (c.type === 'control') {
     if (c.mode !== 'manual' && c.mode !== 'ai') return false;
     s.controlMode = c.mode;
+    for (const a of s.allies) a.plan = a.plan?.filter((p) => !isHandoff(p));
+    s.pendingSelect = null;
+    s.handoffSlow = 0;
     emit(
       s,
       'system',
@@ -180,6 +197,7 @@ export function command(s: State, c: Command): boolean {
       );
       if (used) return reject(s, 'その武器はほかの持ち込み枠で使用中です。先に外してください。');
       a.weapons[c.slot] = c.weaponId;
+      renameTactics(s);
       return true;
     }
     if (
@@ -189,6 +207,7 @@ export function command(s: State, c: Command): boolean {
       (c.slot === 0 || c.slot === 1)
     ) {
       s.presets[c.index].slots[c.id] = c.slot;
+      renameTactics(s);
       return true;
     }
     if (c.type === 'editPresetRow' && s.presets[c.index] && s.allies[c.id]) {
@@ -197,6 +216,7 @@ export function command(s: State, c: Command): boolean {
     }
     if (c.type === 'editFormation' && s.formations[c.index] && s.allies[c.id]) {
       s.formations[c.index].rows[c.id] = c.row;
+      renameTactics(s);
       return true;
     }
     return false;
@@ -204,6 +224,8 @@ export function command(s: State, c: Command): boolean {
   if (c.type === 'next') {
     if (s.phase !== 'loot') return false;
     s.encounter = 2;
+    s.pendingSelect = null;
+    s.handoffSlow = 0;
     s.enemies = createEnemies(s.config, 2);
     s.focus = 100;
     s.timeMode = 'normal';
@@ -226,17 +248,71 @@ export function command(s: State, c: Command): boolean {
     return true;
   }
   if (s.phase !== 'battle') return false;
+  if (c.type === 'enqueue' && isHandoff(c.step)) {
+    if (c.id !== s.selected || c.step.kind !== 'skill' || c.step.target.kind !== 'ally')
+      return false;
+    return command(s, { type: 'select', id: c.step.target.id });
+  }
+  if (c.type === 'toggleWeapon') {
+    const a = s.allies[c.id];
+    if (!a || a.hp <= 0) return false;
+    return command(s, {
+      type: 'enqueue',
+      id: c.id,
+      step: { kind: 'weapon', slot: projectedSlot(a) === 0 ? 1 : 0 },
+    });
+  }
+  if (c.type === 'toggleRow') {
+    const a = s.allies[c.id];
+    if (!a || a.hp <= 0) return false;
+    return command(s, {
+      type: 'enqueue',
+      id: c.id,
+      step: { kind: 'move', row: opposite(projectedRow(a)) },
+    });
+  } else if (c.type === 'cancelFirst') {
+    const a = s.allies[c.id],
+      first = a && planned(a)[0];
+    if (!a || a.hp <= 0 || !first) return false;
+    return command(s, { type: 'removePlan', id: c.id, key: first.key });
+  }
   s.metrics.inputs++;
   switch (c.type) {
-    case 'select':
+    case 'select': {
       if (!s.allies[c.id] || s.allies[c.id].hp <= 0) return false;
-      s.selected = c.id;
+      if (s.controlMode === 'ai') {
+        s.selected = c.id;
+        return true;
+      }
+      const a = s.allies[s.selected];
+      if (a.action?.skillId === 'handoff') return reject(s, '交代を実行中です。');
+      a.plan ??= [];
+      a.plan = a.plan.filter((p) => !isHandoff(p));
+      s.pendingSelect = c.id === s.selected ? null : c.id;
+      if (c.id === s.selected) {
+        emit(s, 'system', 'キャラ交代の予約を取消');
+        return true;
+      }
+      s.planSeq ??= 0;
+      if (a.queued) {
+        a.plan.unshift({ key: ++s.planSeq, kind: 'skill', ...a.queued });
+        a.queued = null;
+      }
+      a.plan.unshift({
+        key: ++s.planSeq,
+        kind: 'skill',
+        skillId: 'handoff',
+        target: { kind: 'ally', id: c.id },
+      });
+      emit(s, 'system', `${s.allies[c.id].name}へ交代予約：1 ATB・先頭優先。開始時に後続を解除`);
       return true;
+    }
     case 'target':
       if (!s.enemies[c.id] || s.enemies[c.id].hp <= 0) return false;
       s.target = c.id;
       return true;
     case 'time': {
+      if (c.mode === 'stop') s.handoffSlow = 0;
       if (c.mode !== 'normal' && s.timeMode === 'normal') {
         if (s.focus <= 4) return reject(s, '集中力が足りません。通常速度で続行します。');
         s.focus -= 4;
@@ -287,6 +363,8 @@ export function command(s: State, c: Command): boolean {
     case 'skill': {
       const a = s.allies[c.id],
         skill = SKILLS[c.skillId];
+      if (c.id === s.selected && s.pendingSelect !== null)
+        return reject(s, '交代予約を先に取り消してください。');
       if (!a || a.hp <= 0 || !skill || !canUse(a, c.skillId))
         return reject(s, '現在の武器では使えない技です。');
       if (
@@ -296,6 +374,7 @@ export function command(s: State, c: Command): boolean {
         return reject(s, '武器変更後には使えない技です。');
       if (!validTarget(s, a, skill, c.target)) return reject(s, '対象を選び直してください。');
       if (skill.effect === 'potion' && s.potions < 1) return reject(s, '救急薬を使い切りました。');
+      if (skill.cost > s.config.atbMax) return reject(s, '最大ATBを超える技です。');
       if (a.plan) a.plan = [];
       a.queued = { skillId: c.skillId, target: copy(c.target) };
       emit(s, 'system', `${a.name}：「${skill.name}」を予約`);
@@ -305,7 +384,8 @@ export function command(s: State, c: Command): boolean {
       const a = s.allies[c.id],
         p = c.step;
       if (!a || a.hp <= 0) return false;
-      if (planned(a).length >= PLAN_LIMIT) return reject(s, `予約は一人${PLAN_LIMIT}手までです。`);
+      if (!canAppend(a, s.config, p.kind === 'skill' ? (SKILLS[p.skillId]?.cost ?? Infinity) : 0))
+        return reject(s, `先行入力は合計${s.config.atbMax} ATB・${s.config.atbMax}手までです。`);
       if (p.kind === 'skill') {
         const sk = SKILLS[p.skillId],
           w = WEAPONS[a.weapons[projectedSlot(a)]];
@@ -339,12 +419,15 @@ export function command(s: State, c: Command): boolean {
       const p = a.plan?.find((p) => p.key === c.key);
       if (!p) return false;
       a.plan = a.plan!.filter((p) => p.key !== c.key);
+      if (isHandoff(p)) s.pendingSelect = null;
       emit(s, 'system', `${a.name}：「${stepName(a, p)}」の予約を取消`);
       prunePlan(s, a);
       return true;
     }
     case 'cancel': {
       if (!s.allies[c.id]) return false;
+      if (c.id === s.selected && s.allies[c.id].action?.skillId !== 'handoff')
+        s.pendingSelect = null;
       s.allies[c.id].queued = null;
       if (s.allies[c.id].plan) s.allies[c.id].plan = [];
       if (s.allies[c.id].plan) emit(s, 'system', `${s.allies[c.id].name}：予約をすべて取消`);
@@ -386,8 +469,9 @@ function beginAction(s: State, a: Ally, skillId: string, target: Target) {
   a.action = {
     skillId,
     target: copy(target),
-    remaining: skill.cast,
-    total: skill.cast,
+    remaining: skill.cast + skill.recovery,
+    total: skill.cast + skill.recovery,
+    resolved: false,
     weaponId: weaponOf(a).id,
   };
   emit(s, 'action', `${a.name} → ${skill.name}`, { source: `a${a.id}` });
@@ -422,10 +506,10 @@ function forceEnemy(s: State, e: Enemy, row: Row) {
     return;
   }
   e.row = row;
-  e.steadfast = 2;
+  e.steadfast = BATTLE_TIMING.steadfastDuration;
   if (e.cast?.movable) {
     e.cast = null;
-    e.nextAttack = 3;
+    e.nextAttack = 3 * BATTLE_TIMING.enemyIntervalScale;
     emit(s, 'warning', `${e.name}の構えが崩れた`);
   }
   emit(s, 'move', `${e.name} → ${ROW_NAMES[row]}`, { target: `e${e.id}` });
@@ -433,6 +517,19 @@ function forceEnemy(s: State, e: Enemy, row: Row) {
 function resolve(s: State, a: Ally, action: Action) {
   const skill = SKILLS[action.skillId],
     weapon = WEAPONS[action.weaponId];
+  if (skill.effect === 'handoff') {
+    s.pendingSelect = null;
+    if (
+      s.controlMode === 'manual' &&
+      action.target.kind === 'ally' &&
+      s.allies[action.target.id].hp > 0
+    ) {
+      s.selected = action.target.id;
+      s.handoffSlow = BATTLE_TIMING.handoffSlow;
+      emit(s, 'system', `${s.allies[s.selected].name}へ交代：引継ぎスロー`);
+    } else emit(s, 'system', '交代先が不在のため交代を中止');
+    return;
+  }
   if (['heal', 'shield', 'guard', 'potion', 'evacuate'].includes(skill.effect)) {
     const targets = s.allies.filter(
       (x) =>
@@ -455,10 +552,12 @@ function resolve(s: State, a: Ally, action: Action) {
         t.row = opposite(t.row);
         t.nextRow = null;
         t.move = 0;
-        t.action = null;
+        // The caster pays its own recovery even when evacuating its own row.
+        if (t.action !== action) t.action = null;
         emit(s, 'move', `${t.name}：緊急退避 → ${ROW_NAMES[t.row]}`, { target: `a${t.id}` });
       } else {
-        t.shield = skill.effect === 'guard' ? 4 : 6;
+        t.shield =
+          skill.effect === 'guard' ? BATTLE_TIMING.guardDuration : BATTLE_TIMING.shieldDuration;
         emit(s, 'heal', `${t.name}：防護`, { target: `a${t.id}` });
       }
     }
@@ -508,11 +607,13 @@ function resolve(s: State, a: Ally, action: Action) {
       continue;
     }
     if (!e.broken && e.chain >= 200) {
-      e.broken = 8;
+      e.broken = BATTLE_TIMING.breakDuration;
       e.cast = null;
-      e.nextAttack = 2;
+      e.nextAttack = 2 * BATTLE_TIMING.enemyIntervalScale;
       s.metrics.breaks++;
-      emit(s, 'break', `${e.name} BREAK — 8秒間の好機`, { target: `e${e.id}` });
+      emit(s, 'break', `${e.name} BREAK — ${BATTLE_TIMING.breakDuration}秒間の好機`, {
+        target: `e${e.id}`,
+      });
     }
     if (skill.effect === 'push' || skill.effect === 'pull')
       forceEnemy(s, e, skill.effect === 'push' ? 'back' : 'front');
@@ -524,6 +625,7 @@ function prunePlan(s: State, a: Ally) {
   a.plan = a.plan.filter((p) => {
     if (p.kind === 'weapon') slot = p.slot;
     if (
+      isHandoff(p) ||
       p.kind !== 'skill' ||
       ['guard', 'potion', ...WEAPONS[a.weapons[slot]].skills].includes(p.skillId)
     )
@@ -534,14 +636,32 @@ function prunePlan(s: State, a: Ally) {
 }
 function tickAlly(s: State, a: Ally, dt: number) {
   if (a.hp <= 0) return;
-  a.atb = Math.min(4, a.atb + dt * s.config.atbRate);
+  a.atb = Math.min(s.config.atbMax, a.atb + dt * s.config.atbRate);
   a.shield = Math.max(0, a.shield - dt);
   if (a.action) {
-    a.action.remaining -= dt;
-    if (a.action.remaining <= 1e-9) {
-      const action = a.action;
-      a.action = null;
+    const action = a.action;
+    action.remaining = Math.max(0, action.remaining - dt);
+    if (!action.resolved && action.remaining <= SKILLS[action.skillId].recovery + 1e-9) {
+      action.resolved = true;
       resolve(s, a, action);
+    }
+    if (action.remaining <= 1e-9 && a.action === action) a.action = null;
+    return;
+  }
+  const handoff = a.plan?.[0];
+  if (handoff && isHandoff(handoff) && handoff.kind === 'skill' && !a.move && !a.shift) {
+    if (handoff.target.kind !== 'ally' || s.allies[handoff.target.id].hp <= 0) {
+      a.plan!.shift();
+      s.pendingSelect = null;
+      emit(s, 'system', '交代先が戦闘不能のため、交代予約を解除');
+    } else if (a.atb >= SKILLS.handoff.cost) {
+      const reset = a.plan!.length - 1;
+      a.plan = [];
+      a.queued = null;
+      a.nextRow = null;
+      a.nextSlot = null;
+      beginAction(s, a, 'handoff', handoff.target);
+      emit(s, 'system', `交代開始：後続${reset}手を解除`);
     }
     return;
   }
@@ -648,7 +768,7 @@ function startEnemyCast(s: State, e: Enemy) {
           : `${ROW_NAMES[e.cast.row]}への交差砲撃`;
     e.cast.movable = pattern !== 'single';
   }
-  e.cast.remaining = e.cast.total = recipe.cast ?? e.cast.total;
+  e.cast.remaining = e.cast.total = (recipe.cast ?? e.cast.total) * BATTLE_TIMING.enemyWindupScale;
   e.cast.power = (recipe.power ?? e.cast.power) * pressure(s.config.encounterLevel).damage;
   emit(
     s,
@@ -669,14 +789,15 @@ function tickEnemy(s: State, e: Enemy, dt: number) {
     return;
   }
   e.hold = Math.max(0, e.hold - dt);
-  if (!e.hold) e.chain = Math.max(100, e.chain - 11 * dt);
+  if (!e.hold) e.chain = Math.max(100, e.chain - BATTLE_TIMING.chainDecay * dt);
   if (e.cast) {
     e.cast.remaining -= dt;
     if (e.cast.remaining > 1e-9) return;
     const cast = e.cast;
     e.cast = null;
     e.nextAttack =
-      enemyRecipe(s.config, s.encounter, e.id).interval ?? (e.kind === 'cannon' ? 4.8 : 3.8);
+      (enemyRecipe(s.config, s.encounter, e.id).interval ?? (e.kind === 'cannon' ? 4.8 : 3.8)) *
+      BATTLE_TIMING.enemyIntervalScale;
     const targets = s.allies.filter(
       (a) =>
         a.hp > 0 &&
@@ -720,13 +841,15 @@ function tickEnemy(s: State, e: Enemy, dt: number) {
     if (e.nextAttack <= 0) startEnemyCast(s, e);
   }
 }
-/** One fixed real-time tick. Rendering never decides hit timing. Mutates only the passed state. */
+/** One fixed real-time tick. */
 export function step(s: State) {
   if (s.paused || s.phase !== 'battle') return;
   s.tick++;
   s.realTime += DT;
+  const handoff = s.handoffSlow > 0;
+  s.handoffSlow = Math.max(0, s.handoffSlow - DT);
   let speed = s.timeMode === 'normal' ? 1 : s.timeMode === 'slow' ? 0.25 : 0;
-  if (s.timeMode !== 'normal') {
+  if (s.timeMode !== 'normal' && !(handoff && s.timeMode === 'slow')) {
     const rate = s.timeMode === 'slow' ? s.config.slowDrain : s.config.stopDrain;
     const cost = Math.min(s.focus, rate * DT);
     s.focus = Math.max(0, s.focus - cost);
@@ -738,6 +861,7 @@ export function step(s: State) {
       emit(s, 'system', '集中力を使い切りました。通常速度へ。');
     }
   }
+  if (handoff && speed === 1) speed = 0.25;
   const dt = DT * speed;
   if (dt === 0) return;
   s.time += dt;
@@ -761,7 +885,20 @@ export function step(s: State) {
       emit(s, 'system', '勝利。轟砕の槌・流星の弓・帰還の軍旗を入手。');
     } else emit(s, 'system', '二つの戦いを突破した。');
   }
-  if (s.allies[s.selected]?.hp <= 0) s.selected = s.allies.find((a) => a.hp > 0)?.id ?? 0;
+  if (s.phase !== 'battle') {
+    s.pendingSelect = null;
+    s.handoffSlow = 0;
+    for (const a of s.allies) {
+      // A battle may end while a handoff is queued or being performed.
+      a.plan = a.plan?.filter((p) => !isHandoff(p));
+      if (a.action?.skillId === 'handoff') a.action = null;
+    }
+  }
+  if (s.allies[s.selected]?.hp <= 0) {
+    s.pendingSelect = null;
+    s.handoffSlow = 0;
+    s.selected = s.allies.find((a) => a.hp > 0)?.id ?? 0;
+  }
   if (s.enemies[s.target]?.hp <= 0) s.target = s.enemies.find((e) => e.hp > 0)?.id ?? 0;
 }
 export function advance(s: State, seconds: number) {

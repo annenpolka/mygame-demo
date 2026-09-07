@@ -12,7 +12,8 @@
     "test:e2e": "playwright test",
     "sim": "tsx scripts/headless.ts",
     "sim:limits": "tsx scripts/limits.ts",
-    "sim:queue": "tsx scripts/queue-study.ts"
+    "sim:queue": "tsx scripts/queue-study.ts",
+    "sim:scenarios": "tsx scripts/scenario-study.ts"
   },
   "dependencies": {
     "react": "^19.2.8",

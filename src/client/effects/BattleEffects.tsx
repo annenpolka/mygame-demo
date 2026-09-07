@@ -1,3 +1,4 @@
+import { actionPhase } from '../timing';
 import { useEffect, useLayoutEffect, useState, type RefObject } from 'react';
 import type { State, Target } from '../../sim/types';
 import { effectCues, type EffectCue } from './events';
@@ -113,12 +114,13 @@ export function BattleEffects({
               )}
               {a.action && (
                 <circle
-                  className="fx-casting ally"
+                  className={`fx-casting ally ${a.action.resolved ? 'recovering' : ''}`}
+                  data-status={a.action.resolved ? 'recovery' : 'windup'}
                   cx={p.x}
                   cy={p.y}
                   r={22}
                   pathLength={100}
-                  strokeDasharray={`${(1 - a.action.remaining / a.action.total) * 100} 100`}
+                  strokeDasharray={`${(1 - actionPhase(a.action).remaining / actionPhase(a.action).total) * 100} 100`}
                 />
               )}
             </g>

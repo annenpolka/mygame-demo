@@ -1,3 +1,4 @@
+import { DT, SKILLS } from '../src/content/data';
 import { describe, it, expect } from 'vitest';
 import {
   battleInput,
@@ -30,8 +31,8 @@ describe('direct controller battle commands', () => {
     expect(ui.page).toBe('target');
     expect(planned(x.state.allies[0])).toHaveLength(0);
     press('right');
-    for (let i = 0; i < 6; i++) press('confirm');
-    expect(planned(x.state.allies[0])).toHaveLength(6);
+    for (let i = 0; i < 2; i++) press('confirm');
+    expect(planned(x.state.allies[0])).toHaveLength(2);
     expect(ui.page).toBe('target');
     expect(
       planned(x.state.allies[0]).every(
@@ -39,11 +40,11 @@ describe('direct controller battle commands', () => {
       ),
     ).toBe(true);
     press('confirm');
-    expect(planned(x.state.allies[0])).toHaveLength(6);
-    expect(ui.message).toContain('6手');
+    expect(planned(x.state.allies[0])).toHaveLength(2);
+    expect(ui.message).toContain('4 ATB');
     press('cancel');
     expect(ui.page).toBe('command');
-    press('down');
+    press('queue');
     press('confirm');
     press('cancel');
     press('skill');
@@ -52,7 +53,7 @@ describe('direct controller battle commands', () => {
   });
   it('guard takes one press at home and back does not add guard inside a picker', () => {
     const x = session();
-    let r = battleInput(x.state, newBattlePad(), 'cancel');
+    let r = battleInput(x.state, newBattlePad(), 'down');
     x.send(...r.commands);
     expect(planned(x.state.allies[0])).toMatchObject([{ kind: 'skill', skillId: 'guard' }]);
     r = battleInput(x.state, openPage(x.state, r.ui, 'target', 'sweep'), 'cancel');
@@ -93,19 +94,20 @@ describe('direct controller battle commands', () => {
     x.send(...added.commands);
     expect(planned(x.state.allies[0]).map((p) => p.kind)).toEqual(['weapon', 'skill']);
     x.send({ type: 'time', mode: 'normal' });
-    for (let i = 0; i < 10; i++) x.advance(0.1);
+    for (let i = 0; i < 20; i++) x.advance(0.1);
     expect(x.state.allies[0].slot).toBe(1);
     expect(x.state.allies[0].shield).toBeGreaterThan(0);
   });
   it("switches actors without committing drafts or losing another actor's queue", () => {
     const x = session();
-    x.send(...battleInput(x.state, newBattlePad(), 'cancel').commands);
+    x.send(...battleInput(x.state, newBattlePad(), 'down').commands);
     const draft = openPage(x.state, newBattlePad(), 'target', 'sweep');
     const r = battleInput(x.state, draft, 'next');
     x.send(...r.commands);
     expect(r.ui.page).toBe('command');
-    expect(x.state.selected).toBe(1);
-    expect(planned(x.state.allies[0])).toHaveLength(1);
+    expect(x.state.selected).toBe(0);
+    expect(x.state.pendingSelect).toBe(1);
+    expect(planned(x.state.allies[0])).toHaveLength(2);
   });
   it('uses triggers in submenus, honors pause, and dispatches linked tactics without reordering', () => {
     const x = session();
@@ -118,7 +120,7 @@ describe('direct controller battle commands', () => {
     const tactic = confirmChoice(x.state, openPage(x.state, ui, 'tactics'), '1');
     expect(tactic.commands.map((c) => c.type)).toEqual(['optima', 'move', 'move', 'move']);
     x.send({ type: 'pause', value: true });
-    expect(battleInput(x.state, newBattlePad(), 'cancel').commands).toEqual([]);
+    expect(battleInput(x.state, newBattlePad(), 'down').commands).toEqual([]);
     x.state.config.uiMode = 'individual';
     expect(choices(x.state, { ...ui, page: 'tactics', tactics: 'formation' })).toEqual([]);
   });
@@ -147,7 +149,7 @@ describe('battle effects follow resolved simulation outcomes', () => {
       id: 0,
       step: { kind: 'skill', skillId: 'slash', target: { kind: 'enemy', id: 0 } },
     });
-    advance(s, 0.45);
+    advance(s, SKILLS.slash.cast + 2 * DT);
     const before = copy(s),
       cues = effectCues(s),
       damage = s.events.find((e) => e.type === 'damage')!;
@@ -182,18 +184,19 @@ describe('battle effects follow resolved simulation outcomes', () => {
     });
     advance(s, 0.5);
     expect(effectCues(s).some((c) => c.type === 'shield' && c.target === 'a0')).toBe(true);
+    advance(s, SKILLS.heal.cast + 2 * DT - 0.5);
     expect(
       effectCues(s).some((c) => c.type === 'heal' && c.target === 'a1' && c.value === 190),
     ).toBe(true);
     command(s, { type: 'optima', index: 1 });
-    advance(s, 1);
+    advance(s, SKILLS.heal.recovery + s.config.shiftTime + 2 * DT);
     expect(effectCues(s).some((c) => c.type === 'shift')).toBe(true);
     command(s, {
       type: 'enqueue',
       id: 2,
       step: { kind: 'skill', skillId: 'pull', target: { kind: 'enemy', id: 1 } },
     });
-    advance(s, 1);
+    advance(s, SKILLS.pull.cast + SKILLS.jab.cast + SKILLS.jab.recovery + 2 * DT);
     expect(s.enemies[1].row).toBe('front');
     expect(effectCues(s).some((c) => c.type === 'move' && c.target === 'e1')).toBe(true);
   });

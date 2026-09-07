@@ -1,4 +1,5 @@
 import { createHash } from 'node:crypto';
+import { DEFAULT_CONFIG } from '../src/content/data';
 import { mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 import {
@@ -47,7 +48,7 @@ const hash = (path: string) =>
     .digest('hex');
 const frozen = {
   'src/ai/policies.ts': '292513ec6b6d8e1d8205fc4f44b0ec574278f6944cc79e0fe8cefed4c4097d67',
-  'src/ai/observation.ts': '0e4d314ab5bb9a3f77d35bf46fea927cb06563f6442f22bc858eb36fb4b4e7d9',
+  'src/ai/observation.ts': 'f9a24a431eba8c724d0de11ab78a7718d97a97840448ed99196c32f6d39c1347',
 };
 for (const [path, expected] of Object.entries(frozen))
   if (hash(path) !== expected) throw new Error(`固定した現行AIが変更されています: ${path}`);
@@ -58,6 +59,7 @@ const paths = [
   'src/sim/engine.ts',
   'src/sim/types.ts',
   'src/sim/plan.ts',
+  'src/sim/tactics.ts',
   'src/ai/queue-policy.ts',
   'src/content/data.ts',
   'src/content/encounters.ts',
@@ -128,7 +130,7 @@ for (const encounterSet of sets)
             count,
             maxSeconds,
             enemyPower: 1,
-            atbRate: 0.85,
+            atbRate: DEFAULT_CONFIG.atbRate,
             decisionInterval: 0.25,
             reactionSeconds: 0.35,
             reliableObservedWinRate: 0.9,

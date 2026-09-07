@@ -43,9 +43,9 @@ describe('manual actor control', () => {
     expect(s.allies[1].action?.skillId).toBe('spark');
     command(s, { type: 'select', id: 1 });
     step(s);
-    expect(s.allies[0].action?.skillId).toBe('slash');
+    expect(s.allies[0].action?.skillId).toBe('handoff');
     expect(s.allies[1].action?.skillId).toBe('spark');
-    advance(s, 2);
+    advance(s, 3);
     expect(s.allies[1].action).toBeNull();
     expect(s.events.filter((e) => e.type === 'action' && e.source === 'a1')).toHaveLength(1);
   });

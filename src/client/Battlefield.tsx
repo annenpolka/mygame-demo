@@ -1,7 +1,9 @@
-import { planned, stepName, PLAN_LIMIT } from '../sim/plan';
+import { HandoffStatus } from './HandoffStatus';
+import { actionStatus } from './timing';
+import { canAppend, planned, stepName } from '../sim/plan';
 import { useEffect, useRef, type CSSProperties } from 'react';
 import { BattleEffects } from './effects/BattleEffects';
-import { ROW_NAMES } from '../content/data';
+import { BATTLE_TIMING, ROW_NAMES } from '../content/data';
 import { weaponOf } from '../sim/engine';
 import type { State, Skill, Target, Row } from '../sim/types';
 const keyOf = (t: Target) => (t.kind === 'row' ? `row-${t.row}` : `${t.kind}-${t.id}`);
@@ -30,7 +32,7 @@ export function Battlefield({
 }) {
   const field = useRef<HTMLDivElement>(null);
   const active = !!pending && s.phase === 'battle';
-  const full = planned(s.allies[s.selected]).length >= PLAN_LIMIT;
+  const full = !canAppend(s.allies[s.selected], s.config, pending?.cost ?? 0);
   const sideForSkill = pending?.target.startsWith('enemy') ? 'enemy' : 'ally';
   const aimName = !aim
     ? ''
@@ -40,8 +42,19 @@ export function Battlefield({
   useEffect(() => {
     if (active) field.current?.focus({ preventScroll: true });
   }, [active, pending?.id]);
+  const tracks = Math.max(
+    2,
+    ...(['front', 'back'] as const).flatMap((row) => [
+      s.allies.filter((a) => a.row === row).length,
+      s.enemies.filter((e) => e.row === row).length,
+    ]),
+  );
   return (
-    <div className={`battlefield ${active ? 'targeting' : ''}`} aria-label="敵味方の前後列">
+    <div
+      className={`battlefield ${active ? 'targeting' : ''}`}
+      aria-label="敵味方の前後列"
+      style={{ '--field-tracks': tracks } as CSSProperties}
+    >
       {active ? (
         <div className="field-target-bar">
           <div>
@@ -140,7 +153,7 @@ export function Battlefield({
                             data-unit={`a${a.id}`}
                             role={targetable ? 'option' : undefined}
                             aria-selected={targetable ? aimed : undefined}
-                            style={{ gridRow: a.id + 2, '--unit-color': a.color } as CSSProperties}
+                            style={{ '--unit-color': a.color } as CSSProperties}
                             className={`field-unit friend ${a.id === s.selected ? 'selected' : ''} ${targetable || rowTarget ? 'can-target' : ''} ${a.hp <= 0 ? 'fallen' : ''} ${aimed || aimedRow ? 'aimed' : ''} ${active && !targetable && !rowTarget ? 'outside-target' : ''}`}
                             disabled={
                               a.hp <= 0 ||
@@ -171,16 +184,34 @@ export function Battlefield({
                               <small>
                                 {targetable
                                   ? `HP ${Math.ceil(a.hp)} / ${a.maxHp}`
-                                  : a.nextRow
-                                    ? `${ROW_NAMES[a.nextRow]}へ移動中`
-                                    : planned(a).length
-                                      ? `次：${stepName(a, planned(a)[0])}`
-                                      : s.controlMode === 'manual' &&
-                                          a.id === s.selected &&
-                                          !a.action
-                                        ? '指示待ち'
-                                        : w.archetype}
+                                  : a.action
+                                    ? actionStatus(a.action)
+                                    : a.nextRow
+                                      ? `${ROW_NAMES[a.nextRow]}へ移動中`
+                                      : planned(a).length
+                                        ? `次：${stepName(a, planned(a)[0])}`
+                                        : s.controlMode === 'manual' &&
+                                            a.id === s.selected &&
+                                            !a.action
+                                          ? '指示待ち'
+                                          : w.archetype}
                               </small>
+                              <span className="unit-gauges">
+                                <UnitGauge
+                                  label={`${a.name}のHP`}
+                                  value={a.hp}
+                                  max={a.maxHp}
+                                  kind="hp"
+                                  text={`${Math.ceil(a.hp)} / ${a.maxHp}`}
+                                />
+                                <UnitGauge
+                                  label={`${a.name}のATB`}
+                                  value={a.atb}
+                                  max={s.config.atbMax}
+                                  kind="atb"
+                                  text={`ATB ${a.atb.toFixed(1)} / ${s.config.atbMax}`}
+                                />
+                              </span>
                               {cast && <em>追尾 {cast.remaining.toFixed(1)}秒</em>}
                             </span>
                           </button>
@@ -198,7 +229,6 @@ export function Battlefield({
                             data-unit={`e${e.id}`}
                             role={targetable ? 'option' : undefined}
                             aria-selected={targetable ? aimed : undefined}
-                            style={{ gridRow: e.id + 2 }}
                             className={`field-unit foe ${s.target === e.id ? 'selected' : ''} ${e.broken ? 'broken' : ''} ${targetable || rowTarget ? 'can-target' : ''} ${e.hp <= 0 ? 'fallen' : ''} ${aimed || aimedRow ? 'aimed' : ''}`}
                             disabled={
                               e.hp <= 0 ||
@@ -224,19 +254,64 @@ export function Battlefield({
                                 {s.target === e.id && '◎ '}
                                 {e.name}
                               </strong>
-                              <small>
-                                {e.hp <= 0
-                                  ? '撃破'
-                                  : targetable
-                                    ? `HP ${Math.ceil(e.hp)} / ${e.maxHp}`
-                                    : e.broken > 0
-                                      ? `BREAK ${e.broken.toFixed(1)}秒`
-                                      : e.kind === 'guard' && row === 'front'
-                                        ? '後列を防護'
+                              <span className="unit-gauges">
+                                <UnitGauge
+                                  label={`${e.name}のHP`}
+                                  value={e.hp}
+                                  max={e.maxHp}
+                                  kind="enemy-hp"
+                                  text={`${Math.ceil(e.hp)} / ${e.maxHp}`}
+                                />
+                                <UnitGauge
+                                  label={`${e.name}のチェイン`}
+                                  value={e.broken || e.chain - 100}
+                                  max={e.broken ? BATTLE_TIMING.breakDuration : 100}
+                                  kind={e.broken ? 'break' : 'chain'}
+                                  text={
+                                    e.broken
+                                      ? `BREAK ${e.broken.toFixed(1)}s`
+                                      : `CHAIN ${e.chain.toFixed(0)}% / 200%`
+                                  }
+                                />
+                              </span>
+                              <span className="unit-telegraph">
+                                {e.cast ? (
+                                  <>
+                                    <span>
+                                      <b>{e.cast.name}</b> <b>{e.cast.remaining.toFixed(1)}s</b>
+                                    </span>
+                                    <UnitGauge
+                                      label={`${e.name}の行動予告`}
+                                      value={e.cast.total - e.cast.remaining}
+                                      max={e.cast.total}
+                                      kind="danger"
+                                    />
+                                    <small>
+                                      {e.cast.target === 'row'
+                                        ? `列固定：${ROW_NAMES[e.cast.row]}`
+                                        : e.cast.target === 'all'
+                                          ? '全員：列移動で回避不可'
+                                          : `追尾：${s.allies[e.cast.allyId].name}`}
+                                      {e.cast.movable &&
+                                        (e.kind === 'guard' && !e.broken
+                                          ? '・重装で移動不可'
+                                          : e.steadfast > 0
+                                            ? '・踏ん張り中'
+                                            : '・移動で中断可')}
+                                    </small>
+                                  </>
+                                ) : (
+                                  <small>
+                                    {e.hp <= 0
+                                      ? '撃破'
+                                      : e.kind === 'guard' && !e.broken
+                                        ? '重装・後列を防護'
                                         : e.steadfast > 0
-                                          ? '踏ん張り'
+                                          ? '踏ん張り中'
                                           : '強制移動可'}
-                              </small>
+                                  </small>
+                                )}
+                              </span>
                             </span>
                           </button>
                         );
@@ -252,20 +327,55 @@ export function Battlefield({
           targetSide={sideForSkill}
         />
       </div>
-      <div className="field-hint">
-        {active
-          ? '方向キーで対象を選ぶ · 駒・列を押しても積めます'
-          : s.controlMode === 'ai'
-            ? 'AI鑑賞中 · 下に全員の予約と判断を表示'
-            : `${s.allies[s.selected].name}を手動操作 · 技を選んで戦場の対象へ`}
-        <span>
-          {s.timeMode === 'normal'
-            ? '通常 ×1.00'
-            : s.timeMode === 'slow'
-              ? 'スロー ×0.25'
-              : '戦術停止 ×0.00'}
-        </span>
+      <div className="field-footer">
+        {s.controlMode === 'manual' && (s.pendingSelect !== null || s.handoffSlow > 0) ? (
+          <HandoffStatus state={s} cancel={() => onAlly(s.selected)} />
+        ) : (
+          <div className="field-hint">
+            {active
+              ? '方向キーで対象を選ぶ · 駒・列を押しても積めます'
+              : s.controlMode === 'ai'
+                ? 'AI鑑賞中 · 下に全員の予約と判断を表示'
+                : `${s.allies[s.selected].name}を手動操作 · 技を選んで戦場の対象へ`}
+            <span>
+              {s.timeMode === 'normal'
+                ? '通常 ×1.00'
+                : s.timeMode === 'slow'
+                  ? 'スロー ×0.25'
+                  : '戦術停止 ×0.00'}
+            </span>
+          </div>
+        )}
       </div>
     </div>
+  );
+}
+
+function UnitGauge({
+  label,
+  value,
+  max,
+  kind,
+  text,
+}: {
+  label: string;
+  value: number;
+  max: number;
+  kind: string;
+  text?: string;
+}) {
+  return (
+    <span className={`unit-gauge gauge-${kind}`}>
+      {text && <small>{text}</small>}
+      <span
+        role="meter"
+        aria-label={label}
+        aria-valuemin={0}
+        aria-valuemax={max}
+        aria-valuenow={Math.max(0, Math.min(max, value))}
+      >
+        <i style={{ width: `${Math.max(0, Math.min(100, (value / max) * 100))}%` }} />
+      </span>
+    </span>
   );
 }

@@ -5,6 +5,7 @@ import {
   padFamily,
   buttonName,
   validBindings,
+  migrateBindings,
   type PadSnapshot,
 } from '../src/input/gamepad';
 const pad = (buttons: number[] = [], axes: number[] = [0, 0], id = 'Xbox'): PadSnapshot => ({
@@ -19,6 +20,26 @@ const pad = (buttons: number[] = [], axes: number[] = [0, 0], id = 'Xbox'): PadS
   axes,
 });
 describe('controller polling and mappings', () => {
+  it('does not repeat one-press movement or guard at home; menu navigation can still repeat', () => {
+    const r = new PadReader(),
+      b = defaultBindings('xbox');
+    r.read(pad(), b, 0, true, false);
+    expect(r.read(pad([14]), b, 20, true, false)).toEqual(['left']);
+    expect(r.read(pad([14]), b, 900, true, false)).toEqual([]);
+    r.read(pad(), b, 920, true, false);
+    expect(r.read(pad([13]), b, 940, true, false)).toEqual(['down']);
+    expect(r.read(pad([13]), b, 1900, true, false)).toEqual([]);
+    expect(r.read(pad([13]), b, 2000, true, true)).toEqual(['down']);
+  });
+  it('preserves v2 custom bindings and assigns queue to an unused button if R3 is taken', () => {
+    const old: any = { ...defaultBindings('playstation'), confirm: 11 };
+    delete old.queue;
+    const migrated = migrateBindings(old)!;
+    expect(migrated.confirm).toBe(11);
+    expect(migrated.queue).not.toBe(11);
+    const { queue, ...preserved } = migrated;
+    expect(preserved).toEqual(old);
+  });
   it.each([
     ['Xbox Wireless', 'xbox', 0],
     ['DualSense Wireless (054c)', 'playstation', 0],

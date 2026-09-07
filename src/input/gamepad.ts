@@ -13,6 +13,7 @@ export const PAD_ACTIONS = [
   'down',
   'left',
   'right',
+  'queue',
 ] as const;
 export type PadAction = (typeof PAD_ACTIONS)[number];
 export type PadFamily = 'xbox' | 'playstation' | 'switch';
@@ -53,6 +54,7 @@ export function defaultBindings(family: PadFamily): PadBindings {
     down: 13,
     left: 14,
     right: 15,
+    queue: 11,
     axisX: 0,
     axisY: 1,
     invertX: false,
@@ -132,7 +134,13 @@ export class PadReader {
     this.repeats.clear();
     this.axisHeld = { x: 0, y: 0 };
   }
-  read(pad: PadSnapshot | null, bindings: PadBindings, now: number, enabled = true): PadAction[] {
+  read(
+    pad: PadSnapshot | null,
+    bindings: PadBindings,
+    now: number,
+    enabled = true,
+    repeatNavigation = true,
+  ): PadAction[] {
     if (!pad?.connected) {
       this.reset();
       return [];
@@ -163,7 +171,11 @@ export class PadReader {
       if (!this.held.has(a)) {
         output.push(a);
         this.repeats.set(a, now + 350);
-      } else if (directions.has(a) && now >= (this.repeats.get(a) ?? Infinity)) {
+      } else if (
+        repeatNavigation &&
+        directions.has(a) &&
+        now >= (this.repeats.get(a) ?? Infinity)
+      ) {
         output.push(a);
         this.repeats.set(a, now + 110);
       }
@@ -192,7 +204,17 @@ export function validBindings(input: unknown): input is PadBindings {
 export function migrateBindings(input: unknown): PadBindings | null {
   if (validBindings(input)) return input;
   if (!input || typeof input !== 'object') return null;
-  const b = input as PadBindings;
+  let b = input as PadBindings;
+  if (b.queue === undefined) {
+    const used = new Set(PAD_ACTIONS.filter((a) => a !== 'queue').map((a) => b[a]));
+    b = {
+      ...b,
+      queue: !used.has(11)
+        ? 11
+        : Array.from({ length: 64 }, (_, i) => i).find((i) => !used.has(i))!,
+    };
+    if (validBindings(b)) return b;
+  }
   const legacy = PAD_ACTIONS.filter((a) => a !== 'skill' && a !== 'item');
   if (!legacy.every((k) => Number.isInteger(b[k]) && b[k] >= 0 && b[k] <= 63)) return null;
   const next = { ...b, skill: b.stop, item: b.slow };

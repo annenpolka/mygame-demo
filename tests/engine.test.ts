@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { DT, SKILLS, VERSION } from '../src/content/data';
+import { BATTLE_TIMING, DT, SKILLS, VERSION } from '../src/content/data';
 import { advance, command, copy, createState, step } from '../src/sim/engine';
 import type { EnemyCast, State } from '../src/sim/types';
 import { runReplay, Session } from '../src/lab/session';
@@ -62,13 +62,13 @@ describe('two clocks and resources', () => {
       expect(a.action?.skillId).toBe('guard');
       expect(a.atb).toBeCloseTo(0.05);
       expect(a.shield).toBe(0);
-      advance(s, 0.25);
-      expect(a.shield).toBeGreaterThan(3.9);
-      expect(a.atb).toBeCloseTo(0.3);
+      advance(s, 0.4);
+      expect(a.shield).toBeGreaterThan(BATTLE_TIMING.guardDuration - 0.1);
+      expect(a.atb).toBeCloseTo(0.45);
       expect(guard()).toBe(true);
       advance(s, 0.1);
-      expect(a.action).toBeNull();
-      expect(a.atb).toBeCloseTo(0.4);
+      expect(a.action?.resolved).toBe(true);
+      expect(a.atb).toBeCloseTo(0.55);
       expect(s.events.filter((e) => e.type === 'action' && e.source === 'a0')).toHaveLength(1);
     },
   );
@@ -115,12 +115,17 @@ describe('two clocks and resources', () => {
   });
 });
 describe('commands and weapon boundaries', () => {
-  it('selection preserves committed actions, ATB and reservations', () => {
+  it('selection inserts a handoff ahead of legacy reservations without charging early', () => {
     const s = battle();
     command(s, { type: 'skill', id: 0, skillId: 'sweep', target: { kind: 'row', row: 'front' } });
     const before = copy(s.allies);
     command(s, { type: 'select', id: 1 });
-    expect(s.allies).toEqual(before);
+    expect(s.allies[0].atb).toEqual(before[0].atb);
+    expect(s.allies[0].action).toEqual(before[0].action);
+    expect(s.allies[0].plan?.map((p) => p.kind === 'skill' && p.skillId)).toEqual([
+      'handoff',
+      'sweep',
+    ]);
   });
   it('a skill outside the active weapon is unavailable even manually', () => {
     const s = battle();
@@ -145,12 +150,12 @@ describe('commands and weapon boundaries', () => {
     command(a, { type: 'optima', index: 3 });
     command(b, { type: 'optima', index: 3 });
     command(b, { type: 'move', id: 0, row: 'back' });
-    advance(a, 0.6);
-    advance(b, 0.6);
+    advance(a, a.config.moveTime);
+    advance(b, b.config.moveTime);
     expect(a.allies).toEqual(b.allies);
     expect(a.allies[0].row).toBe('back');
     expect(a.allies[0].slot).toBe(1);
-    expect(a.allies[0].atb).toBeCloseTo(1 + 0.6 * a.config.atbRate);
+    expect(a.allies[0].atb).toBeCloseTo(1 + a.config.moveTime * a.config.atbRate);
   });
   it('an executing attack completes before a weapon change or normal movement', () => {
     const s = battle();
@@ -163,7 +168,7 @@ describe('commands and weapon boundaries', () => {
     expect(s.allies[0].action?.skillId).toBe('sweep');
     expect(s.allies[0].row).toBe('front');
     expect(s.allies[0].slot).toBe(0);
-    advance(s, 1.2);
+    advance(s, SKILLS.sweep.cast + SKILLS.sweep.recovery + s.config.moveTime - 0.5);
     expect(s.allies[0].row).toBe('back');
     expect(s.allies[0].slot).toBe(1);
     expect(s.enemies[0].hp).toBeLessThan(s.enemies[0].maxHp);
@@ -173,7 +178,7 @@ describe('commands and weapon boundaries', () => {
     command(s, { type: 'move', id: 0, row: 'back' });
     advance(s, 0.4);
     command(s, { type: 'move', id: 0, row: 'back' });
-    advance(s, 0.2);
+    advance(s, s.config.moveTime - 0.4);
     expect(s.allies[0].row).toBe('back');
   });
   it('an ATB-starved manual reservation prevents auto spending', () => {
@@ -182,7 +187,7 @@ describe('commands and weapon boundaries', () => {
     command(s, { type: 'skill', id: 0, skillId: 'sweep', target: { kind: 'row', row: 'front' } });
     advance(s, 2);
     expect(s.allies[0].queued?.skillId).toBe('sweep');
-    expect(s.allies[0].atb).toBeCloseTo(1.7);
+    expect(s.allies[0].atb).toBeCloseTo(2 * s.config.atbRate);
     expect(s.allies[0].action).toBeNull();
   });
   it('paid shielding persists after changing weapons', () => {
@@ -231,7 +236,7 @@ describe('formation and impact timing', () => {
     s.enemies[1].cast = cast({ row: 'back', remaining: 2.4, total: 2.4 });
     command(s, { type: 'skill', id: 0, skillId: 'sweep', target: { kind: 'row', row: 'front' } });
     command(s, { type: 'skill', id: 2, skillId: 'pull', target: { kind: 'enemy', id: 1 } });
-    advance(s, 1);
+    advance(s, SKILLS.sweep.cast + 2 * DT);
     expect(s.enemies[1].row).toBe('front');
     expect(s.enemies[1].cast).toBeNull();
     expect(
@@ -247,7 +252,7 @@ describe('formation and impact timing', () => {
       s.allies[0].action = null;
       s.allies[0].atb = 4;
       command(s, { type: 'skill', id: 0, skillId: 'push', target: { kind: 'enemy', id: 0 } });
-      advance(s, 1.15);
+      advance(s, SKILLS.push.cast + 2 * DT);
     };
     hit();
     expect(s.enemies[0].row).toBe('front');
@@ -257,7 +262,7 @@ describe('formation and impact timing', () => {
     s.allies[2].slot = 1;
     s.allies[2].atb = 4;
     command(s, { type: 'skill', id: 2, skillId: 'pull', target: { kind: 'enemy', id: 0 } });
-    advance(s, 0.7);
+    advance(s, SKILLS.pull.cast + 2 * DT);
     expect(s.enemies[0].row).toBe('back');
   });
   it('forced allied movement remains in place instead of restoring a past formation', () => {
@@ -281,7 +286,7 @@ describe('formation and impact timing', () => {
       skillId: 'evacuate',
       target: { kind: 'row', row: 'front' },
     });
-    advance(s, 0.25);
+    advance(s, SKILLS.evacuate.cast + 2 * DT);
     expect(s.allies[0].row).toBe('back');
     expect(s.allies[0].action?.skillId).not.toBe('sweep');
     expect(s.allies[0].atb).toBeLessThan(2.3);

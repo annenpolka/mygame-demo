@@ -40,6 +40,7 @@ const sets: EncounterSetId[] = ['bulwark', 'crossfire', 'pursuit', 'attrition'],
 const paths = [
   'src/sim/engine.ts',
   'src/sim/plan.ts',
+  'src/sim/tactics.ts',
   'src/sim/types.ts',
   'src/content/data.ts',
   'src/content/encounters.ts',
@@ -59,9 +60,16 @@ if (
 )
   throw new Error('比較元AIが変更されています。');
 const baselinePath = 'artifacts/ai-limits/results.json';
-const baseline: RunSummary[] = existsSync(baselinePath)
-  ? JSON.parse(readFileSync(baselinePath, 'utf8')).runs
-  : [];
+const baselineFile = existsSync(baselinePath)
+  ? JSON.parse(readFileSync(baselinePath, 'utf8'))
+  : null;
+// Historical receipts remain useful evidence, but a different rules version is not a replay oracle.
+const baseline: RunSummary[] =
+  baselineFile?.version === EXPERIMENT_VERSION ? baselineFile.runs : [];
+if (baselineFile && !baseline.length)
+  console.log(
+    `既存の比較元は別バージョン (${baselineFile.version})。旧結果との完全一致比較は省略します。`,
+  );
 const prior = new Map(
   baseline.map((r) => [`${r.encounterSet}/${r.encounterLevel}/${r.policy}/${r.seed}`, r.finalHash]),
 );

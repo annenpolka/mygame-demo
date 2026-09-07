@@ -674,7 +674,11 @@
     padding-bottom: 6px;
   }
   .pad-desk {
-    min-height: 272px;
+    min-height: 240px;
+  }
+  .pad-queue-help {
+    min-height: 170px;
+    padding: 6px 8px;
   }
   .pad-layout .battle-lane {
     grid-template-rows: 20px repeat(3, 28px);

@@ -24,17 +24,19 @@ test('selected actor waits and target choices are on the battlefield for enemies
   await expect(page.locator('.field-aim-path')).toBeVisible();
   await page.screenshot({ path: 'test-results/field-target-row.png', fullPage: true });
   await page.keyboard.press('Enter');
-  await expect(page.locator('.plan-list')).toContainText('円弧斬り');
+  await expect(page.locator('.pad-plan-list')).toContainText('円弧斬り');
+  await page.keyboard.press('Escape');
   await page.keyboard.press('z');
   await expect(field.getByRole('option')).toHaveCount(2);
   await field.getByRole('option', { name: '灰の砲術師に斬撃を積む', exact: true }).click();
+  await page.keyboard.press('Escape');
   await page.keyboard.press('v');
   await expect(field.getByRole('option')).toHaveCount(3);
   await field.getByRole('option', { name: 'リネに救急薬を積む', exact: true }).click();
+  await page.keyboard.press('Escape');
   await page.keyboard.press('c');
-  await expect(field.getByRole('option')).toHaveCount(1);
-  await field.getByRole('option', { name: 'アルトに防御を積む', exact: true }).click();
-  await expect(page.locator('.plan-list li')).toHaveCount(4);
+  await expect(field).toHaveCount(0);
+  await expect(page.locator('.pad-plan-list li')).toHaveCount(4);
 });
 test('AI viewing offers all policies, visible decisions, pause, speed, and manual handoff', async ({
   page,
@@ -63,8 +65,8 @@ test('AI viewing offers all policies, visible decisions, pause, speed, and manua
   await expect(page.locator('.battle-clock strong')).not.toHaveText(time);
   await page.getByRole('button', { name: '手動に戻る', exact: true }).click();
   await expect(page.getByRole('region', { name: 'AI鑑賞', exact: true })).toHaveCount(0);
-  await expect(page.locator('.plan-list li')).toHaveCount(0);
-  await page.clock.runFor(2000);
+  await expect(page.locator('.pad-plan-list li')).toHaveCount(0);
+  await page.clock.runFor(4500);
   await expect(page.locator('[data-unit=a0]')).toContainText('指示待ち');
   expect(errors).toEqual([]);
 });

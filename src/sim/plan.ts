@@ -1,7 +1,6 @@
 import { SKILLS, WEAPONS, ROW_NAMES, DT } from '../content/data';
 import type { Ally, PlannedStep, PlanStep, State, Target } from './types';
 
-export const PLAN_LIMIT = 6;
 type Actor = Pick<
   Ally,
   'slot' | 'nextSlot' | 'queued' | 'action' | 'nextRow' | 'move' | 'shift' | 'atb'
@@ -19,6 +18,29 @@ export function projectedSlot(a: Actor) {
   let slot = a.nextSlot ?? a.slot;
   for (const step of planned(a)) if (step.kind === 'weapon') slot = step.slot;
   return slot;
+}
+export function projectedRow(a: Actor & Pick<Ally, 'row'>) {
+  let row = a.nextRow ?? a.row;
+  for (const p of planned(a)) if (p.kind === 'move') row = p.row;
+  return row;
+}
+export const isHandoff = (p: PlanStep) => p.kind === 'skill' && p.skillId === 'handoff';
+export const planCost = (p: PlanStep) =>
+  p.kind === 'skill' ? (SKILLS[p.skillId]?.cost ?? Infinity) : 0;
+export const plannedCost = (a: Parameters<typeof planned>[0]) =>
+  planned(a).reduce((n, p) => n + planCost(p), 0);
+/** Zero-ATB movement/items still occupy one entry; both bounds follow the ATB maximum. */
+export function canAppend(
+  a: Parameters<typeof planned>[0] & { action?: Ally['action'] },
+  rules: Pick<State['config'], 'atbMax'>,
+  cost = 0,
+) {
+  return (
+    a.action?.skillId !== 'handoff' &&
+    !planned(a).some(isHandoff) &&
+    planned(a).length < rules.atbMax &&
+    plannedCost(a) + cost <= rules.atbMax
+  );
 }
 export function targetName(s: Pick<State, 'allies' | 'enemies'>, t: Target) {
   return t.kind === 'row'
@@ -43,30 +65,35 @@ export function pendingPotions(
 /** Earliest execution using visible state only; no enemy outcomes are predicted. */
 export function planTiming(
   a: Actor,
-  rules: Pick<State['config'], 'atbRate' | 'moveTime' | 'shiftTime'>,
+  rules: Pick<State['config'], 'atbMax' | 'atbRate' | 'moveTime' | 'shiftTime'>,
 ) {
+  const head = planned(a)[0];
+  const handoffFirst = head && isHandoff(head);
   let elapsed =
     (a.action?.remaining ?? 0) +
     Math.max(
-      a.nextRow ? rules.moveTime - a.move : 0,
-      a.nextSlot !== null ? rules.shiftTime - a.shift : 0,
+      a.nextRow && (!handoffFirst || a.move > 0) ? rules.moveTime - a.move : 0,
+      a.nextSlot !== null && (!handoffFirst || a.shift > 0) ? rules.shiftTime - a.shift : 0,
     );
-  let atb = Math.min(4, a.atb + elapsed * rules.atbRate);
+  let atb = Math.min(rules.atbMax, a.atb + elapsed * rules.atbRate);
   return planned(a).map((step) => {
     if (step.kind === 'skill') {
       const skill = SKILLS[step.skillId];
       const wait = Math.max(0, (skill.cost - atb) / rules.atbRate);
       elapsed += wait + DT;
-      atb = Math.min(4, atb + (wait + DT) * rules.atbRate) - skill.cost;
+      atb = Math.min(rules.atbMax, atb + (wait + DT) * rules.atbRate) - skill.cost;
       const starts = elapsed;
       elapsed += skill.cast + DT;
-      atb = Math.min(4, atb + (skill.cast + DT) * rules.atbRate);
-      return { key: step.key, starts, ends: elapsed };
+      atb = Math.min(rules.atbMax, atb + (skill.cast + DT) * rules.atbRate);
+      const ends = elapsed; // Impact deadline used by defensive AI.
+      elapsed += skill.recovery;
+      atb = Math.min(rules.atbMax, atb + skill.recovery * rules.atbRate);
+      return { key: step.key, starts, ends, ready: elapsed };
     }
     const starts = elapsed + DT;
     const duration = step.kind === 'move' ? rules.moveTime : rules.shiftTime;
     elapsed = starts + duration + DT;
-    atb = Math.min(4, atb + (duration + 2 * DT) * rules.atbRate);
-    return { key: step.key, starts, ends: elapsed };
+    atb = Math.min(rules.atbMax, atb + (duration + 2 * DT) * rules.atbRate);
+    return { key: step.key, starts, ends: elapsed, ready: elapsed };
   });
 }

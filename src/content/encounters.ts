@@ -1,4 +1,5 @@
 import type { Config, Enemy, Row } from '../sim/types';
+import { BATTLE_TIMING } from './data';
 
 export const ENCOUNTER_SET_IDS = [
   'belfry',
@@ -193,7 +194,7 @@ export function createEnemies(config: Partial<Config>, stage: 1 | 2): Enemy[] {
       chain: 100,
       hold: 0,
       broken: 0,
-      nextAttack: r.first,
+      nextAttack: r.first * BATTLE_TIMING.enemyIntervalScale,
       cast: null,
       steadfast: 0,
       attackCount: 0,

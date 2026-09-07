@@ -1,16 +1,17 @@
 import type { EncounterSetId } from '../content/encounters';
 export type Row = 'front' | 'back';
-export type Role = 'A' | 'B' | 'S';
+export type Role = 'A' | 'B' | 'D' | 'S';
 export type Slot = 0 | 1;
 export type TimeMode = 'normal' | 'slow' | 'stop';
 export type Target = { kind: 'enemy' | 'ally'; id: number } | { kind: 'row'; row: Row };
 export type Effect =
-  'damage' | 'heal' | 'shield' | 'push' | 'pull' | 'evacuate' | 'guard' | 'potion';
+  'damage' | 'heal' | 'shield' | 'push' | 'pull' | 'evacuate' | 'guard' | 'potion' | 'handoff';
 export interface Skill {
   id: string;
   name: string;
   cost: number;
   cast: number;
+  recovery: number;
   power: number;
   chain: number;
   hold: number;
@@ -35,6 +36,8 @@ export interface Action {
   target: Target;
   remaining: number;
   total: number;
+  /** remaining/total include windup and recovery; impact happens once. */
+  resolved: boolean;
   weaponId: string;
 }
 export type PlanStep =
@@ -99,6 +102,7 @@ export interface Formation {
   rows: [Row, Row, Row];
 }
 export interface Config {
+  atbMax: number;
   encounterSet?: EncounterSetId;
   encounterLevel?: number;
   seed: number;
@@ -143,6 +147,8 @@ export interface State {
   config: Config;
   encounter: 1 | 2;
   selected: number;
+  pendingSelect: number | null;
+  handoffSlow: number;
   target: number;
   allies: Ally[];
   enemies: Enemy[];
@@ -168,6 +174,9 @@ export type Command =
   | { type: 'optima'; index: number }
   | { type: 'skill'; id: number; skillId: string; target: Target }
   | { type: 'cancel'; id: number }
+  | { type: 'cancelFirst'; id: number }
+  | { type: 'toggleRow'; id: number }
+  | { type: 'toggleWeapon'; id: number }
   | { type: 'enqueue'; id: number; step: PlanStep }
   | { type: 'removePlan'; id: number; key: number }
   | { type: 'equip'; id: number; slot: Slot; weaponId: string }

@@ -1,0 +1,606 @@
+.role-D {
+  color: #92c9a4;
+  border-color: #92c9a4;
+}
+.battle-layout .battle-main {
+  display: block;
+}
+.battlefield {
+  margin: 0;
+}
+.battle-layout .battle-lane {
+  grid-template-rows: 24px repeat(var(--field-tracks), minmax(82px, auto));
+  gap: 5px;
+}
+.battle-layout .field-unit {
+  align-self: stretch;
+  min-height: 0;
+  padding: 5px 7px;
+  gap: 7px;
+}
+.battle-layout .field-unit-info {
+  flex: 1;
+  width: 100%;
+}
+.battle-layout .field-unit-info strong {
+  font-size: 12px;
+}
+.battle-layout .field-unit-info > small {
+  min-height: 14px;
+}
+.unit-gauges {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+.unit-gauge {
+  display: block;
+  color: #bfced5;
+}
+.unit-gauge small {
+  display: block;
+  font:
+    9px ui-monospace,
+    monospace;
+  white-space: nowrap;
+}
+.unit-gauge [role='meter'] {
+  display: block;
+  height: 3px;
+  background: #ffffff1a;
+  margin: 2px 0;
+}
+.unit-gauge i {
+  display: block;
+  height: 100%;
+  background: #8bc1cc;
+}
+.unit-gauge.gauge-chain i,
+.unit-gauge.gauge-break i {
+  background: #e7b45d;
+}
+.unit-gauge.gauge-danger i {
+  background: #f38779;
+}
+.unit-telegraph {
+  display: block;
+  min-height: 28px;
+  margin-top: 3px;
+}
+.unit-telegraph > span {
+  display: flex;
+  justify-content: space-between;
+  font-size: 10px;
+  color: #ffc0ad;
+}
+.unit-telegraph small {
+  font-size: 9px;
+}
+.unit-telegraph > .unit-gauge {
+  display: block;
+}
+.field-footer {
+  min-height: 34px;
+}
+.loadout-modal {
+  width: min(1100px, 100%);
+  max-height: 92dvh;
+  overflow: auto;
+  padding: 22px;
+  background: #122330;
+  border: 1px solid #ddb57570;
+}
+.loadout-modal > header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 18px;
+}
+.loadout-modal h2 {
+  font-size: 22px;
+  margin: 4px 0;
+}
+.loadout-modal > header button {
+  padding: 8px 12px;
+  white-space: nowrap;
+}
+.loadout-tabs {
+  display: flex;
+  border-bottom: 1px solid var(--line);
+  gap: 8px;
+}
+.loadout-tabs button {
+  flex: 1;
+  padding: 10px;
+  font-size: 13px;
+}
+.loadout-visual button[aria-selected='true'],
+.loadout-visual button[aria-pressed='true'] {
+  border-color: var(--gold);
+  background: #ddb57512;
+}
+.role-key {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px;
+  color: #a4b9c3;
+  font-size: 11px;
+  margin: 12px 0;
+}
+.loadout-party {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+}
+.loadout-party article {
+  min-width: 0;
+  border-top: 2px solid var(--actor-color);
+  background: #1c3342;
+  padding: 10px;
+}
+.loadout-party h3 {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 15px;
+  margin: 0 0 8px;
+}
+.loadout-party h3 > span {
+  color: var(--actor-color);
+  font-family: serif;
+}
+.weapon-slot {
+  display: flex;
+  gap: 10px;
+  width: 100%;
+  text-align: left;
+  padding: 8px;
+  margin-top: 5px;
+}
+.weapon-glyph {
+  font-size: 29px;
+  color: var(--actor-color, #e0bd86);
+}
+.weapon-slot strong,
+.weapon-slot small {
+  display: block;
+}
+.weapon-slot strong {
+  font-size: 13px;
+}
+.weapon-slot small {
+  font-size: 10px;
+}
+.weapon-pool-heading,
+.board-heading {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  margin: 18px 0 10px;
+}
+.weapon-pool-heading h3,
+.board-heading h3 {
+  margin: 0;
+  font-size: 15px;
+}
+.weapon-pool-heading > span,
+.board-heading > span {
+  color: #a9bdc7;
+  font-size: 11px;
+}
+.weapon-pool {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 8px;
+}
+.weapon-choice {
+  display: grid;
+  grid-template-columns: 30px 1fr;
+  gap: 3px 10px;
+  padding: 10px;
+  text-align: left;
+  min-width: 0;
+}
+.weapon-choice .weapon-glyph {
+  grid-row: 1/5;
+  align-self: center;
+}
+.weapon-choice > :not(.weapon-glyph) {
+  grid-column: 2;
+}
+.weapon-choice strong {
+  font-size: 13px;
+}
+.weapon-choice > span:not(.weapon-glyph),
+.weapon-choice small,
+.weapon-choice em {
+  font-size: 10px;
+  font-style: normal;
+}
+.weapon-choice em {
+  color: var(--gold);
+}
+.tactic-cards {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 8px;
+}
+.tactic-cards button {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px;
+  text-align: left;
+  gap: 5px;
+}
+.tactic-cards strong {
+  display: block;
+  font-size: 13px;
+}
+.tactic-cards small {
+  font:
+    8px ui-monospace,
+    monospace;
+  color: var(--gold);
+}
+.tactic-roles {
+  display: flex;
+  gap: 5px;
+  margin-top: 6px;
+}
+.formation-diagram {
+  width: 95px;
+  max-width: 48%;
+  flex-shrink: 0;
+}
+.formation-diagram text {
+  font: 9px sans-serif;
+  fill: #bdced7;
+}
+.formation-diagram .diagram-role {
+  fill: #0b1821;
+  text-anchor: middle;
+  font-weight: bold;
+}
+.formation-board {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px 28px;
+  padding: 12px;
+  background: linear-gradient(90deg, #183344 49.8%, #ddb57550 50%, #20343e 50.2%);
+}
+.board-label {
+  color: #bdcdd5;
+  font-size: 11px;
+  text-align: center;
+}
+.board-label.front {
+  grid-column: 2;
+}
+.formation-actor {
+  padding: 10px;
+  border: 1px solid #ffffff28;
+  border-left: 3px solid var(--actor-color);
+  background: #142938;
+}
+.formation-actor-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.formation-actor-title strong {
+  font-size: 14px;
+}
+.formation-actor-title small {
+  font-size: 10px;
+  color: #b8cbd4;
+}
+.preset-weapons {
+  display: flex;
+  gap: 6px;
+  margin-top: 7px;
+}
+.preset-weapons button {
+  flex: 1;
+  padding: 7px;
+  text-align: left;
+  font-size: 11px;
+}
+.preset-weapons b {
+  display: block;
+  font-size: 10px;
+  margin-top: 3px;
+}
+.change-row {
+  padding: 4px 12px;
+  font-size: 11px;
+  margin-top: 8px;
+}
+.formation-board.roles-only {
+  grid-template-columns: 1fr;
+  background: #183344;
+  gap: 8px;
+}
+.loadout-note,
+.loadout-notice {
+  color: #b5c9d2;
+  font-size: 12px;
+  line-height: 1.7;
+}
+.loadout-notice {
+  border-left: 2px solid var(--gold);
+  padding: 8px 12px;
+  background: #ddb57508;
+}
+@media (min-width: 1200px) and (max-height: 800px) {
+  .battle-layout .battle-lane {
+    grid-template-rows: 20px repeat(var(--field-tracks), minmax(77px, auto));
+  }
+  .battle-layout .field-unit .field-symbol {
+    font-size: 26px;
+  }
+  .loadout-modal {
+    padding: 15px;
+  }
+}
+@media (max-width: 800px) {
+  .battle-layout .battle-lane {
+    grid-template-rows: 32px repeat(var(--field-tracks), minmax(130px, auto));
+    padding: 0 2px 5px;
+    gap: 4px;
+  }
+  .battle-layout .field-unit {
+    flex-direction: column;
+    gap: 2px;
+    padding: 4px 2px;
+  }
+  .battle-layout .field-unit-info strong {
+    font-size: 10px;
+  }
+  .unit-gauges {
+    display: block;
+  }
+  .unit-gauge small {
+    font-size: 8px;
+    white-space: normal;
+    overflow-wrap: anywhere;
+  }
+  .unit-telegraph > span {
+    font-size: 9px;
+    flex-wrap: wrap;
+  }
+  .unit-telegraph small {
+    font-size: 8px;
+  }
+  .loadout-modal {
+    padding: 12px;
+    max-height: 96dvh;
+  }
+  .loadout-modal h2 {
+    font-size: 17px;
+  }
+  .loadout-party {
+    grid-template-columns: 1fr;
+    gap: 8px;
+  }
+  .loadout-party article {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 4px;
+  }
+  .loadout-party h3 {
+    grid-column: 1/-1;
+    margin-bottom: 0;
+  }
+  .weapon-slot {
+    padding: 4px;
+    gap: 5px;
+  }
+  .weapon-slot .weapon-glyph {
+    font-size: 20px;
+  }
+  .weapon-slot strong {
+    font-size: 11px;
+  }
+  .weapon-pool {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .weapon-choice {
+    grid-template-columns: 1fr;
+    padding: 8px;
+  }
+  .weapon-choice .weapon-glyph {
+    display: none;
+  }
+  .weapon-choice > :not(.weapon-glyph) {
+    grid-column: 1;
+  }
+  .tactic-cards {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .tactic-cards button {
+    padding: 8px;
+  }
+  .tactic-cards strong {
+    font-size: 11px;
+  }
+  .formation-board {
+    gap: 6px;
+    padding: 6px;
+  }
+  .formation-actor {
+    padding: 6px;
+  }
+  .formation-actor-title {
+    gap: 4px;
+  }
+  .preset-weapons {
+    flex-direction: column;
+  }
+  .weapon-pool-heading,
+  .board-heading {
+    flex-wrap: wrap;
+    gap: 4px;
+  }
+}
+
+.battle-layout .field-unit-info {
+  gap: 2px;
+}
+.battle-layout .field-unit:disabled:not(.fallen):not(.outside-target) {
+  opacity: 1;
+}
+.pad-actor-vitals,
+.pad-atb {
+  display: none;
+}
+.pad-actor {
+  min-height: 50px;
+}
+.unit-gauge.gauge-break [role='meter'] {
+  height: 5px;
+  background: #5b4231;
+}
+.unit-gauge.gauge-break small {
+  color: #ffd282;
+  font-weight: bold;
+}
+@media (min-width: 1200px) and (max-height: 800px) {
+  .pad-layout .command-diamond {
+    grid-template-rows: repeat(3, 50px);
+    gap: 4px;
+  }
+  .pad-layout .direct-command {
+    min-height: 46px;
+    padding-top: 3px;
+    padding-bottom: 3px;
+  }
+  .pad-layout .pad-desk {
+    min-height: 218px;
+  }
+  .pad-layout .battle-clock strong {
+    line-height: 1.1;
+  }
+  .pad-layout .pad-actor {
+    padding-top: 5px;
+    padding-bottom: 5px;
+  }
+  .pad-layout .field-footer {
+    min-height: 30px;
+  }
+}
+
+body:has(.loadout-modal) {
+  overflow: hidden;
+}
+.weapon-choice:disabled {
+  opacity: 0.65;
+}
+@media (min-width: 1200px) and (max-height: 800px) {
+  .pad-layout .pad-direction-commands {
+    gap: 3px;
+  }
+  .pad-layout .pad-direction-commands button {
+    padding: 3px 6px;
+    font-size: 11px;
+  }
+  .pad-layout .pad-direction-commands .pad-glyph {
+    height: 20px;
+    min-width: 20px;
+  }
+  .pad-layout .pad-actor-crest {
+    line-height: 1;
+  }
+  .pad-layout .battle-heading > div:first-child {
+    display: flex;
+    align-items: baseline;
+    gap: 12px;
+  }
+  .pad-layout .battle-heading h1 {
+    margin: 0;
+  }
+  .pad-layout .battle-clock small {
+    display: none;
+  }
+  .pad-layout .battle-clock strong {
+    margin: 0;
+  }
+}
+@media (min-width: 1200px) and (max-height: 800px) {
+  .pad-layout .pad-queue-help {
+    min-height: 150px;
+    padding-top: 4px;
+    padding-bottom: 4px;
+  }
+}
+@media (min-width: 801px) {
+  .battle-layout:not(.pad-layout):not(.watch-layout) .battle-main {
+    display: flex;
+    flex-direction: column;
+  }
+  .battle-layout:not(.pad-layout):not(.watch-layout) .battlefield {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+  }
+  .battle-layout:not(.pad-layout):not(.watch-layout) .horizontal-field {
+    flex: 1;
+  }
+  .battle-layout:not(.pad-layout):not(.watch-layout) .unit-gauge small {
+    font-size: 10px;
+  }
+}
+@media (min-width: 801px) {
+  .battle-layout:not(.pad-layout):not(.watch-layout) .field-footer {
+    flex: 0 0 38px;
+    height: 38px;
+  }
+}
+@media (min-width: 1200px) {
+  .battle-layout:not(.pad-layout):not(.watch-layout) .focus-panel {
+    min-height: 130px;
+  }
+}
+
+/* One interaction model, with keys laid out for a keyboard rather than face buttons. */
+.keyboard-console .command-diamond {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  grid-template-rows: repeat(2, minmax(65px, 1fr));
+  grid-template-areas: 'confirm skill' 'item cancel';
+  gap: 8px;
+}
+.keyboard-console .diamond-center {
+  display: none;
+}
+.keyboard-console .direct-command {
+  min-width: 0;
+  justify-content: flex-start;
+  padding: 10px;
+}
+.keyboard-console .keyboard-glyph {
+  border-radius: 5px;
+  min-width: 26px;
+  width: auto;
+  padding: 0 6px;
+  font: 700 12px monospace;
+}
+.keyboard-console .pad-direction-commands {
+  gap: 6px;
+}
+.keyboard-console .pad-direction-commands button {
+  min-height: 34px;
+}
+.keyboard-console .pad-command-root {
+  align-items: stretch;
+}
+.keyboard-console .pad-plan-heading > button {
+  text-align: left;
+}
+@media (min-width: 1200px) and (min-height: 801px) {
+  .keyboard-console .pad-desk {
+    min-height: 270px;
+  }
+}

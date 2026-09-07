@@ -1,6 +1,7 @@
 import { POLICY_IDS, POLICY_INFO, type PolicyId } from '../ai/policies';
 import { WatchPlayer, type WatchPlanning } from '../ai/watch-player';
-import { ROW_NAMES, SKILLS } from '../content/data';
+import { ROW_NAMES } from '../content/data';
+import { actionStatus } from './timing';
 import { weaponOf } from '../sim/engine';
 import { planned, stepName, targetName } from '../sim/plan';
 import type { State } from '../sim/types';
@@ -106,12 +107,15 @@ export function WatchConsole({
               <i style={{ width: `${(a.hp / a.maxHp) * 100}%`, background: a.color }} />
             </div>
             <div className="watch-atb">
-              ATB <b>{a.atb.toFixed(1)} / 4</b>
+              ATB{' '}
+              <b>
+                {a.atb.toFixed(1)} / {s.config.atbMax}
+              </b>
               <span>
                 {a.hp <= 0
                   ? '戦闘不能'
                   : a.action
-                    ? `${SKILLS[a.action.skillId].name} ${a.action.remaining.toFixed(1)}s`
+                    ? actionStatus(a.action)
                     : a.nextRow
                       ? '移動中'
                       : a.nextSlot !== null

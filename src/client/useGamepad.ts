@@ -11,7 +11,7 @@ import {
   type PadFamily,
   type PadSnapshot,
 } from '../input/gamepad';
-const STORAGE = 'orchestra-gamepad-v2';
+const STORAGE = 'orchestra-gamepad-v3';
 interface Saved {
   family: PadFamily | 'auto';
   display: 'auto' | 'pad' | 'pointer';
@@ -20,7 +20,10 @@ interface Saved {
 function readSaved(): Saved {
   try {
     const x = JSON.parse(
-      localStorage.getItem(STORAGE) ?? localStorage.getItem('orchestra-gamepad-v1') ?? '{}',
+      localStorage.getItem(STORAGE) ??
+        localStorage.getItem('orchestra-gamepad-v2') ??
+        localStorage.getItem('orchestra-gamepad-v1') ??
+        '{}',
     );
     return {
       family: ['auto', 'xbox', 'playstation', 'switch'].includes(x.family) ? x.family : 'auto',
@@ -39,13 +42,21 @@ export function useGamepad(
   onAction: (a: PadAction) => void,
   onDisconnect: () => void,
   settingsOpen: boolean,
+  repeatNavigation = true,
 ) {
   const [saved, setSaved] = useState(readSaved),
     [pad, setPad] = useState<PadSnapshot | null>(null),
     [capture, setCapture] = useState<PadAction | null>(null),
     [error, setError] = useState('');
-  const callbacks = useRef({ onAction, onDisconnect, settingsOpen, saved, capture });
-  callbacks.current = { onAction, onDisconnect, settingsOpen, saved, capture };
+  const callbacks = useRef({
+    onAction,
+    onDisconnect,
+    settingsOpen,
+    saved,
+    capture,
+    repeatNavigation,
+  });
+  callbacks.current = { onAction, onDisconnect, settingsOpen, saved, capture, repeatNavigation };
   const reader = useRef(new PadReader()).current;
   const previousRaw = useRef<boolean[]>([]);
   const captureReady = useRef(false);
@@ -125,7 +136,13 @@ export function useGamepad(
         !!current &&
         (current.mapping === 'standard' || !!settings.custom[current.id]) &&
         !capturing;
-      for (const action of reader.read(current, b, now, enabled))
+      for (const action of reader.read(
+        current,
+        b,
+        now,
+        enabled,
+        callbacks.current.repeatNavigation,
+      ))
         callbacks.current.onAction(action);
       if (!open && capturing) setCapture(null);
       frame = requestAnimationFrame(poll);

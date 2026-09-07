@@ -33,7 +33,9 @@ export interface Observation {
     >[]
   >;
   presets: ReadonlyDeep<Preset[]>;
-  rules: ReadonlyDeep<Pick<State['config'], 'atbRate' | 'moveTime' | 'shiftTime' | 'enemyPower'>>;
+  rules: ReadonlyDeep<
+    Pick<State['config'], 'atbMax' | 'atbRate' | 'moveTime' | 'shiftTime' | 'enemyPower'>
+  >;
 }
 
 export function observe(s: State): Observation {
@@ -65,6 +67,7 @@ export function observe(s: State): Observation {
     ),
     presets: s.presets,
     rules: {
+      atbMax: s.config.atbMax,
       atbRate: s.config.atbRate,
       moveTime: s.config.moveTime,
       shiftTime: s.config.shiftTime,

@@ -139,3 +139,8 @@
     opacity: 0.45;
   }
 }
+
+.fx-casting.ally.recovering {
+  stroke: #a8b1c6;
+  opacity: 0.65;
+}

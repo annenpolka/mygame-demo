@@ -1,9 +1,9 @@
-import { planned, planTiming } from '../sim/plan';
+import { planned, planTiming, canAppend } from '../sim/plan';
 import { DT, SKILLS, WEAPONS } from '../content/data';
 import type { Command, Row, Target } from '../sim/types';
 import type { Observation } from './observation';
 
-export const QUEUE_POLICY_VERSION = 'queue-policy-1';
+export const QUEUE_POLICY_VERSION = 'queue-policy-2';
 import { ABLATIONS, POLICY_IDS, type PolicyId, type Ablation } from './policies';
 export type CombatCommand = Extract<
   Command,
@@ -160,6 +160,7 @@ export function createQueuePolicy(
         if (assigned.has(a.id) || changing(a) || !usable(a, skillId)) return false;
         const emergency = skillId === 'guard' || skillId === 'potion';
         const plan = planned(a);
+        let retained = plan;
         if (emergency) {
           if (
             a.action?.skillId === skillId ||
@@ -185,6 +186,7 @@ export function createQueuePolicy(
               p.kind !== 'skill' || ['guard', 'potion', 'heal', 'greatHeal'].includes(p.skillId),
           );
           if (kept.length >= depth) return false;
+          retained = kept;
         } else {
           if (
             plan.length >= depth ||
@@ -198,6 +200,8 @@ export function createQueuePolicy(
           )
             return false;
         }
+        if (!canAppend({ queued: null, plan: retained }, v.rules, SKILLS[skillId].cost))
+          return false;
         commands.push({ type: 'enqueue', id: a.id, step: { kind: 'skill', skillId, target } });
         assigned.add(a.id);
         reasons.push((a.action ? '行動中に予約：' : '') + reason);

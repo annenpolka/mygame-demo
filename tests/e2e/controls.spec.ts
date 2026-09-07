@@ -53,46 +53,43 @@ async function press(page: Page, index: number) {
   await release(page);
 }
 
-test('human adds six actions including movement and future weapon skills, and cancels without reordering', async ({
+test('human fills four entries including movement and future weapon skills, and cancels without reordering', async ({
   page,
 }) => {
   await page.setViewportSize({ width: 1440, height: 900 });
   await page.getByRole('button', { name: '戦闘開始 →', exact: true }).click();
   await page.keyboard.press('f');
-  await expect(page.getByRole('button', { name: '防御を選ぶ', exact: true })).toContainText(
-    '1 ATB',
-  );
-  await page.getByRole('button', { name: '円弧斬りを選ぶ', exact: true }).click();
+  await expect(page.getByRole('button', { name: '防御を積む', exact: true })).toContainText('C');
+  await page.getByRole('button', { name: '主力技：円弧斬り', exact: true }).click();
   await page.getByRole('option', { name: '敵前列に円弧斬りを積む', exact: true }).click();
-  await page.getByRole('button', { name: '防御を選ぶ', exact: true }).click();
-  await page.getByRole('option', { name: 'アルトに防御を積む', exact: true }).click();
-  await page.getByRole('button', { name: '救急薬を選ぶ', exact: true }).click();
-  await page.getByRole('option', { name: 'リネに救急薬を積む', exact: true }).click();
-  await page.getByRole('tab', { name: '移動', exact: true }).click();
-  await page.getByRole('button', { name: '← 後列へ 0.6秒 · 末尾に積む', exact: true }).click();
-  await page.getByRole('tab', { name: '武器変更', exact: true }).click();
-  await page.getByRole('button', { name: /誓いの盾槍.*武器変更を末尾に積む/ }).click();
-  await page.getByRole('tab', { name: '技', exact: true }).click();
-  await page.getByRole('button', { name: '護りの誓いを選ぶ', exact: true }).click();
+  await page.keyboard.press('Escape');
+  await page.getByRole('button', { name: '前後移動を積む', exact: true }).click();
+  await page.getByRole('button', { name: '武器変更を積む', exact: true }).click();
+  await page.getByRole('button', { name: '基本技：護りの誓い', exact: true }).click();
   await page.getByRole('option', { name: 'セナに護りの誓いを積む', exact: true }).click();
-  await expect(page.locator('.plan-list li')).toHaveCount(6);
+  await expect(page.locator('.pad-plan-list li')).toHaveCount(4);
   expect(
-    await page.locator('.plan-list').evaluate((el) => el.scrollHeight <= el.clientHeight),
+    await page.locator('.pad-plan-list').evaluate((el) => el.scrollHeight <= el.clientHeight),
   ).toBe(true);
-  await expect(page.getByRole('button', { name: '護りの誓いを選ぶ', exact: true })).toBeDisabled();
+  await page.keyboard.press('Escape');
+  await expect(
+    page.getByRole('button', { name: '基本技：護りの誓い', exact: true }),
+  ).toBeDisabled();
   await page.screenshot({ path: 'test-results/plans-desktop.png', fullPage: true });
   const logBox = await page.locator('.log-container').boundingBox();
   expect(logBox!.y + logBox!.height).toBeLessThanOrEqual(900);
-  await page.getByRole('button', { name: '2手目の防御を取消', exact: true }).click();
-  await expect(page.locator('.plan-list li')).toHaveCount(5);
-  await expect(page.locator('.plan-list li').nth(1)).toContainText('救急薬');
+  await page.getByRole('button', { name: '2手目の後列へ移動を取消', exact: true }).click();
+  await expect(page.locator('.pad-plan-list li')).toHaveCount(3);
+  await expect(page.locator('.pad-plan-list li').nth(1)).toContainText('誓いの盾槍');
   expect(await page.getByRole('button', { name: /並べ替え|前へ移す|後ろへ移す/ }).count()).toBe(0);
   await page.keyboard.press('2');
-  await expect(page.locator('.plan-list li')).toHaveCount(0);
-  await page.keyboard.press('1');
-  await expect(page.locator('.plan-list li')).toHaveCount(5);
-  await page.getByRole('button', { name: 'すべて取消', exact: true }).click();
-  await expect(page.locator('.plan-list li')).toHaveCount(0);
+  await expect(page.locator('.pad-plan-list li')).toHaveCount(4);
+  await expect(page.locator('.pad-plan-list li').first()).toContainText('キャラ交代');
+  await page.keyboard.press('Backspace');
+  await expect(page.locator('.pad-plan-list li')).toHaveCount(3);
+  await page.keyboard.press('t');
+  await page.getByRole('button', { name: 'V 未実行をすべて取消', exact: true }).click();
+  await expect(page.locator('.pad-plan-list li')).toHaveCount(0);
 });
 
 for (const [id, label, confirm, cancel] of [
@@ -114,9 +111,7 @@ for (const [id, label, confirm, cancel] of [
     await expect(page.getByRole('button', { name: '戦闘開始 →', exact: true })).toHaveCount(0);
     await press(page, 7);
     await expect(page.getByRole('region', { name: 'パッド用戦闘コマンド' })).toBeVisible();
-    await expect(page.getByRole('button', { name: '防御を積む：防御', exact: true })).toContainText(
-      '1 ATB',
-    );
+    await expect(page.getByRole('button', { name: '防御を積む', exact: true })).toBeEnabled();
     await page.screenshot({ path: `test-results/native-${label}-root.png`, fullPage: true });
     await press(page, 3); // Main skill opens the target picker directly.
     await expect(page.getByRole('listbox', { name: '戦場で対象を選ぶ' })).toBeVisible();
@@ -130,21 +125,12 @@ for (const [id, label, confirm, cancel] of [
     await expect(page.locator('.pad-plan-list li').first()).toContainText('後列');
     await page.screenshot({ path: `test-results/native-${label}-target.png`, fullPage: true });
     await press(page, cancel);
-    await press(page, 13); // Queue starts at the last reservation.
+    await press(page, 11); // Queue starts at the last reservation.
     await press(page, confirm);
     await expect(page.locator('.pad-plan-list li')).toHaveCount(1);
     await page.screenshot({ path: `test-results/native-${label}-queue.png`, fullPage: true });
     await press(page, cancel);
-    await press(page, 5);
-    await expect(page.locator('.pad-page-heading')).toContainText('リネ');
-    await press(page, cancel); // Guard is a direct command at home.
-    await expect(page.locator('.pad-plan-list li')).toHaveCount(1);
-    await expect(page.locator('.pad-plan-list')).toContainText('防御');
-    await press(page, 4);
-    await expect(page.locator('.pad-plan-list li')).toHaveCount(1);
-    await press(page, 15); // Weapon change picker.
-    await press(page, 13);
-    await press(page, confirm);
+    await press(page, 15); // One-touch weapon change, displaying the destination role.
     await expect(
       page.getByRole('button', { name: '基本技：護りの誓い', exact: true }),
     ).toBeVisible();
@@ -153,6 +139,23 @@ for (const [id, label, confirm, cancel] of [
     await expect(page.locator('.pad-plan-list li')).toHaveCount(3);
     await expect(page.locator('.pad-plan-list li').last()).toContainText('護りの誓い');
     await press(page, cancel);
+    await press(page, cancel); // One press removes the oldest pending action from the command screen.
+    await expect(page.locator('.pad-plan-list li')).toHaveCount(2);
+    await expect(page.locator('.pad-plan-list li').first()).toContainText('誓いの盾槍');
+    await down(page, 14); // Movement appends directly and holding does not repeat.
+    await page.clock.runFor(600);
+    await expect(page.locator('.pad-plan-list li')).toHaveCount(3);
+    await release(page);
+    await expect(page.locator('.pad-plan-list li').last()).toContainText('後列へ移動');
+    await press(page, 5);
+    await expect(page.locator('.pad-plan-list li')).toHaveCount(4);
+    await expect(page.locator('.pad-plan-list li').first()).toContainText('キャラ交代');
+    await press(page, 7);
+    await page.clock.runFor(1300);
+    await expect(page.locator('.pad-page-heading')).toContainText('リネ');
+    await press(page, 7);
+    await press(page, 13);
+    await expect(page.locator('.pad-plan-list')).toContainText('防御');
     await press(page, 8);
     await expect(page.getByRole('log', { name: 'パッドの戦闘ログ' })).toBeVisible();
     await press(page, cancel);
@@ -172,6 +175,66 @@ for (const [id, label, confirm, cancel] of [
     await expect(page.getByRole('dialog', { name: '休憩ポーズ' })).toBeVisible();
   });
 }
+
+for (const mode of ['mouse', 'pad'] as const) {
+  test(`${mode} requests handoff during recovery and shows the free window without moving the battlefield`, async ({
+    page,
+  }) => {
+    await page.setViewportSize({ width: 1366, height: 752 });
+    if (mode === 'pad') await virtualPad(page, 'DualSense Wireless Controller (054c)');
+    await page.getByRole('button', { name: '戦闘開始 →', exact: true }).click();
+    await page
+      .getByRole('button', { name: mode === 'pad' ? '基本技：斬撃' : '基本技：斬撃', exact: true })
+      .click();
+    await page.getByRole('option', { name: '鐘楼の衛兵に斬撃を積む', exact: true }).click();
+    await page.keyboard.press('Escape');
+    await page.clock.runFor(1000);
+    await page.evaluate(() => document.fonts.ready);
+    const before = await page.locator('.horizontal-field').evaluate((el) => ({
+      y: el.getBoundingClientRect().y + scrollY,
+      height: el.getBoundingClientRect().height,
+    }));
+    await page.keyboard.press('e');
+    await expect(page.locator('.handoff-status')).toContainText('アルト → リネ');
+    await expect(page.locator('[data-unit=a0]')).toContainText('硬直');
+    await page.screenshot({ path: `test-results/handoff-${mode}-waiting.png`, fullPage: true });
+    await page.clock.runFor(1700);
+    await expect(page.locator('.handoff-status')).toContainText('引継ぎスロー');
+    await expect(page.locator('.handoff-status')).toContainText('集中力消費なし');
+    const after = await page.locator('.horizontal-field').evaluate((el) => ({
+      y: el.getBoundingClientRect().y + scrollY,
+      height: el.getBoundingClientRect().height,
+    }));
+    expect(after!.y).toBe(before!.y);
+    expect(after!.height).toBe(before!.height);
+    if (mode === 'pad')
+      expect(
+        await page.locator('.log-container').evaluate((el) => el.getBoundingClientRect().bottom),
+      ).toBeLessThanOrEqual(752);
+    await page.screenshot({ path: `test-results/handoff-${mode}-slow.png`, fullPage: true });
+    await page.clock.runFor(900);
+    await expect(page.locator('.handoff-status')).toHaveCount(0);
+  });
+}
+
+test('capacity setting updates visible segments and stack limit; keyboard toggles and cancels the head', async ({
+  page,
+}) => {
+  await page.getByRole('button', { name: '⚙ 実験室', exact: true }).click();
+  await page.getByLabel('最大ATB・先行入力枠', { exact: true }).fill('6');
+  await page.getByRole('button', { name: '条件を反映して再開始', exact: true }).click();
+  await page.getByRole('button', { name: '戦闘開始 →', exact: true }).click();
+  await page.keyboard.press('f');
+  for (let i = 0; i < 6; i++) await page.keyboard.press('r');
+  await expect(page.locator('.pad-plan-list li')).toHaveCount(6);
+  await expect(page.locator('.pad-plan-list li').first()).toContainText('後列へ移動');
+  await expect(page.locator('.pad-plan-list li').last()).toContainText('前列へ移動');
+  await page.keyboard.press('r');
+  await expect(page.locator('.pad-plan-list li')).toHaveCount(6);
+  await page.keyboard.press('Backspace');
+  await expect(page.locator('.pad-plan-list li')).toHaveCount(5);
+  await expect(page.locator('.pad-plan-list li').first()).toContainText('前列へ移動');
+});
 
 test('custom raw controller binding is captured without firing, and persists after reload', async ({
   page,
@@ -202,8 +265,7 @@ test('mobile queue and gamepad settings stay inside the viewport', async ({ page
   await page.getByRole('button', { name: '戦闘開始 →', exact: true }).click();
   await page.keyboard.press('f');
   for (let i = 0; i < 3; i++) {
-    await page.getByRole('button', { name: '防御を選ぶ', exact: true }).click();
-    await page.getByRole('option', { name: 'アルトに防御を積む', exact: true }).click();
+    await page.getByRole('button', { name: '防御を積む', exact: true }).click();
   }
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
   await page.screenshot({ path: 'test-results/plans-mobile.png', fullPage: true });
@@ -224,18 +286,18 @@ test('mobile queue and gamepad settings stay inside the viewport', async ({ page
   await expect(page.getByRole('dialog', { name: '休憩ポーズ' })).toBeVisible();
 });
 
-test('native pad layout handles six queued actions and picker navigation at mobile width', async ({
+test('native pad layout handles four queued actions and picker navigation at mobile width', async ({
   page,
 }) => {
   await page.setViewportSize({ width: 390, height: 844 });
   await virtualPad(page, 'DualSense Wireless Controller (054c)');
   await page.getByRole('button', { name: '戦闘開始 →', exact: true }).click();
   await press(page, 7);
-  for (let i = 0; i < 6; i++) await press(page, 1);
-  await expect(page.locator('.pad-plan-list li')).toHaveCount(6);
+  for (let i = 0; i < 4; i++) await press(page, 13);
+  await expect(page.locator('.pad-plan-list li')).toHaveCount(4);
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
   await page.screenshot({ path: 'test-results/native-mobile.png', fullPage: true });
-  await press(page, 13);
+  await press(page, 11);
   await expect(page.locator('.pad-plan-list .selected')).toBeInViewport({ ratio: 1 });
   await press(page, 2);
   await expect(page.locator('.pad-plan-list li')).toHaveCount(0);
@@ -250,13 +312,12 @@ test('effects visualize resolved damage and shields; tactical stop freezes their
 }) => {
   await page.getByRole('button', { name: '戦闘開始 →', exact: true }).click();
   await page.keyboard.press('c');
-  await page.getByRole('option', { name: 'アルトに防御を積む', exact: true }).click();
-  await page.clock.runFor(250);
+  await page.clock.runFor(450);
   await expect(page.locator('[data-effect=shield]')).toHaveCount(1);
   await expect(page.locator('[data-status=shield]')).toHaveCount(1);
   await page.keyboard.press('z');
   await page.getByRole('option', { name: '鐘楼の衛兵に斬撃を積む', exact: true }).click();
-  await page.clock.runFor(1550);
+  await page.clock.runFor(2350);
   const fx = page.locator('[data-effect=slash]').first();
   await expect(fx).toBeVisible();
   const value = Number(await fx.getAttribute('data-value'));
@@ -291,7 +352,7 @@ test('native tactics selects team commands and supports reduced motion', async (
   const formation = await list.locator('[aria-selected=true] strong').innerText();
   await press(page, 0);
   await expect(page.locator('.pad-feedback')).toContainText(formation);
-  await press(page, 1);
+  await press(page, 13);
   await expect(page.locator('.pad-plan-list li')).toHaveCount(1);
   await page.getByRole('button', { name: '1手目の防御を取消', exact: true }).click();
   await expect(page.locator('.pad-plan-list li')).toHaveCount(0);
@@ -301,6 +362,7 @@ test('previous saved custom bindings migrate to direct commands without losing c
   page,
 }) => {
   await page.evaluate(() => {
+    localStorage.removeItem('orchestra-gamepad-v3');
     localStorage.removeItem('orchestra-gamepad-v2');
     localStorage.setItem(
       'orchestra-gamepad-v1',
@@ -340,7 +402,7 @@ test('previous saved custom bindings migrate to direct commands without losing c
   await press(page, 20);
   await expect(page.locator('.pad-plan-list li')).toHaveCount(1);
   const saved = await page.evaluate(() =>
-    JSON.parse(localStorage.getItem('orchestra-gamepad-v2')!),
+    JSON.parse(localStorage.getItem('orchestra-gamepad-v3')!),
   );
   expect(saved.family).toBe('playstation');
   expect(saved.custom['Legacy Custom Pad']).toMatchObject({
@@ -355,7 +417,7 @@ test('previous saved custom bindings migrate to direct commands without losing c
   });
 });
 
-test('short desktop separates command buttons and shows the battlefield, six plans, and log together', async ({
+test('short desktop separates command buttons and shows the battlefield, four plans, and log together', async ({
   page,
 }) => {
   await page.setViewportSize({ width: 1366, height: 752 });
@@ -378,11 +440,52 @@ test('short desktop separates command buttons and shows the battlefield, six pla
     }
   }
   await page.screenshot({ path: 'test-results/native-compact-root.png', fullPage: true });
-  for (let i = 0; i < 6; i++) await press(page, 1);
-  await expect(page.locator('.pad-plan-list li')).toHaveCount(6);
+  for (let i = 0; i < 4; i++) await press(page, 13);
+  await expect(page.locator('.pad-plan-list li')).toHaveCount(4);
   const logBottom = await page
     .locator('.log-container')
     .evaluate((el) => el.getBoundingClientRect().bottom + scrollY);
   expect(logBottom).toBeLessThanOrEqual(752);
-  await page.screenshot({ path: 'test-results/native-compact-six.png', fullPage: true });
+  await page.screenshot({ path: 'test-results/native-compact-four.png', fullPage: true });
 });
+
+for (const mode of ['mouse', 'pad'] as const) {
+  test(`${mode} displays windup then recovery, and queue cancellation preserves the committed action`, async ({
+    page,
+  }) => {
+    await page.setViewportSize({ width: 1366, height: 752 });
+    if (mode === 'pad') await virtualPad(page, 'DualSense Wireless Controller (054c)');
+    await page.getByRole('button', { name: '戦闘開始 →', exact: true }).click();
+    const basic = page.getByRole('button', {
+      name: mode === 'pad' ? '基本技：斬撃' : '基本技：斬撃',
+      exact: true,
+    });
+    await expect(basic).toContainText('発動0.9秒 + 硬直1秒');
+    await basic.click();
+    await page.getByRole('option', { name: '鐘楼の衛兵に斬撃を積む', exact: true }).click();
+    await page.getByRole('button', { name: '対象選択を戻る', exact: true }).click();
+    await page.clock.runFor(400);
+    await expect(page.locator('[data-unit=a0]')).toContainText('発動まで');
+    await page.screenshot({ path: `test-results/tempo-${mode}-windup.png`, fullPage: true });
+    await page.clock.runFor(600);
+    await expect(page.locator('[data-unit=a0]')).toContainText('硬直');
+    await expect(page.locator('[data-status=recovery]')).toHaveCount(1);
+    const guard = page.getByRole('button', {
+      name: mode === 'pad' ? '防御を積む' : '防御を積む',
+      exact: true,
+    });
+    await guard.click();
+    await page.getByRole('button', { name: '1手目の防御を取消', exact: true }).click();
+    await expect(page.locator('[data-unit=a0]')).toContainText('硬直');
+    expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(
+      true,
+    );
+    if (mode === 'pad')
+      expect(
+        await page.locator('.log-container').evaluate((el) => el.getBoundingClientRect().bottom),
+      ).toBeLessThanOrEqual(752);
+    await page.screenshot({ path: `test-results/tempo-${mode}-recovery.png`, fullPage: true });
+    await page.clock.runFor(1000);
+    await expect(page.locator('[data-unit=a0]')).toContainText('指示待ち');
+  });
+}

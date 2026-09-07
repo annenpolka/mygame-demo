@@ -1,3 +1,4 @@
+import { DEFAULT_CONFIG } from '../src/content/data';
 import type { EncounterSetId } from '../src/content/encounters';
 import { performance } from 'node:perf_hooks';
 import { mkdirSync, readFileSync, writeFileSync } from 'node:fs';
@@ -28,6 +29,7 @@ const values = new Set([
   '--powers',
   '--enemy-power',
   '--atb',
+  '--atb-max',
   '--out',
   '--dir',
   '--replay',
@@ -66,6 +68,7 @@ function sourceHashes() {
       'src/sim/engine.ts',
       'src/sim/types.ts',
       'src/sim/plan.ts',
+      'src/sim/tactics.ts',
       'src/ai/queue-policy.ts',
       'src/content/data.ts',
       'src/content/encounters.ts',
@@ -90,13 +93,17 @@ if (args.includes('--help') || args.includes('--list')) {
       'npm run sim -- --compare --seeds 20 --seed 1307 --powers 1,2,3 --dir artifacts/ai-comparison\n' +
       'npm run sim -- --study --seeds 30 --seed 1307 --dir artifacts/ai-study\n' +
       'npm run sim -- --replay path/to/replay.json [--atb 1.2 --enemy-power 2]\n' +
-      '追加設定: --planning legacy|next|queue --set belfry|bulwark|crossfire|pursuit|attrition --level 1〜10 --interval 0.25 --reaction 0.35 --max-seconds 180 --ablation none|no-pull|no-row|no-defense\n',
+      '追加設定: --planning legacy|next|queue --atb-max 2〜8 --set belfry|bulwark|crossfire|pursuit|attrition --level 1〜10 --interval 0.25 --reaction 0.35 --max-seconds 180 --ablation none|no-pull|no-row|no-defense\n',
   );
   console.log(POLICY_IDS.map((id) => `${id}: ${POLICY_INFO[id].description}`).join('\n'));
 } else if (value('--replay')) {
   const start = performance.now();
   const recording = parseRecording(readFileSync(value('--replay')!, 'utf8'));
   const override: Partial<Config> = {};
+  if (value('--atb-max'))
+    throw new Error(
+      '--atb-maxは新しい戦闘の設定です。既存の予約容量を変えるリプレイ比較には使えません。',
+    );
   if (value('--atb')) override.atbRate = Number(value('--atb'));
   if (value('--enemy-power')) override.enemyPower = Number(value('--enemy-power'));
   if (
@@ -131,7 +138,8 @@ if (args.includes('--help') || args.includes('--list')) {
     encounterLevel: value('--level') ? Number(value('--level')) : undefined,
     ablation,
     seed,
-    atbRate: Number(value('--atb') ?? 0.85),
+    atbRate: Number(value('--atb') ?? DEFAULT_CONFIG.atbRate),
+    atbMax: Number(value('--atb-max') ?? DEFAULT_CONFIG.atbMax),
     decisionInterval: Number(value('--interval') ?? 0.25),
     reactionSeconds: Number(value('--reaction') ?? 0.35),
     maxSeconds: Number(value('--max-seconds') ?? 180),
