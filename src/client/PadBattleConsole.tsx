@@ -1,6 +1,6 @@
 import { partyBonus } from '../sim/bonuses';
 import { weaponFunction } from './Loadout';
-import { actionStatus, skillTiming } from './timing';
+import { skillTiming } from './timing';
 import { ROLE_NAMES, ROW_NAMES, SKILLS, WEAPONS } from '../content/data';
 import { useEffect, useRef } from 'react';
 import {
@@ -13,7 +13,6 @@ import {
   plannedCost,
   projectedRow,
 } from '../sim/plan';
-import { weaponOf } from '../sim/engine';
 import {
   choices,
   selectedChoice,
@@ -375,17 +374,6 @@ export function PadBattleConsole({
               </b>
               {glyph('queue')}
             </button>
-            <span>
-              {a.action
-                ? actionStatus(a.action)
-                : a.nextRow
-                  ? '実行中：移動'
-                  : a.nextSlot !== null
-                    ? '実行中：武器変更'
-                    : q.length
-                      ? '次の手のATB待ち'
-                      : '指示待ち（手動）'}
-            </span>
           </div>
           <ol className="pad-plan-list">
             {q.map((p, i) => (

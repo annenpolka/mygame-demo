@@ -1,3 +1,4 @@
+import { BattleSound, operationFeedback } from './audio/sound';
 import { prepareLoadout } from '../ai/composition';
 import { BONUS_LABELS, BONUS_MODES } from '../sim/bonuses';
 import { AtbTimeline } from './AtbTimeline';
@@ -50,6 +51,8 @@ function download(name: string, text: string) {
 
 export function App() {
   const [session] = useState(() => new Session());
+  const [sound] = useState(() => new BattleSound());
+  useEffect(() => sound.attach(), [sound]);
   const [player] = useState(() => new WatchPlayer());
   const [, render] = useState(0);
   const [labOpen, setLabOpen] = useState(false);
@@ -72,11 +75,16 @@ export function App() {
     for (const c of commands) {
       if (c.type === 'start' && session.state.controlMode === 'ai')
         session.send(...prepareLoadout(session.state, player.loadout));
-      session.send(c);
+      const feedback = operationFeedback(c, session.state);
+      const accepted = session.send(c)[0];
+      sound.play(accepted ? feedback.cue : 'error', true);
+      if (c.type !== 'target' && !['editPreset', 'editPresetRow', 'editFormation'].includes(c.type))
+        setNotice(accepted ? feedback.label : '今はこの操作を実行できません。');
     }
     refresh();
   };
   const switchControl = () => {
+    sound.play('confirm', true);
     if (watching && s.phase === 'battle')
       session.send(...s.allies.map((a) => ({ type: 'cancel' as const, id: a.id })), {
         type: 'time',
@@ -140,6 +148,7 @@ export function App() {
       frame = 0;
     const loop = (now: number) => {
       player.advance(session, (now - previous) / 1000);
+      sound.observe(session.state, session.log, session.initial);
       previous = now;
       render((x) => x + 1);
       frame = requestAnimationFrame(loop);
@@ -161,7 +170,7 @@ export function App() {
       cancelAnimationFrame(frame);
       document.removeEventListener('visibilitychange', hidden);
     };
-  }, [session, player]);
+  }, [session, player, sound]);
   useEffect(() => {
     const blocked =
       loadoutOpen ||
@@ -327,6 +336,12 @@ export function App() {
   }, [notice]);
 
   const applyBattleResult = (r: ReturnType<typeof battleInput>) => {
+    if (!r.commands.length) {
+      if (r.ui.page !== battleUI.page)
+        sound.play(r.ui.page === 'command' ? 'cancel' : 'open', true);
+      else if (r.ui.key !== battleUI.key) sound.play('nav', true);
+      else if (r.ui.message && r.ui.stamp !== battleUI.stamp) sound.play('error', true);
+    }
     setBattleUI({
       ...r.ui,
       logOffset: Math.min(r.ui.logOffset, Math.max(0, session.log.length - 6)),
@@ -337,6 +352,7 @@ export function App() {
     applyBattleResult(battleInput(s, battleUI, action));
   };
   const handlePad = (action: PadAction) => {
+    void sound.unlock();
     if (
       s.phase === 'battle' &&
       !watching &&
@@ -350,6 +366,7 @@ export function App() {
       return;
     }
     if (action === 'up' || action === 'down' || action === 'left' || action === 'right') {
+      sound.play('nav', true);
       navigate(action);
       return;
     }
@@ -358,6 +375,7 @@ export function App() {
       return;
     }
     if (action === 'cancel') {
+      sound.play('cancel', true);
       if (loadoutOpen) setLoadoutOpen(false);
       else if (padOpen) setPadOpen(false);
       else if (help) {
@@ -426,9 +444,13 @@ export function App() {
     const choice = choices(s, battleUI).find(
       (c) => c.target && JSON.stringify(c.target) === JSON.stringify(target),
     );
-    if (choice && choice.key !== battleUI.key) setBattleUI({ ...battleUI, key: choice.key });
+    if (choice && choice.key !== battleUI.key) {
+      sound.play('nav', true);
+      setBattleUI({ ...battleUI, key: choice.key });
+    }
   };
   const backFromTarget = () => {
+    sound.play('cancel', true);
     setPending(null);
     setBattleUI(home);
   };
@@ -514,6 +536,25 @@ export function App() {
         )}
 
         <nav aria-label="補助操作">
+          <button
+            aria-label="効果音を切り替え"
+            aria-pressed={sound.enabled}
+            title={sound.unlocked ? '効果音のON/OFF' : 'クリックかキー入力で音声を有効にします'}
+            onClick={() => {
+              if (sound.enabled && !sound.unlocked) {
+                void sound.unlock().then(() => {
+                  sound.play('confirm', true);
+                  refresh();
+                });
+                return;
+              }
+              sound.setEnabled(!sound.enabled);
+              if (sound.enabled) sound.play('confirm', true);
+              refresh();
+            }}
+          >
+            {sound.enabled ? (sound.unlocked ? '♪ 音ON' : '♪ 音を開始') : '♪ 音OFF'}
+          </button>
           <button className={watching ? 'active' : ''} onClick={switchControl}>
             {watching ? '手動に戻る' : 'AI鑑賞'}
           </button>
@@ -728,7 +769,10 @@ export function App() {
             remove={(key) =>
               applyBattleResult(confirmChoice(s, { ...battleUI, page: 'queue', key }, key))
             }
-            open={(page) => setBattleUI(openPage(s, battleUI, page))}
+            open={(page) => {
+              sound.play('open', true);
+              setBattleUI(openPage(s, battleUI, page));
+            }}
             select={select}
           />
         ) : null}
@@ -833,6 +877,22 @@ export function App() {
                 <option value={1}>第一戦から</option>
                 <option value={2}>第二戦だけ試す</option>
               </select>
+            </label>
+            <label>
+              効果音の音量
+              <input
+                aria-label="効果音の音量"
+                type="range"
+                min="0"
+                max="50"
+                step="1"
+                value={Math.round(sound.volume * 100)}
+                onChange={(e) => {
+                  sound.setVolume(Number(e.target.value) / 100);
+                  sound.play('nav', true);
+                  refresh();
+                }}
+              />
             </label>
             {(
               [
@@ -1206,7 +1266,7 @@ export function App() {
       )}
       {padOpen && <PadSettings controls={gamepad} onClose={() => setPadOpen(false)} />}
       {notice && (
-        <div className="toast" role="status">
+        <div className="toast" role="status" aria-label="操作結果">
           {notice}
         </div>
       )}

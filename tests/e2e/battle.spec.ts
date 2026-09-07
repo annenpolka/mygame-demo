@@ -37,7 +37,7 @@ test('keyboard selection, tactical stop, command reservation, and opaque system 
     .click();
   await expect(page.locator('.pad-plan-list')).toContainText('祝福の鐘');
   await page.keyboard.press('1');
-  await expect(page.locator('.atb-reservation')).toContainText('キャラ交代');
+  await expect(page.locator('.atb-reservation').first()).toContainText('キャラ交代');
   await page.keyboard.press('f');
   await page.clock.runFor(1600);
   await page.keyboard.press('f');

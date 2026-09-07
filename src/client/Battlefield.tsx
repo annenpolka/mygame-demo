@@ -107,7 +107,9 @@ export function Battlefield({
                 key={`${side}-${row}`}
                 className={`battle-lane ${side} ${row} ${danger ? 'danger-lane' : ''} ${rowTarget ? 'can-target' : ''} ${aimedRow ? 'aimed' : ''} ${active && side !== sideForSkill ? 'outside-target' : ''}`}
                 aria-label={rowName}
-                onMouseEnter={() => rowTarget && onAim({ kind: 'row', row })}
+                onPointerMove={(event) =>
+                  (event.movementX || event.movementY) && rowTarget && onAim({ kind: 'row', row })
+                }
                 onClick={(e) => {
                   if (rowTarget && !full && e.target === e.currentTarget)
                     onTarget({ kind: 'row', row });
@@ -157,7 +159,11 @@ export function Battlefield({
                             aria-label={
                               targetable ? `${a.name}に${pending.name}を積む` : `${a.name}を選択`
                             }
-                            onMouseEnter={() => targetable && onAim({ kind: 'ally', id: a.id })}
+                            onPointerMove={(event) =>
+                              (event.movementX || event.movementY) &&
+                              targetable &&
+                              onAim({ kind: 'ally', id: a.id })
+                            }
                             onClick={() =>
                               targetable
                                 ? onTarget({ kind: 'ally', id: a.id })
@@ -232,7 +238,11 @@ export function Battlefield({
                             aria-label={
                               targetable ? `${e.name}に${pending.name}を積む` : `${e.name}を狙う`
                             }
-                            onMouseEnter={() => targetable && onAim({ kind: 'enemy', id: e.id })}
+                            onPointerMove={(event) =>
+                              (event.movementX || event.movementY) &&
+                              targetable &&
+                              onAim({ kind: 'enemy', id: e.id })
+                            }
                             onClick={() =>
                               targetable
                                 ? onTarget({ kind: 'enemy', id: e.id })

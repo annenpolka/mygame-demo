@@ -1030,3 +1030,18 @@ body:has(.loadout-modal) {
     font-size: 9px;
   }
 }
+@media (min-width: 1200px) {
+  .pad-layout .pad-queue-help {
+    min-height: 118px;
+    padding: 2px 8px;
+  }
+  .pad-layout .pad-queue-help p {
+    margin: 3px 0;
+    font-size: 12px;
+    line-height: 1.4;
+  }
+  .pad-layout .pad-queue-help button {
+    padding: 5px 12px;
+    margin: 5px 0;
+  }
+}
