@@ -8,6 +8,7 @@ const pages = {
   tactics: '全員への指示',
   queue: '予約取消',
   log: 'ログ',
+  aux: '補助メニュー',
 };
 export function PlaytestNotes({
   notes,

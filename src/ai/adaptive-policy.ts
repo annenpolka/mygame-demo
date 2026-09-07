@@ -1,5 +1,5 @@
 import { DT, SKILLS, WEAPONS } from '../content/data';
-import { canAppend, planned, projectedSlot, pendingPotions } from '../sim/plan';
+import { canAppend, committed as planned, projectedSlot, pendingPotions } from '../sim/plan';
 import type { Command, Target } from '../sim/types';
 import type { Observation } from './observation';
 import { SLOT_SETS, teamOutput } from './composition';
@@ -103,7 +103,12 @@ export function createAdaptivePolicy(style: 'adaptive' | 'assault', reaction = 0
         };
       }
       for (const a of live) {
-        if (a.nextRow !== null || a.nextSlot !== null || projectedSlot(a) !== a.slot) continue;
+        if (
+          a.nextRow !== null ||
+          a.nextSlot !== null ||
+          projectedSlot({ ...a, draft: [] }) !== a.slot
+        )
+          continue;
         const w = WEAPONS[a.weapons[a.slot]],
           q = planned(a);
         const dangers = casts.filter(

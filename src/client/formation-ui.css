@@ -569,7 +569,7 @@ body:has(.loadout-modal) {
 .keyboard-console .command-diamond {
   grid-template-columns: repeat(2, minmax(0, 1fr));
   grid-template-rows: repeat(2, minmax(65px, 1fr));
-  grid-template-areas: 'confirm skill' 'cutQueue back';
+  grid-template-areas: 'confirm skill' 'guard back';
   gap: 8px;
 }
 .keyboard-console .diamond-center {
@@ -1079,4 +1079,25 @@ body:has(.loadout-modal) {
     margin: 4px 0;
     line-height: 1.45;
   }
+}
+
+.plan-stage {
+  font-size: 9px;
+  font-style: normal;
+  font-weight: normal;
+  margin-left: 4px;
+  opacity: 0.8;
+}
+.atb-reservation.draft {
+  border: 1px dashed #dbc496;
+  background: #83745433;
+}
+.palette-target-bar > small {
+  margin-left: auto;
+  font-size: 11px;
+}
+
+.pad-direction-commands > small {
+  grid-column: 1 / -1;
+  font-size: 10px;
 }

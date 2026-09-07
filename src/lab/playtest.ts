@@ -196,10 +196,21 @@ const int = z.number().int().nonnegative();
 const viewSchema = z.object({
   pending: z.string().max(100).nullable(),
   battle: z.object({
-    page: z.enum(['command', 'target', 'move', 'weapon', 'tactics', 'queue', 'log']),
+    page: z.enum(['command', 'target', 'move', 'weapon', 'tactics', 'queue', 'log', 'aux']),
     key: z.string().max(200),
     skillId: z.string().max(100).nullable(),
     tactics: z.enum(['optima', 'formation', 'items']),
+    candidates: z
+      .record(
+        z.string().max(100),
+        z.union([
+          z.object({ kind: z.enum(['enemy', 'ally']), id: int.max(2) }),
+          z.object({ kind: z.literal('row'), row: z.enum(['front', 'back']) }),
+        ]),
+      )
+      .optional(),
+    candidateSide: z.enum(['enemy', 'ally']).optional(),
+    candidateWeapon: z.string().max(100).optional(),
     queueFocus: z
       .object({
         key: z.string().max(200),

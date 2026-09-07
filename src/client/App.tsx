@@ -27,6 +27,8 @@ import {
   battleInput,
   type BattleAction,
   newBattlePad,
+  paletteCursor,
+  selectCandidate,
   home,
   openPage,
   confirmChoice,
@@ -445,7 +447,7 @@ export function App() {
       ) {
         if (event.key.toLowerCase() === 'h') {
           event.preventDefault();
-          send({ type: 'hold', id: s.selected, value: !s.allies[s.selected].executionHeld });
+          applyBattleInput('execute');
           return;
         }
         const keys: Record<string, BattleAction> = {
@@ -467,10 +469,12 @@ export function App() {
           f: 'stop',
           Backspace: 'back',
           Delete: 'back',
-          r: 'left',
-          w: 'right',
+          r: 'toggleRow',
+          w: 'toggleWeapon',
           t: 'queue',
           l: 'log',
+          u: 'tactics',
+          i: 'aux',
         };
         const action = keys[event.key] ?? keys[event.key.toLowerCase()];
         if (action) {
@@ -618,7 +622,7 @@ export function App() {
       select(ids[(i + (action === 'next' ? 1 : ids.length - 1)) % ids.length]);
       return;
     }
-    if (action === 'log') {
+    if (action === 'menu') {
       inputScope().querySelector<HTMLButtonElement>('.log-heading button')?.click();
       return;
     }
@@ -646,15 +650,7 @@ export function App() {
       }
     },
     padOpen,
-    battleUI.page !== 'command' ||
-      s.phase !== 'battle' ||
-      notesOpen ||
-      loadoutOpen ||
-      s.paused ||
-      help ||
-      padOpen ||
-      labOpen ||
-      watching,
+    true,
   );
   const padActive = gamepad.usePadDisplay && s.phase === 'battle' && !watching;
   const shownPending = battleUI.page === 'target' ? battleUI.skillId : null;
@@ -753,8 +749,8 @@ export function App() {
                   {buttonName(gamepad.bindings.previous, gamepad.family)} /{' '}
                   {buttonName(gamepad.bindings.next, gamepad.family)}
                 </b>{' '}
-                仲間 <b>{buttonName(gamepad.bindings.slow, gamepad.family)}</b> スロー{' '}
-                <b>{buttonName(gamepad.bindings.stop, gamepad.family)}</b> 停止
+                仲間 <b>{buttonName(gamepad.bindings.execute, gamepad.family)}</b> 行動開始{' '}
+                <b>{buttonName(gamepad.bindings.cutQueue, gamepad.family)}</b> 後続取消
               </>
             ) : (
               'パッド設定で、この機器のボタンを割り当ててください。'
@@ -967,6 +963,10 @@ export function App() {
             state={s}
             pending={shownPending ? SKILLS[shownPending] : null}
             aim={aim}
+            palette={
+              s.phase === 'battle' && !watching && !shownPending ? paletteCursor(s, battleUI) : null
+            }
+            onCandidate={(side, target) => setBattleUI(selectCandidate(s, battleUI, side, target))}
             onAlly={select}
             onEnemy={(id) => {
               if (!watching) send({ type: 'target', id });
@@ -976,6 +976,11 @@ export function App() {
             onBack={backFromTarget}
             confirmLabel={
               padActive ? buttonName(gamepad.bindings.confirm, gamepad.family) : 'Enter'
+            }
+            navigationLabel={
+              padActive
+                ? `${gamepad.bindings.navigation === 'dpad' ? '十字キー' : '左スティック'}：左右で候補・上下で敵／味方`
+                : undefined
             }
             backLabel={padActive ? buttonName(gamepad.bindings.back, gamepad.family) : 'Esc'}
           />
@@ -1440,7 +1445,7 @@ export function App() {
             <span className="eyebrow">HOW TO PLAY</span>
             <h2>全体を指揮し、一手を差し込む。</h2>
             <p>
-              選択中の仲間は、予約が空なら指示を待ちます。ほかの仲間は装備中の武器で自動行動します。AはHP削りとチェイン維持、Bはチェイン上昇、Dは被害を受け止める防護、Sは回復・強化・弱体。敵のチェインが
+              選択中の仲間は、行動開始を押すまで下書きを実行しません。ほかの仲間は装備中の武器で自動行動します。AはHP削りとチェイン維持、Bはチェイン上昇、Dは被害を受け止める防護、Sは回復・強化・弱体。敵のチェインが
               {COMBAT_RULES.breakThreshold}%になると
               {BATTLE_TIMING.breakDuration}秒間ブレイクします。
             </p>
@@ -1456,12 +1461,20 @@ export function App() {
                   秒で交代し、開始時に後続の予約を解除します。満杯でも交代を積めます。
                 </p>
                 <p>
-                  <Key>Z</Key> 基本技を選ぶ。<Key>X</Key>{' '}
-                  主力技を選び、対象をクリックして末尾へ追加。<Key>C</Key> 防御。<Key>V</Key>{' '}
-                  救急薬。先行入力は合計最大ATBまで、移動・武器・薬を含む手数も最大ATBと同じです。
+                  <Key>Z</Key> 基本技、<Key>X</Key> 主力技、<Key>C</Key> 防御を下書きに追加。
+                  戦場の対象候補を先に選べます。候補を変えても、積んだ行動の対象や仲間AIの狙いは変わりません。
+                  <Key>V</Key> は救急薬、<Key>I</Key> は補助、<Key>U</Key> は全体指示。
                 </p>
                 <p>
-                  パッドでは×／Aが基本技、△／Yが主力技。○／Bは戻る専用、□／Xはどの戦闘画面でも後続取消。薬は↑の指示メニュー内「道具」から選びます。↓で防御、R3で予約一覧、一件取消後は方向入力で選び直します。予約一覧の△／Yで保留・解除。キーボードはEscで戻る、Bで後続取消、Cで防御、Vで薬、Hで保留、Pで休憩です。実行中の一手と最後の硬直は後続取消でも続き、その間はATB補充が止まります。
+                  <Key>H</Key>{' '}
+                  で行動開始。下書きの一組を確定し、その列の合計ATBと現在の一手の終了を待ちます。
+                  実行中も次の下書きを作れます。確定済みの未実行分と下書きの合計は最大ATBと同じコスト・手数まで。
+                  未開始の確定列は一組まで。開始を連打しても複製も停止もしません。
+                </p>
+                <p>
+                  パッドでは×／Aが基本技、□／Xが主力技、△／Yが防御。○／Bは戻る専用。
+                  右トリガーで行動開始、左トリガーで後続取消。左スティックで対象候補を選び、十字キーの左でスロー、右で戦術停止、上で全体指示、下で補助を開きます。
+                  薬・移動・武器変更は補助メニュー。十字キーで選択する代替配置も設定できます。
                 </p>
               </div>
               <div>
@@ -1471,7 +1484,7 @@ export function App() {
                   <Key>S</Key>
                   <Key>D</Key>
                   <Key>G</Key>{' '}
-                  で武器構成を切り替え。Rで前後移動、Wで武器切替を積みます。Escは戻るだけ。Bで後続をまとめて取り消し、Tの予約一覧で一件ずつ取り消せます。実行中の技と終了硬直は続き、支払い済みATBは戻りません。未使用ATBは残ります。
+                  で武器構成を切り替え。Rで前後移動、Wで武器切替を積みます。Escは戻るだけ。Bで後続取消。確定分だけを消し、下書きは残します。Tの予約一覧で選んだ一件を訂正できます。取消後は方向入力で選び直すまで、決定の連打では次を消しません。実行中の技と終了硬直は続き、支払い済みATBは戻りません。未使用ATBは残ります。
                   <Key>7</Key>
                   <Key>8</Key>
                   <Key>9</Key> で一括隊列。
@@ -1483,7 +1496,7 @@ export function App() {
                   。射撃・魔法は後列でも威力を維持します。
                 </p>
                 <p>
-                  パッドのコマンド画面では↑が指示・道具、←の一押しで前後移動を積み、→の一押しで表示された役割へ武器を切り替えます。画面下に今使えるボタンが表示されます。
+                  列技は追加時の列を保存し、技ボタンに範囲と人数を表示します。防御は常に自分。下書きの武器変更を見越した技も選べます。
                 </p>
               </div>
               <div>
@@ -1500,7 +1513,7 @@ export function App() {
                   実秒間の無料スローで状況を確認できます。再発動待ちはありません。
                 </p>
                 <p>
-                  パッドは左トリガーでスロー、右トリガーで戦術停止。メニューを開くだけでは時間は止まりません。
+                  行動の発動・接続・終了硬直中はATB補充が止まります。メニューを開くだけでは時間は止まりません。
                 </p>
               </div>
               <div>

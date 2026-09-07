@@ -120,6 +120,17 @@ export function planTiming(
             : 'scheduled',
       }) as PlanTiming,
   );
+  // A draft forecast means "if executed now"; keep its status distinct from committed work.
+  if (canExecuteSequence(a)) {
+    const key =
+      Math.max(0, ...queue.map((p) => p.key), ...(a.sequences ?? []).map((b) => b.key)) + 1;
+    a.sequences ??= [];
+    a.sequences.push({ key, started: false });
+    a.plan ??= [];
+    a.plan.push(...a.draft!.map((p) => ({ ...p, sequenceId: key })));
+    a.draft = [];
+    a.executionHeld = false;
+  }
   if (a.executionHeld || !queue.length) return results;
   const byKey = new Map(results.map((r) => [r.key, r]));
   let elapsed = 0;

@@ -34,6 +34,7 @@ test('real audio graph starts on interaction, gives action feedback, and respect
   const voices = await page.evaluate(() => (window as any).audioStats.voices);
   await page.keyboard.press('r');
   await page.keyboard.press('w');
+  await page.keyboard.press('h');
   await page.keyboard.press('b');
   expect(await page.evaluate(() => (window as any).audioStats.voices)).toBe(voices);
   await expect(page.locator('.toast')).toContainText('未実行の予約をすべて取消');

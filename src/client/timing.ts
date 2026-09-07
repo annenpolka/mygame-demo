@@ -19,6 +19,7 @@ export function actionStatus(action: Action) {
 
 import {
   canLink,
+  sequenceCost,
   pendingSteps,
   validExecutionStep,
   type ExecutionRules,
@@ -44,6 +45,9 @@ export function executionStatus(a: ExecutionActor, rules: ExecutionRules, view: 
   )
     return `${a.nextRow !== null ? '移動中' : '武器変更中'} · 補充停止`;
   if (a.executionHeld) return '実行保留中 · ATB充填';
+  const sequence = a.sequences?.find((b) => b.key === head?.sequenceId && !b.started);
+  if (sequence) return `確定列 ${sequenceCost(a, sequence.key)} ATB待ち · 現在${a.atb.toFixed(1)}`;
+  if (a.draft?.length) return `下書き ${a.draft.length}手 · 行動開始待ち`;
   return a.atb >= rules.atbMax
     ? 'ATB満タン · 指示待ち'
     : head

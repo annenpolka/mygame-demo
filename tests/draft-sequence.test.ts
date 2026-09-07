@@ -26,6 +26,24 @@ const starts = (s: State) => s.events.filter((e) => e.type === 'action' && e.sou
 const snapshot = (s: State) =>
   parseSnapshot(JSON.stringify({ kind: 'snapshot', version: VERSION, state: s }));
 describe('explicit, bounded action sequences', () => {
+  it('keeps AI committed input on the actual weapon while the human draft previews a future one', () => {
+    const s = quiet(),
+      a = s.allies[0];
+    draft(s, { kind: 'weapon', slot: 1 });
+    expect(command(s, { type: 'enqueue', id: 0, step: slash })).toBe(true);
+    expect(
+      command(s, {
+        type: 'enqueue',
+        id: 0,
+        step: { kind: 'skill', skillId: 'ward', target: { kind: 'ally', id: 0 } },
+      }),
+    ).toBe(false);
+    expect(a.draft).toMatchObject([{ kind: 'weapon', slot: 1 }]);
+    const before = copy(s);
+    planTiming(a, s.config, s);
+    expect(s).toEqual(before);
+  });
+
   it('keeps edits inert even when ATB is full and does not turn execution into an enable switch', () => {
     const s = quiet(1),
       a = s.allies[0];
@@ -36,8 +54,9 @@ describe('explicit, bounded action sequences', () => {
     expect(a.atb).toBe(4);
     expect(starts(s)).toHaveLength(0);
     expect(
-      planTiming(a, s.config, s).every((p) => p.status === 'draft' && p.ends === Infinity),
+      planTiming(a, s.config, s).every((p) => p.status === 'draft' && Number.isFinite(p.ends)),
     ).toBe(true);
+    expect(planTiming(a, s.config, s).map((p) => p.linked)).toEqual([false, true, true]);
     execute(s);
     const group = copy(a.plan);
     for (let i = 0; i < 10; i++) expect(command(s, { type: 'executeSequence', id: 0 })).toBe(false);

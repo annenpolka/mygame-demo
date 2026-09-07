@@ -4,7 +4,15 @@ import { ROW_NAMES } from '../content/data';
 import { PadGlyph } from './PadBattleConsole';
 import type { PadBindings, PadFamily, PadAction } from '../input/gamepad';
 import { weaponOf } from '../sim/engine';
-import { isHandoff, planCost, planned, stepName, targetName } from '../sim/plan';
+import {
+  canExecuteSequence,
+  committed,
+  isHandoff,
+  planCost,
+  planned,
+  stepName,
+  targetName,
+} from '../sim/plan';
 import type { State, Command } from '../sim/types';
 import { executionStatus } from './timing';
 
@@ -75,16 +83,22 @@ export function AtbTimeline({
         </b>
         <div className="sequence-controls" aria-label="連続行動の操作">
           <button
-            aria-pressed={a.executionHeld}
-            disabled={s.controlMode !== 'manual'}
-            title="現在の一手と硬直は続け、次の開始を保留。保留中も予約を編集できます。"
-            onClick={() => send({ type: 'hold', id: a.id, value: !a.executionHeld })}
+            disabled={
+              !canExecuteSequence(a) || s.pendingSelect !== null || s.controlMode !== 'manual'
+            }
+            title="見えている下書きだけを一組として確定。列全体の必要ATBと現在の一手の終了を待ちます。"
+            onClick={() => act('execute')}
           >
-            {keyboard && <kbd>H</kbd>} {a.executionHeld ? '保留解除・放つ' : '実行保留・貯める'}
+            {keyboard ? (
+              <kbd>H</kbd>
+            ) : (
+              <PadGlyph action="execute" bindings={bindings} family={family} />
+            )}{' '}
+            行動開始
           </button>
           <button
-            disabled={!q.length || s.controlMode !== 'manual'}
-            title="未開始の予約をすべて取り消し、残ったATBを保持。現在の一手と終了硬直は続きます。"
+            disabled={!committed(a).length || s.controlMode !== 'manual'}
+            title="確定した未開始分を取り消し、下書きと残ったATBを保持。現在の一手と終了硬直は続きます。"
             onClick={() => act('cutQueue')}
           >
             {keyboard ? (
@@ -107,12 +121,17 @@ export function AtbTimeline({
           .map(({ p, index, start, cost }) => (
             <div
               key={p.key}
-              className={`atb-reservation ${index > 1 && q.some(isHandoff) ? 'will-reset' : ''}`}
+              className={`atb-reservation ${a.draft?.some((d) => d.key === p.key) ? 'draft' : 'committed'} ${index > 1 && q.some(isHandoff) ? 'will-reset' : ''}`}
               style={{ gridColumn: `${start + 1} / span ${cost}` }}
               title={`${index}. ${stepName(a, p)} · ${cost} ATB${p.kind === 'skill' ? ` → ${targetName(s, p.target)}` : ''}`}
             >
               <b>{index}</b>
-              <strong>{stepName(a, p)}</strong>
+              <strong>
+                {stepName(a, p)}{' '}
+                <em className="plan-stage">
+                  {a.draft?.some((d) => d.key === p.key) ? '下書き' : '確定'}
+                </em>
+              </strong>
               <small>{cost} ATB</small>
             </div>
           ))}

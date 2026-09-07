@@ -1,21 +1,20 @@
 import { COMBAT_RULES } from '../content/rules';
 import { partyBonus } from '../sim/bonuses';
-import { weaponFunction } from './Loadout';
 import { skillTiming } from './timing';
-import { ROLE_NAMES, ROW_NAMES, SKILLS, WEAPONS } from '../content/data';
+import { ROLE_NAMES, SKILLS, WEAPONS } from '../content/data';
 import { Fragment, useEffect, useRef } from 'react';
 import {
   planned,
+  committed,
   planTiming,
   projectedSlot,
   stepName,
   targetName,
-  pendingPotions,
   plannedCost,
-  projectedRow,
 } from '../sim/plan';
 import {
   choices,
+  skillPreview,
   selectedChoice,
   unavailable,
   type BattlePad,
@@ -37,8 +36,10 @@ export function PadGlyph({
 }) {
   const index = bindings[action];
   return (
-    <b className={`pad-glyph family-${family} button-${index} ${index < 4 ? 'face' : ''}`}>
-      {buttonName(index, family)}
+    <b
+      className={`pad-glyph family-${family} button-${index} ${index >= 0 && index < 4 ? 'face' : ''}`}
+    >
+      {index < 0 ? '一覧' : buttonName(index, family)}
     </b>
   );
 }
@@ -93,7 +94,7 @@ export function PadBattleConsole({
     );
   const list = choices(s, ui),
     choice = selectedChoice(s, ui);
-  const keyNames: Record<PadAction, string> = {
+  const keyNames: Record<PadAction | 'log', string> = {
     mark: 'M',
     confirm: ui.page === 'command' ? 'Z' : 'Enter',
     skill: 'X',
@@ -102,21 +103,31 @@ export function PadBattleConsole({
     previous: 'Q',
     next: 'E',
     up: '↑',
-    down: 'C',
-    left: 'R',
-    right: 'W',
+    down: '↓',
+    left: '←',
+    right: '→',
     queue: 'T',
     log: 'L',
+    menu: 'I',
+    aux: 'I',
+    tactics: 'U',
+    execute: 'H',
+    guard: 'C',
     slow: 'Space',
     stop: 'F',
     pause: 'P',
   };
-  const glyph = (action: PadAction) =>
+  const glyph = (action: PadAction | 'log') =>
     keyboard ? (
       <kbd className="pad-glyph keyboard-glyph">{keyNames[action]}</kbd>
     ) : (
-      <PadGlyph action={action} bindings={bindings} family={family} />
+      <PadGlyph action={action === 'log' ? 'menu' : action} bindings={bindings} family={family} />
     );
+  const navigationName = keyboard
+    ? '矢印キー'
+    : bindings.navigation === 'dpad'
+      ? '十字キー'
+      : '左スティック';
   const pageNames = {
     command: 'コマンド',
     target: '対象を選ぶ',
@@ -125,10 +136,11 @@ export function PadBattleConsole({
     tactics: '指示・道具',
     queue: '予約を取り消す',
     log: '戦闘ログ',
+    aux: '補助メニュー',
   };
   const commandCards: { action: PadAction; skillId?: string; title: string; fallback: string }[] = [
-    { action: 'skill', skillId: w.skills[1], title: '主力技', fallback: 'north' },
-    { action: 'cutQueue', title: '後続取消', fallback: 'west' },
+    { action: 'skill', skillId: w.skills[1], title: '主力技', fallback: 'west' },
+    { action: 'guard', skillId: 'guard', title: '防御', fallback: 'north' },
     { action: 'back', title: '戻る', fallback: 'east' },
     { action: 'confirm', skillId: w.skills[0], title: '基本技', fallback: 'south' },
   ];
@@ -220,6 +232,7 @@ export function PadBattleConsole({
               <div className="command-diamond">
                 {commandCards.map((card) => {
                   const skill = card.skillId ? SKILLS[card.skillId] : undefined;
+                  const preview = skill ? skillPreview(s, ui, skill.id) : null;
                   return (
                     <button
                       key={card.action}
@@ -234,11 +247,17 @@ export function PadBattleConsole({
                         card.action === 'cutQueue'
                           ? !q.length
                           : skill
-                            ? !!unavailable(s, skill.id)
+                            ? !!unavailable(s, skill.id) || !preview?.target
                             : false
                       }
                       onClick={() => act(card.action)}
-                      aria-label={skill ? `${card.title}：${skill.name}` : card.title}
+                      aria-label={
+                        card.action === 'guard'
+                          ? '防御を下書き'
+                          : skill
+                            ? `${card.title}：${skill.name}`
+                            : card.title
+                      }
                     >
                       {glyph(card.action)}
                       <span>
@@ -246,7 +265,7 @@ export function PadBattleConsole({
                         <strong>{skill?.name ?? card.title}</strong>
                         <em>
                           {skill
-                            ? `${skill.cost} ATB · ${skillTiming(skill)}`
+                            ? `${preview?.label} · ${skill.cost} ATB · ${skillTiming(skill)}`
                             : card.action === 'back'
                               ? '予約は変えない'
                               : '未開始分を取消 · 今の一手は続行'}
@@ -260,41 +279,10 @@ export function PadBattleConsole({
                 </div>
               </div>
               <div className="pad-direction-commands">
-                <span>{keyboard ? '移動・武器・防御を一押し' : '方向キーで一押し'}</span>
-                {(
-                  [
-                    ['up', '指示・道具', 'tactics'],
-                    ['left', `${projectedRow(a) === 'front' ? '後列' : '前列'}へ積む`, 'move'],
-                    [
-                      'right',
-                      `${WEAPONS[a.weapons[projectedSlot(a) === 0 ? 1 : 0]].role}｜${weaponFunction(WEAPONS[a.weapons[projectedSlot(a) === 0 ? 1 : 0]])}へ`,
-                      'weapon',
-                    ],
-                    ['down', '防御を積む', 'queue'],
-                  ] as const
-                ).map(([action, title, page]) => (
-                  <button
-                    key={action}
-                    aria-label={
-                      action === 'left'
-                        ? '前後移動を積む'
-                        : action === 'right'
-                          ? '武器変更を積む'
-                          : title
-                    }
-                    disabled={
-                      action === 'left' || action === 'right'
-                        ? !!unavailable(s)
-                        : action === 'down'
-                          ? !!unavailable(s, 'guard')
-                          : false
-                    }
-                    onClick={() => act(action)}
-                  >
-                    {glyph(action)}
-                    {title}
-                  </button>
-                ))}
+                <span>対象を選び、技を下書きへ</span>
+                <button onClick={() => act('tactics')}>{glyph('tactics')} 全体指示</button>
+                <button onClick={() => act('aux')}>{glyph('aux')} 補助メニュー</button>
+                <small>移動・武器変更・薬は補助へ</small>
               </div>
             </div>
           ) : ui.page === 'target' ? (
@@ -302,7 +290,7 @@ export function PadBattleConsole({
               <strong>↑ 戦場で対象を選択中</strong>
               <p>{ui.skillId && SKILLS[ui.skillId].description}</p>
               <p>
-                方向キーで駒・列を選び、{glyph('confirm')}
+                {navigationName}で駒・列を選び、{glyph('confirm')}
                 で末尾へ。決定を押すたびに同じ対象へ追加できます。
               </p>
               <p>{glyph('back')} コマンドへ戻る</p>
@@ -311,10 +299,10 @@ export function PadBattleConsole({
             <div className="pad-queue-help">
               <strong>取り消す手を選んでください。</strong>
               <p>
-                右の一覧を上下で選択し、{glyph('confirm')}で1件取消。{glyph('skill')}
-                で実行保留・解除。現在の一手と硬直は続きます。
+                一覧を{navigationName}の上下で選択し、{glyph('confirm')}
+                で1件取消。現在の一手と硬直は続きます。
               </p>
-              <button disabled={!q.length} onClick={() => act('cutQueue')}>
+              <button disabled={!committed(a).length} onClick={() => act('cutQueue')}>
                 {glyph('cutQueue')} 後続取消
               </button>
               <p>残した手の順序は変わりません。</p>
@@ -369,7 +357,9 @@ export function PadBattleConsole({
                     disabled={
                       !!c.skillId
                         ? !!unavailable(s, c.skillId)
-                        : ui.page !== 'tactics' && !!unavailable(s, ui.skillId ?? undefined)
+                        : ui.page !== 'tactics' &&
+                          ui.page !== 'aux' &&
+                          !!unavailable(s, ui.skillId ?? undefined)
                     }
                   >
                     <b className="pad-choice-arrow">{choice?.key === c.key ? '▶' : '·'}</b>
@@ -398,10 +388,10 @@ export function PadBattleConsole({
           <div className="pad-feedback" role="status" key={ui.stamp}>
             {ui.message ||
               (q.length >= s.config.atbMax
-                ? '先行入力が満杯です。一件取消は予約一覧、全部やめるときは後続取消。'
+                ? '確定分＋下書きが満杯です。下書きの訂正は予約一覧、攻撃の打ち切りは後続取消。'
                 : ui.page === 'target'
                   ? '決定を押すたび、同じ対象へ末尾に積みます。'
-                  : `先行入力は${s.config.atbMax} ATBまで。実行中も追加できます。`)}
+                  : `下書きを組んだら行動開始。確定分と合わせて${s.config.atbMax} ATBまで。`)}
           </div>
         </div>
         <aside
@@ -409,9 +399,12 @@ export function PadBattleConsole({
           aria-label={`${a.name}の予約`}
         >
           {timeButtons}
-          <div className="pad-plan-heading" title="時刻・連結は現在の対象と編成での予測">
+          <div
+            className="pad-plan-heading"
+            title="予測は通常速度の戦闘秒。時間停止中は進まず、未来の撃破・編成変更は含みません。"
+          >
             <button onClick={() => open('queue')}>
-              積んだ手{' '}
+              確定＋下書き{' '}
               <b>
                 {plannedCost(a)} / {s.config.atbMax} ATB · {q.length}/{s.config.atbMax}手
               </b>
@@ -423,6 +416,8 @@ export function PadBattleConsole({
               <Fragment key={p.key}>
                 {receipt?.index === i && receiptRow}
                 <li
+                  data-plan-key={p.key}
+                  data-plan-status={a.draft?.some((d) => d.key === p.key) ? 'draft' : 'committed'}
                   key={p.key}
                   className={ui.page === 'queue' && choice?.key === String(p.key) ? 'selected' : ''}
                 >
@@ -433,7 +428,10 @@ export function PadBattleConsole({
                     <b>{timing[i].linked ? '↳' : i + 1}</b>
                     <span>
                       <strong>
-                        {stepName(a, p)}
+                        {stepName(a, p)}{' '}
+                        <em className="plan-stage">
+                          {a.draft?.some((d) => d.key === p.key) ? '下書き' : '確定'}
+                        </em>
                         {timing[i].linked && <em className="link-tag">連結予定</em>}
                       </strong>
                       <small>
@@ -445,11 +443,15 @@ export function PadBattleConsole({
                         ·{' '}
                         {i > 0 && q[0]?.kind === 'skill' && q[0].skillId === 'handoff'
                           ? '交代開始時に解除'
-                          : timing[i].status === 'held'
-                            ? '保留解除待ち'
-                            : timing[i].status === 'invalid'
-                              ? '開始不可・取消予定'
-                              : `効果まで約${timing[i].ends.toFixed(1)}秒`}
+                          : timing[i].status === 'draft'
+                            ? Number.isFinite(timing[i].ends)
+                              ? `今開始なら効果まで約${timing[i].ends.toFixed(1)}秒`
+                              : '次の列の確定待ち'
+                            : timing[i].status === 'held'
+                              ? '保留解除待ち'
+                              : timing[i].status === 'invalid'
+                                ? '開始不可・取消予定'
+                                : `効果まで約${timing[i].ends.toFixed(1)}秒`}
                       </small>
                     </span>
                     {ui.page === 'queue' && choice?.key === String(p.key) ? (
@@ -477,8 +479,8 @@ export function PadBattleConsole({
             <span>{glyph('back')} 戻る</span>
             <span>
               {keyboard
-                ? '↑ 指示・道具 · R 移動 · W 武器 · C 防御 · V 薬'
-                : '↑ 指示・道具 / ← 前後移動 / → 武器変更 / ↓ 防御'}
+                ? 'H 行動開始 · B 後続取消 · U 全体指示 · I 補助'
+                : '左スティックで対象 · 補助に移動・武器・薬'}
             </span>
           </>
         ) : (
@@ -494,9 +496,12 @@ export function PadBattleConsole({
                     : '末尾に積む'}
             </span>
             <span>{glyph('back')} コマンドへ</span>
-            <span>方向キー {ui.page === 'log' ? '履歴を読む' : '選択'}</span>
+            <span>
+              {navigationName} {ui.page === 'log' ? '履歴を読む' : '選択'}
+            </span>
           </>
         )}
+        <span>{glyph('execute')} 行動開始</span>
         <span>{glyph('cutQueue')} 後続取消</span>
         <button onClick={() => act('log')}>{glyph('log')} ログ</button>
         <button onClick={() => act('pause')}>{glyph('pause')} 休憩</button>

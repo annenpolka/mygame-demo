@@ -6,12 +6,13 @@ import {
   padFamily,
   validBindings,
   migrateBindings,
+  navigationPreset,
   type PadAction,
   type PadBindings,
   type PadFamily,
   type PadSnapshot,
 } from '../input/gamepad';
-const STORAGE = 'orchestra-gamepad-v4';
+const STORAGE = 'orchestra-gamepad-v5';
 interface Saved {
   family: PadFamily | 'auto';
   display: 'auto' | 'pad' | 'pointer';
@@ -21,6 +22,7 @@ function readSaved(): Saved {
   try {
     const x = JSON.parse(
       localStorage.getItem(STORAGE) ??
+        localStorage.getItem('orchestra-gamepad-v4') ??
         localStorage.getItem('orchestra-gamepad-v3') ??
         localStorage.getItem('orchestra-gamepad-v2') ??
         localStorage.getItem('orchestra-gamepad-v1') ??
@@ -118,7 +120,14 @@ export function useGamepad(
           // Swapping a duplicate mapping avoids firing two commands from one button.
           const other = PAD_ACTIONS.find((a) => a !== capturing && next[a] === pressed);
           if (other) next[other] = b[capturing];
-          setSaved((s) => ({ ...s, custom: { ...s.custom, [current!.id]: next } }));
+          if (validBindings(next)) {
+            setSaved((s) => ({ ...s, custom: { ...s.custom, [current!.id]: next } }));
+            setError('');
+          } else {
+            setError(
+              'その割当では決定・戻る・行動開始・後続取消・補助のいずれかが未割当になります。別のボタンを選んでください。',
+            );
+          }
           setCapture(null);
           rearm.current = true;
           captureReady.current = false;
@@ -152,6 +161,14 @@ export function useGamepad(
     return () => cancelAnimationFrame(frame);
   }, [reader]);
   return {
+    setNavigation: (navigation: 'stick' | 'dpad') => {
+      reader.reset();
+      if (pad)
+        setSaved((s) => ({
+          ...s,
+          custom: { ...s.custom, [pad.id]: navigationPreset(bindings, navigation) },
+        }));
+    },
     pad,
     family,
     bindings,

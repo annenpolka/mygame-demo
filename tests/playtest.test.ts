@@ -11,7 +11,7 @@ import {
   prepareNoteComparison,
   sameRules,
 } from '../src/lab/playtest';
-import { openPage, battleInput } from '../src/input/battle-pad';
+import { openPage, battleInput, selectCandidate, paletteCursor } from '../src/input/battle-pad';
 import { WatchPlayer } from '../src/ai/watch-player';
 function fixture() {
   const session = new Session(),
@@ -192,4 +192,25 @@ it('treats link duration as a numeric rule change while description edits stay c
     SKILLS.slash.link = link;
     SKILLS.slash.description = description;
   }
+});
+
+it('restores candidate memory, an active committed group and a separate next draft through a playtest mark', () => {
+  const { session, journal, view } = fixture();
+  view.battle = selectCandidate(session.state, view.battle, 'enemy', { kind: 'enemy', id: 1 });
+  session.send(...battleInput(session.state, view.battle, 'confirm').commands);
+  session.send(...battleInput(session.state, view.battle, 'execute').commands);
+  session.advance(0.1);
+  view.battle = selectCandidate(session.state, view.battle, 'enemy', { kind: 'enemy', id: 0 });
+  session.send(...battleInput(session.state, view.battle, 'guard').commands);
+  const note = parseNotes(exportNotes([journal.mark(session, view)]))[0];
+  const restored = prepareNoteReplay(note, 'marked');
+  const state = runReplay(restored.recording);
+  expect(state).toEqual(session.state);
+  expect(state.allies[0].action).toMatchObject({ target: { kind: 'enemy', id: 1 } });
+  expect(state.allies[0].draft).toMatchObject([{ skillId: 'guard' }]);
+  expect(paletteCursor(state, restored.view.battle)).toEqual({
+    side: 'enemy',
+    target: { kind: 'enemy', id: 0 },
+  });
+  expect(state.allies[0].sequences).toEqual(session.state.allies[0].sequences);
 });

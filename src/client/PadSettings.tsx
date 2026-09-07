@@ -10,11 +10,15 @@ const names = {
   slow: 'スロー',
   stop: '戦術停止',
   pause: '休憩ポーズ',
-  log: '戦闘ログ',
+  menu: '補助メニュー（時間操作・ログも収録）',
+  execute: '行動開始（下書きの列を確定）',
+  guard: '自分への防御を下書き',
+  tactics: '全体指示',
+  aux: '補助メニュー',
   up: '上へ',
-  down: '防御を積む・下へ',
-  left: '前後移動を積む・左へ',
-  right: '武器切替を積む・右へ',
+  down: '下へ',
+  left: '左へ',
+  right: '右へ',
   queue: '予約一覧・取消',
   mark: '今のところに印・休憩中は印一覧',
 };
@@ -71,8 +75,20 @@ export function PadSettings({
           </select>
         </label>
         <p className="muted">
-          戦闘では4ボタンを基本技・主力技・戻る・後続取消に分けます。薬は↑の指示メニュー内「道具」から選びます。肩ボタンで仲間、トリガーで時間を操作。設定中は肩ボタンで項目を切り替えます。割り当ては接続機器ごとに保存します。
+          右トリガーで行動開始、左トリガーで後続取消。4ボタンは基本技・主力技・防御・戻る。左スティックで対象を選び、十字キーで時間操作とメニュー。十字キー選択の配置では時間操作も補助メニューから選べます。
         </p>
+        <label className="pad-family">
+          選択の操作方式
+          <select
+            aria-label="パッドの選択方式"
+            value={c.bindings.navigation}
+            disabled={!c.pad}
+            onChange={(e) => c.setNavigation(e.target.value as 'stick' | 'dpad')}
+          >
+            <option value="stick">左スティックで選択・十字キーで時間操作</option>
+            <option value="dpad">十字キーで選択・時間操作は補助メニュー</option>
+          </select>
+        </label>
         <div className="pad-bindings">
           {PAD_ACTIONS.map((a) => (
             <button

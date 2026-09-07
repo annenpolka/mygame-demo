@@ -20,7 +20,7 @@ test('mark, comment, reload and take over an earlier target screen while retaini
   await page.setViewportSize({ width: 1366, height: 752 });
   await page.getByRole('button', { name: '戦闘開始 →', exact: true }).click();
   await page.clock.runFor(500);
-  await page.keyboard.press('x');
+  await page.keyboard.press('v');
   await page.clock.runFor(4000);
   const clock = await page.locator('.battle-clock strong').innerText();
   await page.keyboard.press('m');
@@ -42,7 +42,7 @@ test('mark, comment, reload and take over an earlier target screen while retaini
   const original = await exportBook(page);
   expect(original).toHaveLength(1);
   expect(original[0].before.view.battle.page).toBe('target');
-  expect(original[0].before.view.battle.skillId).toBe('sweep');
+  expect(original[0].before.view.battle.skillId).toBe('potion');
   expect(
     original[0].marked.state.realTime - original[0].before.state.realTime,
   ).toBeGreaterThanOrEqual(2.99);
@@ -56,13 +56,13 @@ test('mark, comment, reload and take over an earlier target screen while retaini
   await expect(page.getByRole('dialog', { name: '休憩ポーズ' })).toContainText('印の少し前');
   await page.getByRole('button', { name: 'この場面から操作する Esc', exact: true }).click();
   await expect(page.locator('.field-target-guide')).toBeVisible();
-  await expect(page.locator('.field-target-bar')).toContainText('円弧斬り');
+  await expect(page.locator('.field-target-bar')).toContainText('救急薬');
   await expect(page.getByRole('meter', { name: '操作キャラのATB' })).toHaveAttribute(
     'aria-valuenow',
     String(original[0].before.state.allies[0].atb),
   );
   await page.keyboard.press('Enter');
-  await expect(page.locator('.pad-plan-list')).toContainText('円弧斬り');
+  await expect(page.locator('.pad-plan-list')).toContainText('救急薬');
   await page.keyboard.press('m');
   await page.keyboard.press('Shift+M');
   const after = await exportBook(page);

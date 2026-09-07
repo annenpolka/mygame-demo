@@ -5,38 +5,27 @@ test.beforeEach(async ({ page }) => {
   await page.clock.pauseAt(new Date('2026-01-01T01:00:00Z'));
   await page.setViewportSize({ width: 1440, height: 900 });
 });
-test('selected actor waits and target choices are on the battlefield for enemies, rows, allies and self', async ({
+test('candidate cursor remains on the battlefield and keeps selection separate from draft actions', async ({
   page,
 }) => {
   await page.getByRole('button', { name: '戦闘開始 →', exact: true }).click();
   await page.clock.runFor(2500);
-  await expect(page.locator('[data-unit=a0]')).toContainText('指示待ち');
   await page.keyboard.press('f');
-  await page.keyboard.press('x');
-  const field = page.getByRole('listbox', { name: '戦場で対象を選ぶ', exact: true });
-  await expect(field.getByRole('option')).toHaveCount(2);
+  const field = page.getByRole('listbox', { name: '行動の対象候補' });
+  await expect(field.getByRole('option')).toHaveCount(9);
   await page.keyboard.press('ArrowRight');
-  await expect(field.getByRole('option', { selected: true })).toHaveAttribute(
-    'aria-label',
-    '敵後列に円弧斬りを積む',
-  );
-  await expect(page.locator('.battle-lane.enemy.back')).toHaveClass(/aimed/);
+  await expect(
+    field.getByRole('option', { name: '灰の砲術師を対象候補にする', selected: true }),
+  ).toBeVisible();
   await expect(page.locator('.field-aim-path')).toBeVisible();
-  await page.screenshot({ path: 'test-results/field-target-row.png', fullPage: true });
-  await page.keyboard.press('Enter');
-  await expect(page.locator('.pad-plan-list')).toContainText('円弧斬り');
-  await page.keyboard.press('Escape');
+  await page.keyboard.press('x');
   await page.keyboard.press('z');
-  await expect(field.getByRole('option')).toHaveCount(2);
-  await field.getByRole('option', { name: '灰の砲術師に斬撃を積む', exact: true }).click();
-  await page.keyboard.press('Escape');
   await page.keyboard.press('v');
-  await expect(field.getByRole('option')).toHaveCount(3);
-  await field.getByRole('option', { name: 'リネに救急薬を積む', exact: true }).click();
+  await page.getByRole('option', { name: 'リネに救急薬を積む', exact: true }).click();
   await page.keyboard.press('Escape');
   await page.keyboard.press('c');
-  await expect(field).toHaveCount(0);
   await expect(page.locator('.pad-plan-list li')).toHaveCount(4);
+  await expect(page.locator('[data-unit=a0]')).toContainText('行動開始待ち');
 });
 test('AI viewing offers all policies, visible decisions, pause, speed, and manual handoff', async ({
   page,

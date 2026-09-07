@@ -86,7 +86,6 @@ test('fixed formation height and selected ATB budget map multi-cost skills and f
   await page.keyboard.press('f');
   await page.keyboard.press('x');
   expect(await height()).toBe(before);
-  await page.keyboard.press('Enter');
   await page.keyboard.press('Escape');
   await page.keyboard.press('r');
   await page.keyboard.press('w');

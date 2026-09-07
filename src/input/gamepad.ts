@@ -2,13 +2,17 @@ export const PAD_ACTIONS = [
   'confirm',
   'back',
   'skill',
+  'guard',
+  'execute',
   'cutQueue',
   'previous',
   'next',
   'slow',
   'stop',
   'pause',
-  'log',
+  'menu',
+  'tactics',
+  'aux',
   'up',
   'down',
   'left',
@@ -19,6 +23,7 @@ export const PAD_ACTIONS = [
 export type PadAction = (typeof PAD_ACTIONS)[number];
 export type PadFamily = 'xbox' | 'playstation' | 'switch';
 export type PadBindings = Record<PadAction, number> & {
+  navigation: 'stick' | 'dpad';
   axisX: number;
   axisY: number;
   invertX: boolean;
@@ -45,16 +50,21 @@ export function defaultBindings(family: PadFamily): PadBindings {
     back: family === 'switch' ? 0 : 1,
     previous: 4,
     next: 5,
-    skill: 3,
-    cutQueue: 2,
-    slow: 6,
-    stop: 7,
+    skill: 2,
+    guard: 3,
+    execute: 7,
+    cutQueue: 6,
+    slow: 14,
+    stop: 15,
     pause: 9,
-    log: 8,
-    up: 12,
-    down: 13,
-    left: 14,
-    right: 15,
+    menu: 8,
+    tactics: 12,
+    aux: 13,
+    up: -1,
+    down: -1,
+    left: -1,
+    right: -1,
+    navigation: 'stick',
     queue: 11,
     mark: 10,
     axisX: 0,
@@ -63,7 +73,28 @@ export function defaultBindings(family: PadFamily): PadBindings {
     invertY: false,
   };
 }
+/** Both presets retain execute/cutoff/back and the auxiliary menu button. */
+export function navigationPreset(b: PadBindings, navigation: 'stick' | 'dpad'): PadBindings {
+  if (b.navigation === navigation) return b;
+  const [up, down, left, right] =
+    b.navigation === 'stick' ? [b.tactics, b.aux, b.slow, b.stop] : [b.up, b.down, b.left, b.right];
+  return navigation === 'dpad'
+    ? { ...b, navigation, up, down, left, right, tactics: -1, aux: -1, slow: -1, stop: -1 }
+    : {
+        ...b,
+        navigation,
+        tactics: up,
+        aux: down,
+        slow: left,
+        stop: right,
+        up: -1,
+        down: -1,
+        left: -1,
+        right: -1,
+      };
+}
 export function buttonName(index: number, family: PadFamily) {
+  if (index < 0) return '未割当';
   return (
     {
       xbox: [
@@ -193,8 +224,11 @@ export function validBindings(input: unknown): input is PadBindings {
   if (!input || typeof input !== 'object') return false;
   const b = input as PadBindings;
   return (
-    PAD_ACTIONS.every((k) => Number.isInteger(b[k]) && b[k] >= 0 && b[k] <= 63) &&
-    new Set(PAD_ACTIONS.map((k) => b[k])).size === PAD_ACTIONS.length &&
+    PAD_ACTIONS.every((k) => Number.isInteger(b[k]) && b[k] >= -1 && b[k] <= 63) &&
+    new Set(PAD_ACTIONS.map((k) => b[k]).filter((i) => i >= 0)).size ===
+      PAD_ACTIONS.filter((k) => b[k] >= 0).length &&
+    ['stick', 'dpad'].includes(b.navigation) &&
+    ['confirm', 'back', 'execute', 'cutQueue', 'menu'].every((k) => b[k as PadAction] >= 0) &&
     ['axisX', 'axisY'].every(
       (k) => Number.isInteger(b[k as 'axisX']) && b[k as 'axisX'] >= -1 && b[k as 'axisX'] <= 15,
     ) &&
@@ -203,44 +237,44 @@ export function validBindings(input: unknown): input is PadBindings {
   );
 }
 
-/** Migrate names without moving custom physical buttons. The former item button is cutoff. */
+/** Preserve physical slots while moving their roles to the sequence palette. */
 export function migrateBindings(input: unknown): PadBindings | null {
+  if (validBindings(input)) return input;
   if (!input || typeof input !== 'object' || Array.isArray(input)) return null;
   const old = input as Record<string, unknown>;
-  let b = {
+  if (old.execute !== undefined) return null;
+  const early = old.skill === undefined;
+  const b = {
     ...old,
+    navigation: 'stick',
     back: old.back ?? old.cancel,
-    cutQueue: old.cutQueue ?? old.item,
+    skill: old.cutQueue ?? old.item ?? (early ? old.slow : undefined),
+    guard: old.skill ?? old.stop,
+    cutQueue: early ? undefined : old.slow,
+    execute: early ? undefined : old.stop,
+    slow: old.left,
+    stop: old.right,
+    tactics: old.up,
+    aux: old.down,
+    menu: old.log,
+    up: -1,
+    down: -1,
+    left: -1,
+    right: -1,
   } as unknown as PadBindings;
-  delete (b as unknown as Record<string, unknown>).cancel;
-  delete (b as unknown as Record<string, unknown>).item;
+  for (const key of ['cancel', 'item', 'log'])
+    delete (b as unknown as Record<string, unknown>)[key];
   for (const [action, preferred] of [
     ['queue', 11],
     ['mark', 10],
+    ['cutQueue', 6],
+    ['execute', 7],
   ] as const) {
     if (b[action] !== undefined) continue;
-    const used = new Set(PAD_ACTIONS.filter((a) => a !== action).map((a) => b[a]));
-    b = {
-      ...b,
-      [action]: !used.has(preferred)
-        ? preferred
-        : Array.from({ length: 64 }, (_, i) => i).find((i) => !used.has(i))!,
-    };
-  }
-  // Before direct skill/item buttons existed, those physical buttons were slow/stop.
-  if (b.skill === undefined && b.cutQueue === undefined) {
-    b = { ...b, skill: b.stop, cutQueue: b.slow };
-    const used = new Set(PAD_ACTIONS.filter((a) => a !== 'slow' && a !== 'stop').map((a) => b[a]));
-    for (const [action, preferred] of [
-      ['slow', 6],
-      ['stop', 7],
-    ] as const) {
-      const free = !used.has(preferred)
-        ? preferred
-        : Array.from({ length: 64 }, (_, i) => i).find((i) => !used.has(i))!;
-      b[action] = free;
-      used.add(free);
-    }
+    const used = new Set(PAD_ACTIONS.map((a) => b[a]).filter((i) => i >= 0));
+    b[action] = !used.has(preferred)
+      ? preferred
+      : Array.from({ length: 64 }, (_, i) => i).find((i) => !used.has(i))!;
   }
   return validBindings(b) ? b : null;
 }

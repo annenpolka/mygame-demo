@@ -29,19 +29,17 @@ test('keyboard selection, tactical stop, command reservation, and opaque system 
   await page.clock.runFor(700);
   await page.keyboard.press('f');
   await expect(page.locator('.pad-page-heading')).toContainText('セナ');
+  await page.getByRole('option', { name: 'アルトを対象候補にする', exact: true }).click();
   await page.keyboard.press('x');
-  await expect(page.locator('.field-target-guide')).toBeVisible();
-  await page
-    .getByRole('listbox', { name: '戦場で対象を選ぶ' })
-    .getByRole('option', { name: /アルト/ })
-    .click();
+  await page.keyboard.press('h');
   await expect(page.locator('.pad-plan-list')).toContainText('祝福の鐘');
   await page.keyboard.press('1');
   await expect(page.locator('.atb-reservation').first()).toContainText('キャラ交代');
   await page.keyboard.press('f');
   await page.clock.runFor(1600);
   await page.keyboard.press('f');
-  await page.getByRole('button', { name: '前後移動を積む', exact: true }).click();
+  await page.keyboard.press('r');
+  await page.keyboard.press('h');
   await expect(page.locator('.pad-actor').nth(0)).toContainText('前列');
   await page.keyboard.press('p');
   await expect(page.getByRole('dialog', { name: '休憩ポーズ' })).toBeVisible();
@@ -67,7 +65,8 @@ test('first battle, equipment update, preset edit, second battle and victory', a
   page.on('pageerror', (error) => errors.push(error.message));
   await page.getByRole('button', { name: '戦闘開始 →', exact: true }).click();
   await page.keyboard.press('3');
-  await page.getByRole('button', { name: '灰の砲術師を狙う' }).click();
+  await page.getByRole('option', { name: '灰の砲術師を対象候補にする', exact: true }).click();
+  await page.getByRole('button', { name: '仲間の集中攻撃対象にする', exact: true }).click();
   await page.keyboard.press('s');
   await page.clock.runFor(45000);
   const loot = page.getByRole('dialog', { name: '戦利品と編成' });
@@ -82,10 +81,11 @@ test('first battle, equipment update, preset edit, second battle and victory', a
   await loot.getByRole('button', { name: 'オプティマ2のアルトを枠2に変更', exact: true }).click();
   await loot.getByRole('button', { name: '次の戦闘へ →' }).click();
   await expect(page.getByRole('heading', { level: 1 })).toContainText('夜渡りの包囲陣');
-  await page.keyboard.press('ArrowUp');
+  await page.keyboard.press('u');
   await expect(page.getByRole('option').filter({ hasText: '総崩し' })).toBeVisible();
   await page.keyboard.press('Escape');
-  await page.getByRole('button', { name: '夜渡りの砲術師を狙う' }).click();
+  await page.getByRole('option', { name: '夜渡りの砲術師を対象候補にする', exact: true }).click();
+  await page.getByRole('button', { name: '仲間の集中攻撃対象にする', exact: true }).click();
   await page.keyboard.press('a');
   await page.clock.runFor(75000);
   await expect(page.getByRole('dialog', { name: '戦闘結果' })).toContainText('境界を、越えた。');
@@ -119,7 +119,7 @@ test('lab snapshot roundtrip, invalid JSON and linked/individual control modes',
   await page.getByLabel('操作方式', { exact: true }).selectOption('individual');
   await page.getByRole('button', { name: '条件を反映して再開始' }).click();
   await page.getByRole('button', { name: '戦闘開始 →', exact: true }).click();
-  await page.keyboard.press('ArrowUp');
+  await page.keyboard.press('u');
   await page.keyboard.press('ArrowRight');
   await expect(page.locator('.pad-no-choices')).toContainText('個別操作モード');
 });
@@ -136,7 +136,7 @@ test('mobile layout and touch controls stay within the viewport', async ({ page 
   await page.getByRole('button', { name: 'セナに指示', exact: true }).click();
   await page.clock.runFor(1600);
   await page.getByRole('button', { name: '主力技：引き寄せ', exact: true }).click();
-  await expect(page.locator('.field-target-guide')).toBeVisible();
+  await expect(page.getByRole('listbox', { name: '行動の対象候補' })).toBeVisible();
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(
     true,
   );
@@ -154,7 +154,7 @@ test('horizontal battlefield, direct row targeting, and a glanceable desktop', a
   expect(boxes.every((b, i) => i === 0 || (b.x > boxes[i - 1].x && b.y === boxes[0].y))).toBe(true);
   await page.keyboard.press('f');
   await page.getByRole('button', { name: '主力技：円弧斬り', exact: true }).click();
-  await page.getByRole('option', { name: '敵前列に円弧斬りを積む', exact: true }).click();
+
   await expect(page.locator('.pad-plan-list')).toContainText('円弧斬り');
   const logBox = await page.locator('.log-container').boundingBox();
   expect(logBox!.y + logBox!.height).toBeLessThanOrEqual(900);

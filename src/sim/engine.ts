@@ -11,7 +11,6 @@ import { renameTactics } from './tactics';
 import {
   canAppend,
   canExecuteSequence,
-  committed,
   plannedCost,
   isHandoff,
   planned,
@@ -403,7 +402,7 @@ export function command(s: State, c: Command): boolean {
         return reject(s, `先行入力は合計${s.config.atbMax} ATB・${s.config.atbMax}手までです。`);
       if (p.kind === 'skill') {
         const sk = SKILLS[p.skillId],
-          w = WEAPONS[a.weapons[projectedSlot(a)]];
+          w = WEAPONS[a.weapons[projectedSlot(c.type === 'draft' ? a : { ...a, draft: [] })]];
         if (!sk || !['guard', 'potion', ...w.skills].includes(p.skillId))
           return reject(s, 'その順序では使えない技です。先に武器変更を積んでください。');
         if (!validTarget(s, a, sk, p.target)) return reject(s, '対象を選び直してください。');

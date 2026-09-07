@@ -2,6 +2,8 @@ import { partyBonus, bonusText } from '../sim/bonuses';
 import { SKILLS, WEAPONS, ROW_NAMES } from '../content/data';
 import {
   canAppend,
+  canExecuteSequence,
+  committed,
   planned,
   projectedSlot,
   projectedRow,
@@ -12,7 +14,16 @@ import type { Command, State, Target } from '../sim/types';
 import type { PadAction } from './gamepad';
 
 export type BattleAction =
-  PadAction | 'guard' | 'potion' | 'itemMenu' | 'optimaMenu' | 'formationMenu';
+  | PadAction
+  | 'potion'
+  | 'itemMenu'
+  | 'optimaMenu'
+  | 'formationMenu'
+  | 'move'
+  | 'weapon'
+  | 'toggleRow'
+  | 'toggleWeapon'
+  | 'log';
 export interface QueueFocus {
   key: string;
   actorId: number;
@@ -20,13 +31,17 @@ export interface QueueFocus {
   title: string;
   status: 'selected' | 'removed' | 'gone';
 }
-export type BattlePage = 'command' | 'target' | 'move' | 'weapon' | 'tactics' | 'queue' | 'log';
+export type BattlePage =
+  'command' | 'target' | 'move' | 'weapon' | 'tactics' | 'queue' | 'log' | 'aux';
 export interface BattlePad {
   page: BattlePage;
   key: string;
   skillId: string | null;
   tactics: 'optima' | 'formation' | 'items';
   queueFocus?: QueueFocus;
+  candidates?: Record<string, Target>;
+  candidateSide?: 'enemy' | 'ally';
+  candidateWeapon?: string;
   remembered: Record<string, string>;
   message: string;
   stamp: number;
@@ -37,6 +52,7 @@ export interface BattleChoice {
   title: string;
   detail: string;
   command?: Command;
+  action?: BattleAction;
   skillId?: string;
   target?: Target;
 }
@@ -70,6 +86,91 @@ function focusQueue(s: State, ui: BattlePad, key: string): BattlePad {
     },
   };
 }
+
+export interface PaletteCursor {
+  side: 'enemy' | 'ally';
+  target: Target;
+}
+export function paletteCursor(s: State, ui: BattlePad): PaletteCursor {
+  const a = s.allies[s.selected],
+    weapon = a.weapons[projectedSlot(a)];
+  const side =
+    ui.candidateWeapon === weapon && ui.candidateSide
+      ? ui.candidateSide
+      : SKILLS[WEAPONS[weapon].skills[0]].target.startsWith('enemy')
+        ? 'enemy'
+        : 'ally';
+  return {
+    side,
+    target: ui.candidates?.[`${a.id}:${side}`] ?? {
+      kind: side,
+      id: side === 'ally' ? a.id : (s.enemies.find((e) => e.hp > 0)?.id ?? 0),
+    },
+  };
+}
+export function selectCandidate(
+  s: State,
+  ui: BattlePad,
+  side: 'enemy' | 'ally',
+  target: Target,
+): BattlePad {
+  if (target.kind !== 'row' && target.kind !== side) return ui;
+  return {
+    ...ui,
+    candidateSide: side,
+    candidateWeapon: s.allies[s.selected].weapons[projectedSlot(s.allies[s.selected])],
+    candidates: { ...ui.candidates, [`${s.selected}:${side}`]: { ...target } },
+  };
+}
+export function skillPreview(
+  s: State,
+  ui: BattlePad,
+  id: string,
+): { target: Target | null; label: string } {
+  const skill = SKILLS[id],
+    cursor = paletteCursor(s, ui);
+  if (skill.target === 'self') return { target: { kind: 'ally', id: s.selected }, label: '自分' };
+  const side = skill.target.startsWith('enemy') ? 'enemy' : 'ally';
+  if (cursor.side !== side)
+    return { target: null, label: `${side === 'enemy' ? '敵' : '味方'}の対象候補を選ぶ` };
+  const units = side === 'enemy' ? s.enemies : s.allies;
+  const selected = cursor.target;
+  const unit =
+    selected.kind === 'row' ? undefined : units.find((x) => x.id === selected.id && x.hp > 0);
+  if (cursor.target.kind !== 'row' && !unit)
+    return { target: null, label: '対象が不在・候補を選び直す' };
+  if (skill.target.endsWith('Row')) {
+    const row = cursor.target.kind === 'row' ? cursor.target.row : unit!.row;
+    return {
+      target: { kind: 'row', row },
+      label: `${side === 'enemy' ? '敵' : '味方'}${ROW_NAMES[row]}・${units.filter((x) => x.hp > 0 && x.row === row).length}体`,
+    };
+  }
+  return unit
+    ? { target: { kind: side, id: unit.id }, label: unit.name }
+    : { target: null, label: '単体の対象候補を選ぶ' };
+}
+function addPaletteSkill(s: State, ui: BattlePad, id: string) {
+  const preview = skillPreview(s, ui, id),
+    reason = unavailable(s, id) || (!preview.target ? preview.label : '');
+  return {
+    ui: {
+      ...home(ui),
+      message: reason || `${SKILLS[id].name} → ${preview.label}を下書きに追加`,
+      stamp: ui.stamp + 1,
+    },
+    commands: reason
+      ? []
+      : [
+          {
+            type: 'draft',
+            id: s.selected,
+            step: { kind: 'skill', skillId: id, target: preview.target! },
+          } as Command,
+        ],
+  };
+}
+
 const targetKey = (t: Target) => (t.kind === 'row' ? `row:${t.row}` : `${t.kind}:${t.id}`);
 export function choices(s: State, ui: BattlePad): BattleChoice[] {
   const a = s.allies[s.selected];
@@ -103,23 +204,48 @@ export function choices(s: State, ui: BattlePad): BattleChoice[] {
               .filter((x) => x.hp > 0 && target.kind === 'row' && x.row === target.row)
               .map((x) => x.name)
               .join('・') || '現在は誰もいません',
-        command: { type: 'enqueue', id: a.id, step: { kind: 'skill', skillId: skill.id, target } },
+        command: { type: 'draft', id: a.id, step: { kind: 'skill', skillId: skill.id, target } },
       };
     });
   }
+  if (ui.page === 'aux')
+    return [
+      { key: 'move', title: '前後移動', detail: '移動先を選び、下書きへ追加', action: 'move' },
+      { key: 'weapon', title: '武器変更', detail: '変更先を選び、下書きへ追加', action: 'weapon' },
+      {
+        key: 'potion',
+        title: '救急薬',
+        detail: `残${Math.max(0, s.potions - pendingPotions(s.allies))}個・味方を選ぶ`,
+        skillId: 'potion',
+      },
+      { key: 'tactics', title: '全体指示', detail: 'オプティマ・一括隊列', action: 'tactics' },
+      {
+        key: 'slow',
+        title: 'スロー',
+        detail: '通常速度と切り替え',
+        command: { type: 'time', mode: s.timeMode === 'slow' ? 'normal' : 'slow' },
+      },
+      {
+        key: 'stop',
+        title: '戦術停止',
+        detail: '通常速度と切り替え',
+        command: { type: 'time', mode: s.timeMode === 'stop' ? 'normal' : 'stop' },
+      },
+      { key: 'log', title: '戦闘ログ', detail: '記録を読む', action: 'log' },
+    ];
   if (ui.page === 'move')
     return (['back', 'front'] as const).map((row) => ({
       key: row,
       title: `${ROW_NAMES[row]}へ移動`,
       detail: `${s.config.moveTime}秒 · 予約の末尾に追加`,
-      command: { type: 'enqueue', id: a.id, step: { kind: 'move', row } },
+      command: { type: 'draft', id: a.id, step: { kind: 'move', row } },
     }));
   if (ui.page === 'weapon')
     return a.weapons.map((id, slot) => ({
       key: String(slot),
       title: WEAPONS[id].name,
       detail: `${WEAPONS[id].role} · ${WEAPONS[id].archetype} · ${s.config.shiftTime}秒`,
-      command: { type: 'enqueue', id: a.id, step: { kind: 'weapon', slot: slot as 0 | 1 } },
+      command: { type: 'draft', id: a.id, step: { kind: 'weapon', slot: slot as 0 | 1 } },
     }));
   if (ui.page === 'tactics')
     return ui.tactics === 'items'
@@ -246,6 +372,7 @@ export function confirmChoice(
   }
   if (!choice)
     return feedback('状態が変わりました。選び直してください。', { ...ui, key: list[0]?.key ?? '' });
+  if (choice.action) return battleInput(s, ui, choice.action);
   if (choice.skillId) {
     const reason = unavailable(s, choice.skillId);
     return reason
@@ -253,7 +380,7 @@ export function confirmChoice(
       : { ui: openPage(s, ui, 'target', choice.skillId), commands: [] };
   }
   if (!choice.command) return { ui, commands: [] };
-  if (choice.command.type === 'enqueue') {
+  if (choice.command.type === 'draft') {
     const reason = unavailable(s, ui.skillId ?? undefined);
     if (reason) return feedback(reason);
   }
@@ -272,7 +399,7 @@ export function confirmChoice(
   const message =
     ui.page === 'queue'
       ? '一件取消済み。方向入力で次に取り消す予約を選んでください。'
-      : choice.command.type === 'enqueue'
+      : choice.command.type === 'draft'
         ? `${choice.command.step.kind === 'skill' ? SKILLS[choice.command.step.skillId].name : choice.title}を${planned(s.allies[s.selected]).length + 1}手目に追加`
         : `${choice.title}へ切り替えました。`;
   return { ui: { ...next, message, stamp: ui.stamp + 1 }, commands };
@@ -287,7 +414,7 @@ export function battleInput(
   if (s.phase !== 'battle' || s.paused) return result();
   if (action === 'back') return result(ui.page === 'command' ? ui : home(ui));
   if (action === 'cutQueue') {
-    const hasQueue = planned(s.allies[s.selected]).length > 0;
+    const hasQueue = committed(s.allies[s.selected]).length > 0;
     return result(
       hasQueue
         ? {
@@ -299,6 +426,40 @@ export function battleInput(
       hasQueue ? [{ type: 'cancel', id: s.selected }] : [],
     );
   }
+  if (action === 'toggleRow' || action === 'toggleWeapon') {
+    const a = s.allies[s.selected],
+      reason = unavailable(s);
+    return result(
+      { ...home(ui), message: reason, stamp: ui.stamp + 1 },
+      reason
+        ? []
+        : [
+            {
+              type: 'draft',
+              id: a.id,
+              step:
+                action === 'toggleRow'
+                  ? { kind: 'move', row: projectedRow(a) === 'front' ? 'back' : 'front' }
+                  : { kind: 'weapon', slot: projectedSlot(a) === 0 ? 1 : 0 },
+            },
+          ],
+    );
+  }
+  if (action === 'execute') {
+    const a = s.allies[s.selected];
+    if (!canExecuteSequence(a) || s.pendingSelect !== null) return result();
+    return result(
+      {
+        ...home(ui),
+        message: '見えていた下書きの一組を実行確定。必要ATBと現在の一手の終了を待ちます。',
+        stamp: ui.stamp + 1,
+      },
+      [{ type: 'executeSequence', id: a.id }],
+    );
+  }
+  if (action === 'menu') return result(openPage(s, ui, 'aux'));
+  if (['aux', 'move', 'weapon', 'tactics'].includes(action))
+    return result(openPage(s, ui, action as BattlePage));
   if (action === 'itemMenu' || action === 'optimaMenu' || action === 'formationMenu')
     return result(
       openPage(
@@ -311,19 +472,8 @@ export function battleInput(
         'tactics',
       ),
     );
-  if (action === 'guard' || action === 'potion') {
-    const reason = unavailable(s, action);
-    if (reason) return result({ ...ui, message: reason, stamp: ui.stamp + 1 });
-    return action === 'potion'
-      ? result(openPage(s, ui, 'target', 'potion'))
-      : result({ ...home(ui), message: '防御を予約に追加', stamp: ui.stamp + 1 }, [
-          {
-            type: 'enqueue',
-            id: s.selected,
-            step: { kind: 'skill', skillId: 'guard', target: { kind: 'ally', id: s.selected } },
-          },
-        ]);
-  }
+  if (action === 'guard') return addPaletteSkill(s, ui, 'guard');
+  if (action === 'potion') return result(openPage(s, ui, 'target', 'potion'));
   if (action === 'previous' || action === 'next') {
     const ids = s.allies.filter((a) => a.hp > 0).map((a) => a.id),
       i = ids.indexOf(s.pendingSelect ?? s.selected);
@@ -341,56 +491,33 @@ export function battleInput(
     return result(ui.page === 'log' ? home(ui) : { ...openPage(s, ui, 'log'), logOffset: 0 });
   if (ui.page === 'command') {
     const w = WEAPONS[s.allies[s.selected].weapons[projectedSlot(s.allies[s.selected])]];
-    if (action === 'left') {
-      const reason = unavailable(s);
-      const row = projectedRow(s.allies[s.selected]) === 'front' ? 'back' : 'front';
-      return result(
-        { ...ui, message: reason || `${ROW_NAMES[row]}への移動を末尾に追加`, stamp: ui.stamp + 1 },
-        reason ? [] : [{ type: 'toggleRow', id: s.selected }],
-      );
+    if (action === 'confirm' || action === 'skill')
+      return addPaletteSkill(s, ui, w.skills[action === 'confirm' ? 0 : 1]);
+    if (['up', 'down', 'left', 'right'].includes(action)) {
+      const cursor = paletteCursor(s, ui);
+      const side =
+        action === 'up' || action === 'down'
+          ? cursor.side === 'enemy'
+            ? 'ally'
+            : 'enemy'
+          : cursor.side;
+      const units = side === 'enemy' ? s.enemies : s.allies;
+      const candidates: Target[] = [
+        ...units.filter((x) => x.hp > 0).map((x) => ({ kind: side, id: x.id })),
+        { kind: 'row', row: 'front' },
+        { kind: 'row', row: 'back' },
+      ];
+      const remembered = ui.candidates?.[`${s.selected}:${side}`];
+      const current = candidates.findIndex((t) => targetKey(t) === targetKey(cursor.target));
+      const target =
+        side !== cursor.side
+          ? (remembered ?? candidates[0])
+          : candidates[
+              (current + (action === 'left' ? candidates.length - 1 : 1)) % candidates.length
+            ];
+      return result(selectCandidate(s, ui, side, target));
     }
-    if (action === 'right') {
-      const reason = unavailable(s),
-        a = s.allies[s.selected],
-        w = WEAPONS[a.weapons[projectedSlot(a) === 0 ? 1 : 0]];
-      return result(
-        {
-          ...ui,
-          message: reason || `${w.archetype}〈${w.role}〉への変更を末尾に追加`,
-          stamp: ui.stamp + 1,
-        },
-        reason ? [] : [{ type: 'toggleWeapon', id: s.selected }],
-      );
-    }
-    const pages = { up: 'tactics' } as const;
-    if (action in pages) return result(openPage(s, ui, pages[action as keyof typeof pages]));
-    const id =
-      action === 'confirm'
-        ? w.skills[0]
-        : action === 'skill'
-          ? w.skills[1]
-          : action === 'down'
-            ? 'guard'
-            : null;
-    if (!id) return result();
-    const reason = unavailable(s, id);
-    if (reason) return result({ ...ui, message: reason, stamp: ui.stamp + 1 });
-    if (id === 'guard')
-      return result(
-        {
-          ...ui,
-          message: `防御を${planned(s.allies[s.selected]).length + 1}手目に追加`,
-          stamp: ui.stamp + 1,
-        },
-        [
-          {
-            type: 'enqueue',
-            id: s.selected,
-            step: { kind: 'skill', skillId: 'guard', target: { kind: 'ally', id: s.selected } },
-          },
-        ],
-      );
-    return result(openPage(s, ui, 'target', id));
+    return result();
   }
   if (ui.page === 'log') {
     if (action === 'up' || action === 'down')
@@ -398,10 +525,6 @@ export function battleInput(
     if (action === 'confirm') return result({ ...ui, logOffset: 0 });
     return result();
   }
-  if (ui.page === 'queue' && action === 'skill')
-    return result({ ...ui, stamp: ui.stamp + 1 }, [
-      { type: 'hold', id: s.selected, value: !s.allies[s.selected].executionHeld },
-    ]);
   if (ui.page === 'tactics' && (action === 'left' || action === 'right')) {
     const tabs = ['optima', 'formation', 'items'] as const;
     return result(

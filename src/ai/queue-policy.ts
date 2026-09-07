@@ -1,5 +1,5 @@
 import { createAdaptivePolicy } from './adaptive-policy';
-import { planned, planTiming, canAppend } from '../sim/plan';
+import { committed as planned, planTiming, canAppend } from '../sim/plan';
 import { DT, SKILLS, WEAPONS } from '../content/data';
 import type { Command, Row, Target } from '../sim/types';
 import type { Observation } from './observation';
@@ -220,6 +220,7 @@ export function createQueuePolicy(
         const arrival = planTiming(
           {
             ...hook,
+            draft: [],
             queued: null,
             plan: [
               ...planned(hook),
@@ -282,6 +283,7 @@ export function createQueuePolicy(
             planTiming(
               {
                 ...a,
+                draft: [],
                 queued: null,
                 plan: [
                   ...planned(a).filter(
