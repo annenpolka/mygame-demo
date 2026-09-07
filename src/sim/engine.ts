@@ -499,7 +499,10 @@ function beginAction(s: State, a: Ally, skillId: string, target: Target, comboIn
     ...makeAction(a, skillId, target, comboIndex),
     offense: { damage: bonus.damage * position.damage, chain: bonus.chain * position.chain },
   };
-  emit(s, 'action', `${a.name} → ${skill.name}`, { source: `a${a.id}` });
+  emit(s, 'action', `${a.name} → ${skill.name}`, {
+    source: `a${a.id}`,
+    visual: { skillId, actionName: skill.name, comboIndex },
+  });
   return true;
 }
 function chooseAuto(s: State, a: Ally) {
@@ -525,28 +528,39 @@ function chooseAuto(s: State, a: Ally) {
     });
   }
 }
-function forceEnemy(s: State, e: Enemy, row: Row) {
+function forceEnemy(s: State, e: Enemy, row: Row, source: string) {
   if (e.row === row) return;
   if (e.steadfast > 0 || (e.kind === 'guard' && e.broken <= 0)) {
     emit(
       s,
       'system',
       `${e.name}：${e.steadfast > 0 ? '踏ん張り中' : '重装・ブレイク中のみ移動可能'}`,
+      { source, target: `e${e.id}`, visual: { outcome: 'resist' } },
     );
     return;
   }
+  const fromRow = e.row;
   e.row = row;
   e.steadfast = BATTLE_TIMING.steadfastDuration;
   if (e.cast?.movable) {
     e.cast = null;
     e.nextAttack = 3 * BATTLE_TIMING.enemyIntervalScale;
-    emit(s, 'warning', `${e.name}の構えが崩れた`);
+    emit(s, 'warning', `${e.name}の構えが崩れた`, {
+      source,
+      target: `e${e.id}`,
+      visual: { outcome: 'interrupt' },
+    });
   }
-  emit(s, 'move', `${e.name} → ${ROW_NAMES[row]}`, { target: `e${e.id}` });
+  emit(s, 'move', `${e.name} → ${ROW_NAMES[row]}`, {
+    source,
+    target: `e${e.id}`,
+    visual: { fromRow, toRow: row },
+  });
 }
 function resolve(s: State, a: Ally, action: Action) {
   const skill = SKILLS[action.skillId],
     weapon = WEAPONS[action.weaponId];
+  const visual = { skillId: skill.id, actionName: skill.name, comboIndex: action.comboIndex };
   if (skill.effect === 'handoff') {
     s.pendingSelect = null;
     if (
@@ -578,18 +592,24 @@ function resolve(s: State, a: Ally, action: Action) {
           target: `a${t.id}`,
           source: `a${a.id}`,
           value: amount,
+          visual,
         });
       } else if (skill.effect === 'evacuate') {
+        const fromRow = t.row;
         t.row = opposite(t.row);
         t.nextRow = null;
         t.move = 0;
         // The caster pays its own recovery even when evacuating its own row.
         if (t.action !== action) t.action = null;
-        emit(s, 'move', `${t.name}：緊急退避 → ${ROW_NAMES[t.row]}`, { target: `a${t.id}` });
+        emit(s, 'move', `${t.name}：緊急退避 → ${ROW_NAMES[t.row]}`, {
+          source: `a${a.id}`,
+          target: `a${t.id}`,
+          visual: { ...visual, fromRow, toRow: t.row },
+        });
       } else {
         t.shield =
           skill.effect === 'guard' ? BATTLE_TIMING.guardDuration : BATTLE_TIMING.shieldDuration;
-        emit(s, 'heal', `${t.name}：防護`, { target: `a${t.id}` });
+        emit(s, 'heal', `${t.name}：防護`, { source: `a${a.id}`, target: `a${t.id}`, visual });
       }
     }
     return;
@@ -601,7 +621,12 @@ function resolve(s: State, a: Ally, action: Action) {
         ? e.row === action.target.row
         : action.target.kind === 'enemy' && e.id === action.target.id),
   );
-  if (!targets.length) emit(s, 'system', `${skill.name}：着弾先に敵がいない`);
+  if (!targets.length)
+    emit(s, 'system', `${skill.name}：着弾先に敵がいない`, {
+      source: `a${a.id}`,
+      target: `a${a.id}`,
+      visual: { ...visual, outcome: 'miss' },
+    });
   for (const e of targets) {
     const protectedRear =
       e.row === 'back' &&
@@ -627,10 +652,15 @@ function resolve(s: State, a: Ally, action: Action) {
       source: `a${a.id}`,
       target: `e${e.id}`,
       value: damage,
+      visual: { ...visual, shielded: protectedRear },
     });
     if (e.hp <= 0) {
       e.cast = null;
-      emit(s, 'system', `${e.name}を倒した`);
+      emit(s, 'system', `${e.name}を倒した`, {
+        source: `a${a.id}`,
+        target: `e${e.id}`,
+        visual: { ...visual, outcome: 'defeat' },
+      });
       continue;
     }
     if (!e.broken && e.chain >= COMBAT_RULES.breakThreshold) {
@@ -640,10 +670,12 @@ function resolve(s: State, a: Ally, action: Action) {
       s.metrics.breaks++;
       emit(s, 'break', `${e.name} BREAK — ${BATTLE_TIMING.breakDuration}秒間の好機`, {
         target: `e${e.id}`,
+        source: `a${a.id}`,
+        visual,
       });
     }
     if (skill.effect === 'push' || skill.effect === 'pull')
-      forceEnemy(s, e, skill.effect === 'push' ? 'back' : 'front');
+      forceEnemy(s, e, skill.effect === 'push' ? 'back' : 'front', `a${a.id}`);
   }
 }
 function prunePlan(s: State, a: Ally) {
@@ -688,7 +720,11 @@ function tickAlly(s: State, a: Ally, dt: number) {
     idle: () => {
       if (s.controlMode === 'ai' || a.id !== s.selected) chooseAuto(s, a);
     },
-    moved: () => emit(s, 'move', `${a.name} → ${ROW_NAMES[a.row]}`, { target: `a${a.id}` }),
+    moved: () =>
+      emit(s, 'move', `${a.name} → ${ROW_NAMES[a.row]}`, {
+        target: `a${a.id}`,
+        visual: { fromRow: opposite(a.row), toRow: a.row },
+      }),
     shifted: () => emit(s, 'shift', `${a.name} → ${weaponOf(a).archetype}`, { target: `a${a.id}` }),
     discarded: (p) => {
       if (isHandoff(p)) s.pendingSelect = null;
@@ -740,6 +776,7 @@ function startEnemyCast(s: State, e: Enemy) {
     s,
     'warning',
     `${e.name}：${e.cast.name}${e.cast.target === 'single' ? ` → ${target.name}` : ''}`,
+    { source: `e${e.id}`, visual: { actionName: e.cast.name } },
   );
 }
 function tickEnemy(s: State, e: Enemy, dt: number) {
@@ -770,7 +807,12 @@ function tickEnemy(s: State, e: Enemy, dt: number) {
         (cast.target === 'all' ||
           (cast.target === 'row' ? a.row === cast.row : a.id === cast.allyId)),
     );
-    if (!targets.length) emit(s, 'system', `${e.name}：${cast.name}は誰にも当たらなかった`);
+    if (!targets.length)
+      emit(s, 'system', `${e.name}：${cast.name}は誰にも当たらなかった`, {
+        source: `e${e.id}`,
+        target: `e${e.id}`,
+        visual: { actionName: cast.name, outcome: 'miss' },
+      });
     // A single area hit shares the same instant, even if it downs its defender.
     const taken = partyBonus(s.allies, s.config.bonusMode).taken;
     for (const a of targets) {
@@ -790,6 +832,7 @@ function tickEnemy(s: State, e: Enemy, dt: number) {
         source: `e${e.id}`,
         target: `a${a.id}`,
         value: damage,
+        visual: { actionName: cast.name, shielded: a.shield > 0 },
       });
       if (a.hp <= 0) {
         a.action = null;
@@ -799,12 +842,20 @@ function tickEnemy(s: State, e: Enemy, dt: number) {
         a.sequences = [];
         a.nextRow = null;
         a.nextSlot = null;
-        emit(s, 'warning', `${a.name}：戦闘不能`);
+        emit(s, 'warning', `${a.name}：戦闘不能`, {
+          source: `e${e.id}`,
+          target: `a${a.id}`,
+          visual: { outcome: 'defeat' },
+        });
       } else if (cast.push && a.row === 'front') {
         a.row = 'back';
         a.nextRow = null;
         a.move = 0;
-        emit(s, 'move', `${a.name}は後列へ押された`, { target: `a${a.id}` });
+        emit(s, 'move', `${a.name}は後列へ押された`, {
+          source: `e${e.id}`,
+          target: `a${a.id}`,
+          visual: { fromRow: 'front', toRow: 'back' },
+        });
       }
     }
   } else {

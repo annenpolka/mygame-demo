@@ -1,7 +1,7 @@
 import { COMBAT_RULES, percent } from './rules';
 import type { Config, Formation, Preset, Skill, Weapon } from '../sim/types';
 
-export const VERSION = 'orchestra-12';
+export const VERSION = 'orchestra-13';
 export const DT = 1 / 60;
 export const BATTLE_TIMING = {
   enemyWindupScale: 1.6,

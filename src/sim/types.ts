@@ -144,6 +144,16 @@ export interface BattleEvent {
   source?: string;
   target?: string;
   value?: number;
+  /** Resolved presentation facts; never used to calculate combat. */
+  visual?: {
+    skillId?: string;
+    actionName?: string;
+    comboIndex?: number;
+    shielded?: boolean;
+    fromRow?: Row;
+    toRow?: Row;
+    outcome?: 'defeat' | 'interrupt' | 'miss' | 'resist';
+  };
 }
 export interface Metrics {
   damage: number;

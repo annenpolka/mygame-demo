@@ -72,6 +72,17 @@ const eventSchema = z.object({
   source: z.string().optional(),
   target: z.string().optional(),
   value: n.optional(),
+  visual: z
+    .object({
+      skillId: skill.optional(),
+      actionName: z.string().max(100).optional(),
+      comboIndex: n.int().positive().optional(),
+      shielded: z.boolean().optional(),
+      fromRow: row.optional(),
+      toRow: row.optional(),
+      outcome: z.enum(['defeat', 'interrupt', 'miss', 'resist']).optional(),
+    })
+    .optional(),
 });
 const stateSchema = z
   .object({

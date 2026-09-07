@@ -173,7 +173,7 @@ describe('target selection boundaries', () => {
     recording.inputs.push({ tick: 0, order: 10, command: { type: 'target', id: 1 } } as never);
     expect(() => parseRecording(JSON.stringify(recording))).toThrow();
     const old = { ...copy(x.state), version: 'orchestra-11', target: 0 };
-    expect(VERSION).toBe('orchestra-12');
+    expect(VERSION).toBe('orchestra-13');
     expect(() =>
       parseSnapshot(JSON.stringify({ version: 'orchestra-11', kind: 'snapshot', state: old })),
     ).toThrow();
