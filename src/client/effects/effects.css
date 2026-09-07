@@ -1,19 +1,158 @@
+/* The field owns the animation space. HUD text sits over the particle layer. */
 .horizontal-field {
   position: relative;
   isolation: isolate;
+  background: radial-gradient(ellipse at 50% 100%, #4e668426, transparent 65%), #101e2b;
 }
-.battle-effects {
+.battle-layout .battle-lane {
+  grid-template-rows: 27px repeat(var(--field-tracks), minmax(0, 1fr));
+  gap: 5px;
+}
+.battle-layout .field-unit {
+  display: grid;
+  grid-template-columns: 64px minmax(0, 1fr);
+  grid-template-rows: 18px 1fr;
+  align-items: center;
+  gap: 2px 7px;
+  padding: 3px 7px 23px;
+  text-align: left;
+  background-color: #11233375;
+  border-bottom: 1px solid #b6d9f41b;
+}
+.battle-layout .field-unit.fallen {
+  background: transparent;
+}
+.battle-layout .field-unit.selected {
+  background-color: #34415188;
+}
+.battle-layout .field-unit-info {
+  grid-column: 2;
+  grid-row: 2;
+  position: relative;
+  z-index: 8;
+  pointer-events: none;
+}
+.battle-layout .field-unit-info > small {
+  font-size: 9px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.battle-layout .field-unit-info strong {
+  font-size: 11px;
+}
+.battle-layout .field-unit .field-symbol {
+  grid-column: 1;
+  grid-row: 2;
+  width: 64px;
+  height: 64px;
+  font-size: 32px;
+  display: block;
+  position: relative;
+}
+.unit-intent {
+  grid-column: 1 / -1;
+  grid-row: 1;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  min-width: 0;
+  line-height: 16px;
+  color: #ffe1a3;
+  font-size: 10px;
+  white-space: nowrap;
+  position: relative;
+  z-index: 8;
+}
+.unit-intent b {
+  flex-shrink: 0;
+  font-weight: 600;
+}
+.unit-intent > span {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  color: #bdcdd9;
+}
+.unit-intent.hostile {
+  color: #ffb09a;
+}
+.unit-intent.recovery {
+  color: #9bafbe;
+  opacity: 0.7;
+}
+.unit-incoming {
+  color: #ffb59f !important;
+  font-size: 9px !important;
+  white-space: nowrap;
+}
+.unit-figure {
+  width: 64px;
+  height: 68px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.5;
+  overflow: visible;
+}
+.emblem-ground {
+  fill: #84bdd211;
+  stroke: #aed8e944;
+}
+.emblem-body {
+  transform-origin: 32px 42px;
+  transform: translate(var(--emblem-x), var(--emblem-y)) rotate(var(--emblem-tilt));
+  filter: drop-shadow(0 0 7px var(--emblem-glow));
+}
+.emblem-cloak {
+  fill: #182636;
+  stroke: currentColor;
+  opacity: 0.85;
+}
+.emblem-metal {
+  fill: #2a4256;
+  stroke-width: 1.7;
+}
+.emblem-bright,
+.emblem-blade {
+  fill: currentColor;
+  stroke: #f7eed5;
+  stroke-width: 0.7;
+}
+.emblem-core {
+  fill: currentColor;
+  stroke: #e0fbff;
+  stroke-width: 1;
+}
+.emblem-limbs {
+  stroke-width: 4;
+  stroke-linecap: square;
+}
+.emblem-etch {
+  stroke: #bed4df;
+  opacity: 0.55;
+}
+.is-struck .emblem-metal {
+  fill: color-mix(in srgb, #ffffff calc(var(--emblem-flash) * 100%), #2a4256);
+}
+.battle-effects,
+.battle-particles {
   position: absolute;
   inset: 0;
   width: 100%;
   height: 100%;
-  z-index: 6;
-  overflow: visible;
   pointer-events: none;
+  overflow: hidden;
+}
+.fx-underlay {
+  z-index: 2;
+}
+.battle-particles {
+  z-index: 4;
+}
+.fx-foreground {
+  z-index: 7;
 }
 .battle-effects path,
 .battle-effects circle,
-.battle-effects rect,
 .battle-effects ellipse {
   fill: none;
   stroke: currentColor;
@@ -21,126 +160,267 @@
 }
 .battle-effects text {
   text-anchor: middle;
-  paint-order: stroke;
-  stroke: #0b1b29;
-  stroke-width: 3px;
-  stroke-linejoin: round;
   fill: currentColor;
+  paint-order: stroke;
+  stroke: #0a1825;
+  stroke-width: 3.5px;
+  stroke-linejoin: round;
   font-family: ui-monospace, monospace;
+}
+.fx-area-bracket {
+  stroke-width: 2;
+}
+.fx-intent-line {
+  stroke-width: 1.3;
+}
+.fx-lock {
+  stroke-width: 1.5;
+}
+.field-aim-path {
+  color: #f6d995;
+  opacity: 0.55;
+  stroke-width: 1.5;
+  stroke-dasharray: 3 6;
 }
 .fx-casting {
   stroke-width: 2;
-  opacity: 0.6;
-  transform-box: fill-box;
-  transform-origin: center;
-  transform: rotate(-90deg);
-}
-.fx-casting.ally {
-  color: #e4c18f;
-}
-.fx-casting.enemy {
-  color: #ef9a7f;
+  opacity: 0.8;
 }
 .fx-protection {
-  color: #8ac6c7;
-  opacity: 0.65;
-}
-.fx-protection rect {
+  color: #99ede4;
   stroke-width: 1.5;
-  stroke-dasharray: 7 3;
 }
 .fx-protection text {
   font-size: 9px;
 }
-.fx-flight {
-  stroke-width: 2.5;
-  opacity: 0.6;
-}
-.fx-slashes path {
-  stroke-width: 4;
-  stroke-linecap: round;
-}
-.fx-slashes path + path {
-  stroke-width: 2;
-}
-.fx-arrow-impact {
-  stroke-width: 2;
-}
-.fx-burst {
-  stroke-width: 2;
-}
-.fx-break .fx-burst {
-  stroke-width: 3;
-}
-.fx-burst circle {
-  opacity: 0.6;
-}
-.fx-magic .fx-burst {
-  stroke-dasharray: 4 5;
-}
-.fx-healing {
-  stroke-width: 2.5;
-}
-.fx-shield-shape {
-  stroke-width: 3;
-  fill: #9fe3dc22 !important;
-}
-.fx-displace {
-  stroke-width: 2.5;
-}
-.fx-shifting {
-  stroke-width: 2;
-}
-.fx-number {
-  font-size: 21px;
-  font-weight: 800;
-  letter-spacing: -1px;
-}
-.fx-number.break-label {
-  font-size: 24px;
-  letter-spacing: 2px;
-}
-.fx-action-label {
+.fx-combo {
   font-size: 10px;
   font-weight: 700;
 }
-.battle-lane.aimed {
-  background: #cfa45e28;
-  box-shadow: inset 0 0 0 2px #efd2a0;
+.fx-number {
+  font-size: 22px;
+  font-weight: 800;
+  letter-spacing: -1px;
 }
-.field-unit.aimed {
-  outline: 2px solid #f0d6a9;
-  outline-offset: 2px;
-  background: #486274;
+.fx-number.fx-outcome {
+  font-size: 12px;
+  letter-spacing: 1px;
 }
-.field-unit.aimed:after {
-  content: '対象';
-  position: absolute;
-  right: 3px;
-  top: -12px;
-  font-size: 9px;
-  line-height: 1.4;
-  color: #152e3a;
-  background: #f0d6a9;
-  padding: 0 4px;
+.fx-break .fx-outcome {
+  font-size: 20px;
+  font-style: italic;
+  letter-spacing: 3px;
 }
-@media (max-width: 600px) {
-  .fx-number {
-    font-size: 17px;
+.fx-mitigated {
+  font-size: 8px;
+  letter-spacing: 1px;
+  fill: #a1eee1 !important;
+}
+.fx-shatter {
+  stroke-width: 3;
+}
+.fx-static-impact {
+  stroke-width: 3;
+  opacity: 0.65;
+}
+@media (max-width: 1100px) {
+  .battle-layout .field-unit {
+    grid-template-columns: 48px minmax(0, 1fr);
+    gap: 2px 3px;
+    padding-left: 3px;
+    padding-right: 3px;
   }
-  .fx-number.break-label {
-    font-size: 19px;
+  .battle-layout .field-unit .field-symbol,
+  .unit-figure {
+    width: 48px;
+    height: 56px;
   }
-  .fx-action-label {
+  .unit-intent {
     font-size: 9px;
+    gap: 3px;
   }
-  .fx-flight {
-    stroke-width: 1.5;
-    opacity: 0.45;
+  .battle-layout .field-unit-info strong {
+    font-size: 10px;
+  }
+}
+@media (max-width: 800px) {
+  .battle-layout .battle-lane {
+    grid-template-rows: 32px repeat(var(--field-tracks), 207px);
+    gap: 4px;
+  }
+  .battle-layout .field-unit {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-rows: 27px 48px 1fr;
+    padding: 2px 2px 42px;
+    gap: 0;
+    align-content: start;
+    text-align: center;
+  }
+  .battle-layout .field-unit .field-symbol {
+    grid-column: 1;
+    grid-row: 2;
+    justify-self: center;
+    width: 44px;
+    height: 48px;
+  }
+  .unit-figure {
+    width: 44px;
+    height: 48px;
+  }
+  .battle-layout .field-unit-info {
+    grid-column: 1;
+    grid-row: 3;
+    align-self: start;
+  }
+  .unit-intent {
+    grid-column: 1;
+    flex-direction: column;
+    gap: 0;
+    font-size: 8px;
+    line-height: 12px;
+    overflow: hidden;
+  }
+  .unit-intent > span {
+    width: 100%;
+  }
+  .unit-intent b {
+    max-width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .battle-layout .field-unit-info > small {
+    min-height: 0;
+    font-size: 8px;
+  }
+  .unit-incoming {
+    font-size: 8px !important;
+  }
+  .fx-number {
+    font-size: 16px;
+  }
+  .fx-number.fx-outcome {
+    font-size: 9px;
+    letter-spacing: 0;
+  }
+  .fx-break .fx-outcome {
+    font-size: 14px;
+  }
+  .fx-shield-caption {
+    display: none;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .emblem-body {
+    transform: none;
+    filter: none;
+  }
+  .is-struck .emblem-metal {
+    fill: #a2bdce;
+  }
+  .battle-particles {
+    display: none;
   }
 }
 
-.fx-casting.ally.recovering {
-  stroke: #a8b1c6;
-  opacity: 0.65;
+/* Shield duration is also present in the field caption; its hit mitigation stays with the number. */
+.fx-shield-caption {
+  font-size: 8px;
+  opacity: 0.8;
+}
+
+@media (min-width: 801px) {
+  .battle-layout .horizontal-field {
+    height: clamp(228px, calc(100svh - 550px), 350px);
+    flex: none !important;
+  }
+  .battle-layout .unit-telegraph {
+    gap: 1px;
+  }
+  .battle-layout .unit-telegraph small {
+    font-size: 9px;
+  }
+  .battle-layout .unit-gauge small {
+    font-size: 8px;
+  }
+  .battle-layout .field-unit {
+    padding-bottom: 21px;
+  }
+  .battlefield[data-density='3'] .field-unit {
+    grid-template-columns: 40px minmax(0, 1fr);
+    grid-template-rows: 14px 1fr;
+    padding: 1px 3px 2px;
+  }
+  .battlefield[data-density='3'] .field-symbol,
+  .battlefield[data-density='3'] .unit-figure {
+    width: 38px;
+    height: 39px;
+    align-self: start;
+  }
+  .battlefield[data-density='3'] .field-unit-info > small {
+    display: none;
+  }
+  .battlefield[data-density='3'] .field-unit-info {
+    gap: 0;
+  }
+  .battlefield[data-density='3'] .field-unit-info strong {
+    font-size: 10px;
+    line-height: 1.2;
+  }
+  .battlefield[data-density='3'] .unit-intent {
+    font-size: 8px;
+    line-height: 12px;
+  }
+  .battlefield[data-density='3'] .unit-incoming {
+    font-size: 8px !important;
+  }
+  .battlefield[data-density='3'] .unit-telegraph small {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  .battlefield[data-density='3'] .fx-shield-caption {
+    display: none;
+  }
+}
+.intent-clock {
+  font-size: 9px;
+  font-style: normal;
+}
+.fx-number.fx-compact {
+  font-size: 13px;
+}
+.fx-number.fx-outcome.fx-compact {
+  font-size: 9px;
+  letter-spacing: 0;
+}
+/* Grid items must shrink inside the fixed battle viewport instead of painting over the ATB panel. */
+.battle-layout .battle-lane {
+  min-height: 0;
+}
+.battle-layout .field-unit {
+  grid-template-rows: 18px minmax(0, 1fr);
+}
+@media (min-width: 801px) and (max-height: 800px) {
+  .battle-layout .field-unit {
+    grid-template-columns: 50px minmax(0, 1fr);
+  }
+  .battle-layout .field-unit .field-symbol,
+  .battle-layout .unit-figure {
+    width: 46px;
+    height: 48px;
+  }
+  .battlefield[data-density='3'] .field-unit {
+    grid-template-columns: 38px minmax(0, 1fr);
+    grid-template-rows: 14px minmax(0, 1fr);
+  }
+  .battlefield[data-density='3'] .field-symbol,
+  .battlefield[data-density='3'] .unit-figure {
+    width: 36px;
+    height: 38px;
+  }
+}
+@media (max-width: 800px) {
+  .battle-layout .field-unit {
+    grid-template-rows: 27px 48px 1fr;
+  }
 }

@@ -1,35 +1,23 @@
-import { actionPhase } from '../timing';
-import { useEffect, useLayoutEffect, useState, type RefObject } from 'react';
+import { useEffect, useState, type RefObject } from 'react';
 import type { State, Target } from '../../sim/types';
-import { effectCues, type EffectCue } from './events';
-type Point = { x: number; y: number };
-interface Layout {
-  width: number;
-  height: number;
-  points: Record<string, Point>;
-}
-const colors = {
-  slash: '#ffda94',
-  shot: '#aaddff',
-  magic: '#9ecffb',
-  impact: '#ecc592',
-  hit: '#f4a291',
-  heal: '#93e7bd',
-  shield: '#9fe3dc',
-  move: '#dfc5f8',
-  shift: '#e2d3a9',
-  break: '#ffe2a5',
-};
+import { type EffectCue, type ActionCue } from './events';
+import { Particles } from './Particles';
+import { PALETTE, arc, clamp, columnX, type Layout, type Anchor } from './geometry';
+
 export function BattleEffects({
   state: s,
   field,
   aim = null,
   targetSide = 'enemy',
+  cues,
+  actions,
 }: {
   state: State;
   field: RefObject<HTMLDivElement | null>;
   aim?: Target | null;
   targetSide?: 'ally' | 'enemy';
+  cues: EffectCue[];
+  actions: ActionCue[];
 }) {
   const [layout, setLayout] = useState<Layout>({ width: 1, height: 1, points: {} });
   const [reduced, setReduced] = useState(false);
@@ -39,10 +27,18 @@ export function BattleEffects({
     if (!root) return;
     const measure = () => {
       const b = root.getBoundingClientRect(),
-        points: Record<string, Point> = {};
+        points: Layout['points'] = {};
       root.querySelectorAll<HTMLElement>('[data-unit]').forEach((el) => {
-        const r = (el.querySelector('.field-symbol') ?? el).getBoundingClientRect();
-        points[el.dataset.unit!] = { x: r.x + r.width / 2 - b.x, y: r.y + r.height / 2 - b.y };
+        const r = (el.querySelector('.field-symbol') ?? el).getBoundingClientRect(),
+          card = el.getBoundingClientRect();
+        points[el.dataset.unit!] = {
+          x: r.x + r.width / 2 - b.x,
+          y: r.y + r.height / 2 - b.y,
+          left: card.x - b.x,
+          top: card.y - b.y,
+          width: card.width,
+          height: card.height,
+        };
       });
       setLayout((old) => {
         const next = { width: b.width, height: b.height, points };
@@ -52,244 +48,210 @@ export function BattleEffects({
     measure();
     const observer = new ResizeObserver(measure);
     observer.observe(root);
+    root.querySelectorAll('[data-unit]').forEach((el) => observer.observe(el));
     return () => observer.disconnect();
   }, [field, positions, s.encounter]);
-  useLayoutEffect(() => {
-    const q = matchMedia('(prefers-reduced-motion: reduce)');
-    const update = () => setReduced(q.matches);
+  useEffect(() => {
+    const q = matchMedia('(prefers-reduced-motion: reduce)'),
+      update = () => setReduced(q.matches);
     update();
     q.addEventListener('change', update);
     return () => q.removeEventListener('change', update);
   }, []);
-  const cues = effectCues(s);
   const from = layout.points[`a${s.selected}`];
   const to = !aim
     ? null
     : aim.kind === 'row'
-      ? {
-          x:
-            layout.width *
-            (targetSide === 'ally'
-              ? aim.row === 'back'
-                ? 0.125
-                : 0.375
-              : aim.row === 'front'
-                ? 0.625
-                : 0.875),
-          y: layout.height * 0.52,
-        }
+      ? { x: columnX(layout, targetSide, aim.row), y: layout.height * 0.5 }
       : layout.points[`${aim.kind === 'ally' ? 'a' : 'e'}${aim.id}`];
   return (
-    <svg
-      className="battle-effects"
-      viewBox={`0 0 ${layout.width} ${layout.height}`}
-      aria-hidden="true"
-      data-effects={reduced ? 'reduced' : 'full'}
-    >
-      {from && to && (
-        <g className="field-aim-path">
-          <path
-            d={`M ${from.x} ${from.y} Q ${(from.x + to.x) / 2} ${Math.max(10, Math.min(from.y, to.y) - 25)} ${to.x} ${to.y}`}
-          />
-          <circle cx={to.x} cy={to.y} r={27} />
-          <path
-            d={`M ${to.x - 7} ${to.y - 36} L ${to.x} ${to.y - 29} L ${to.x + 7} ${to.y - 36}`}
-          />
-        </g>
-      )}
-      {s.allies
-        .filter((a) => a.hp > 0)
-        .map((a) => {
-          const p = layout.points[`a${a.id}`];
-          if (!p) return null;
-          return (
-            <g key={`status-${a.id}`}>
-              {a.shield > 0 && (
-                <g className="fx-protection" data-status="shield">
-                  <rect x={p.x - 37} y={p.y - 18} width={74} height={36} rx={12} />
-                  <text x={p.x} y={p.y + 27}>
+    <>
+      <svg
+        className="battle-effects fx-underlay"
+        viewBox={`0 0 ${layout.width} ${layout.height}`}
+        aria-hidden="true"
+      >
+        <defs>
+          <pattern
+            id="threat-hatch"
+            width="12"
+            height="12"
+            patternUnits="userSpaceOnUse"
+            patternTransform="rotate(35)"
+          >
+            <path d="M0 0V12" stroke="#ff957b" strokeWidth="2" opacity=".16" />
+          </pattern>
+        </defs>
+        {actions
+          .filter((c) => !c.recovery)
+          .map((c) => {
+            const p = layout.points[c.source];
+            if (!p) return null;
+            const color = PALETTE[c.type];
+            return (
+              <g
+                key={c.source}
+                className={`fx-intent ${c.hostile ? 'hostile' : 'friendly'}`}
+                data-source={c.source}
+                data-action={c.label}
+                color={color}
+              >
+                {c.area &&
+                  (c.area.row ? [c.area.row] : (['front', 'back'] as const)).map((row) => {
+                    const x = columnX(layout, c.area!.side, row) - layout.width / 8;
+                    return (
+                      <g key={row} data-zone={`${c.area!.side}-${row}`}>
+                        <rect
+                          className="fx-area-fill"
+                          x={x + 3}
+                          y={25}
+                          width={layout.width / 4 - 6}
+                          height={layout.height - 30}
+                          fill={c.hostile ? 'url(#threat-hatch)' : color}
+                          opacity={c.hostile ? 0.8 : 0.07}
+                        />
+                        <path
+                          className="fx-area-bracket"
+                          d={`M${x + 15} 29h-10v${layout.height - 39}h10 M${x + layout.width / 4 - 15} 29h10v${layout.height - 39}h-10`}
+                          opacity={0.3 + c.progress * 0.5}
+                        />
+                      </g>
+                    );
+                  })}
+                {c.targets.map((id) => {
+                  const q = layout.points[id];
+                  if (!q) return null;
+                  return (
+                    <g key={id} data-aim-target={id}>
+                      <path
+                        className="fx-intent-line"
+                        d={arc(p, q)}
+                        opacity={c.hostile ? 0.25 + c.progress * 0.4 : 0.17}
+                        strokeDasharray={c.hostile ? '5 7' : '2 8'}
+                      />
+                      <g
+                        className="fx-lock"
+                        transform={`translate(${q.x} ${q.y})`}
+                        opacity={c.hostile ? 0.45 + c.progress * 0.45 : 0.35}
+                      >
+                        <path d="M-31-12v-13h13M18-25h13v13M31 12v13H18M-18 25h-13V12" />
+                        {c.hostile && <path d="M-5-33 0-27 5-33" />}
+                      </g>
+                    </g>
+                  );
+                })}
+              </g>
+            );
+          })}
+        {from && to && (
+          <g className="field-aim-path">
+            <path d={arc(from, to)} />
+            <circle cx={to.x} cy={to.y} r="32" />
+          </g>
+        )}
+      </svg>
+      <Particles layout={layout} cues={cues} actions={actions} reduced={reduced} />
+      <svg
+        className="battle-effects fx-foreground"
+        viewBox={`0 0 ${layout.width} ${layout.height}`}
+        aria-hidden="true"
+        data-effects={reduced ? 'reduced' : 'full'}
+      >
+        {s.allies
+          .filter((a) => a.hp > 0 && a.shield > 0)
+          .map((a) => {
+            const p = layout.points[`a${a.id}`];
+            return (
+              p && (
+                <g
+                  key={a.id}
+                  className="fx-protection"
+                  data-status="shield"
+                  transform={`translate(${p.x} ${p.y})`}
+                >
+                  <path d="M0-33 29-18 29 16 0 34-29 16-29-18Z" />
+                  <path d="M0-28 24-14 24 13 0 28-24 13-24-14Z" opacity=".4" />
+                  <text
+                    className="fx-shield-caption"
+                    x={p.left + p.width / 2 - p.x}
+                    y={p.top + p.height - 2 - p.y}
+                  >
                     防護 {a.shield.toFixed(1)}s
                   </text>
                 </g>
-              )}
-              {a.action && (
+              )
+            );
+          })}
+        {actions.map((c) => {
+          const p = layout.points[c.source];
+          return (
+            p && (
+              <g key={c.source} color={c.recovery ? '#92a8b7' : PALETTE[c.type]}>
                 <circle
-                  className={`fx-casting ally ${a.action.resolved ? 'recovering' : ''}`}
-                  data-status={a.action.resolved ? 'recovery' : 'windup'}
+                  className={`fx-casting ${c.hostile ? 'enemy' : 'ally'}`}
+                  data-status={c.recovery ? 'recovery' : 'windup'}
                   cx={p.x}
                   cy={p.y}
-                  r={22}
-                  pathLength={100}
-                  strokeDasharray={`${(1 - actionPhase(a.action).remaining / actionPhase(a.action).total) * 100} 100`}
+                  r="30"
+                  pathLength="100"
+                  strokeDasharray={`${c.progress * 100} 100`}
+                  transform={`rotate(-90 ${p.x} ${p.y})`}
                 />
-              )}
-            </g>
+                {c.combo > 1 && (
+                  <text className="fx-combo" x={p.x} y={p.y - 38}>
+                    {c.combo}連続
+                  </text>
+                )}
+              </g>
+            )
           );
         })}
-      {s.enemies
-        .filter((e) => e.hp > 0 && e.cast)
-        .map((e) => {
-          const p = layout.points[`e${e.id}`];
-          if (!p || !e.cast) return null;
-          return (
-            <circle
-              key={`cast-${e.id}`}
-              className="fx-casting enemy"
-              cx={p.x}
-              cy={p.y}
-              r={23}
-              pathLength={100}
-              strokeDasharray={`${(1 - e.cast.remaining / e.cast.total) * 100} 100`}
-            />
-          );
+        {cues.map((c) => {
+          const p = layout.points[c.target];
+          return p && <ImpactLabel key={c.id} cue={c} p={p} reduced={reduced} />;
         })}
-      {cues.map(
-        (cue) =>
-          layout.points[cue.target] && (
-            <Cue
-              key={cue.id}
-              cue={cue}
-              point={layout.points[cue.target]}
-              source={cue.source ? layout.points[cue.source] : undefined}
-              layout={layout}
-              reduced={reduced}
-              siblings={cues.filter((c) => c.target === cue.target)}
-            />
-          ),
-      )}
-    </svg>
+      </svg>
+    </>
   );
 }
-function Cue({
-  cue: c,
-  point: p,
-  source,
-  layout,
-  reduced,
-  siblings,
-}: {
-  cue: EffectCue;
-  point: Point;
-  source?: Point;
-  layout: Layout;
-  reduced: boolean;
-  siblings: EffectCue[];
-}) {
-  const t = reduced ? 0.5 : c.progress,
-    burst = Math.min(1, t * 4),
-    fade = Math.min(1, (1 - c.progress) * 3),
-    radius = 12 + burst * 24;
-  const hit = ['hit', 'impact', 'magic', 'break'].includes(c.type);
-  const x0 = c.target.startsWith('e')
-    ? p.x < layout.width * 0.75
-      ? p.x + layout.width / 4
-      : p.x - layout.width / 4
-    : p.x < layout.width * 0.25
-      ? p.x + layout.width / 4
-      : p.x - layout.width / 4;
-  const value = c.value === undefined ? c.label : `${c.type === 'heal' ? '+' : ''}${c.value}`;
-  const numbered = siblings.filter((x) => x.value !== undefined);
-  const offset =
-    c.value === undefined
-      ? 0
-      : (numbered.findIndex((x) => x.id === c.id) - (numbered.length - 1) / 2) * 40;
+function ImpactLabel({ cue: c, p, reduced }: { cue: EffectCue; p: Anchor; reduced: boolean }) {
+  const special = c.value === undefined,
+    t = reduced ? 0.4 : c.progress;
+  const text = c.value === undefined ? c.label : `${c.type === 'heal' ? '+' : ''}${c.value}`;
+  // Dedicated feedback strip at the foot of the card keeps numbers clear of name/HP/cast.
+  const compact = p.height < 85;
+  const x = compact ? p.x : p.left + p.width * (special ? 0.5 : 0.16 + (c.lane % 4) * 0.225);
+  const y = p.top + p.height - 9 - (reduced ? 0 : Math.sin(t * Math.PI) * 5);
   return (
     <g
       className={`fx-cue fx-${c.type}`}
       data-effect={c.type}
+      data-source={c.source}
       data-target={c.target}
       data-value={c.value}
-      opacity={fade}
-      style={{ color: colors[c.type] }}
+      opacity={clamp((1 - c.progress) * 4)}
+      color={PALETTE[c.type]}
     >
-      {source && !reduced && ['shot', 'magic', 'heal', 'slash'].includes(c.type) && (
+      {(c.type === 'break' || c.type === 'interrupt') && (
         <path
-          className="fx-flight"
-          d={`M ${source.x} ${source.y} Q ${(source.x + p.x) / 2} ${Math.max(10, Math.min(source.y, p.y) - 25)} ${p.x} ${p.y}`}
-          pathLength={100}
-          strokeDasharray={c.type === 'shot' ? '12 8' : '65 35'}
-          strokeDashoffset={100 - t * 160}
+          className="fx-shatter"
+          d={`M${p.x - 29} ${p.y - 29}l18 8-11 13 22 10-15 18M${p.x + 29} ${p.y - 29}l-18 8 11 13-22 10 15 18`}
+          opacity={1 - t}
         />
       )}
-      {c.type === 'slash' && (
-        <g
-          className="fx-slashes"
-          transform={`translate(${p.x} ${p.y}) scale(${0.7 + burst * 0.4})`}
-        >
-          <path d="M -29 21 Q -5 -2 31 -20" />
-          <path d="M -17 -22 L 19 19" />
-        </g>
-      )}
-      {c.type === 'shot' && (
-        <g className="fx-arrow-impact">
-          <path
-            d={`M ${p.x - 24} ${p.y + 12} L ${p.x + 19} ${p.y - 10} M ${p.x + 8} ${p.y - 14} L ${p.x + 19} ${p.y - 10} L ${p.x + 13} ${p.y + 1}`}
-          />
-          <circle cx={p.x} cy={p.y} r={radius * 0.5} />
-        </g>
-      )}
-      {hit && (
-        <g className="fx-burst">
-          <circle cx={p.x} cy={p.y} r={radius} />
-          {Array.from({ length: c.type === 'break' ? 10 : 6 }, (_, i) => {
-            const angle = (i * Math.PI * 2) / (c.type === 'break' ? 10 : 6);
-            return (
-              <path
-                key={i}
-                d={`M ${p.x + Math.cos(angle) * radius * 0.6} ${p.y + Math.sin(angle) * radius * 0.6} L ${p.x + Math.cos(angle) * (radius + 10)} ${p.y + Math.sin(angle) * (radius + 10)}`}
-              />
-            );
-          })}
-        </g>
-      )}
-      {c.type === 'heal' && (
-        <g className="fx-healing">
-          <ellipse cx={p.x} cy={p.y + 9} rx={radius} ry={radius * 0.35} />
-          {[-1, 0, 1].map((i) => (
-            <path
-              key={i}
-              d={`M ${p.x + i * 20 - 5} ${p.y - 20 - t * 16 + Math.abs(i) * 8} h 10 m -5 -5 v 10`}
-            />
-          ))}
-        </g>
-      )}
-      {c.type === 'shield' && (
-        <path
-          className="fx-shield-shape"
-          d={`M ${p.x - 25} ${p.y - 19} Q ${p.x} ${p.y - 28} ${p.x + 25} ${p.y - 19} L ${p.x + 21} ${p.y + 8} L ${p.x} ${p.y + 24} L ${p.x - 21} ${p.y + 8} Z`}
-        />
-      )}
-      {c.type === 'move' && (
-        <g className="fx-displace">
-          <path
-            d={`M ${x0} ${p.y} Q ${(x0 + p.x) / 2} ${p.y - 25} ${p.x} ${p.y}`}
-            pathLength={100}
-            strokeDasharray="5 4"
-          />
-          <path
-            d={`M ${p.x + (x0 > p.x ? 12 : -12)} ${p.y - 9} L ${p.x} ${p.y} L ${p.x + (x0 > p.x ? 12 : -12)} ${p.y + 9}`}
-          />
-        </g>
-      )}
-      {c.type === 'shift' && (
-        <g
-          className="fx-shifting"
-          transform={`translate(${p.x} ${p.y}) rotate(${reduced ? 0 : t * 100})`}
-        >
-          <rect x={-21} y={-21} width={42} height={42} rx={3} />
-          <rect x={-14} y={-14} width={28} height={28} />
-        </g>
+      {reduced && c.value !== undefined && (
+        <circle className="fx-static-impact" cx={p.x} cy={p.y} r="25" />
       )}
       <text
-        className={`fx-number ${c.type === 'break' ? 'break-label' : ''}`}
-        x={p.x + offset}
-        y={p.y - 23 - (reduced ? 0 : t * 14)}
+        className={`fx-number ${special ? 'fx-outcome' : ''} ${compact ? 'fx-compact' : ''}`}
+        x={x}
+        y={y - (special ? (compact ? 5 : 17) : 0)}
       >
-        {value}
+        {text}
       </text>
-      {c.value !== undefined && siblings.at(-1)?.id === c.id && (
-        <text className="fx-action-label" x={p.x} y={p.y + 21}>
-          {c.label}
+      {c.shielded && (
+        <text className="fx-mitigated" x={x} y={y + 10}>
+          軽減
         </text>
       )}
     </g>

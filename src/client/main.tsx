@@ -4,7 +4,6 @@ import { App } from './App';
 import './style.css';
 import './console.css';
 import './pad-battle.css';
-import './effects/effects.css';
 import './watch.css';
 
 createRoot(document.getElementById('root')!).render(
@@ -16,3 +15,5 @@ createRoot(document.getElementById('root')!).render(
 import './formation-ui.css';
 
 import './playtest.css';
+
+import './effects/effects.css';

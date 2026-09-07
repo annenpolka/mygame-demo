@@ -7,6 +7,8 @@ import { executionStatus } from './timing';
 import { canAppend, planned, stepName } from '../sim/plan';
 import { useEffect, useRef, type CSSProperties } from 'react';
 import { BattleEffects } from './effects/BattleEffects';
+import { UnitEmblem } from './effects/UnitEmblem';
+import { actionCues, effectCues } from './effects/events';
 import { BATTLE_TIMING, ROW_NAMES } from '../content/data';
 import { weaponOf } from '../sim/engine';
 import type { State, Skill, Target } from '../sim/types';
@@ -39,6 +41,44 @@ export function Battlefield({
   navigationLabel?: string;
 }) {
   const field = useRef<HTMLDivElement>(null);
+  const tracks = Math.max(
+    2,
+    ...FIELD_COLUMNS.map(
+      (c) => (c.side === 'ally' ? s.allies : s.enemies).filter((u) => u.row === c.row).length,
+    ),
+  );
+  const effects = effectCues(s),
+    actions = actionCues(s);
+  const intent = (id: string) => actions.find((c) => c.source === id);
+  const reaction = (id: string) =>
+    effects.filter((c) => c.target === id && c.value !== undefined).at(-1);
+  const receiving = (id: string) =>
+    actions
+      .filter((c) => c.hostile && !c.recovery && c.targets.includes(id))
+      .sort((a, b) => a.remaining - b.remaining)[0];
+  const intentLabel = (id: string) => {
+    const c = intent(id);
+    if (!c) return null;
+    const names = c.targets
+      .map(
+        (id) =>
+          (id.startsWith('a') ? s.allies : s.enemies).find((u) => `${id[0]}${u.id}` === id)?.name,
+      )
+      .filter(Boolean)
+      .join('・');
+    return (
+      <span
+        className={`unit-intent ${c.hostile ? 'hostile' : ''} ${c.recovery ? 'recovery' : ''}`}
+        title={`${c.label} → ${names || '対象なし'}`}
+      >
+        <b>{c.label}</b>
+        {c.hostile && <i className="intent-clock">{c.remaining.toFixed(1)}s</i>}
+        <span>
+          {c.recovery ? '終了硬直' : c.area ? '範囲' : '→'} {c.recovery ? '' : names || '対象なし'}
+        </span>
+      </span>
+    );
+  };
   if (palette) aim = palette.target;
   const active = (!!pending || !!palette) && s.phase === 'battle';
   const full = !palette && !canAppend(s.allies[s.selected], s.config, pending?.cost ?? 0);
@@ -55,7 +95,8 @@ export function Battlefield({
     <div
       className={`battlefield ${active ? 'targeting' : ''}`}
       aria-label="敵味方の前後列"
-      style={{ '--field-tracks': 3 } as CSSProperties}
+      style={{ '--field-tracks': tracks } as CSSProperties}
+      data-density={tracks}
     >
       {palette ? (
         <div className="field-target-bar palette-target-bar">
@@ -140,9 +181,6 @@ export function Battlefield({
                             (pending?.target.startsWith('ally') ||
                               (pending?.target === 'self' && a.id === s.selected)));
                       const aimed = targetable && aim?.kind === 'ally' && aim.id === a.id;
-                      const cast = s.enemies.find(
-                        (e) => e.hp > 0 && e.cast?.target === 'single' && e.cast.allyId === a.id,
-                      )?.cast;
                       return (
                         <button
                           key={a.id}
@@ -179,7 +217,21 @@ export function Battlefield({
                                 : onAlly(a.id)
                           }
                         >
-                          <span className="field-symbol">{w.glyph}</span>
+                          {intentLabel(`a${a.id}`)}
+                          <UnitEmblem
+                            kind={
+                              w.skills.includes('shot')
+                                ? 'bow'
+                                : w.skills.includes('jab')
+                                  ? 'fist'
+                                  : w.skills.includes('smash')
+                                    ? 'hammer'
+                                    : w.role
+                            }
+                            id={`a${a.id}`}
+                            action={intent(`a${a.id}`)}
+                            reaction={reaction(`a${a.id}`)}
+                          />
                           <span className="field-unit-info">
                             <strong>
                               {a.name} <b className={`role role-${w.role}`}>{w.role}</b>
@@ -218,7 +270,12 @@ export function Battlefield({
                                 text={`ATB ${a.atb.toFixed(1)} / ${s.config.atbMax}`}
                               />
                             </span>
-                            {cast && <em>追尾 {cast.remaining.toFixed(1)}秒</em>}
+                            {receiving(`a${a.id}`) && (
+                              <em className="unit-incoming">
+                                {receiving(`a${a.id}`)!.area ? '範囲攻撃' : '狙われている'}{' '}
+                                {receiving(`a${a.id}`)!.remaining.toFixed(1)}秒
+                              </em>
+                            )}
                           </span>
                         </button>
                       );
@@ -264,7 +321,13 @@ export function Battlefield({
                                 : undefined
                           }
                         >
-                          <span className="field-symbol">{e.glyph}</span>
+                          {intentLabel(`e${e.id}`)}
+                          <UnitEmblem
+                            kind={e.kind}
+                            id={`e${e.id}`}
+                            action={intent(`e${e.id}`)}
+                            reaction={reaction(`e${e.id}`)}
+                          />
                           <span className="field-unit-info">
                             <strong>{e.name}</strong>
                             <span className="unit-gauges">
@@ -294,9 +357,6 @@ export function Battlefield({
                             <span className="unit-telegraph">
                               {e.cast ? (
                                 <>
-                                  <span>
-                                    <b>{e.cast.name}</b> <b>{e.cast.remaining.toFixed(1)}s</b>
-                                  </span>
                                   <UnitGauge
                                     label={`${e.name}の行動予告`}
                                     value={e.cast.total - e.cast.remaining}
@@ -338,6 +398,8 @@ export function Battlefield({
         })}
         <BattleEffects
           state={s}
+          cues={effects}
+          actions={actions}
           field={field}
           aim={active ? aim : null}
           targetSide={sideForSkill}
