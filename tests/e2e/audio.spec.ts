@@ -54,7 +54,7 @@ test('bonus presets select the comparison condition and expose the active party 
   );
   await expect(page.getByRole('meter', { name: '鐘楼の衛兵のHP', exact: true })).toHaveAttribute(
     'aria-valuemax',
-    '2175',
+    '2100',
   );
   await page.getByRole('button', { name: 'なし', exact: true }).click();
   await expect(page.getByRole('meter', { name: '鐘楼の衛兵のHP', exact: true })).toHaveAttribute(

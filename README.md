@@ -236,3 +236,7 @@ npm run sim -- --policy tactician --planning queue --set crossfire --level 6 --s
 開発時は [AGENTS.md](AGENTS.md) に従い、検証した機能単位でコミットします。GitHub remote は private を維持します。
 
 現在のルールは `orchestra-7`。開始前に編成ボーナス「なし／控えめ／強め／強め・速度比較」を選べます。[ボーナスの倍率と確定タイミング](docs/party-bonuses.md)、[ATB帯と固定陣形](docs/atb-display.md)、[編成と装備を評価するAI](docs/composition-ai.md)を参照。
+
+前列は全職の威力・チェインが各1.25倍。[位置補正](docs/front-row.md)と[同条件で約3倍になったヘッドレス計測](docs/headless-performance.md)を参照。再計測は `npm run sim:bench -- --dir artifacts/new-bench`。
+
+最新の[前列補正あり・12,000戦の比較結果](docs/party-bonus-front-study.md)では、全員前列の攻撃優先は改善しましたが、予告対応AIがなお優勢でした。速度比較用の敵HP倍率は1.40です。

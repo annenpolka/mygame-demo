@@ -668,10 +668,10 @@ export function App() {
                   </button>
                 ))}
                 <button
-                  aria-pressed={s.config.bonusMode === 'strong' && s.config.enemyHpScale === 1.45}
-                  title="標準ABSの戦闘時間を揃える比較。敵HPは1.45倍です。"
+                  aria-pressed={s.config.bonusMode === 'strong' && s.config.enemyHpScale === 1.4}
+                  title="標準ABSの戦闘時間を揃える比較。敵HPは1.4倍です。"
                   onClick={() => {
-                    const next = { ...s.config, bonusMode: 'strong' as const, enemyHpScale: 1.45 };
+                    const next = { ...s.config, bonusMode: 'strong' as const, enemyHpScale: 1.4 };
                     setConfig(next);
                     restart(next, false);
                   }}
