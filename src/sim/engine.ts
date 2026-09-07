@@ -39,10 +39,14 @@ function random(s: State) {
   s.rng = (Math.imul(s.rng, 1664525) + 1013904223) >>> 0;
   return s.rng / 4294967296;
 }
-export function createState(config: Partial<Config> = {}): State {
+export function createState(
+  config: Partial<Config> = {},
+  controlMode: State['controlMode'] = 'manual',
+): State {
   const c = { ...DEFAULT_CONFIG, ...config };
   return {
     version: VERSION,
+    controlMode,
     config: c,
     phase: 'ready',
     paused: false,
@@ -113,11 +117,29 @@ export function command(s: State, c: Command): boolean {
     return true;
   }
   if (s.paused) return false;
+  if (c.type === 'control') {
+    if (c.mode !== 'manual' && c.mode !== 'ai') return false;
+    s.controlMode = c.mode;
+    emit(
+      s,
+      'system',
+      c.mode === 'ai'
+        ? 'AI鑑賞：全員の行動をAIに委ねました。'
+        : '手動操作：選択中の仲間は指示を待ちます。',
+    );
+    return true;
+  }
   if (c.type === 'start') {
     if (s.phase !== 'ready') return false;
     for (const a of s.allies) a.slot = s.presets[s.activePreset].slots[a.id];
     s.phase = 'battle';
-    emit(s, 'system', '戦闘開始。仲間は現在の武器で自動行動します。');
+    emit(
+      s,
+      'system',
+      s.controlMode === 'ai'
+        ? '戦闘開始。全員をAIが操作します。'
+        : '戦闘開始。選択中の仲間は指示を待ち、ほかの仲間は自動行動します。',
+    );
     return true;
   }
   if (c.type === 'labWeapons') {
@@ -587,7 +609,7 @@ function tickAlly(s: State, a: Ally, dt: number) {
     }
     return;
   }
-  chooseAuto(s, a);
+  if (s.controlMode === 'ai' || a.id !== s.selected) chooseAuto(s, a);
 }
 function startEnemyCast(s: State, e: Enemy) {
   const alive = s.allies.filter((a) => a.hp > 0);

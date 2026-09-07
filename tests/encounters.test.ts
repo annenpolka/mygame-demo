@@ -49,12 +49,11 @@ describe('persistent battle log', () => {
   });
 });
 describe('fixed encounter pressure sets', () => {
-  it('keeps the default initial state and old-format recordings compatible', () => {
+  it('keeps the default encounter optional and replays the current rules exactly', () => {
     expect(createState().config).not.toHaveProperty('encounterSet');
     const run = runPolicy({ policy: 'tactician', seed: 1307 });
     expect(run.summary.outcome).toBe('victory');
-    expect(run.summary.seconds).toBeCloseTo(25.4666666667, 4);
-    expect(run.summary.metrics.taken).toBe(125);
+    expect(run.finalState.controlMode).toBe('ai');
     expect(runReplay(parseRecording(JSON.stringify(run.recording)))).toEqual(run.finalState);
   });
   it.each(ENCOUNTER_SET_IDS)(

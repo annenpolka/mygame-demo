@@ -48,6 +48,7 @@ const eventSchema = z.object({
 const stateSchema = z
   .object({
     version: z.literal(VERSION),
+    controlMode: z.enum(['manual', 'ai']),
     planSeq: n.int().max(200000).optional(),
     phase: z.enum(['ready', 'battle', 'loot', 'victory', 'defeat']),
     paused: z.boolean(),
@@ -160,6 +161,7 @@ const stateSchema = z
       });
   });
 const cmdSchema = z.discriminatedUnion('type', [
+  z.object({ type: z.literal('control'), mode: z.enum(['manual', 'ai']) }),
   z.object({ type: z.literal('labWeapons') }),
   z.object({ type: z.literal('start') }),
   z.object({ type: z.literal('pause'), value: z.boolean() }),

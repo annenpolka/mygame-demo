@@ -14,8 +14,8 @@ export class Session {
   private lastEvent = 0;
   private encounterStart: State | null = null;
   private accumulator = 0;
-  constructor(config: Partial<Config> = {}) {
-    this.state = createState(config);
+  constructor(config: Partial<Config> = {}, controlMode: State['controlMode'] = 'manual') {
+    this.state = createState(config, controlMode);
     this.initial = copy(this.state);
   }
   private capture = (state: State = this.state) => {
@@ -58,20 +58,25 @@ export class Session {
       }
     }
   }
-  advance(elapsed: number) {
+  advance(elapsed: number, beforeStep?: () => void) {
     if (this.state.paused || this.state.phase !== 'battle') {
       this.accumulator = 0;
       return;
     }
     this.accumulator += Math.min(elapsed, 0.1);
     while (this.accumulator >= DT) {
+      if (this.state.phase !== 'battle' || this.state.paused) {
+        this.accumulator = 0;
+        break;
+      }
+      beforeStep?.();
       step(this.state);
       this.capture();
       this.accumulator -= DT;
     }
   }
   reset(config: Partial<Config> = this.state.config) {
-    this.state = createState(config);
+    this.state = createState(config, this.state.controlMode);
     this.initial = copy(this.state);
     this.inputs = [];
     this.gestures = 0;

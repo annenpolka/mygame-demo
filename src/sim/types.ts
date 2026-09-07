@@ -129,6 +129,7 @@ export interface Metrics {
   focusUsed: number;
 }
 export interface State {
+  controlMode: 'manual' | 'ai';
   version: string;
   planSeq?: number;
   phase: 'ready' | 'battle' | 'loot' | 'victory' | 'defeat';
@@ -155,6 +156,7 @@ export interface State {
   metrics: Metrics;
 }
 export type Command =
+  | { type: 'control'; mode: State['controlMode'] }
   | { type: 'labWeapons' }
   | { type: 'start' }
   | { type: 'pause'; value: boolean }

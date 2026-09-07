@@ -28,8 +28,8 @@ test('keyboard selection, tactical stop, command reservation, and opaque system 
   await page.keyboard.press('x');
   await expect(page.locator('.target-heading h2')).toBeVisible();
   await page
-    .locator('.target-choices')
-    .getByRole('button', { name: /アルト/ })
+    .getByRole('listbox', { name: '戦場で対象を選ぶ' })
+    .getByRole('option', { name: /アルト/ })
     .click();
   await expect(page.locator('.plan-list')).toContainText('祝福の鐘');
   await page.keyboard.press('1');
@@ -55,11 +55,12 @@ test('keyboard selection, tactical stop, command reservation, and opaque system 
 });
 
 test('first battle, equipment update, preset edit, second battle and victory', async ({ page }) => {
-  // This test renders two full battles while running 110 seconds of browser animation callbacks.
+  // Sena is controlled manually; the two attackers keep acting automatically.
   test.setTimeout(90000);
   const errors: string[] = [];
   page.on('pageerror', (error) => errors.push(error.message));
   await page.getByRole('button', { name: '戦闘開始 →', exact: true }).click();
+  await page.keyboard.press('3');
   await page.getByRole('button', { name: '灰の砲術師の情報' }).click();
   await page.getByRole('button', { name: 'S 崩しの連奏 A B B', exact: true }).click();
   await page.clock.runFor(35000);
@@ -142,7 +143,7 @@ test('horizontal battlefield, direct row targeting, and a glanceable desktop', a
   expect(boxes.every((b, i) => i === 0 || (b.x > boxes[i - 1].x && b.y === boxes[0].y))).toBe(true);
   await page.getByRole('button', { name: '停止 ×0.00', exact: true }).click();
   await page.getByRole('button', { name: '円弧斬りを選ぶ', exact: true }).click();
-  await page.getByRole('button', { name: '敵 前列この列を選ぶ', exact: true }).click();
+  await page.getByRole('option', { name: '敵前列に円弧斬りを積む', exact: true }).click();
   await expect(page.locator('.plan-list')).toContainText('円弧斬り');
   const logBox = await page.locator('.log-container').boundingBox();
   expect(logBox!.y + logBox!.height).toBeLessThanOrEqual(900);

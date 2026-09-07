@@ -1,0 +1,141 @@
+.horizontal-field {
+  position: relative;
+  isolation: isolate;
+}
+.battle-effects {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 6;
+  overflow: visible;
+  pointer-events: none;
+}
+.battle-effects path,
+.battle-effects circle,
+.battle-effects rect,
+.battle-effects ellipse {
+  fill: none;
+  stroke: currentColor;
+  vector-effect: non-scaling-stroke;
+}
+.battle-effects text {
+  text-anchor: middle;
+  paint-order: stroke;
+  stroke: #0b1b29;
+  stroke-width: 3px;
+  stroke-linejoin: round;
+  fill: currentColor;
+  font-family: ui-monospace, monospace;
+}
+.fx-casting {
+  stroke-width: 2;
+  opacity: 0.6;
+  transform-box: fill-box;
+  transform-origin: center;
+  transform: rotate(-90deg);
+}
+.fx-casting.ally {
+  color: #e4c18f;
+}
+.fx-casting.enemy {
+  color: #ef9a7f;
+}
+.fx-protection {
+  color: #8ac6c7;
+  opacity: 0.65;
+}
+.fx-protection rect {
+  stroke-width: 1.5;
+  stroke-dasharray: 7 3;
+}
+.fx-protection text {
+  font-size: 9px;
+}
+.fx-flight {
+  stroke-width: 2.5;
+  opacity: 0.6;
+}
+.fx-slashes path {
+  stroke-width: 4;
+  stroke-linecap: round;
+}
+.fx-slashes path + path {
+  stroke-width: 2;
+}
+.fx-arrow-impact {
+  stroke-width: 2;
+}
+.fx-burst {
+  stroke-width: 2;
+}
+.fx-break .fx-burst {
+  stroke-width: 3;
+}
+.fx-burst circle {
+  opacity: 0.6;
+}
+.fx-magic .fx-burst {
+  stroke-dasharray: 4 5;
+}
+.fx-healing {
+  stroke-width: 2.5;
+}
+.fx-shield-shape {
+  stroke-width: 3;
+  fill: #9fe3dc22 !important;
+}
+.fx-displace {
+  stroke-width: 2.5;
+}
+.fx-shifting {
+  stroke-width: 2;
+}
+.fx-number {
+  font-size: 21px;
+  font-weight: 800;
+  letter-spacing: -1px;
+}
+.fx-number.break-label {
+  font-size: 24px;
+  letter-spacing: 2px;
+}
+.fx-action-label {
+  font-size: 10px;
+  font-weight: 700;
+}
+.battle-lane.aimed {
+  background: #cfa45e28;
+  box-shadow: inset 0 0 0 2px #efd2a0;
+}
+.field-unit.aimed {
+  outline: 2px solid #f0d6a9;
+  outline-offset: 2px;
+  background: #486274;
+}
+.field-unit.aimed:after {
+  content: '対象';
+  position: absolute;
+  right: 3px;
+  top: -12px;
+  font-size: 9px;
+  line-height: 1.4;
+  color: #152e3a;
+  background: #f0d6a9;
+  padding: 0 4px;
+}
+@media (max-width: 600px) {
+  .fx-number {
+    font-size: 17px;
+  }
+  .fx-number.break-label {
+    font-size: 19px;
+  }
+  .fx-action-label {
+    font-size: 9px;
+  }
+  .fx-flight {
+    stroke-width: 1.5;
+    opacity: 0.45;
+  }
+}

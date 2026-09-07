@@ -34,6 +34,44 @@ function tactic(s: State) {
   if (s.activePreset !== preset) command(s, { type: 'optima', index: preset });
 }
 describe('two clocks and resources', () => {
+  it.each(['skill', 'enqueue'] as const)(
+    '%s guard waits for ATB, spends one segment at start, and cannot repeat for free',
+    (input) => {
+      const s = battle(),
+        a = s.allies[0];
+      s.config.atbRate = 1;
+      a.atb = 0.25;
+      const guard = () =>
+        command(
+          s,
+          input === 'enqueue'
+            ? {
+                type: 'enqueue',
+                id: 0,
+                step: { kind: 'skill', skillId: 'guard', target: { kind: 'ally', id: 0 } },
+              }
+            : { type: 'skill', id: 0, skillId: 'guard', target: { kind: 'ally', id: 0 } },
+        );
+      expect(guard()).toBe(true);
+      expect(a.atb).toBe(0.25);
+      advance(s, 0.5);
+      expect(a.atb).toBeCloseTo(0.75);
+      expect(a.action).toBeNull();
+      expect(a.shield).toBe(0);
+      advance(s, 0.3);
+      expect(a.action?.skillId).toBe('guard');
+      expect(a.atb).toBeCloseTo(0.05);
+      expect(a.shield).toBe(0);
+      advance(s, 0.25);
+      expect(a.shield).toBeGreaterThan(3.9);
+      expect(a.atb).toBeCloseTo(0.3);
+      expect(guard()).toBe(true);
+      advance(s, 0.1);
+      expect(a.action).toBeNull();
+      expect(a.atb).toBeCloseTo(0.4);
+      expect(s.events.filter((e) => e.type === 'action' && e.source === 'a0')).toHaveLength(1);
+    },
+  );
   it('tactical stop drains focus while ATB, movement, casts and status timers remain frozen', () => {
     const s = battle();
     s.allies[0].shield = 5;
@@ -347,6 +385,12 @@ describe('recordings and snapshots', () => {
   });
   it('rejects corrupt, incompatible, oversized and out-of-order recordings', () => {
     const session = new Session();
+    const freeGuardReplay = session.recording();
+    freeGuardReplay.version = freeGuardReplay.initial.version = 'orchestra-1';
+    expect(() => parseRecording(JSON.stringify(freeGuardReplay))).toThrow();
+    const freeGuardSnapshot = JSON.parse(session.snapshot());
+    freeGuardSnapshot.version = freeGuardSnapshot.state.version = 'orchestra-1';
+    expect(() => parseSnapshot(JSON.stringify(freeGuardSnapshot))).toThrow();
     expect(() => session.restore('{')).toThrow();
     expect(() =>
       parseSnapshot(JSON.stringify({ version: 'older', kind: 'snapshot', state: session.state })),

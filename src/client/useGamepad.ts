@@ -5,27 +5,34 @@ import {
   defaultBindings,
   padFamily,
   validBindings,
+  migrateBindings,
   type PadAction,
   type PadBindings,
   type PadFamily,
   type PadSnapshot,
 } from '../input/gamepad';
-const STORAGE = 'orchestra-gamepad-v1';
+const STORAGE = 'orchestra-gamepad-v2';
 interface Saved {
   family: PadFamily | 'auto';
+  display: 'auto' | 'pad' | 'pointer';
   custom: Record<string, PadBindings>;
 }
 function readSaved(): Saved {
   try {
-    const x = JSON.parse(localStorage.getItem(STORAGE) ?? '{}');
+    const x = JSON.parse(
+      localStorage.getItem(STORAGE) ?? localStorage.getItem('orchestra-gamepad-v1') ?? '{}',
+    );
     return {
       family: ['auto', 'xbox', 'playstation', 'switch'].includes(x.family) ? x.family : 'auto',
+      display: ['auto', 'pad', 'pointer'].includes(x.display) ? x.display : 'auto',
       custom: Object.fromEntries(
-        Object.entries(x.custom ?? {}).filter(([, b]) => validBindings(b)),
+        Object.entries(x.custom ?? {})
+          .map(([id, b]) => [id, migrateBindings(b)])
+          .filter(([, b]) => validBindings(b)),
       ),
     } as Saved;
   } catch {
-    return { family: 'auto', custom: {} };
+    return { family: 'auto', display: 'auto', custom: {} };
   }
 }
 export function useGamepad(
@@ -143,6 +150,9 @@ export function useGamepad(
       setSaved((s) => ({ ...s, family }));
     },
     chosenFamily: saved.family,
+    display: saved.display,
+    usePadDisplay: saved.display === 'pad' || (saved.display === 'auto' && supported),
+    setDisplay: (display: Saved['display']) => setSaved((s) => ({ ...s, display })),
     update: (b: PadBindings) => {
       if (pad) {
         reader.reset();

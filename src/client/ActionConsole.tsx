@@ -10,13 +10,12 @@ import {
   targetName,
 } from '../sim/plan';
 import { weaponOf } from '../sim/engine';
-import type { Command, State, Target } from '../sim/types';
+import type { Command, State } from '../sim/types';
 
 export function ActionConsole({
   state: s,
   pending,
   onChoose,
-  onTarget,
   onBack,
   onSelect,
   send,
@@ -24,7 +23,6 @@ export function ActionConsole({
   state: State;
   pending: string | null;
   onChoose: (id: string) => void;
-  onTarget: (t: Target) => void;
   onBack: () => void;
   onSelect: (id: number) => void;
   send: (...cmds: Command[]) => void;
@@ -37,33 +35,6 @@ export function ActionConsole({
     live = s.phase === 'battle' && !s.paused,
     canAct = live && a.hp > 0;
   const skill = pending ? SKILLS[pending] : null;
-  const targets: { target: Target; title: string; detail: string }[] = !skill
-    ? []
-    : skill.target === 'enemy'
-      ? s.enemies
-          .filter((e) => e.hp > 0)
-          .map((e) => ({
-            target: { kind: 'enemy', id: e.id },
-            title: e.name,
-            detail: `${ROW_NAMES[e.row]} · HP ${Math.ceil(e.hp)}`,
-          }))
-      : skill.target === 'ally' || skill.target === 'self'
-        ? s.allies
-            .filter((x) => x.hp > 0 && (skill.target !== 'self' || x.id === a.id))
-            .map((x) => ({
-              target: { kind: 'ally', id: x.id },
-              title: x.name,
-              detail: `HP ${Math.ceil(x.hp)} / ${x.maxHp}`,
-            }))
-        : (['front', 'back'] as const).map((row) => ({
-            target: { kind: 'row', row },
-            title: `${skill.target === 'enemyRow' ? '敵' : '味方'}${ROW_NAMES[row]}`,
-            detail:
-              (skill.target === 'enemyRow' ? s.enemies : s.allies)
-                .filter((x) => x.hp > 0 && x.row === row)
-                .map((x) => x.name)
-                .join('・') || '現在は誰もいません',
-          }));
   return (
     <section className="action-console" aria-label="行動の予約">
       <div className="console-party" aria-label="仲間を選ぶ">
@@ -122,9 +93,11 @@ export function ActionConsole({
                 <span>次</span>
                 {q.length
                   ? `${stepName(x, q[0])} ${q.length > 1 ? `ほか${q.length - 1}手` : ''}`
-                  : weaponOf(x).role === 'S'
-                    ? '必要時に自動支援'
-                    : '自動行動'}
+                  : s.controlMode === 'manual' && x.id === s.selected
+                    ? '指示待ち（手動）'
+                    : weaponOf(x).role === 'S'
+                      ? '必要時に自動支援'
+                      : '自動行動'}
               </div>
             </button>
           );
@@ -146,20 +119,9 @@ export function ActionConsole({
               <b>{skill.cost} ATB</b>
             </div>
             <p>{skill.description}</p>
-            <div className="target-choices">
-              {targets.map(({ target, title, detail }, i) => (
-                <button
-                  key={i}
-                  disabled={!canAct || queue.length >= PLAN_LIMIT}
-                  onClick={() => onTarget(target)}
-                  aria-label={`${title}に${skill.name}を積む`}
-                >
-                  <strong>{title}</strong>
-                  <small>{detail}</small>
-                  <span>末尾に追加 ＋</span>
-                </button>
-              ))}
-            </div>
+            <p className="field-target-guide">
+              ↑ 戦場の駒・列を選んで積みます。方向キーとEnterでも選べます。
+            </p>
             <p className="draft-note">確定するまで、予約は変わりません。</p>
           </div>
         ) : (
@@ -251,7 +213,9 @@ export function ActionConsole({
                 ))}
               </div>
             )}
-            <p className="console-tip">実行中でも追加できます。空になれば自動行動に戻ります。</p>
+            <p className="console-tip">
+              実行中も追加できます。予約が空なら、選択中の仲間は指示を待ちます。
+            </p>
           </>
         )}
       </div>
@@ -279,7 +243,9 @@ export function ActionConsole({
                   ? '武器変更'
                   : a.hp <= 0
                     ? '戦闘不能'
-                    : '待機・自動行動'}
+                    : queue.length
+                      ? 'ATB待ち'
+                      : '指示待ち（手動）'}
           </strong>
           {a.action && <span>あと{a.action.remaining.toFixed(1)}秒</span>}
         </div>

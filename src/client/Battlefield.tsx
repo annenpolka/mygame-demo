@@ -1,33 +1,86 @@
-import { planned, stepName } from '../sim/plan';
-import type { CSSProperties } from 'react';
-import { ROW_NAMES, SKILLS } from '../content/data';
+import { planned, stepName, PLAN_LIMIT } from '../sim/plan';
+import { useEffect, useRef, type CSSProperties } from 'react';
+import { BattleEffects } from './effects/BattleEffects';
+import { ROW_NAMES } from '../content/data';
 import { weaponOf } from '../sim/engine';
 import type { State, Skill, Target, Row } from '../sim/types';
-
+const keyOf = (t: Target) => (t.kind === 'row' ? `row-${t.row}` : `${t.kind}-${t.id}`);
 export function Battlefield({
   state: s,
   pending,
   onAlly,
   onEnemy,
   onTarget,
+  aim = null,
+  onAim,
+  onBack,
+  confirmLabel = 'Enter',
+  backLabel = 'Esc',
 }: {
   state: State;
   pending: Skill | null;
   onAlly: (id: number) => void;
   onEnemy: (id: number) => void;
   onTarget: (t: Target) => void;
+  aim?: Target | null;
+  onAim: (t: Target) => void;
+  onBack: () => void;
+  confirmLabel?: string;
+  backLabel?: string;
 }) {
+  const field = useRef<HTMLDivElement>(null);
+  const active = !!pending && s.phase === 'battle';
+  const full = planned(s.allies[s.selected]).length >= PLAN_LIMIT;
+  const sideForSkill = pending?.target.startsWith('enemy') ? 'enemy' : 'ally';
+  const aimName = !aim
+    ? ''
+    : aim.kind === 'row'
+      ? `${sideForSkill === 'enemy' ? '敵' : '味方'}${ROW_NAMES[aim.row]}`
+      : (aim.kind === 'enemy' ? s.enemies : s.allies)[aim.id]?.name;
+  useEffect(() => {
+    if (active) field.current?.focus({ preventScroll: true });
+  }, [active, pending?.id]);
   return (
-    <div className="battlefield" aria-label="敵味方の前後列">
-      <div className="field-legend">
-        <span>
-          味方 → <small>後列は被害 −28%</small>
-        </span>
-        <span>
-          ← 敵 <small>◎ 集中攻撃の対象</small>
-        </span>
-      </div>
-      <div className="horizontal-field">
+    <div className={`battlefield ${active ? 'targeting' : ''}`} aria-label="敵味方の前後列">
+      {active ? (
+        <div className="field-target-bar">
+          <div>
+            <small>TARGET · {pending.cost} ATB</small>
+            <strong>
+              {pending.name}
+              <span> → {aimName}</span>
+            </strong>
+          </div>
+          <button
+            className="field-confirm"
+            disabled={!aim || full}
+            onClick={() => aim && onTarget(aim)}
+          >
+            <kbd>{confirmLabel}</kbd>
+            {full ? '予約が満杯' : '末尾に積む'}
+          </button>
+          <button aria-label="対象選択を戻る" onClick={onBack}>
+            <kbd>{backLabel}</kbd>戻る
+          </button>
+        </div>
+      ) : (
+        <div className="field-legend">
+          <span>
+            味方 → <small>後列は被害 −28%</small>
+          </span>
+          <span>
+            ← 敵 <small>◎ 集中攻撃の対象</small>
+          </span>
+        </div>
+      )}
+      <div
+        className="horizontal-field"
+        ref={field}
+        role={active ? 'listbox' : undefined}
+        aria-label={active ? '戦場で対象を選ぶ' : undefined}
+        tabIndex={active ? 0 : undefined}
+        aria-activedescendant={active && aim ? `field-target-${keyOf(aim)}` : undefined}
+      >
         {(['ally', 'enemy'] as const).map((side) =>
           (side === 'ally' ? ['back', 'front'] : ['front', 'back']).map((r) => {
             const row = r as Row;
@@ -39,20 +92,32 @@ export function Battlefield({
                   e.cast &&
                   (e.cast.target === 'all' || (e.cast.target === 'row' && e.cast.row === row)),
               );
-            const rowTarget = pending?.target === (side === 'ally' ? 'allyRow' : 'enemyRow');
+            const rowTarget =
+              active && pending.target === (side === 'ally' ? 'allyRow' : 'enemyRow');
+            const aimedRow = rowTarget && aim?.kind === 'row' && aim.row === row;
+            const rowName = `${side === 'ally' ? '味方' : '敵'}${ROW_NAMES[row]}`;
             return (
               <section
                 key={`${side}-${row}`}
-                className={`battle-lane ${side} ${row} ${danger ? 'danger-lane' : ''} ${rowTarget ? 'can-target' : ''}`}
-                aria-label={`${side === 'ally' ? '味方' : '敵'}${ROW_NAMES[row]}`}
+                className={`battle-lane ${side} ${row} ${danger ? 'danger-lane' : ''} ${rowTarget ? 'can-target' : ''} ${aimedRow ? 'aimed' : ''} ${active && side !== sideForSkill ? 'outside-target' : ''}`}
+                aria-label={rowName}
+                onMouseEnter={() => rowTarget && onAim({ kind: 'row', row })}
+                onClick={(e) => {
+                  if (rowTarget && !full && e.target === e.currentTarget)
+                    onTarget({ kind: 'row', row });
+                }}
               >
                 <button
                   className="lane-heading"
-                  disabled={!rowTarget || s.phase !== 'battle'}
+                  id={rowTarget ? `field-target-row-${row}` : undefined}
+                  role={rowTarget ? 'option' : undefined}
+                  aria-selected={rowTarget ? aimedRow : undefined}
+                  aria-label={rowTarget ? `${rowName}に${pending.name}を積む` : undefined}
+                  disabled={!rowTarget || full}
                   onClick={() => onTarget({ kind: 'row', row })}
                 >
-                  {side === 'ally' ? '味方' : '敵'} {ROW_NAMES[row]}
-                  {rowTarget && <small>この列を選ぶ</small>}
+                  {rowName}
+                  {rowTarget && <small>{aimedRow ? '▼ この列へ' : 'この列を選ぶ'}</small>}
                   {danger && <small>⚠ 攻撃予告</small>}
                 </button>
                 {side === 'ally'
@@ -60,17 +125,33 @@ export function Battlefield({
                       .filter((a) => a.row === row)
                       .map((a) => {
                         const w = weaponOf(a),
-                          targetable = pending?.target === 'ally';
+                          targetable =
+                            active &&
+                            (pending.target === 'ally' ||
+                              (pending.target === 'self' && a.id === s.selected));
+                        const aimed = targetable && aim?.kind === 'ally' && aim.id === a.id;
                         const cast = s.enemies.find(
                           (e) => e.hp > 0 && e.cast?.target === 'single' && e.cast.allyId === a.id,
                         )?.cast;
                         return (
                           <button
                             key={a.id}
+                            id={targetable ? `field-target-ally-${a.id}` : undefined}
+                            data-unit={`a${a.id}`}
+                            role={targetable ? 'option' : undefined}
+                            aria-selected={targetable ? aimed : undefined}
                             style={{ gridRow: a.id + 2, '--unit-color': a.color } as CSSProperties}
-                            className={`field-unit friend ${a.id === s.selected ? 'selected' : ''} ${targetable ? 'can-target' : ''} ${a.hp <= 0 ? 'fallen' : ''}`}
-                            disabled={a.hp <= 0 || s.phase !== 'battle'}
-                            aria-label={`${a.name}を${targetable ? '対象にする' : '選択'}`}
+                            className={`field-unit friend ${a.id === s.selected ? 'selected' : ''} ${targetable || rowTarget ? 'can-target' : ''} ${a.hp <= 0 ? 'fallen' : ''} ${aimed || aimedRow ? 'aimed' : ''} ${active && !targetable && !rowTarget ? 'outside-target' : ''}`}
+                            disabled={
+                              a.hp <= 0 ||
+                              s.phase !== 'battle' ||
+                              s.controlMode === 'ai' ||
+                              (active && ((!targetable && !rowTarget) || full))
+                            }
+                            aria-label={
+                              targetable ? `${a.name}に${pending.name}を積む` : `${a.name}を選択`
+                            }
+                            onMouseEnter={() => targetable && onAim({ kind: 'ally', id: a.id })}
                             onClick={() =>
                               targetable
                                 ? onTarget({ kind: 'ally', id: a.id })
@@ -83,31 +164,52 @@ export function Battlefield({
                             <span className="field-unit-info">
                               <strong>
                                 {a.name} <b className={`role role-${w.role}`}>{w.role}</b>
+                                {a.id === s.selected && s.controlMode === 'manual' && (
+                                  <i className="manual-tag">手動</i>
+                                )}
                               </strong>
                               <small>
-                                {a.nextRow
-                                  ? `${ROW_NAMES[a.nextRow]}へ移動中`
-                                  : planned(a).length
-                                    ? `次：${stepName(a, planned(a)[0])}`
-                                    : w.archetype}
+                                {targetable
+                                  ? `HP ${Math.ceil(a.hp)} / ${a.maxHp}`
+                                  : a.nextRow
+                                    ? `${ROW_NAMES[a.nextRow]}へ移動中`
+                                    : planned(a).length
+                                      ? `次：${stepName(a, planned(a)[0])}`
+                                      : s.controlMode === 'manual' &&
+                                          a.id === s.selected &&
+                                          !a.action
+                                        ? '指示待ち'
+                                        : w.archetype}
                               </small>
                               {cast && <em>追尾 {cast.remaining.toFixed(1)}秒</em>}
                             </span>
-                            <Impact state={s} target={`a${a.id}`} />
                           </button>
                         );
                       })
                   : s.enemies
                       .filter((e) => e.row === row)
                       .map((e) => {
-                        const targetable = pending?.target === 'enemy';
+                        const targetable = active && pending.target === 'enemy',
+                          aimed = targetable && aim?.kind === 'enemy' && aim.id === e.id;
                         return (
                           <button
                             key={e.id}
+                            id={targetable ? `field-target-enemy-${e.id}` : undefined}
+                            data-unit={`e${e.id}`}
+                            role={targetable ? 'option' : undefined}
+                            aria-selected={targetable ? aimed : undefined}
                             style={{ gridRow: e.id + 2 }}
-                            className={`field-unit foe ${s.target === e.id ? 'selected' : ''} ${e.broken ? 'broken' : ''} ${targetable ? 'can-target' : ''} ${e.hp <= 0 ? 'fallen' : ''}`}
-                            disabled={e.hp <= 0 || s.phase !== 'battle'}
-                            aria-label={`${e.name}を${targetable ? '対象にする' : '狙う'}`}
+                            className={`field-unit foe ${s.target === e.id ? 'selected' : ''} ${e.broken ? 'broken' : ''} ${targetable || rowTarget ? 'can-target' : ''} ${e.hp <= 0 ? 'fallen' : ''} ${aimed || aimedRow ? 'aimed' : ''}`}
+                            disabled={
+                              e.hp <= 0 ||
+                              s.phase !== 'battle' ||
+                              s.controlMode === 'ai' ||
+                              (active && ((!targetable && !rowTarget) || full))
+                            }
+                            aria-label={
+                              targetable ? `${e.name}に${pending.name}を積む` : `${e.name}を狙う`
+                            }
+                            onMouseEnter={() => targetable && onAim({ kind: 'enemy', id: e.id })}
                             onClick={() =>
                               targetable
                                 ? onTarget({ kind: 'enemy', id: e.id })
@@ -125,16 +227,17 @@ export function Battlefield({
                               <small>
                                 {e.hp <= 0
                                   ? '撃破'
-                                  : e.broken > 0
-                                    ? `BREAK ${e.broken.toFixed(1)}秒`
-                                    : e.kind === 'guard' && row === 'front'
-                                      ? '後列を防護'
-                                      : e.steadfast > 0
-                                        ? '踏ん張り'
-                                        : '強制移動可'}
+                                  : targetable
+                                    ? `HP ${Math.ceil(e.hp)} / ${e.maxHp}`
+                                    : e.broken > 0
+                                      ? `BREAK ${e.broken.toFixed(1)}秒`
+                                      : e.kind === 'guard' && row === 'front'
+                                        ? '後列を防護'
+                                        : e.steadfast > 0
+                                          ? '踏ん張り'
+                                          : '強制移動可'}
                               </small>
                             </span>
-                            <Impact state={s} target={`e${e.id}`} />
                           </button>
                         );
                       })}
@@ -142,11 +245,19 @@ export function Battlefield({
             );
           }),
         )}
+        <BattleEffects
+          state={s}
+          field={field}
+          aim={active ? aim : null}
+          targetSide={sideForSkill}
+        />
       </div>
       <div className="field-hint">
-        {pending
-          ? `${pending.name}：光っている対象・列を選択`
-          : '仲間を選ぶ → 技を選ぶ → 対象を選ぶ'}
+        {active
+          ? '方向キーで対象を選ぶ · 駒・列を押しても積めます'
+          : s.controlMode === 'ai'
+            ? 'AI鑑賞中 · 下に全員の予約と判断を表示'
+            : `${s.allies[s.selected].name}を手動操作 · 技を選んで戦場の対象へ`}
         <span>
           {s.timeMode === 'normal'
             ? '通常 ×1.00'
@@ -157,15 +268,4 @@ export function Battlefield({
       </div>
     </div>
   );
-}
-function Impact({ state, target }: { state: State; target: string }) {
-  const event = [...state.events]
-    .reverse()
-    .find((e) => e.target === target && e.value && state.time - e.time < 0.85);
-  return event ? (
-    <span key={event.id} className={`floating ${event.type}`}>
-      {event.type === 'heal' ? '+' : ''}
-      {event.value}
-    </span>
-  ) : null;
 }

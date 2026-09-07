@@ -1,8 +1,10 @@
 import { PAD_ACTIONS, buttonName } from '../input/gamepad';
 import type { GamepadControls } from './useGamepad';
 const names = {
-  confirm: '決定・積む',
-  cancel: '戻る',
+  confirm: '基本技・決定・積む',
+  cancel: '防御・戻る',
+  skill: '主力技',
+  item: '救急薬・予約を全取消',
   previous: '前の仲間',
   next: '次の仲間',
   slow: 'スロー',
@@ -42,6 +44,18 @@ export function PadSettings({
           </p>
         )}
         <label className="pad-family">
+          操作画面
+          <select
+            aria-label="操作画面"
+            value={c.display}
+            onChange={(e) => c.setDisplay(e.target.value as GamepadControls['display'])}
+          >
+            <option value="auto">接続に合わせて自動</option>
+            <option value="pad">パッド用コマンド</option>
+            <option value="pointer">マウス用の一覧</option>
+          </select>
+        </label>
+        <label className="pad-family">
           ボタン表示
           <select
             aria-label="パッドのボタン表示"
@@ -55,7 +69,7 @@ export function PadSettings({
           </select>
         </label>
         <p className="muted">
-          方向キー・左スティックで選択し、決定で積み込みます。肩ボタンは戦闘中は仲間、設定中は項目を切り替えます。割り当ては接続機器ごとに保存します。
+          戦闘では4ボタンから技・防御・薬を直接選べます。肩ボタンで仲間、トリガーで時間を操作。設定中は肩ボタンで項目を切り替えます。割り当ては接続機器ごとに保存します。
         </p>
         <div className="pad-bindings">
           {PAD_ACTIONS.map((a) => (

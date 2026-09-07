@@ -178,6 +178,7 @@ export function runPolicy(options: RunOptions): RunResult {
     ...(opts.encounterLevel ? { encounterLevel: opts.encounterLevel } : {}),
   });
   const initial = copy(s);
+  s.controlMode = initial.controlMode = 'ai';
   const planning = opts.planning ?? 'legacy';
   if (!['legacy', 'next', 'queue'].includes(planning)) throw new Error('不明な予約方式');
   const policy =

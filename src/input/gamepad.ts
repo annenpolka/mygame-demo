@@ -1,6 +1,8 @@
 export const PAD_ACTIONS = [
   'confirm',
   'cancel',
+  'skill',
+  'item',
   'previous',
   'next',
   'slow',
@@ -41,8 +43,10 @@ export function defaultBindings(family: PadFamily): PadBindings {
     cancel: family === 'switch' ? 0 : 1,
     previous: 4,
     next: 5,
-    slow: 2,
-    stop: 3,
+    skill: 3,
+    item: 2,
+    slow: 6,
+    stop: 7,
     pause: 9,
     log: 8,
     up: 12,
@@ -182,4 +186,27 @@ export function validBindings(input: unknown): input is PadBindings {
     typeof b.invertX === 'boolean' &&
     typeof b.invertY === 'boolean'
   );
+}
+
+/** Keep the user's old physical button layout when assigning the new battle roles. */
+export function migrateBindings(input: unknown): PadBindings | null {
+  if (validBindings(input)) return input;
+  if (!input || typeof input !== 'object') return null;
+  const b = input as PadBindings;
+  const legacy = PAD_ACTIONS.filter((a) => a !== 'skill' && a !== 'item');
+  if (!legacy.every((k) => Number.isInteger(b[k]) && b[k] >= 0 && b[k] <= 63)) return null;
+  const next = { ...b, skill: b.stop, item: b.slow };
+  const used = new Set(legacy.filter((a) => a !== 'slow' && a !== 'stop').map((a) => b[a]));
+  used.add(next.skill);
+  used.add(next.item);
+  const free = (preferred: number) => {
+    const n = !used.has(preferred)
+      ? preferred
+      : Array.from({ length: 64 }, (_, i) => i).find((i) => !used.has(i))!;
+    used.add(n);
+    return n;
+  };
+  next.slow = free(6);
+  next.stop = free(7);
+  return validBindings(next) ? next : null;
 }

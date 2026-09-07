@@ -1,6 +1,6 @@
 import type { Config, Formation, Preset, Skill, Weapon } from '../sim/types';
 
-export const VERSION = 'orchestra-1';
+export const VERSION = 'orchestra-2';
 export const DT = 1 / 60;
 export const DEFAULT_CONFIG: Config = {
   seed: 1307,
@@ -201,14 +201,15 @@ export const SKILLS: Record<string, Skill> = Object.fromEntries(
       {
         id: 'guard',
         name: '防御',
-        cost: 0,
+        cost: 1,
         cast: 0.2,
         power: 0,
         chain: 0,
         hold: 0,
         effect: 'guard',
         target: 'self',
-        description: '4秒間、自分の被ダメージを半減。準備中の技が終わってから構える。',
+        description:
+          '1 ATBを消費し、4秒間、自分の被ダメージを半減。実行中の技の終了とATB充填を待って構える。',
       },
       {
         id: 'potion',

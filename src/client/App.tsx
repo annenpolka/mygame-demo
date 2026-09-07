@@ -1,3 +1,16 @@
+import { WatchPlayer, type WatchPlanning } from '../ai/watch-player';
+import type { PolicyId } from '../ai/policies';
+import { WatchConsole } from './WatchConsole';
+import { PadBattleConsole } from './PadBattleConsole';
+import {
+  battleInput,
+  newBattlePad,
+  home,
+  openPage,
+  confirmChoice,
+  choices,
+  selectedChoice,
+} from '../input/battle-pad';
 import { ActionConsole } from './ActionConsole';
 import { PadSettings } from './PadSettings';
 import { useGamepad } from './useGamepad';
@@ -58,17 +71,20 @@ function download(name: string, text: string) {
 
 export function App() {
   const [session] = useState(() => new Session());
+  const [player] = useState(() => new WatchPlayer());
   const [, render] = useState(0);
   const [labOpen, setLabOpen] = useState(false);
   const [help, setHelp] = useState(false);
   const [padOpen, setPadOpen] = useState(false);
   const [pending, setPending] = useState<string | null>(null);
+  const [battleUI, setBattleUI] = useState(newBattlePad);
   const [notice, setNotice] = useState('');
   const [snapshot, setSnapshot] = useState<string | null>(null);
   const [config, setConfig] = useState<Config>({ ...DEFAULT_CONFIG });
   const [compare, setCompare] = useState<string | null>(null);
   const upload = useRef<HTMLInputElement>(null);
   const s = session.state,
+    watching = s.controlMode === 'ai',
     ally = s.allies[s.selected],
     weapon = WEAPONS[ally.weapons[projectedSlot(ally)]];
   const refresh = () => render((x) => x + 1);
@@ -76,7 +92,38 @@ export function App() {
     session.send(...commands);
     refresh();
   };
+  const switchControl = () => {
+    if (watching && s.phase === 'battle')
+      session.send(...s.allies.map((a) => ({ type: 'cancel' as const, id: a.id })), {
+        type: 'time',
+        mode: 'normal',
+      });
+    if (!watching && s.phase === 'battle') session.send({ type: 'time', mode: 'normal' });
+    session.send({ type: 'control', mode: watching ? 'manual' : 'ai' });
+    player.paused = false;
+    setPending(null);
+    setBattleUI(newBattlePad());
+    refresh();
+    if (!watching)
+      requestAnimationFrame(() =>
+        focusElement(
+          document.querySelector<HTMLElement>(
+            s.phase === 'ready' ? '[data-pad-default]' : '.watch-pause',
+          ) ?? undefined,
+        ),
+      );
+  };
+  const configureAI = (policy: PolicyId, planning: WatchPlanning) => {
+    player.configure(policy, planning);
+    if (s.phase === 'battle')
+      session.send(...s.allies.map((a) => ({ type: 'cancel' as const, id: a.id })), {
+        type: 'time',
+        mode: 'normal',
+      });
+    refresh();
+  };
   const select = (id: number) => {
+    setBattleUI(home);
     setPending(null);
     send({ type: 'select', id });
   };
@@ -87,26 +134,18 @@ export function App() {
     send(...cmds);
     setPending(null);
   };
-  const useSkill = (id: string, target?: Target) => {
-    if (!target) {
-      setPending(pending === id ? null : id);
-      return;
-    }
-    send({
-      type: 'enqueue',
-      id: ally.id,
-      step: { kind: 'skill', skillId: id, target },
-    });
-    setPending(null);
-    requestAnimationFrame(() =>
-      focusElement(
-        document.querySelector<HTMLElement>(`.action-tile[data-skill="${id}"]`) ?? undefined,
-      ),
-    );
+  const useSkill = (id: string) => {
+    setPending(pending === id ? null : id);
+    setBattleUI(pending === id ? home(battleUI) : openPage(s, battleUI, 'target', id));
   };
   const restart = (newConfig?: Config, announce = true) => {
+    setBattleUI(newBattlePad());
     if (newConfig) session.reset(newConfig);
-    else session.retry();
+    else {
+      const mode = s.controlMode;
+      session.retry();
+      if (session.state.controlMode !== mode) session.send({ type: 'control', mode });
+    }
     setPending(null);
     setNotice(announce ? '開始条件を復元しました。' : '');
     refresh();
@@ -116,7 +155,7 @@ export function App() {
     let previous = performance.now(),
       frame = 0;
     const loop = (now: number) => {
-      session.advance((now - previous) / 1000);
+      player.advance(session, (now - previous) / 1000);
       previous = now;
       render((x) => x + 1);
       frame = requestAnimationFrame(loop);
@@ -124,7 +163,11 @@ export function App() {
     frame = requestAnimationFrame(loop);
     const hidden = () => {
       previous = performance.now();
-      if (document.hidden && session.state.phase === 'battle') {
+      if (
+        document.hidden &&
+        (session.state.phase === 'battle' ||
+          (session.state.phase === 'loot' && session.state.controlMode === 'ai'))
+      ) {
         session.send({ type: 'pause', value: true });
         render((x) => x + 1);
       }
@@ -134,9 +177,14 @@ export function App() {
       cancelAnimationFrame(frame);
       document.removeEventListener('visibilitychange', hidden);
     };
-  }, [session]);
+  }, [session, player]);
   useEffect(() => {
-    const blocked = s.paused || help || padOpen || ['loot', 'victory', 'defeat'].includes(s.phase);
+    const blocked =
+      s.paused ||
+      help ||
+      padOpen ||
+      ['victory', 'defeat'].includes(s.phase) ||
+      (s.phase === 'loot' && !watching);
     if (!blocked) return;
     const dialogs = document.querySelectorAll<HTMLElement>('[role="dialog"]');
     const dialog = dialogs[dialogs.length - 1];
@@ -164,7 +212,10 @@ export function App() {
     return () => document.removeEventListener('keydown', trap);
   }, [s.paused, s.phase, help, padOpen]);
   useEffect(() => {
-    if (pending) document.querySelector<HTMLButtonElement>('.target-choices button')?.focus();
+    if (pending)
+      document
+        .querySelector<HTMLElement>('.horizontal-field[role=listbox]')
+        ?.focus({ preventScroll: true });
   }, [pending]);
   useEffect(() => {
     const listener = (event: KeyboardEvent) => {
@@ -176,6 +227,48 @@ export function App() {
         (event.target instanceof Element && event.target.closest('input,select,textarea'))
       )
         return;
+      if (watching && !s.paused && !help && !padOpen && !labOpen) {
+        if (event.key === ' ' && ['battle', 'loot'].includes(s.phase)) {
+          event.preventDefault();
+          player.paused = !player.paused;
+          refresh();
+          return;
+        }
+        if (
+          !['Escape', 'Enter', 'Tab', 'ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight'].includes(
+            event.key,
+          )
+        )
+          return;
+      }
+      if ((padActive || pending) && !watching && !s.paused && !help && !padOpen && !labOpen) {
+        const keys: Record<string, PadAction> = {
+          ArrowUp: 'up',
+          ArrowDown: 'down',
+          ArrowLeft: 'left',
+          ArrowRight: 'right',
+          Enter: 'confirm',
+          z: 'confirm',
+          x: 'skill',
+          c: 'cancel',
+          v: 'item',
+          q: 'previous',
+          e: 'next',
+          ' ': 'slow',
+          f: 'stop',
+        };
+        const action =
+          event.key === 'Escape'
+            ? battleUI.page === 'command'
+              ? 'pause'
+              : 'cancel'
+            : (keys[event.key] ?? keys[event.key.toLowerCase()]);
+        if (action) {
+          event.preventDefault();
+          applyBattleInput(action);
+          return;
+        }
+      }
       if (event.key === 'Escape') {
         event.preventDefault();
         if (padOpen) {
@@ -224,7 +317,28 @@ export function App() {
     return () => clearTimeout(timer);
   }, [notice]);
 
+  const applyBattleResult = (r: ReturnType<typeof battleInput>) => {
+    setBattleUI({
+      ...r.ui,
+      logOffset: Math.min(r.ui.logOffset, Math.max(0, session.log.length - 6)),
+    });
+    if (r.commands.length) send(...r.commands);
+  };
+  const applyBattleInput = (action: PadAction) => {
+    if (!padActive && pending && action === 'confirm') {
+      const result = confirmChoice(s, battleUI);
+      applyBattleResult(result);
+      if (result.commands.length) setPending(null);
+      return;
+    }
+    if (!padActive && ['cancel', 'previous', 'next'].includes(action)) setPending(null);
+    applyBattleResult(battleInput(s, battleUI, action));
+  };
   const handlePad = (action: PadAction) => {
+    if ((padActive || pending) && !watching && !s.paused && !help && !padOpen && !labOpen) {
+      applyBattleInput(action);
+      return;
+    }
     if (action === 'up' || action === 'down' || action === 'left' || action === 'right') {
       navigate(action);
       return;
@@ -261,25 +375,57 @@ export function App() {
       inputScope().querySelector<HTMLButtonElement>('.log-heading button')?.click();
       return;
     }
+    if (watching && action !== 'pause') return;
     if (padOpen || help || labOpen || s.phase !== 'battle') return;
     if (action === 'pause') {
       send({ type: 'pause', value: !s.paused });
       return;
     }
     if (s.paused) return;
+    if (action === 'skill') useSkill(weapon.skills[1]);
+    if (action === 'item') useSkill('potion');
     if (action === 'slow') send({ type: 'time', mode: s.timeMode === 'slow' ? 'normal' : 'slow' });
     if (action === 'stop') send({ type: 'time', mode: s.timeMode === 'stop' ? 'normal' : 'stop' });
   };
   const gamepad = useGamepad(
     handlePad,
     () => {
-      if (session.state.phase === 'battle') {
+      if (
+        session.state.phase === 'battle' ||
+        (session.state.phase === 'loot' && session.state.controlMode === 'ai')
+      ) {
         send({ type: 'pause', value: true });
         setNotice('パッドの接続が切れました。休憩ポーズに入りました。');
       }
     },
     padOpen,
   );
+  const padActive = gamepad.usePadDisplay && s.phase === 'battle' && !watching;
+  const shownPending = padActive ? (battleUI.page === 'target' ? battleUI.skillId : null) : pending;
+  const aim = shownPending ? (selectedChoice(s, battleUI)?.target ?? null) : null;
+  const aimTarget = (target: Target) => {
+    const choice = choices(s, battleUI).find(
+      (c) => c.target && JSON.stringify(c.target) === JSON.stringify(target),
+    );
+    if (choice && choice.key !== battleUI.key) setBattleUI({ ...battleUI, key: choice.key });
+  };
+  const backFromTarget = () => {
+    setPending(null);
+    setBattleUI(home);
+  };
+  const chooseTarget = (target: Target) => {
+    const choice = choices(s, battleUI).find(
+      (c) => c.target && JSON.stringify(c.target) === JSON.stringify(target),
+    );
+    if (!choice) return;
+    const result = confirmChoice(s, battleUI, choice.key);
+    applyBattleResult(result);
+    if (!padActive && result.commands.length) setPending(null);
+  };
+  useEffect(() => {
+    setBattleUI(home);
+    setPending(null);
+  }, [s.phase, gamepad.usePadDisplay]);
   useEffect(() => {
     if (pending && ![...weapon.skills, 'guard', 'potion'].includes(pending)) setPending(null);
   }, [weapon.id, pending]);
@@ -307,7 +453,13 @@ export function App() {
     <div className={`app ${s.timeMode} ${s.paused ? 'is-paused' : ''}`}>
       <header
         className="topbar"
-        inert={s.paused || help || padOpen || ['loot', 'victory', 'defeat'].includes(s.phase)}
+        inert={
+          s.paused ||
+          help ||
+          padOpen ||
+          ['victory', 'defeat'].includes(s.phase) ||
+          (s.phase === 'loot' && !watching)
+        }
       >
         <a className="brand" href="#" onClick={(e) => e.preventDefault()}>
           <span className="brand-mark">◈</span>
@@ -326,8 +478,8 @@ export function App() {
           <div className="pad-hints">
             {gamepad.supported ? (
               <>
-                <b>{buttonName(gamepad.bindings.confirm, gamepad.family)}</b> 決定・積む{' '}
-                <b>{buttonName(gamepad.bindings.cancel, gamepad.family)}</b> 戻る{' '}
+                <b>{buttonName(gamepad.bindings.confirm, gamepad.family)}</b> 基本技・決定{' '}
+                <b>{buttonName(gamepad.bindings.cancel, gamepad.family)}</b> 防御・戻る{' '}
                 <b>
                   {buttonName(gamepad.bindings.previous, gamepad.family)} /{' '}
                   {buttonName(gamepad.bindings.next, gamepad.family)}
@@ -342,6 +494,9 @@ export function App() {
         )}
 
         <nav aria-label="補助操作">
+          <button className={watching ? 'active' : ''} onClick={switchControl}>
+            {watching ? '手動に戻る' : 'AI鑑賞'}
+          </button>
           <button
             onClick={() => {
               setPadOpen(true);
@@ -375,8 +530,14 @@ export function App() {
       </header>
 
       <main
-        className="battle-layout"
-        inert={s.paused || help || padOpen || ['loot', 'victory', 'defeat'].includes(s.phase)}
+        className={`battle-layout ${padActive || watching ? 'pad-layout' : ''} ${watching ? 'watch-layout' : ''}`}
+        inert={
+          s.paused ||
+          help ||
+          padOpen ||
+          ['victory', 'defeat'].includes(s.phase) ||
+          (s.phase === 'loot' && !watching)
+        }
       >
         <section className="battle-main" aria-label="戦闘画面">
           <div className="battle-heading">
@@ -453,10 +614,14 @@ export function App() {
             <div className="ready-bar">
               <p>
                 <strong>武器と隊列を選んで、出発。</strong>
-                <span>仲間は自動で戦います。いつでも技を予約できます。</span>
+                <span>
+                  {watching
+                    ? 'AI方針を選んで2連戦を鑑賞できます。'
+                    : '選択中の仲間は手動操作。ほかの仲間は自動で戦います。'}
+                </span>
               </p>
               <button data-pad-default className="primary" onClick={() => send({ type: 'start' })}>
-                戦闘開始 <span>→</span>
+                {watching ? 'AI鑑賞を開始' : '戦闘開始'} <span>→</span>
               </button>
             </div>
           )}
@@ -468,11 +633,11 @@ export function App() {
                 enemy={e}
                 selected={s.target === e.id}
                 onClick={() =>
-                  pending && SKILLS[pending].target === 'enemy'
-                    ? useSkill(pending, { kind: 'enemy', id: e.id })
-                    : pending && SKILLS[pending].target === 'enemyRow'
-                      ? useSkill(pending, { kind: 'row', row: e.row })
-                      : send({ type: 'target', id: e.id })
+                  shownPending && SKILLS[shownPending].target === 'enemy'
+                    ? chooseTarget({ kind: 'enemy', id: e.id })
+                    : shownPending && SKILLS[shownPending].target === 'enemyRow'
+                      ? chooseTarget({ kind: 'row', row: e.row })
+                      : !watching && send({ type: 'target', id: e.id })
                 }
               />
             ))}
@@ -480,128 +645,165 @@ export function App() {
 
           <Battlefield
             state={s}
-            pending={pending ? SKILLS[pending] : null}
+            pending={shownPending ? SKILLS[shownPending] : null}
+            aim={aim}
             onAlly={select}
-            onEnemy={(id) => send({ type: 'target', id })}
-            onTarget={(target) => {
-              if (pending) useSkill(pending, target);
+            onEnemy={(id) => {
+              if (!watching) send({ type: 'target', id });
             }}
+            onTarget={chooseTarget}
+            onAim={aimTarget}
+            onBack={backFromTarget}
+            confirmLabel={
+              padActive ? buttonName(gamepad.bindings.confirm, gamepad.family) : 'Enter'
+            }
+            backLabel={padActive ? buttonName(gamepad.bindings.cancel, gamepad.family) : 'Esc'}
           />
         </section>
 
-        <aside className="command-sidebar">
-          <section className="focus-panel">
-            <div className="section-label">
-              <span>FOCUS</span>
-              <b>集中力</b>
-              <strong>
-                {Math.ceil(s.focus)}
-                <small> / 100</small>
-              </strong>
-            </div>
-            <Meter value={s.focus} max={100} type="focus" label="集中力" />
-            <div className="time-buttons">
-              {(['normal', 'slow', 'stop'] as const).map((mode, i) => (
-                <button
-                  key={mode}
-                  className={s.timeMode === mode ? 'active' : ''}
-                  disabled={
-                    s.phase !== 'battle' ||
-                    (mode !== 'normal' && s.focus <= 4 && s.timeMode === 'normal')
-                  }
-                  onClick={() => send({ type: 'time', mode })}
-                >
-                  <span>{['通常', 'スロー', '停止'][i]}</span>
-                  <small>{['×1.00', '×0.25', '×0.00'][i]}</small>
-                </button>
-              ))}
-            </div>
-            <div className="focus-note">
-              <span>
-                {s.timeMode === 'normal'
-                  ? '開始時 −4 / 戦闘ごとに全回復'
-                  : `あと ${fmt(s.focus / (s.timeMode === 'slow' ? s.config.slowDrain : s.config.stopDrain))} 秒 · 実時間で消費`}
-              </span>
-              <Key>{s.timeMode === 'stop' ? 'F' : 'Space'}</Key>
-            </div>
-          </section>
-
-          <div className="lower-controls">
-            <section className="optima-panel">
+        {!padActive && !watching && (
+          <aside className="command-sidebar">
+            <section className="focus-panel">
               <div className="section-label">
-                <span>01 / OPTIMA</span>
-                <b>戦い方を替える</b>
-                <small>
-                  {s.config.uiMode === 'linked' ? '武器＋隊列を同時指示' : '武器だけを切り替え'}
-                </small>
+                <span>FOCUS</span>
+                <b>集中力</b>
+                <strong>
+                  {Math.ceil(s.focus)}
+                  <small> / 100</small>
+                </strong>
               </div>
-              <div className="optima-buttons">
-                {s.presets.map((p, i) => (
+              <Meter value={s.focus} max={100} type="focus" label="集中力" />
+              <div className="time-buttons">
+                {(['normal', 'slow', 'stop'] as const).map((mode, i) => (
                   <button
-                    key={i}
-                    disabled={!['ready', 'battle'].includes(s.phase)}
-                    className={`optima ${s.activePreset === i && p.slots.every((slot, id) => slot === (s.allies[id].nextSlot ?? s.allies[id].slot)) ? 'active' : ''}`}
-                    onClick={() => pickOptima(i)}
+                    key={mode}
+                    className={s.timeMode === mode ? 'active' : ''}
+                    disabled={
+                      s.phase !== 'battle' ||
+                      (mode !== 'normal' && s.focus <= 4 && s.timeMode === 'normal')
+                    }
+                    onClick={() => send({ type: 'time', mode })}
                   >
-                    <span>
-                      <Key>{['A', 'S', 'D', 'G'][i]}</Key>
-                      {p.name}
-                    </span>
-                    <div>
-                      {p.slots.map((slot, id) => (
-                        <b
-                          key={id}
-                          className={`role role-${WEAPONS[s.allies[id].weapons[slot]].role}`}
-                        >
-                          {WEAPONS[s.allies[id].weapons[slot]].role}
-                        </b>
-                      ))}
-                    </div>
+                    <span>{['通常', 'スロー', '停止'][i]}</span>
+                    <small>{['×1.00', '×0.25', '×0.00'][i]}</small>
                   </button>
                 ))}
               </div>
-            </section>
-            <section className="formation-panel">
-              <div className="section-label">
-                <span>02 / FORMATION</span>
-                <b>立ち位置を替える</b>
+              <div className="focus-note">
+                <span>
+                  {s.timeMode === 'normal'
+                    ? '開始時 −4 / 戦闘ごとに全回復'
+                    : `あと ${fmt(s.focus / (s.timeMode === 'slow' ? s.config.slowDrain : s.config.stopDrain))} 秒 · 実時間で消費`}
+                </span>
+                <Key>{s.timeMode === 'stop' ? 'F' : 'Space'}</Key>
               </div>
-              {s.config.uiMode === 'individual' ? (
-                <p className="muted">個別操作モード：行動の「移動」から予約</p>
-              ) : (
-                <div className="formation-buttons">
-                  {s.formations.map((f, i) => (
+            </section>
+
+            <div className="lower-controls">
+              <section className="optima-panel">
+                <div className="section-label">
+                  <span>01 / OPTIMA</span>
+                  <b>戦い方を替える</b>
+                  <small>
+                    {s.config.uiMode === 'linked' ? '武器＋隊列を同時指示' : '武器だけを切り替え'}
+                  </small>
+                </div>
+                <div className="optima-buttons">
+                  {s.presets.map((p, i) => (
                     <button
-                      disabled={!['ready', 'battle'].includes(s.phase)}
                       key={i}
-                      onClick={() => send({ type: 'formation', index: i })}
+                      disabled={!['ready', 'battle'].includes(s.phase)}
+                      className={`optima ${s.activePreset === i && p.slots.every((slot, id) => slot === (s.allies[id].nextSlot ?? s.allies[id].slot)) ? 'active' : ''}`}
+                      onClick={() => pickOptima(i)}
                     >
-                      <FormationGlyph rows={f.rows} />
-                      <span>{f.name}</span>
-                      <Key>{i + 7}</Key>
+                      <span>
+                        <Key>{['A', 'S', 'D', 'G'][i]}</Key>
+                        {p.name}
+                      </span>
+                      <div>
+                        {p.slots.map((slot, id) => (
+                          <b
+                            key={id}
+                            className={`role role-${WEAPONS[s.allies[id].weapons[slot]].role}`}
+                          >
+                            {WEAPONS[s.allies[id].weapons[slot]].role}
+                          </b>
+                        ))}
+                      </div>
                     </button>
                   ))}
                 </div>
-              )}
-            </section>
-          </div>
-        </aside>
-        <ActionConsole
-          state={s}
-          pending={pending}
-          onChoose={useSkill}
-          onTarget={(target) => {
-            if (pending) useSkill(pending, target);
-          }}
-          onBack={() => setPending(null)}
-          onSelect={select}
-          send={send}
-        />
+              </section>
+              <section className="formation-panel">
+                <div className="section-label">
+                  <span>02 / FORMATION</span>
+                  <b>立ち位置を替える</b>
+                </div>
+                {s.config.uiMode === 'individual' ? (
+                  <p className="muted">個別操作モード：行動の「移動」から予約</p>
+                ) : (
+                  <div className="formation-buttons">
+                    {s.formations.map((f, i) => (
+                      <button
+                        disabled={!['ready', 'battle'].includes(s.phase)}
+                        key={i}
+                        onClick={() => send({ type: 'formation', index: i })}
+                      >
+                        <FormationGlyph rows={f.rows} />
+                        <span>{f.name}</span>
+                        <Key>{i + 7}</Key>
+                      </button>
+                    ))}
+                  </div>
+                )}
+              </section>
+            </div>
+          </aside>
+        )}
+        {watching ? (
+          <WatchConsole
+            state={s}
+            player={player}
+            refresh={refresh}
+            configure={configureAI}
+            select={select}
+          />
+        ) : padActive ? (
+          <PadBattleConsole
+            state={s}
+            ui={battleUI}
+            bindings={gamepad.bindings}
+            family={gamepad.family}
+            log={session.log}
+            act={applyBattleInput}
+            pick={(key) => applyBattleResult(confirmChoice(s, battleUI, key))}
+            remove={(key) =>
+              applyBattleResult(confirmChoice(s, { ...battleUI, page: 'queue', key }, key))
+            }
+            open={(page) => setBattleUI(openPage(s, battleUI, page))}
+            select={select}
+          />
+        ) : (
+          <ActionConsole
+            state={s}
+            pending={pending}
+            onChoose={useSkill}
+            onBack={() => setPending(null)}
+            onSelect={select}
+            send={send}
+          />
+        )}
       </main>
 
       <div
         className="log-container"
-        inert={s.paused || help || padOpen || ['loot', 'victory', 'defeat'].includes(s.phase)}
+        inert={
+          s.paused ||
+          help ||
+          padOpen ||
+          ['victory', 'defeat'].includes(s.phase) ||
+          (s.phase === 'loot' && !watching)
+        }
       >
         <CombatLog
           entries={session.log}
@@ -618,7 +820,13 @@ export function App() {
         <aside
           className="lab-drawer"
           aria-label="実験室"
-          inert={s.paused || help || padOpen || ['loot', 'victory', 'defeat'].includes(s.phase)}
+          inert={
+            s.paused ||
+            help ||
+            padOpen ||
+            ['victory', 'defeat'].includes(s.phase) ||
+            (s.phase === 'loot' && !watching)
+          }
         >
           <div className="drawer-heading">
             <div>
@@ -826,7 +1034,7 @@ export function App() {
         </aside>
       )}
 
-      {s.phase === 'loot' && (
+      {s.phase === 'loot' && !watching && (
         <div className="modal-backdrop">
           <section className="loot-modal" role="dialog" aria-modal="true" aria-label="戦利品と編成">
             <span className="eyebrow">ENCOUNTER CLEAR</span>
@@ -956,7 +1164,7 @@ export function App() {
             <span className="eyebrow">HOW TO PLAY</span>
             <h2>全体を指揮し、一手を差し込む。</h2>
             <p>
-              予約が空なら、装備中の武器で自動行動します。AはHP削りとチェイン維持、Bはチェイン上昇、Sは回復や防護。敵のチェインが200%になると8秒間ブレイクします。
+              選択中の仲間は、予約が空なら指示を待ちます。ほかの仲間は装備中の武器で自動行動します。AはHP削りとチェイン維持、Bはチェイン上昇、Sは回復や防護。敵のチェインが200%になると8秒間ブレイクします。
             </p>
             <div className="help-grid">
               <div>
@@ -972,6 +1180,9 @@ export function App() {
                   主力技を選び、対象をクリックして末尾へ追加。<Key>C</Key> 防御。<Key>V</Key>{' '}
                   救急薬。一人6手まで積めます。
                 </p>
+                <p>
+                  パッドでは4つのボタンから技・防御・薬を直接選択。対象を選んだ後は決定のたびに1手追加し、戻るでコマンドへ。肩ボタンで仲間、↓で予約取消です。
+                </p>
               </div>
               <div>
                 <h3>編成と位置を変える</h3>
@@ -986,6 +1197,9 @@ export function App() {
                   <Key>9</Key> で一括隊列。
                 </p>
                 <p>前列は近接威力・崩し効率が上がり、後列は被害を28%軽減。全員後列でも戦えます。</p>
+                <p>
+                  パッドのコマンド画面では↑が全員への指示、←が移動、→が武器変更。画面下に今使えるボタンが表示されます。
+                </p>
               </div>
               <div>
                 <h3>考える時間を使う</h3>
@@ -996,6 +1210,9 @@ export function App() {
                 <p>
                   <Key>Esc</Key>{' '}
                   は休憩ポーズ。戦場を隠し、すべての時計を止めます。別タブへの移動でも休憩に入ります。
+                </p>
+                <p>
+                  パッドは左トリガーでスロー、右トリガーで戦術停止。メニューを開くだけでは時間は止まりません。
                 </p>
               </div>
               <div>
