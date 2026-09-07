@@ -164,69 +164,6 @@ export function PadBattleConsole({
       className={`pad-console ${keyboard ? 'keyboard-console' : ''}`}
       aria-label={keyboard ? 'キーボード用戦闘コマンド' : 'パッド用戦闘コマンド'}
     >
-      <div className="pad-party" aria-label="仲間を選ぶ">
-        <button className="pad-shoulder" aria-label="前の仲間" onClick={() => act('previous')}>
-          {glyph('previous')}
-        </button>
-        {s.allies.map((x) => {
-          const weapon = weaponOf(x),
-            queue = planned(x);
-          return (
-            <button
-              key={x.id}
-              className={`pad-actor ${x.id === s.selected ? 'active' : ''} ${x.hp <= 0 ? 'fallen' : ''} ${s.pendingSelect === x.id ? 'handoff-target' : ''}`}
-              aria-label={`${x.name}に指示`}
-              aria-pressed={x.id === s.selected}
-              disabled={x.hp <= 0}
-              onClick={() => select(x.id)}
-            >
-              <span className="pad-actor-crest" style={{ color: x.color }}>
-                {weapon.glyph}
-              </span>
-              <span className="pad-actor-info">
-                <strong>
-                  {x.name}
-                  {s.pendingSelect === x.id && <small>交代待ち</small>}
-                  <b className={`role role-${weapon.role}`}>{weapon.role}</b>
-                  <small>{ROW_NAMES[x.row]}</small>
-                </strong>
-                <span className="pad-actor-vitals">
-                  HP {Math.ceil(x.hp)} / {x.maxHp}
-                  <i style={{ width: `${Math.max(0, (x.hp / x.maxHp) * 100)}%` }} />
-                </span>
-                <span className="pad-atb" aria-label={`${x.name}のATB ${x.atb.toFixed(1)}`}>
-                  {Array.from({ length: s.config.atbMax }, (_, i) => i).map((i) => (
-                    <i key={i}>
-                      <b style={{ width: `${Math.max(0, Math.min(1, x.atb - i)) * 100}%` }} />
-                    </i>
-                  ))}
-                </span>
-              </span>
-              <span className="pad-actor-now">
-                <strong>
-                  {x.action
-                    ? actionStatus(x.action)
-                    : x.nextRow
-                      ? '移動中'
-                      : x.nextSlot !== null
-                        ? '変更中'
-                        : x.hp <= 0
-                          ? '戦闘不能'
-                          : s.controlMode === 'manual' && x.id === s.selected
-                            ? '指示待ち'
-                            : '自動行動'}
-                </strong>
-                <small>
-                  {queue.length ? `次：${stepName(x, queue[0])} · ${queue.length}手` : '予約なし'}
-                </small>
-              </span>
-            </button>
-          );
-        })}
-        <button className="pad-shoulder" aria-label="次の仲間" onClick={() => act('next')}>
-          {glyph('next')}
-        </button>
-      </div>
       <div className="pad-desk">
         <div className="pad-command-area">
           <div className="pad-page-heading">

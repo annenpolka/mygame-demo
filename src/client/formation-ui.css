@@ -335,7 +335,7 @@
   padding: 8px 12px;
   background: #ddb57508;
 }
-@media (min-width: 1200px) and (max-height: 800px) {
+@media (min-width: 1200px) {
   .battle-layout .battle-lane {
     grid-template-rows: 20px repeat(var(--field-tracks), minmax(77px, auto));
   }
@@ -468,7 +468,7 @@
   color: #ffd282;
   font-weight: bold;
 }
-@media (min-width: 1200px) and (max-height: 800px) {
+@media (min-width: 1200px) {
   .pad-layout .command-diamond {
     grid-template-rows: repeat(3, 50px);
     gap: 4px;
@@ -499,7 +499,7 @@ body:has(.loadout-modal) {
 .weapon-choice:disabled {
   opacity: 0.65;
 }
-@media (min-width: 1200px) and (max-height: 800px) {
+@media (min-width: 1200px) {
   .pad-layout .pad-direction-commands {
     gap: 3px;
   }
@@ -529,7 +529,7 @@ body:has(.loadout-modal) {
     margin: 0;
   }
 }
-@media (min-width: 1200px) and (max-height: 800px) {
+@media (min-width: 1200px) {
   .pad-layout .pad-queue-help {
     min-height: 150px;
     padding-top: 4px;
@@ -602,5 +602,404 @@ body:has(.loadout-modal) {
 @media (min-width: 1200px) and (min-height: 801px) {
   .keyboard-console .pad-desk {
     min-height: 270px;
+  }
+}
+
+/* Reserve three tracks even when a column is empty. */
+.battle-layout .battle-lane {
+  grid-template-rows: 24px repeat(3, 76px);
+}
+.field-legend,
+.field-target-bar {
+  box-sizing: border-box;
+  height: 44px;
+}
+.atb-timeline {
+  margin-top: 6px;
+  padding: 8px 14px;
+  border: 1px solid #e9c58266;
+  background: linear-gradient(105deg, #213947, #122430);
+}
+.atb-timeline header {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  height: 28px;
+}
+.atb-timeline header > strong {
+  font-size: 16px;
+  white-space: nowrap;
+}
+.atb-timeline small {
+  font-size: 10px;
+  color: #afc6ce;
+  font-weight: 400;
+}
+.atb-action-now {
+  font-size: 12px;
+  color: #e5cc99;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.atb-number {
+  margin-left: auto;
+  font:
+    700 23px ui-monospace,
+    monospace;
+  white-space: nowrap;
+  color: #f2d49c;
+}
+.atb-budget {
+  display: grid;
+  grid-template-columns: repeat(var(--atb-columns), minmax(0, 1fr));
+  grid-template-rows: 26px 15px;
+  gap: 3px;
+  margin: 3px 0;
+}
+.atb-reservation {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  padding: 2px 8px;
+  background: #cbaa6630;
+  border-left: 3px solid #f1cd8c;
+  min-width: 0;
+}
+.atb-reservation > b {
+  font: 11px monospace;
+  color: #f5d490;
+}
+.atb-reservation strong {
+  font-size: 13px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.atb-reservation small {
+  margin-left: auto;
+  white-space: nowrap;
+}
+.atb-reservation.will-reset {
+  opacity: 0.4;
+}
+.atb-cell {
+  position: relative;
+  background: #4f657055;
+  border: 1px solid #91afb35a;
+  overflow: hidden;
+}
+.atb-cell i {
+  display: block;
+  height: 100%;
+  background: linear-gradient(90deg, #8eacae, #f5d38f);
+  box-shadow: 2px 0 6px #ffe8b5;
+}
+.atb-cell span {
+  position: absolute;
+  inset: 0;
+  text-align: center;
+  font:
+    9px ui-monospace,
+    monospace;
+  color: #fff;
+  text-shadow: 0 1px 2px #102b38;
+}
+.atb-cell.overflow {
+  border: 1px dashed #e5b57c;
+  background: #533f3060;
+}
+.atb-subline {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-height: 17px;
+  font-size: 10px;
+  color: #abc4d0;
+}
+.atb-free-steps {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.atb-free-steps > span {
+  color: #ecce9f;
+}
+.atb-no-cost {
+  font-size: 12px;
+  color: #8da9b6;
+  align-self: center;
+}
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+}
+@media (min-width: 1200px) {
+  .battle-layout .battle-lane {
+    grid-template-rows: 20px repeat(3, 66px);
+    gap: 3px;
+  }
+  .battle-layout .field-unit {
+    padding: 2px 6px;
+  }
+  .field-legend,
+  .field-target-bar {
+    height: 36px;
+    padding-top: 3px;
+    padding-bottom: 3px;
+  }
+  .field-target-bar strong {
+    font-size: 12px;
+  }
+  .atb-timeline {
+    padding: 4px 10px;
+  }
+  .pad-layout .pad-actor {
+    min-height: 34px;
+    padding: 3px 8px;
+  }
+  .pad-layout .pad-actor-crest {
+    font-size: 23px;
+  }
+  .pad-layout .pad-party {
+    margin-bottom: 4px;
+  }
+  .pad-layout .pad-actor-now {
+    font-size: 9px;
+  }
+  .pad-layout .pad-actor-info > strong {
+    font-size: 13px;
+  }
+  .pad-layout .pad-desk {
+    min-height: 200px;
+  }
+  .pad-layout .command-diamond {
+    grid-template-rows: repeat(3, 42px);
+  }
+  .pad-layout .direct-command {
+    min-height: 40px;
+    padding: 3px 9px;
+  }
+  .pad-layout .direct-command strong {
+    font-size: 13px;
+  }
+  .pad-layout .direct-command em {
+    font-size: 9px;
+  }
+  .pad-layout .pad-context-hints {
+    padding: 3px 8px;
+  }
+  .keyboard-console .command-diamond {
+    grid-template-rows: repeat(2, 61px);
+  }
+}
+@media (max-width: 800px) {
+  .battle-layout .battle-lane {
+    grid-template-rows: 32px repeat(3, 130px);
+  }
+  .field-legend,
+  .field-target-bar {
+    height: 76px;
+  }
+  .atb-timeline {
+    padding: 6px;
+  }
+  .atb-timeline header {
+    flex-wrap: wrap;
+    height: auto;
+    gap: 4px 8px;
+  }
+  .atb-action-now {
+    order: 3;
+    flex-basis: 100%;
+    font-size: 10px;
+  }
+  .atb-budget {
+    grid-template-rows: 32px 17px;
+    gap: 2px;
+  }
+  .atb-reservation {
+    padding: 2px;
+    gap: 2px;
+  }
+  .atb-reservation strong {
+    font-size: 10px;
+  }
+  .atb-reservation small {
+    display: none;
+  }
+  .atb-subline {
+    flex-wrap: wrap;
+    gap: 2px;
+  }
+}
+.atb-timeline header {
+  height: 32px;
+}
+.atb-party {
+  display: flex;
+  align-items: stretch;
+  gap: 5px;
+}
+.atb-party > button {
+  padding: 2px 6px;
+  min-height: 28px;
+  min-width: 0;
+}
+.atb-party .pad-actor {
+  flex: none;
+  gap: 5px;
+  font-size: 13px;
+}
+.atb-party small {
+  font-size: 9px;
+}
+.atb-party kbd {
+  font: 11px monospace;
+}
+@media (min-width: 1200px) {
+  .atb-timeline {
+    padding: 3px 10px;
+  }
+  .atb-timeline header {
+    height: 28px;
+  }
+  .atb-party .pad-actor {
+    min-height: 28px;
+  }
+  .atb-budget {
+    grid-template-rows: 23px 13px;
+  }
+  .atb-subline {
+    min-height: 14px;
+  }
+  .pad-layout .pad-command-area {
+    padding: 5px 10px 3px;
+  }
+  .pad-layout .pad-page-heading {
+    margin-bottom: 3px;
+  }
+  .pad-layout .pad-direction-commands {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 4px;
+  }
+  .pad-layout .pad-direction-commands > span {
+    grid-column: 1 / -1;
+  }
+  .pad-layout .pad-direction-commands button {
+    font-size: 10px;
+    flex-wrap: wrap;
+    min-height: 40px;
+    padding: 3px;
+  }
+  .pad-layout .pad-command-root {
+    grid-template-columns: minmax(0, 1fr) 165px;
+  }
+  .pad-layout .pad-feedback {
+    padding-top: 4px;
+    min-height: 20px;
+  }
+  .pad-layout .pad-context-hints .pad-glyph {
+    height: 18px;
+  }
+  .pad-layout .field-footer {
+    height: 24px;
+    min-height: 24px;
+  }
+  .field-legend,
+  .field-target-bar {
+    height: 30px;
+  }
+  .pad-layout .pad-plan-heading {
+    padding: 3px 0;
+  }
+}
+@media (max-width: 800px) {
+  .atb-timeline header {
+    height: auto;
+  }
+  .atb-party {
+    width: 100%;
+    gap: 2px;
+  }
+  .atb-party .pad-actor {
+    flex: 1;
+    padding: 3px;
+    font-size: 11px;
+  }
+  .atb-party small {
+    display: none;
+  }
+  .atb-party .pad-glyph {
+    min-width: 20px;
+    height: 22px;
+    font-size: 10px;
+  }
+  .atb-number {
+    font-size: 18px;
+  }
+  .atb-action-now {
+    order: 0;
+    flex-basis: auto;
+  }
+}
+@media (min-width: 1200px) {
+  .pad-layout .pad-context-hints {
+    min-height: 24px;
+    padding: 2px 8px;
+  }
+  .pad-layout .pad-plan-list {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 3px 8px;
+  }
+  .pad-layout .pad-plan-list button {
+    padding: 3px;
+    gap: 4px;
+  }
+  .pad-layout .pad-plan-list strong {
+    font-size: 11px;
+  }
+  .pad-layout .pad-plan-list button > i {
+    font-size: 10px;
+  }
+  .pad-layout .pad-plan-list button > span {
+    min-width: 0;
+  }
+  .pad-layout .pad-plan-list small {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .pad-layout .pad-plan-empty {
+    padding: 12px 8px;
+  }
+  .log-container .log-heading {
+    padding: 2px 10px;
+  }
+  .log-container .log-heading button {
+    padding: 3px 8px;
+  }
+  .field-legend,
+  .field-target-bar {
+    height: 28px;
+  }
+  .pad-layout .pad-desk {
+    min-height: 194px;
+  }
+  .pad-layout .battle-heading {
+    padding: 2px 0;
+  }
+}
+@media (min-width: 1200px) {
+  .pad-layout .pad-console {
+    margin-top: 0;
+  }
+  .atb-timeline {
+    margin-top: 3px;
   }
 }

@@ -1,3 +1,4 @@
+import { AtbTimeline } from './AtbTimeline';
 import { Loadout } from './Loadout';
 import { BATTLE_TIMING } from '../content/data';
 import { WatchPlayer, type WatchPlanning } from '../ai/watch-player';
@@ -660,6 +661,16 @@ export function App() {
             }
             backLabel={padActive ? buttonName(gamepad.bindings.cancel, gamepad.family) : 'Esc'}
           />
+          {s.phase === 'battle' && (
+            <AtbTimeline
+              state={s}
+              select={select}
+              act={applyBattleInput}
+              keyboard={!padActive}
+              bindings={gamepad.bindings}
+              family={gamepad.family}
+            />
+          )}
         </section>
 
         {watching ? (

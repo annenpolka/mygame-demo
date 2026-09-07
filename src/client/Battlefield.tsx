@@ -42,18 +42,11 @@ export function Battlefield({
   useEffect(() => {
     if (active) field.current?.focus({ preventScroll: true });
   }, [active, pending?.id]);
-  const tracks = Math.max(
-    2,
-    ...(['front', 'back'] as const).flatMap((row) => [
-      s.allies.filter((a) => a.row === row).length,
-      s.enemies.filter((e) => e.row === row).length,
-    ]),
-  );
   return (
     <div
       className={`battlefield ${active ? 'targeting' : ''}`}
       aria-label="敵味方の前後列"
-      style={{ '--field-tracks': tracks } as CSSProperties}
+      style={{ '--field-tracks': 3 } as CSSProperties}
     >
       {active ? (
         <div className="field-target-bar">

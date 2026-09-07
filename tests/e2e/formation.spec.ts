@@ -71,3 +71,36 @@ test('full-width formation shows HP, chain, break duration and enemy cast withou
   await expect(meter).toHaveAttribute('aria-valuenow', held!);
   await page.screenshot({ path: 'test-results/formation-break.png', fullPage: true });
 });
+
+test('fixed formation height and selected ATB budget map multi-cost skills and free transitions', async ({
+  page,
+}) => {
+  await page.setViewportSize({ width: 1366, height: 752 });
+  await page.getByRole('button', { name: '戦闘開始 →', exact: true }).click();
+  const height = () =>
+    page.locator('.horizontal-field').evaluate((el) => el.getBoundingClientRect().height);
+  const before = await height();
+  await page.keyboard.press('7');
+  await page.clock.runFor(1100);
+  expect(await height()).toBe(before);
+  await page.keyboard.press('f');
+  await page.keyboard.press('x');
+  expect(await height()).toBe(before);
+  await page.keyboard.press('Enter');
+  await page.keyboard.press('Escape');
+  await page.keyboard.press('r');
+  await page.keyboard.press('w');
+  const band = page.getByRole('region', { name: 'アルトのATBと行動予約' });
+  await expect(band.locator('.atb-cell')).toHaveCount(4);
+  await expect(band.locator('.atb-reservation')).toHaveCSS('grid-column-end', 'span 2');
+  await expect(band.locator('.atb-free-steps')).toContainText('2. 前列へ移動');
+  await expect(band.locator('.atb-free-steps')).toContainText('3. 誓いの盾槍に変更');
+  const bandBox = await band.boundingBox();
+  const fieldBox = await page.locator('.battlefield').boundingBox();
+  expect(bandBox!.y).toBeGreaterThanOrEqual(fieldBox!.y + fieldBox!.height);
+  await page.screenshot({ path: 'test-results/atb-keyboard.png', fullPage: true });
+  await page.keyboard.press('Backspace');
+  await expect(band.locator('.atb-reservation')).toHaveCount(0);
+  await page.keyboard.press('2');
+  await expect(band.locator('.atb-reservation')).toContainText('キャラ交代');
+});
