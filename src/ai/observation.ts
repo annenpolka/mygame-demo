@@ -67,6 +67,14 @@ export function observe(s: State): Observation {
         ? { ...a.action, target: { ...a.action.target }, offense: { ...a.action.offense } }
         : null,
       queued: a.queued ? { ...a.queued, target: { ...a.queued.target } } : null,
+      ...(a.draft
+        ? {
+            draft: a.draft.map((p) =>
+              p.kind === 'skill' ? { ...p, target: { ...p.target } } : { ...p },
+            ),
+          }
+        : {}),
+      ...(a.sequences ? { sequences: a.sequences.map((b) => ({ ...b })) } : {}),
       ...(a.plan
         ? {
             plan: a.plan.map((p) =>

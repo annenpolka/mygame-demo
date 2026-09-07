@@ -19,6 +19,8 @@ export type ExecutionActor = Pick<
   | 'action'
   | 'queued'
   | 'plan'
+  | 'draft'
+  | 'sequences'
   | 'executionHeld'
 > & { weapons: readonly [string, string] };
 export type TargetView = {
@@ -33,6 +35,21 @@ export function pendingSteps(
     ...(a.queued ? [{ key: 0, kind: 'skill' as const, ...a.queued }] : []),
     ...(a.plan ?? []),
   ];
+}
+/** Drop empty groups, retaining the group whose final action/transition is still running. */
+export function refreshSequences(a: ExecutionActor) {
+  if (!a.sequences) return;
+  a.sequences = a.sequences.filter(
+    (sequence) =>
+      pendingSteps(a).some((p) => p.sequenceId === sequence.key) ||
+      (sequence.started &&
+        (a.action?.sequenceId === sequence.key || a.nextRow !== null || a.nextSlot !== null)),
+  );
+}
+export function sequenceCost(a: ExecutionActor, key: number) {
+  return pendingSteps(a)
+    .filter((p) => p.sequenceId === key)
+    .reduce((sum, p) => sum + (p.kind === 'skill' ? SKILLS[p.skillId].cost : 0), 0);
 }
 export function validExecutionTarget(
   view: TargetView,
@@ -91,6 +108,7 @@ export function canLink(
     next?.kind === 'skill' &&
     SKILLS[action.skillId].link !== undefined &&
     next.skillId === action.skillId &&
+    next.sequenceId === action.sequenceId &&
     a.weapons[a.slot] === action.weaponId &&
     a.nextRow === null &&
     a.nextSlot === null &&
@@ -105,6 +123,13 @@ export function charging(a: ExecutionActor, rules: ExecutionRules) {
   if (a.action || a.move > 0 || a.shift > 0) return false;
   if (a.executionHeld) return true;
   const head = pendingSteps(a)[0];
+  if (
+    head?.sequenceId &&
+    !a.sequences?.find((b) => b.key === head.sequenceId)?.started &&
+    a.nextRow === null &&
+    a.nextSlot === null
+  )
+    return true;
   // Handoff overrides unstarted row/weapon orders, but can wait for its ATB.
   if (head?.kind === 'skill' && head.skillId === 'handoff') return true;
   return a.nextRow === null && a.nextSlot === null && (!head || head.kind === 'skill');
@@ -134,6 +159,12 @@ export function advanceExecution(
   h: ExecutionHooks,
 ) {
   if (a.hp <= 0) return;
+  refreshSequences(a);
+  const start = (p: PlannedStep & { kind: 'skill' }, comboIndex: number) => {
+    if (!h.start(p, comboIndex)) return false;
+    if (a.action && p.sequenceId !== undefined) a.action.sequenceId = p.sequenceId;
+    return true;
+  };
   if (a.action) {
     const action = a.action;
     action.remaining = Math.max(0, action.remaining - dt);
@@ -149,12 +180,15 @@ export function advanceExecution(
       action.recovery - action.remaining + 1e-9 >= (SKILLS[action.skillId].link ?? Infinity) &&
       canLink(a, next, rules, !!next && h.valid(next)) &&
       next.kind === 'skill' &&
-      h.start(next, action.comboIndex + 1)
+      start(next, action.comboIndex + 1)
     ) {
       pop(a);
       return;
     }
-    if (action.remaining <= 1e-9) a.action = null;
+    if (action.remaining <= 1e-9) {
+      a.action = null;
+      refreshSequences(a);
+    }
     return;
   }
   if (a.executionHeld && !a.move && !a.shift) return;
@@ -205,6 +239,17 @@ export function advanceExecution(
     h.idle?.();
     return;
   }
+  const sequence = a.sequences?.find((b) => b.key === head.sequenceId);
+  if (sequence && !sequence.started) {
+    if (!h.valid(head)) {
+      pop(a);
+      h.discarded?.(head);
+      refreshSequences(a);
+      return;
+    }
+    if (a.atb + 1e-9 < sequenceCost(a, sequence.key)) return;
+    sequence.started = true;
+  }
   if (head.kind === 'move') {
     pop(a);
     a.nextRow = head.row === a.row ? null : head.row;
@@ -216,5 +261,6 @@ export function advanceExecution(
   } else if (!h.valid(head)) {
     pop(a);
     h.discarded?.(head);
-  } else if (a.atb + 1e-9 >= SKILLS[head.skillId].cost && h.start(head, 1)) pop(a);
+  } else if (a.atb + 1e-9 >= SKILLS[head.skillId].cost && start(head, 1)) pop(a);
+  refreshSequences(a);
 }

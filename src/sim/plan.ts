@@ -9,13 +9,25 @@ import {
   type TargetView,
 } from './execution';
 import { SKILLS, WEAPONS, ROW_NAMES, DT, DEFAULT_CONFIG } from '../content/data';
-import type { Ally, PlannedStep, PlanStep, State, Target } from './types';
+import type { Ally, PlannedStep, PlanStep, State, Target, Sequence } from './types';
 
 type Actor = Pick<
   Ally,
   'slot' | 'nextSlot' | 'queued' | 'action' | 'nextRow' | 'move' | 'shift' | 'atb'
-> & { weapons: readonly [string, string]; plan?: readonly PlannedStep[] };
-export const planned = pendingSteps;
+> & {
+  weapons: readonly [string, string];
+  plan?: readonly PlannedStep[];
+  draft?: readonly PlannedStep[];
+};
+export const committed = pendingSteps;
+export const planned = (
+  a: Parameters<typeof pendingSteps>[0] & { draft?: readonly PlannedStep[] },
+) => [...pendingSteps(a), ...(a.draft ?? [])];
+export const canExecuteSequence = (a: Pick<Ally, 'draft' | 'sequences' | 'hp' | 'action'>) =>
+  a.hp > 0 &&
+  !!a.draft?.length &&
+  !a.sequences?.some((b) => !b.started) &&
+  a.action?.skillId !== 'handoff';
 export function projectedSlot(a: Actor) {
   let slot = a.nextSlot ?? a.slot;
   for (const step of planned(a)) if (step.kind === 'weapon') slot = step.slot;
@@ -57,7 +69,11 @@ export function stepName(a: { weapons: readonly [string, string] }, p: PlanStep)
       : `${WEAPONS[a.weapons[p.slot]].name}に変更`;
 }
 export function pendingPotions(
-  allies: readonly { queued: Ally['queued']; plan?: readonly PlannedStep[] }[],
+  allies: readonly {
+    queued: Ally['queued'];
+    plan?: readonly PlannedStep[];
+    draft?: readonly PlannedStep[];
+  }[],
 ) {
   return allies.reduce(
     (n, a) => n + planned(a).filter((p) => p.kind === 'skill' && p.skillId === 'potion').length,
@@ -70,14 +86,18 @@ export interface PlanTiming {
   ends: number;
   ready: number;
   linked: boolean;
-  status: 'scheduled' | 'held' | 'invalid' | 'reset';
+  status: 'scheduled' | 'held' | 'draft' | 'invalid' | 'reset';
 }
 /** Conditional on visible targets and current party supply remaining unchanged.
  * Uses the runtime scheduler; future damage, interruption, and AI decisions are not predicted.
  * Times are battle seconds at normal fixed-step resolution (conservatively rounded per boundary at slow speed).
  */
 export function planTiming(
-  actor: Omit<ExecutionActor, 'plan'> & { plan?: readonly PlannedStep[] },
+  actor: Omit<ExecutionActor, 'plan' | 'draft' | 'sequences'> & {
+    plan?: readonly PlannedStep[];
+    draft?: readonly PlannedStep[];
+    sequences?: readonly Readonly<Sequence>[];
+  },
   inputRules: Pick<ExecutionRules, 'atbMax' | 'atbRate' | 'moveTime' | 'shiftTime'> &
     Partial<ExecutionRules>,
   view?: TargetView,
@@ -93,7 +113,11 @@ export function planTiming(
         ends: Infinity,
         ready: Infinity,
         linked: false,
-        status: a.executionHeld ? 'held' : 'scheduled',
+        status: a.draft?.some((d) => d.key === p.key)
+          ? 'draft'
+          : a.executionHeld
+            ? 'held'
+            : 'scheduled',
       }) as PlanTiming,
   );
   if (a.executionHeld || !queue.length) return results;
@@ -105,7 +129,7 @@ export function planTiming(
   // Eight maximum-cost entries need far less than this even at minimum supply.
   for (let tick = 0; tick < 12000; tick++) {
     elapsed += DT;
-    const head = planned(a)[0];
+    const head = committed(a)[0];
     const before = a.action;
     if (charging(a, rules)) a.atb = Math.min(rules.atbMax, a.atb + DT * rules.atbRate);
     advanceExecution(a, rules, DT, {
@@ -127,7 +151,8 @@ export function planTiming(
         byKey.get(p.key)!.status = 'invalid';
       },
       handoff: () => {
-        for (const r of results) if (!Number.isFinite(r.starts)) r.status = 'reset';
+        for (const r of results)
+          if (!Number.isFinite(r.starts) && r.status !== 'draft') r.status = 'reset';
       },
     });
     if (head && head.kind !== 'skill' && !planned(a).some((p) => p.key === head.key)) {
@@ -142,7 +167,7 @@ export function planTiming(
       current.ready = elapsed;
       current = undefined;
     }
-    if (!a.action && !planned(a).length && !transition) break;
+    if (!a.action && !committed(a).length && !transition) break;
   }
   return results;
 }

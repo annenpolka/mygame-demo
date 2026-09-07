@@ -58,6 +58,7 @@ export function operationFeedback(c: Command, s: State): { cue: SoundCue; label:
             ? `${s.allies[c.id]?.name}を観測`
             : `${s.allies[c.id]?.name}への交代を予約`,
       };
+    case 'draft':
     case 'enqueue': {
       const p = c.step,
         skill = p.kind === 'skill' ? SKILLS[p.skillId] : undefined;
@@ -84,6 +85,8 @@ export function operationFeedback(c: Command, s: State): { cue: SoundCue; label:
       return { cue: 'pause', label: c.value ? '実行保留' : '保留解除・実行再開' };
     case 'cancel':
       return { cue: 'cancel', label: '未実行の予約をすべて取消' };
+    case 'executeSequence':
+      return { cue: 'queue', label: '下書きの行動列を実行確定' };
     case 'cancelFirst':
       return { cue: 'cancel', label: '先頭の予約を取消' };
     case 'removePlan':

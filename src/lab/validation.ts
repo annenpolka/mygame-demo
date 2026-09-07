@@ -18,6 +18,7 @@ const target = z.discriminatedUnion('kind', [
   z.object({ kind: z.literal('row'), row }),
 ]);
 const action = z.object({
+  sequenceId: n.int().positive().optional(),
   skillId: skill,
   target,
   remaining: n,
@@ -39,7 +40,11 @@ const planStep = z.discriminatedUnion('kind', [
 ]);
 const plannedStep = z.intersection(
   planStep,
-  z.object({ key: n.int().positive(), auto: z.boolean().optional() }),
+  z.object({
+    key: n.int().positive(),
+    auto: z.boolean().optional(),
+    sequenceId: n.int().positive().optional(),
+  }),
 );
 const config = z.object({
   bonusMode: z.enum(['none', 'modest', 'strong']),
@@ -107,6 +112,11 @@ const stateSchema = z
           action: action.nullable(),
           queued: z.object({ skillId: skill, target }).nullable(),
           plan: z.array(plannedStep).max(9).optional(),
+          draft: z.array(plannedStep).max(8).optional(),
+          sequences: z
+            .array(z.object({ key: n.int().positive(), started: z.boolean() }))
+            .max(2)
+            .optional(),
           shield: n,
           executionHeld: z.boolean(),
         }),
@@ -170,7 +180,11 @@ const stateSchema = z
       s.target >= s.enemies.length
     )
       ctx.addIssue({ code: 'custom', message: 'キャラまたは敵の状態が不正です。' });
-    const keys = s.allies.flatMap((a) => (a.plan ?? []).map((p) => p.key));
+    const keys = s.allies.flatMap((a) =>
+      planned(a)
+        .filter((p) => p.key !== 0)
+        .map((p) => p.key),
+    );
     if (
       new Set(keys).size !== keys.length ||
       keys.some((k) => k > (s.planSeq ?? 0)) ||
@@ -189,6 +203,20 @@ const stateSchema = z
     )
       ctx.addIssue({ code: 'custom', message: 'キャラ交代の状態が不正です。' });
     for (const a of s.allies) {
+      const sequences = a.sequences ?? [];
+      const batchKeys = sequences.map((b) => b.key);
+      if (
+        new Set(batchKeys).size !== batchKeys.length ||
+        sequences.filter((b) => !b.started).length > 1 ||
+        sequences.filter((b) => b.started).length > 1 ||
+        (sequences[1]?.started ?? false) ||
+        batchKeys.some((key) => key > (s.planSeq ?? 0) || keys.includes(key)) ||
+        a.draft?.some((p) => p.sequenceId !== undefined || isHandoff(p)) ||
+        a.plan?.some((p) => p.sequenceId !== undefined && !batchKeys.includes(p.sequenceId)) ||
+        (a.action?.sequenceId !== undefined &&
+          !sequences.some((b) => b.key === a.action!.sequenceId && b.started))
+      )
+        ctx.addIssue({ code: 'custom', message: '下書き・確定列の境界が不正です。' });
       const action = a.action;
       if (
         action &&
@@ -256,6 +284,8 @@ const cmdSchema = z.discriminatedUnion('type', [
   z.object({ type: z.literal('toggleRow'), id }),
   z.object({ type: z.literal('toggleWeapon'), id }),
   z.object({ type: z.literal('enqueue'), id, step: planStep }),
+  z.object({ type: z.literal('draft'), id, step: planStep }),
+  z.object({ type: z.literal('executeSequence'), id }),
   z.object({ type: z.literal('removePlan'), id, key: n.int() }),
   z.object({ type: z.literal('equip'), id, slot, weaponId: weapon }),
   z.object({ type: z.literal('editPreset'), index: n.int().max(3), id, slot }),

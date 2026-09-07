@@ -35,6 +35,7 @@ export interface Weapon {
   bonus?: 'frontChain' | 'breakDamage';
 }
 export interface Action {
+  sequenceId?: number;
   skillId: string;
   target: Target;
   remaining: number;
@@ -51,7 +52,11 @@ export type PlanStep =
   | { kind: 'skill'; skillId: string; target: Target }
   | { kind: 'move'; row: Row }
   | { kind: 'weapon'; slot: Slot };
-export type PlannedStep = PlanStep & { key: number; auto?: boolean };
+export type PlannedStep = PlanStep & { key: number; auto?: boolean; sequenceId?: number };
+export interface Sequence {
+  key: number;
+  started: boolean;
+}
 export interface Ally {
   id: number;
   name: string;
@@ -70,6 +75,10 @@ export interface Ally {
   action: Action | null;
   queued: { skillId: string; target: Target } | null;
   plan?: PlannedStep[];
+  /** Editable input is never read by the execution scheduler. */
+  draft?: PlannedStep[];
+  /** At most one running group and one group waiting to start. */
+  sequences?: Sequence[];
   executionHeld: boolean;
   shield: number;
 }
@@ -191,6 +200,8 @@ export type Command =
   | { type: 'toggleRow'; id: number }
   | { type: 'toggleWeapon'; id: number }
   | { type: 'enqueue'; id: number; step: PlanStep }
+  | { type: 'draft'; id: number; step: PlanStep }
+  | { type: 'executeSequence'; id: number }
   | { type: 'removePlan'; id: number; key: number }
   | { type: 'equip'; id: number; slot: Slot; weaponId: string }
   | { type: 'editPreset'; index: number; id: number; slot: Slot }

@@ -1,9 +1,18 @@
-import { advanceExecution, charging, makeAction, validExecutionTarget } from './execution';
+import {
+  advanceExecution,
+  charging,
+  makeAction,
+  validExecutionTarget,
+  refreshSequences,
+} from './execution';
 import { COMBAT_RULES } from '../content/rules';
 import { partyBonus, positionBonus } from './bonuses';
 import { renameTactics } from './tactics';
 import {
   canAppend,
+  canExecuteSequence,
+  committed,
+  plannedCost,
   isHandoff,
   planned,
   projectedSlot,
@@ -94,6 +103,8 @@ export function createState(
       queued: null,
       shield: 0,
       executionHeld: false,
+      draft: [],
+      sequences: [],
     })),
     enemies: createEnemies(c, c.encounter),
     presets: copy(PRESETS),
@@ -236,6 +247,8 @@ export function command(s: State, c: Command): boolean {
       a.action = null;
       a.queued = null;
       if (a.plan) a.plan = [];
+      a.draft = [];
+      a.sequences = [];
       a.nextRow = null;
       a.nextSlot = null;
       a.move = 0;
@@ -376,10 +389,12 @@ export function command(s: State, c: Command): boolean {
       if (skill.effect === 'potion' && s.potions < 1) return reject(s, '救急薬を使い切りました。');
       if (skill.cost > s.config.atbMax) return reject(s, '最大ATBを超える技です。');
       if (a.plan) a.plan = [];
+      refreshSequences(a);
       a.queued = { skillId: c.skillId, target: copy(c.target) };
       emit(s, 'system', `${a.name}：「${skill.name}」を予約`);
       return true;
     }
+    case 'draft':
     case 'enqueue': {
       const a = s.allies[c.id],
         p = c.step;
@@ -402,10 +417,16 @@ export function command(s: State, c: Command): boolean {
         a.plan.unshift({ key: ++s.planSeq, kind: 'skill', ...a.queued });
         a.queued = null;
       }
-      a.plan.push({ ...copy(p), key: ++s.planSeq });
-      emit(s, 'system', `${a.name}：${a.plan.length}手目に「${stepName(a, p)}」を追加`, {
-        source: `a${a.id}`,
-      });
+      const destination = c.type === 'draft' ? (a.draft ??= []) : a.plan;
+      destination.push({ ...copy(p), key: ++s.planSeq });
+      emit(
+        s,
+        'system',
+        `${a.name}：${c.type === 'draft' ? '下書き' : '確定予約'}${destination.length}手目に「${stepName(a, p)}」を追加`,
+        {
+          source: `a${a.id}`,
+        },
+      );
       return true;
     }
     case 'removePlan': {
@@ -416,12 +437,29 @@ export function command(s: State, c: Command): boolean {
         a.queued = null;
         return true;
       }
-      const p = a.plan?.find((p) => p.key === c.key);
+      const p = planned(a).find((p) => p.key === c.key);
       if (!p) return false;
-      a.plan = a.plan!.filter((p) => p.key !== c.key);
+      a.plan = a.plan?.filter((p) => p.key !== c.key);
+      a.draft = a.draft?.filter((p) => p.key !== c.key);
       if (isHandoff(p)) s.pendingSelect = null;
       emit(s, 'system', `${a.name}：「${stepName(a, p)}」の予約を取消`);
       prunePlan(s, a);
+      refreshSequences(a);
+      return true;
+    }
+    case 'executeSequence': {
+      const a = s.allies[c.id];
+      if (!a || !canExecuteSequence(a) || (c.id === s.selected && s.pendingSelect !== null))
+        return false;
+      const key = (s.planSeq = (s.planSeq ?? 0) + 1);
+      a.sequences ??= [];
+      a.sequences.push({ key, started: false });
+      a.plan ??= [];
+      a.plan.push(...a.draft!.map((p) => ({ ...p, sequenceId: key })));
+      const cost = plannedCost({ queued: null, plan: a.draft });
+      emit(s, 'system', `${a.name}：下書き${a.draft!.length}手を確定（${cost} ATBで開始）`);
+      a.draft = [];
+      a.executionHeld = false;
       return true;
     }
     case 'hold': {
@@ -442,6 +480,7 @@ export function command(s: State, c: Command): boolean {
       const a = s.allies[c.id];
       a.queued = null;
       if (s.allies[c.id].plan) s.allies[c.id].plan = [];
+      refreshSequences(a);
       emit(s, 'system', `${a.name}：残りを打ち切り（現在の行動・終了硬直は継続）`);
       return true;
     }
@@ -510,7 +549,7 @@ function chooseAuto(s: State, a: Ally) {
       : 1;
   if (!beginAction(s, a, skill.id, target)) return;
   a.plan ??= [];
-  for (let i = 1; i < count; i++) {
+  for (let i = 1; i < count && canAppend(a, s.config, skill.cost); i++) {
     s.planSeq = (s.planSeq ?? 0) + 1;
     a.plan.push({
       key: s.planSeq,
@@ -643,9 +682,8 @@ function resolve(s: State, a: Ally, action: Action) {
   }
 }
 function prunePlan(s: State, a: Ally) {
-  if (!a.plan) return;
   let slot = a.nextSlot ?? a.slot;
-  a.plan = a.plan.filter((p) => {
+  const retained = planned(a).filter((p) => {
     if (p.kind === 'weapon') slot = p.slot;
     if (
       isHandoff(p) ||
@@ -656,6 +694,10 @@ function prunePlan(s: State, a: Ally) {
     emit(s, 'system', `${a.name}：武器変更のため「${SKILLS[p.skillId].name}」の予約を解除`);
     return false;
   });
+  const keys = new Set(retained.map((p) => p.key));
+  a.plan = a.plan?.filter((p) => keys.has(p.key));
+  a.draft = a.draft?.filter((p) => keys.has(p.key));
+  refreshSequences(a);
 }
 function tickAlly(s: State, a: Ally, dt: number) {
   if (a.hp <= 0) return;
@@ -790,6 +832,8 @@ function tickEnemy(s: State, e: Enemy, dt: number) {
         a.action = null;
         a.queued = null;
         if (a.plan) a.plan = [];
+        a.draft = [];
+        a.sequences = [];
         a.nextRow = null;
         a.nextSlot = null;
         emit(s, 'warning', `${a.name}：戦闘不能`);
@@ -850,6 +894,8 @@ export function step(s: State) {
         a.action = null;
         a.queued = null;
         if (a.plan) a.plan = [];
+        a.draft = [];
+        a.sequences = [];
       }
       emit(s, 'system', '勝利。轟砕の槌・流星の弓・帰還の軍旗を入手。');
     } else emit(s, 'system', '二つの戦いを突破した。');
