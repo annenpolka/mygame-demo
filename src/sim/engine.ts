@@ -1,3 +1,4 @@
+import { partyBonus } from './bonuses';
 import { renameTactics } from './tactics';
 import {
   canAppend,
@@ -466,7 +467,9 @@ function beginAction(s: State, a: Ally, skillId: string, target: Target) {
     s.potions--;
   }
   a.atb = Math.max(0, a.atb - skill.cost);
+  const bonus = partyBonus(s.allies, s.config.bonusMode);
   a.action = {
+    offense: { damage: bonus.damage, chain: bonus.chain },
     skillId,
     target: copy(target),
     remaining: skill.cast + skill.recovery,
@@ -581,6 +584,7 @@ function resolve(s: State, a: Ally, action: Action) {
       e.hp,
       Math.round(
         skill.power *
+          action.offense.damage *
           position *
           (e.chain / 100) *
           bonus *
@@ -594,7 +598,7 @@ function resolve(s: State, a: Ally, action: Action) {
       a.row === 'front' && weapon.role === 'B'
         ? 1.25 * (weapon.bonus === 'frontChain' ? 1.2 : 1)
         : 1;
-    e.chain = Math.min(500, e.chain + skill.chain * chainBonus);
+    e.chain = Math.min(500, e.chain + skill.chain * chainBonus * action.offense.chain);
     e.hold = Math.max(e.hold, skill.hold);
     emit(s, 'damage', `${a.name} → ${e.name} ${damage}`, {
       source: `a${a.id}`,
@@ -636,7 +640,6 @@ function prunePlan(s: State, a: Ally) {
 }
 function tickAlly(s: State, a: Ally, dt: number) {
   if (a.hp <= 0) return;
-  a.atb = Math.min(s.config.atbMax, a.atb + dt * s.config.atbRate);
   a.shield = Math.max(0, a.shield - dt);
   if (a.action) {
     const action = a.action;
@@ -805,11 +808,14 @@ function tickEnemy(s: State, e: Enemy, dt: number) {
           (cast.target === 'row' ? a.row === cast.row : a.id === cast.allyId)),
     );
     if (!targets.length) emit(s, 'system', `${e.name}：${cast.name}は誰にも当たらなかった`);
+    // A single area hit shares the same instant, even if it downs its defender.
+    const taken = partyBonus(s.allies, s.config.bonusMode).taken;
     for (const a of targets) {
       const damage = Math.min(
         a.hp,
         Math.round(
           cast.power *
+            taken *
             s.config.enemyPower *
             (a.row === 'back' ? 0.72 : 1) *
             (a.shield > 0 ? 0.5 : 1),
@@ -865,6 +871,10 @@ export function step(s: State) {
   const dt = DT * speed;
   if (dt === 0) return;
   s.time += dt;
+  // Integrate the roles present at the beginning of this fixed battle-time interval.
+  // Completed shifts affect the next interval; actor iteration cannot bias ATB supply.
+  const supply = s.config.atbRate * partyBonus(s.allies, s.config.bonusMode).atb;
+  for (const a of s.allies) if (a.hp > 0) a.atb = Math.min(s.config.atbMax, a.atb + dt * supply);
   for (const a of s.allies) tickAlly(s, a, dt);
   for (const e of s.enemies) tickEnemy(s, e, dt);
   if (!s.allies.some((a) => a.hp > 0)) {

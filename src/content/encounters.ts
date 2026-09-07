@@ -182,7 +182,7 @@ export function enemyRecipe(config: Partial<Config>, stage: 1 | 2, id: number) {
 }
 export function createEnemies(config: Partial<Config>, stage: 1 | 2): Enemy[] {
   return encounterSet(config).enemies[stage - 1].map((r, id) => {
-    const hp = Math.round(r.hp * pressure(config.encounterLevel).hp);
+    const hp = Math.round(r.hp * pressure(config.encounterLevel).hp * (config.enemyHpScale ?? 1));
     return {
       id,
       name: r.name,

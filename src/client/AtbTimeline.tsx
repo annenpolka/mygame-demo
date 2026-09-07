@@ -1,3 +1,4 @@
+import { partyBonus, bonusText } from '../sim/bonuses';
 import type { CSSProperties } from 'react';
 import { ROW_NAMES } from '../content/data';
 import { PadGlyph } from './PadBattleConsole';
@@ -114,6 +115,9 @@ export function AtbTimeline({
         ))}
       </div>
       <div className="atb-subline">
+        <span className="active-bonus" title="成立済みの武器のロールだけを集計">
+          {bonusText(partyBonus(s.allies, s.config.bonusMode))}
+        </span>
         <span>
           {q.some(isHandoff)
             ? '交代は先頭優先 · 後続は交代開始時に解除'

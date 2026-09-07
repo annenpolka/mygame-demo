@@ -1,6 +1,6 @@
 import type { Config, Formation, Preset, Skill, Weapon } from '../sim/types';
 
-export const VERSION = 'orchestra-5';
+export const VERSION = 'orchestra-6';
 export const DT = 1 / 60;
 export const BATTLE_TIMING = {
   enemyWindupScale: 1.6,
@@ -13,6 +13,8 @@ export const BATTLE_TIMING = {
   handoffSlow: 0.8,
 };
 export const DEFAULT_CONFIG: Config = {
+  bonusMode: 'strong',
+  enemyHpScale: 1,
   atbMax: 4,
   seed: 1307,
   atbRate: 0.55,

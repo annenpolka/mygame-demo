@@ -6,7 +6,7 @@ import { runReplay, Session } from '../src/lab/session';
 import { parseRecording, parseSnapshot } from '../src/lab/validation';
 
 function battle() {
-  const s = createState();
+  const s = createState({ bonusMode: 'none' });
   command(s, { type: 'start' });
   for (const e of s.enemies) e.nextAttack = 1000;
   return s;

@@ -1,5 +1,6 @@
 import type { EncounterSetId } from '../content/encounters';
 export type Row = 'front' | 'back';
+export type BonusMode = 'none' | 'modest' | 'strong';
 export type Role = 'A' | 'B' | 'D' | 'S';
 export type Slot = 0 | 1;
 export type TimeMode = 'normal' | 'slow' | 'stop';
@@ -39,6 +40,7 @@ export interface Action {
   /** remaining/total include windup and recovery; impact happens once. */
   resolved: boolean;
   weaponId: string;
+  offense: { damage: number; chain: number };
 }
 export type PlanStep =
   | { kind: 'skill'; skillId: string; target: Target }
@@ -102,6 +104,8 @@ export interface Formation {
   rows: [Row, Row, Row];
 }
 export interface Config {
+  bonusMode: BonusMode;
+  enemyHpScale: number;
   atbMax: number;
   encounterSet?: EncounterSetId;
   encounterLevel?: number;

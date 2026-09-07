@@ -1,3 +1,4 @@
+import { partyBonus } from '../sim/bonuses';
 import { weaponFunction } from './Loadout';
 import { actionStatus, skillTiming } from './timing';
 import { ROLE_NAMES, ROW_NAMES, SKILLS, WEAPONS } from '../content/data';
@@ -81,7 +82,10 @@ export function PadBattleConsole({
   const a = s.allies[s.selected],
     w = WEAPONS[a.weapons[projectedSlot(a)]],
     q = planned(a),
-    timing = planTiming(a, s.config);
+    timing = planTiming(a, {
+      ...s.config,
+      atbRate: s.config.atbRate * partyBonus(s.allies, s.config.bonusMode).atb,
+    });
   const list = choices(s, ui),
     choice = selectedChoice(s, ui);
   const keyNames: Record<PadAction, string> = {

@@ -1,3 +1,4 @@
+import { BONUS_LABELS, BONUS_MODES } from '../sim/bonuses';
 import { AtbTimeline } from './AtbTimeline';
 import { Loadout } from './Loadout';
 import { BATTLE_TIMING } from '../content/data';
@@ -605,6 +606,23 @@ export function App() {
                 ))}
               </div>
               <p>{encounterSet(s.config).description}</p>
+              <div className="bonus-picker" aria-label="編成ボーナス設定">
+                <b>編成ボーナス</b>
+                {BONUS_MODES.map((mode) => (
+                  <button
+                    key={mode}
+                    aria-pressed={s.config.bonusMode === mode && s.config.enemyHpScale === 1}
+                    onClick={() => {
+                      const next = { ...s.config, bonusMode: mode, enemyHpScale: 1 };
+                      setConfig(next);
+                      restart(next, false);
+                    }}
+                  >
+                    {BONUS_LABELS[mode]}
+                  </button>
+                ))}
+                <small>現在出ているロールが、全員へ効果を与えます。</small>
+              </div>
               <div className="level-choices" aria-label="戦闘の強度">
                 <b>強度</b>
                 {Array.from({ length: 10 }, (_, i) => i + 1).map((level) => (
@@ -803,6 +821,7 @@ export function App() {
             {(
               [
                 ['seed', '乱数seed', 0, 999999, 1],
+                ['enemyHpScale', '比較用の敵HP倍率', 0.5, 4, 0.05],
                 ['atbMax', '最大ATB・先行入力枠', 2, 8, 1],
                 ['atbRate', 'ATB / 秒', 0.2, 3, 0.05],
                 ['moveTime', '移動時間 / 秒', 0.1, 2, 0.1],

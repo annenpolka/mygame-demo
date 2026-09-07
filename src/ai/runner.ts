@@ -1,3 +1,4 @@
+import { BONUS_MODES } from '../sim/bonuses';
 import { createQueuePolicy, QUEUE_POLICY_VERSION } from './queue-policy';
 import { planned } from '../sim/plan';
 import { ENCOUNTER_SET_IDS, type EncounterSetId } from '../content/encounters';
@@ -6,12 +7,14 @@ import { isDeepStrictEqual } from 'node:util';
 import { DEFAULT_CONFIG, DT, SKILLS, VERSION, WEAPONS } from '../content/data';
 import { command, copy, createState, step } from '../sim/engine';
 import { runReplay } from '../lab/session';
-import type { BattleEvent, Command, Metrics, Recording, State } from '../sim/types';
+import type { BattleEvent, BonusMode, Command, Metrics, Recording, State } from '../sim/types';
 import { observe } from './observation';
 import { createPolicy, POLICY_VERSION, type PolicyId, type Ablation } from './policies';
 
 export type PlanningMode = 'legacy' | 'next' | 'queue';
 export interface RunOptions {
+  bonusMode?: BonusMode;
+  enemyHpScale?: number;
   planning?: PlanningMode;
   encounterSet?: EncounterSetId;
   encounterLevel?: number;
@@ -65,6 +68,8 @@ export interface EnemyOutcome {
   targetsHit: number;
 }
 export interface RunSummary {
+  bonusMode: BonusMode;
+  enemyHpScale: number;
   planning: PlanningMode;
   queuedDuringAction: number;
   appendedPlans: number;
@@ -134,6 +139,8 @@ function difference(now: Metrics, before: Metrics): Metrics {
 }
 export function runPolicy(options: RunOptions): RunResult {
   const opts = {
+    bonusMode: DEFAULT_CONFIG.bonusMode,
+    enemyHpScale: 1,
     seed: 1307,
     enemyPower: 1,
     atbRate: DEFAULT_CONFIG.atbRate,
@@ -145,6 +152,10 @@ export function runPolicy(options: RunOptions): RunResult {
     ...options,
   };
   if (
+    !BONUS_MODES.includes(opts.bonusMode) ||
+    !Number.isFinite(opts.enemyHpScale) ||
+    opts.enemyHpScale < 0.5 ||
+    opts.enemyHpScale > 4 ||
     !Number.isInteger(opts.seed) ||
     opts.seed < 0 ||
     opts.seed > 4294967295 ||
@@ -181,6 +192,8 @@ export function runPolicy(options: RunOptions): RunResult {
     enemyPower: opts.enemyPower,
     atbRate: opts.atbRate,
     atbMax: opts.atbMax,
+    bonusMode: opts.bonusMode,
+    enemyHpScale: opts.enemyHpScale,
     ...(opts.encounterSet ? { encounterSet: opts.encounterSet } : {}),
     ...(opts.encounterLevel ? { encounterLevel: opts.encounterLevel } : {}),
   });
@@ -385,6 +398,8 @@ export function runPolicy(options: RunOptions): RunResult {
     enemyPower: opts.enemyPower,
     atbRate: opts.atbRate,
     atbMax: opts.atbMax,
+    bonusMode: opts.bonusMode,
+    enemyHpScale: opts.enemyHpScale,
     decisionInterval: opts.decisionInterval,
     reactionSeconds: opts.reactionSeconds,
     maxSeconds: opts.maxSeconds,
@@ -417,4 +432,4 @@ export function runPolicy(options: RunOptions): RunResult {
   };
   return { summary, recording, events, decisions, samples, enemyActions, finalState: s };
 }
-export const EXPERIMENT_VERSION = `${VERSION}/${POLICY_VERSION}/${QUEUE_POLICY_VERSION}/runner-3`;
+export const EXPERIMENT_VERSION = `${VERSION}/${POLICY_VERSION}/${QUEUE_POLICY_VERSION}/runner-4`;

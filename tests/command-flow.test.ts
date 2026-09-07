@@ -8,7 +8,7 @@ import { runPolicy } from '../src/ai/runner';
 import type { State } from '../src/sim/types';
 
 function battle(atbMax = 4) {
-  const s = createState({ atbMax });
+  const s = createState({ atbMax, bonusMode: 'none' });
   command(s, { type: 'start' });
   s.enemies.forEach((e) => {
     e.nextAttack = 999;

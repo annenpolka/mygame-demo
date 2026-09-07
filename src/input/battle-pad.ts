@@ -1,3 +1,4 @@
+import { partyBonus, bonusText } from '../sim/bonuses';
 import { SKILLS, WEAPONS, ROW_NAMES } from '../content/data';
 import { canAppend, planned, projectedSlot, projectedRow, pendingPotions } from '../sim/plan';
 import type { Command, State, Target } from '../sim/types';
@@ -93,9 +94,17 @@ export function choices(s: State, ui: BattlePad): BattleChoice[] {
       ? s.presets.map((p, i) => ({
           key: String(i),
           title: p.name,
-          detail: p.slots
-            .map((slot, id) => `${s.allies[id].name} ${WEAPONS[s.allies[id].weapons[slot]].role}`)
-            .join(' / '),
+          detail:
+            p.slots
+              .map((slot, id) => `${s.allies[id].name} ${WEAPONS[s.allies[id].weapons[slot]].role}`)
+              .join(' / ') +
+            ' · ' +
+            bonusText(
+              partyBonus(
+                s.allies.map((a, id) => ({ ...a, slot: p.slots[id] })),
+                s.config.bonusMode,
+              ),
+            ),
           command: { type: 'optima', index: i },
         }))
       : s.config.uiMode === 'individual'

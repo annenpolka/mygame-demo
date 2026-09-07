@@ -1003,3 +1003,30 @@ body:has(.loadout-modal) {
     margin-top: 3px;
   }
 }
+.bonus-picker {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  align-items: center;
+  margin: 8px 0;
+  font-size: 12px;
+}
+.bonus-picker button {
+  padding: 4px 14px;
+}
+.bonus-picker button[aria-pressed='true'] {
+  background: #e8cf9c;
+  color: #152b36;
+}
+.bonus-picker small {
+  color: #9db6c4;
+}
+.active-bonus {
+  color: #edcc91;
+}
+@media (max-width: 800px) {
+  .active-bonus {
+    flex-basis: 100%;
+    font-size: 9px;
+  }
+}

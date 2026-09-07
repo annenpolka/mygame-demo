@@ -23,6 +23,7 @@ const action = z.object({
   remaining: n,
   total: n,
   weaponId: weapon,
+  offense: z.object({ damage: z.number().min(1).max(1.75), chain: z.number().min(1).max(1.9) }),
   resolved: z.boolean(),
 });
 const planStep = z.discriminatedUnion('kind', [
@@ -32,6 +33,8 @@ const planStep = z.discriminatedUnion('kind', [
 ]);
 const plannedStep = z.intersection(planStep, z.object({ key: n.int().positive() }));
 const config = z.object({
+  bonusMode: z.enum(['none', 'modest', 'strong']),
+  enemyHpScale: z.number().min(0.5).max(4),
   atbMax: z.number().int().min(2).max(8),
   encounterSet: z.enum(ENCOUNTER_SET_IDS).optional(),
   encounterLevel: z.number().int().min(1).max(10).optional(),

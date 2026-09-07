@@ -15,11 +15,13 @@ import {
 import { createHash } from 'node:crypto';
 import { EXPERIMENT_VERSION, runPolicy, type RunSummary, type RunResult } from '../src/ai/runner';
 import { aggregate, makeComparisonReport, makeTraceReport } from '../src/ai/report';
-import type { Config } from '../src/sim/types';
+import type { Config, BonusMode } from '../src/sim/types';
 
 const args = process.argv.slice(2);
 const flags = new Set(['--compare', '--study', '--help', '--list']);
 const values = new Set([
+  '--bonus',
+  '--enemy-hp',
   '--planning',
   '--set',
   '--level',
@@ -65,6 +67,7 @@ function saveTrace(dir: string, run: RunResult) {
 function sourceHashes() {
   return Object.fromEntries(
     [
+      'src/sim/bonuses.ts',
       'src/sim/engine.ts',
       'src/sim/types.ts',
       'src/sim/plan.ts',
@@ -93,10 +96,12 @@ if (args.includes('--help') || args.includes('--list')) {
       'npm run sim -- --compare --seeds 20 --seed 1307 --powers 1,2,3 --dir artifacts/ai-comparison\n' +
       'npm run sim -- --study --seeds 30 --seed 1307 --dir artifacts/ai-study\n' +
       'npm run sim -- --replay path/to/replay.json [--atb 1.2 --enemy-power 2]\n' +
-      '追加設定: --planning legacy|next|queue --atb-max 2〜8 --set belfry|bulwark|crossfire|pursuit|attrition --level 1〜10 --interval 0.25 --reaction 0.35 --max-seconds 180 --ablation none|no-pull|no-row|no-defense\n',
+      '追加設定: --bonus none|modest|strong --enemy-hp 0.5〜4 --planning legacy|next|queue --atb-max 2〜8 --set belfry|bulwark|crossfire|pursuit|attrition --level 1〜10 --interval 0.25 --reaction 0.35 --max-seconds 180 --ablation none|no-pull|no-row|no-defense\n',
   );
   console.log(POLICY_IDS.map((id) => `${id}: ${POLICY_INFO[id].description}`).join('\n'));
 } else if (value('--replay')) {
+  if (value('--bonus') || value('--enemy-hp'))
+    throw new Error('--bonus / --enemy-hpは新しい戦闘へ指定してください。');
   const start = performance.now();
   const recording = parseRecording(readFileSync(value('--replay')!, 'utf8'));
   const override: Partial<Config> = {};
@@ -139,6 +144,8 @@ if (args.includes('--help') || args.includes('--list')) {
     ablation,
     seed,
     atbRate: Number(value('--atb') ?? DEFAULT_CONFIG.atbRate),
+    bonusMode: (value('--bonus') ?? DEFAULT_CONFIG.bonusMode) as BonusMode,
+    enemyHpScale: Number(value('--enemy-hp') ?? 1),
     atbMax: Number(value('--atb-max') ?? DEFAULT_CONFIG.atbMax),
     decisionInterval: Number(value('--interval') ?? 0.25),
     reactionSeconds: Number(value('--reaction') ?? 0.35),
