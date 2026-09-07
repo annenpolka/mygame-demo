@@ -1,5 +1,5 @@
 import { expect, it } from 'vitest';
-import { DT } from '../src/content/data';
+import { DT, SKILLS } from '../src/content/data';
 import { Session, runReplay } from '../src/lab/session';
 import { copy } from '../src/sim/engine';
 import {
@@ -156,4 +156,21 @@ it('rejects malformed UI, cursor order, duplicate IDs and edited replay state be
   const badVersion = JSON.parse(exportNotes([note]));
   badVersion.notes[0].recording.version = {};
   expect(() => parseNotes(JSON.stringify(badVersion))).toThrow('形式');
+});
+
+it('treats link duration as a numeric rule change while description edits stay compatible', () => {
+  const { session, journal, view } = fixture();
+  const note = journal.mark(session, view);
+  const link = SKILLS.slash.link,
+    description = SKILLS.slash.description;
+  try {
+    SKILLS.slash.description = '説明の追記';
+    expect(sameRules(note)).toBe(true);
+    SKILLS.slash.link = 0.3;
+    expect(sameRules(note)).toBe(false);
+    expect(() => prepareNoteReplay(note)).toThrow('ルールが異なります');
+  } finally {
+    SKILLS.slash.link = link;
+    SKILLS.slash.description = description;
+  }
 });

@@ -283,7 +283,6 @@ export function command(s: State, c: Command): boolean {
         return true;
       }
       const a = s.allies[s.selected];
-      a.executionHeld = false;
       if (a.action?.skillId === 'handoff') return reject(s, '交代を実行中です。');
       a.plan ??= [];
       a.plan = a.plan.filter((p) => !isHandoff(p));
@@ -292,6 +291,7 @@ export function command(s: State, c: Command): boolean {
         emit(s, 'system', 'キャラ交代の予約を取消');
         return true;
       }
+      a.executionHeld = false;
       s.planSeq ??= 0;
       if (a.queued) {
         a.plan.unshift({ key: ++s.planSeq, kind: 'skill', ...a.queued });

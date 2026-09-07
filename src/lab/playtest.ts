@@ -55,11 +55,12 @@ export function playRules() {
     rules: COMBAT_RULES,
     bonuses: BONUS_VALUES,
     skills: Object.values(SKILLS).map(
-      ({ id, cost, cast, recovery, power, chain, hold, effect, target }) => ({
+      ({ id, cost, cast, recovery, link, power, chain, hold, effect, target }) => ({
         id,
         cost,
         cast,
         recovery,
+        link,
         power,
         chain,
         hold,

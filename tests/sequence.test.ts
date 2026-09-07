@@ -240,3 +240,17 @@ describe('bank ATB, link identical skills, and keep the final recovery', () => {
     expect(() => parseSnapshot(JSON.stringify(invalid))).toThrow();
   });
 });
+
+it('reselecting the held actor does not release the queue; an actual handoff does', () => {
+  const s = quiet();
+  command(s, { type: 'hold', id: 0, value: true });
+  add(s);
+  command(s, { type: 'select', id: 0 });
+  advance(s, 0.5);
+  expect(starts(s)).toHaveLength(0);
+  expect(s.allies[0].executionHeld).toBe(true);
+  command(s, { type: 'select', id: 1 });
+  expect(s.allies[0].executionHeld).toBe(false);
+  step(s);
+  expect(s.allies[0].action?.skillId).toBe('handoff');
+});
