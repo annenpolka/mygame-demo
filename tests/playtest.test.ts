@@ -145,7 +145,8 @@ it('separates incompatible-rule notes from fresh encounter comparisons, preservi
   session.advance(0.1);
   const note = journal.mark(session, view);
   note.rules = 'older rules';
-  note.recording.version = 'orchestra-old';
+  note.recording.version = 'orchestra-11';
+  note.marked.view.battle.candidates = { '0:enemy': { kind: 'row', row: 'back' } } as never;
   expect(sameRules(note)).toBe(false);
   expect(parseNotes(exportNotes([note]))).toEqual([note]);
   expect(() => prepareNoteReplay(note)).toThrow('ルールが異なります');
@@ -169,6 +170,9 @@ it('rejects malformed UI, cursor order, duplicate IDs and edited replay state be
   const invalidView = copy(note);
   invalidView.marked.view.battle.skillId = 'missing';
   expect(() => parseNotes(exportNotes([invalidView]))).toThrow('不明な技');
+  const rowCursor = copy(note);
+  rowCursor.marked.view.battle.candidates = { '0:enemy': { kind: 'row', row: 'back' } } as never;
+  expect(() => parseNotes(exportNotes([rowCursor]))).toThrow('個体');
   const badCursor = copy(note);
   badCursor.before.inputCount = 900;
   expect(() => parseNotes(exportNotes([badCursor]))).toThrow();

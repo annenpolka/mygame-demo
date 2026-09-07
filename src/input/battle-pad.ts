@@ -33,13 +33,14 @@ export interface QueueFocus {
 }
 export type BattlePage =
   'command' | 'target' | 'move' | 'weapon' | 'tactics' | 'queue' | 'log' | 'aux';
+export type UnitTarget = Exclude<Target, { kind: 'row' }>;
 export interface BattlePad {
   page: BattlePage;
   key: string;
   skillId: string | null;
   tactics: 'optima' | 'formation' | 'items';
   queueFocus?: QueueFocus;
-  candidates?: Record<string, Target>;
+  candidates?: Record<string, UnitTarget>;
   candidateSide?: 'enemy' | 'ally';
   candidateWeapon?: string;
   remembered: Record<string, string>;
@@ -89,7 +90,7 @@ function focusQueue(s: State, ui: BattlePad, key: string): BattlePad {
 
 export interface PaletteCursor {
   side: 'enemy' | 'ally';
-  target: Target;
+  target: UnitTarget;
 }
 export function paletteCursor(s: State, ui: BattlePad): PaletteCursor {
   const a = s.allies[s.selected],
@@ -114,7 +115,7 @@ export function selectCandidate(
   side: 'enemy' | 'ally',
   target: Target,
 ): BattlePad {
-  if (target.kind !== 'row' && target.kind !== side) return ui;
+  if (target.kind === 'row' || target.kind !== side) return ui;
   return {
     ...ui,
     candidateSide: side,
@@ -135,12 +136,10 @@ export function skillPreview(
     return { target: null, label: `${side === 'enemy' ? '敵' : '味方'}の対象候補を選ぶ` };
   const units = side === 'enemy' ? s.enemies : s.allies;
   const selected = cursor.target;
-  const unit =
-    selected.kind === 'row' ? undefined : units.find((x) => x.id === selected.id && x.hp > 0);
-  if (cursor.target.kind !== 'row' && !unit)
-    return { target: null, label: '対象が不在・候補を選び直す' };
+  const unit = units.find((x) => x.id === selected.id && x.hp > 0);
+  if (!unit) return { target: null, label: '対象が不在・候補を選び直す' };
   if (skill.target.endsWith('Row')) {
-    const row = cursor.target.kind === 'row' ? cursor.target.row : unit!.row;
+    const row = unit.row;
     return {
       target: { kind: 'row', row },
       label: `${side === 'enemy' ? '敵' : '味方'}${ROW_NAMES[row]}・${units.filter((x) => x.hp > 0 && x.row === row).length}体`,
@@ -177,37 +176,34 @@ export function choices(s: State, ui: BattlePad): BattleChoice[] {
   if (ui.page === 'target' && ui.skillId) {
     const skill = SKILLS[ui.skillId];
     if (!skill) return [];
-    const targets: Target[] =
-      skill.target === 'enemy'
-        ? s.enemies.filter((e) => e.hp > 0).map((e) => ({ kind: 'enemy', id: e.id }))
-        : ['ally', 'self'].includes(skill.target)
-          ? s.allies
-              .filter((x) => x.hp > 0 && (skill.target !== 'self' || x.id === a.id))
-              .map((x) => ({ kind: 'ally', id: x.id }))
-          : [
-              { kind: 'row', row: 'front' },
-              { kind: 'row', row: 'back' },
-            ];
-    return targets.map((target) => {
-      const actor =
-        target.kind === 'row' ? null : (target.kind === 'enemy' ? s.enemies : s.allies)[target.id];
-      const group = skill.target === 'enemyRow' ? s.enemies : s.allies;
-      return {
-        key: targetKey(target),
-        target,
-        title:
-          actor?.name ??
-          `${skill.target === 'enemyRow' ? '敵' : '味方'}${target.kind === 'row' ? ROW_NAMES[target.row] : ''}`,
-        detail: actor
-          ? `HP ${Math.ceil(actor.hp)} / ${actor.maxHp} · ${ROW_NAMES[actor.row]}`
-          : group
-              .filter((x) => x.hp > 0 && target.kind === 'row' && x.row === target.row)
-              .map((x) => x.name)
-              .join('・') || '現在は誰もいません',
-        command: { type: 'draft', id: a.id, step: { kind: 'skill', skillId: skill.id, target } },
-      };
-    });
+    const side = skill.target.startsWith('enemy') ? 'enemy' : 'ally';
+    const units = side === 'enemy' ? s.enemies : s.allies;
+    return units
+      .filter((x) => x.hp > 0 && (skill.target !== 'self' || x.id === a.id))
+      .map((actor) => {
+        const target: UnitTarget = { kind: side, id: actor.id };
+        return {
+          key: targetKey(target),
+          target,
+          title: actor.name,
+          detail:
+            `HP ${Math.ceil(actor.hp)} / ${actor.maxHp} · ${ROW_NAMES[actor.row]}` +
+            (skill.target.endsWith('Row')
+              ? `・${units.filter((x) => x.hp > 0 && x.row === actor.row).length}体へ`
+              : ''),
+          command: {
+            type: 'draft',
+            id: a.id,
+            step: {
+              kind: 'skill',
+              skillId: skill.id,
+              target: skill.target.endsWith('Row') ? { kind: 'row', row: actor.row } : target,
+            },
+          },
+        };
+      });
   }
+
   if (ui.page === 'aux')
     return [
       { key: 'move', title: '前後移動', detail: '移動先を選び、下書きへ追加', action: 'move' },
@@ -325,8 +321,7 @@ export function openPage(
     (page === 'queue'
       ? list.at(-1)?.key
       : page === 'target'
-        ? (ui.remembered[`${s.selected}:${skillId}`] ??
-          (SKILLS[skillId!].target === 'enemy' ? `enemy:${s.target}` : undefined))
+        ? ui.remembered[`${s.selected}:${skillId}`]
         : page === 'weapon'
           ? String(projectedSlot(s.allies[s.selected]))
           : page === 'tactics' && ui.tactics === 'optima'
@@ -504,9 +499,8 @@ export function battleInput(
       const units = side === 'enemy' ? s.enemies : s.allies;
       const candidates: Target[] = [
         ...units.filter((x) => x.hp > 0).map((x) => ({ kind: side, id: x.id })),
-        { kind: 'row', row: 'front' },
-        { kind: 'row', row: 'back' },
       ];
+      if (!candidates.length) return result();
       const remembered = ui.candidates?.[`${s.selected}:${side}`];
       const current = candidates.findIndex((t) => targetKey(t) === targetKey(cursor.target));
       const target =

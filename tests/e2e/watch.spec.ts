@@ -12,7 +12,7 @@ test('candidate cursor remains on the battlefield and keeps selection separate f
   await page.clock.runFor(2500);
   await page.keyboard.press('f');
   const field = page.getByRole('listbox', { name: '行動の対象候補' });
-  await expect(field.getByRole('option')).toHaveCount(9);
+  await expect(field.getByRole('option')).toHaveCount(5);
   await page.keyboard.press('ArrowRight');
   await expect(
     field.getByRole('option', { name: '灰の砲術師を対象候補にする', selected: true }),

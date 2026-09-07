@@ -4,7 +4,7 @@ import { DT, SKILLS, WEAPONS } from '../content/data';
 import type { Command, Row, Target } from '../sim/types';
 import type { Observation } from './observation';
 
-export const QUEUE_POLICY_VERSION = 'queue-policy-3';
+export const QUEUE_POLICY_VERSION = 'queue-policy-4';
 import { ABLATIONS, POLICY_IDS, type PolicyId, type Ablation } from './policies';
 export type CombatCommand = Command;
 export interface Decision {
@@ -29,13 +29,6 @@ function preferredTarget(v: Observation) {
     targets(v).find((e) => e.kind === 'cannon') ??
     targets(v)[0]
   );
-}
-function focusTarget(v: Observation, commands: CombatCommand[], preserveBreak = false) {
-  const t = preserveBreak
-    ? preferredTarget(v)
-    : (targets(v).find((e) => e.kind === 'cannon') ?? targets(v)[0]);
-  if (t && t.id !== v.target) commands.push({ type: 'target', id: t.id });
-  return t;
 }
 function setPreset(v: Observation, commands: CombatCommand[], index: number) {
   if (v.activePreset !== index) commands.push({ type: 'optima', index });
@@ -85,7 +78,6 @@ export function createQueuePolicy(
       const reasons: string[] = [];
       if (id === 'autopilot') return { reason: '自動行動を継続', commands };
       if (id === 'rush' || id === 'balanced' || id === 'rear') {
-        focusTarget(v, commands);
         if (id === 'rush' || id === 'rear') {
           const row = id === 'rush' ? 'front' : 'back';
           if (alive(v).some((a) => (a.nextRow ?? a.row) !== row))
@@ -138,7 +130,7 @@ export function createQueuePolicy(
         slowed = false;
       }
 
-      const t = focusTarget(v, commands, true);
+      const t = preferredTarget(v);
       if (!t) return { reason: '標的なし', commands };
       if (alive(v).some((a) => healthy(a) < 0.55)) healing = true;
       if (alive(v).every((a) => healthy(a) >= 0.82)) healing = false;

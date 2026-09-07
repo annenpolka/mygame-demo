@@ -1,3 +1,4 @@
+import { chooseTarget } from '../sim/targeting';
 import { DT, SKILLS, WEAPONS } from '../content/data';
 import { canAppend, committed as planned, projectedSlot, pendingPotions } from '../sim/plan';
 import type { Command, Target } from '../sim/types';
@@ -42,7 +43,6 @@ export function createAdaptivePolicy(style: 'adaptive' | 'assault', reaction = 0
             (a.kind === 'cannon' ? 400 : 0) -
             a.hp * 0.1),
       )[0];
-      if (v.target !== target.id) commands.push({ type: 'target', id: target.id });
       const health = Math.min(...live.map((a) => a.hp / a.maxHp));
       const hurt = live.reduce((sum, a) => sum + (a.maxHp - a.hp) / a.maxHp, 0) / live.length;
       const incoming = casts.reduce(
@@ -200,18 +200,26 @@ export function createAdaptivePolicy(style: 'adaptive' | 'assault', reaction = 0
           } else if (!heal) {
             const best = skills
               .filter((sk) => ['damage', 'push', 'pull'].includes(sk.effect))
-              .sort((a, b) => {
-                const worth = (sk: typeof a) => {
-                  const count =
-                    sk.target === 'enemyRow'
-                      ? enemies.filter((e) => e.row === target.row).length
-                      : 1;
+              .sort((left, right) => {
+                const worth = (sk: typeof left) => {
+                  const aim = chooseTarget(v, a, sk, v.rules.bonusMode);
+                  const affected = enemies.filter((e) =>
+                    aim?.kind === 'enemy'
+                      ? e.id === aim.id
+                      : aim?.kind === 'row' && e.row === aim.row,
+                  );
                   return (
-                    (count * (sk.power * (target.broken > 0 ? 1.8 : 1) + sk.chain * chainWeight)) /
+                    affected.reduce(
+                      (sum, e) =>
+                        sum +
+                        sk.power * (e.broken > 0 ? 1.8 : 1) +
+                        sk.chain * (e.broken > 0 ? 0.12 : Math.min(12, 3 + e.hp / 250)),
+                      0,
+                    ) /
                     (sk.cast + sk.recovery + sk.cost / v.rules.atbRate)
                   );
                 };
-                return worth(b) - worth(a);
+                return worth(right) - worth(left);
               })[0];
             if (best) {
               skillId = best.id;
@@ -221,6 +229,11 @@ export function createAdaptivePolicy(style: 'adaptive' | 'assault', reaction = 0
                   : { kind: 'enemy', id: target.id };
             }
           }
+        }
+        if (skillId) {
+          const chosen = chooseTarget(v, a, SKILLS[skillId], v.rules.bonusMode);
+          if (!chosen) continue;
+          aim = chosen;
         }
         if (skillId && canAppend(a, v.rules, SKILLS[skillId].cost)) {
           if (

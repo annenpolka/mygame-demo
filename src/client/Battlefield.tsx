@@ -1,3 +1,5 @@
+import { targetName } from '../sim/plan';
+import type { PaletteCursor } from '../input/battle-pad';
 import { COMBAT_RULES, percent } from '../content/rules';
 import { HandoffStatus } from './HandoffStatus';
 import { executionStatus } from './timing';
@@ -14,7 +16,6 @@ export function Battlefield({
   palette = null,
   onCandidate,
   onAlly,
-  onEnemy,
   onTarget,
   aim = null,
   onAim,
@@ -25,10 +26,9 @@ export function Battlefield({
 }: {
   state: State;
   pending: Skill | null;
-  palette?: { side: 'enemy' | 'ally'; target: Target } | null;
+  palette?: PaletteCursor | null;
   onCandidate: (side: 'enemy' | 'ally', target: Target) => void;
   onAlly: (id: number) => void;
-  onEnemy: (id: number) => void;
   onTarget: (t: Target) => void;
   aim?: Target | null;
   onAim: (t: Target) => void;
@@ -63,11 +63,6 @@ export function Battlefield({
             <strong>{aimName}</strong>
           </div>
           <small>{navigationLabel}</small>
-          {palette.side === 'enemy' && palette.target.kind === 'enemy' && (
-            <button onClick={() => palette.target.kind === 'enemy' && onEnemy(palette.target.id)}>
-              仲間の集中攻撃対象にする
-            </button>
-          )}
         </div>
       ) : active ? (
         <div className="field-target-bar">
@@ -96,7 +91,7 @@ export function Battlefield({
             味方 → <small>後列は被害 −{percent(1 - COMBAT_RULES.rearTaken)}%</small>
           </span>
           <span>
-            ← 敵 <small>◎ 集中攻撃の対象</small>
+            ← 敵 <small>AIはロールと戦況から対象を選択</small>
           </span>
         </div>
       )}
@@ -106,11 +101,7 @@ export function Battlefield({
         role={active ? 'listbox' : undefined}
         aria-label={palette ? '行動の対象候補' : active ? '戦場で対象を選ぶ' : undefined}
         tabIndex={active ? 0 : undefined}
-        aria-activedescendant={
-          active && aim
-            ? `field-target-${palette && aim.kind === 'row' ? 'row-' + palette.side + '-' + aim.row : keyOf(aim)}`
-            : undefined
-        }
+        aria-activedescendant={active && aim ? `field-target-${keyOf(aim)}` : undefined}
       >
         {(['ally', 'enemy'] as const).map((side) =>
           (side === 'ally' ? ['back', 'front'] : ['front', 'back']).map((r) => {
@@ -123,56 +114,20 @@ export function Battlefield({
                   e.cast &&
                   (e.cast.target === 'all' || (e.cast.target === 'row' && e.cast.row === row)),
               );
-            const rowTarget =
-              !!palette ||
-              (active && pending?.target === (side === 'ally' ? 'allyRow' : 'enemyRow'));
-            const aimedRow =
-              rowTarget && side === sideForSkill && aim?.kind === 'row' && aim.row === row;
             const rowName = `${side === 'ally' ? '味方' : '敵'}${ROW_NAMES[row]}`;
             return (
               <section
                 key={`${side}-${row}`}
-                className={`battle-lane ${side} ${row} ${danger ? 'danger-lane' : ''} ${rowTarget ? 'can-target' : ''} ${aimedRow ? 'aimed' : ''} ${active && side !== sideForSkill ? 'outside-target' : ''}`}
+                className={`battle-lane ${side} ${row} ${danger ? 'danger-lane' : ''} ${active && side !== sideForSkill ? 'outside-target' : ''}`}
                 aria-label={rowName}
-                onPointerMove={(event) =>
-                  !palette &&
-                  (event.movementX || event.movementY) &&
-                  rowTarget &&
-                  onAim({ kind: 'row', row })
-                }
-                onClick={(e) => {
-                  if (rowTarget && !full && e.target === e.currentTarget)
-                    palette
-                      ? onCandidate(side, { kind: 'row', row })
-                      : onTarget({ kind: 'row', row });
-                }}
               >
-                <button
-                  className="lane-heading"
-                  id={rowTarget ? `field-target-row-${palette ? side + '-' : ''}${row}` : undefined}
-                  role={rowTarget ? 'option' : undefined}
-                  aria-selected={rowTarget ? aimedRow : undefined}
-                  aria-label={
-                    palette
-                      ? `${rowName}を対象候補にする`
-                      : rowTarget
-                        ? `${rowName}に${pending?.name}を積む`
-                        : undefined
-                  }
-                  disabled={!rowTarget || full}
-                  onClick={() =>
-                    palette
-                      ? onCandidate(side, { kind: 'row', row })
-                      : onTarget({ kind: 'row', row })
-                  }
-                >
+                <button className="lane-heading" disabled>
                   {rowName}
-                  {side === 'ally' && row === 'front' && !rowTarget && !danger && (
+                  {side === 'ally' && row === 'front' && !danger && (
                     <small className="front-bonus">
                       威力・崩し＋{percent(COMBAT_RULES.frontDamage - 1)}%
                     </small>
                   )}
-                  {rowTarget && <small>{aimedRow ? '▼ この列へ' : 'この列を選ぶ'}</small>}
                   {danger && <small>⚠ 攻撃予告</small>}
                 </button>
                 {side === 'ally'
@@ -183,7 +138,7 @@ export function Battlefield({
                           targetable =
                             !!palette ||
                             (active &&
-                              (pending?.target === 'ally' ||
+                              (pending?.target.startsWith('ally') ||
                                 (pending?.target === 'self' && a.id === s.selected)));
                         const aimed = targetable && aim?.kind === 'ally' && aim.id === a.id;
                         const cast = s.enemies.find(
@@ -197,12 +152,12 @@ export function Battlefield({
                             role={targetable ? 'option' : undefined}
                             aria-selected={targetable ? aimed : undefined}
                             style={{ '--unit-color': a.color } as CSSProperties}
-                            className={`field-unit friend ${a.id === s.selected ? 'selected' : ''} ${targetable || rowTarget ? 'can-target' : ''} ${a.hp <= 0 ? 'fallen' : ''} ${aimed || aimedRow ? 'aimed' : ''} ${active && !targetable && !rowTarget ? 'outside-target' : ''}`}
+                            className={`field-unit friend ${a.id === s.selected ? 'selected' : ''} ${targetable ? 'can-target' : ''} ${a.hp <= 0 ? 'fallen' : ''} ${aimed ? 'aimed' : ''} ${active && !targetable ? 'outside-target' : ''}`}
                             disabled={
                               a.hp <= 0 ||
                               s.phase !== 'battle' ||
                               s.controlMode === 'ai' ||
-                              (active && ((!targetable && !rowTarget) || full))
+                              (active && (!targetable || full))
                             }
                             aria-label={
                               palette
@@ -222,9 +177,7 @@ export function Battlefield({
                                 ? onCandidate('ally', { kind: 'ally', id: a.id })
                                 : targetable
                                   ? onTarget({ kind: 'ally', id: a.id })
-                                  : rowTarget
-                                    ? onTarget({ kind: 'row', row })
-                                    : onAlly(a.id)
+                                  : onAlly(a.id)
                             }
                           >
                             <span className="field-symbol">{w.glyph}</span>
@@ -235,11 +188,19 @@ export function Battlefield({
                                   <i className="manual-tag">手動</i>
                                 )}
                               </strong>
-                              <small>
+                              <small
+                                title={
+                                  a.action
+                                    ? `${executionStatus(a, s.config, s)} → ${targetName(s, a.action.target)}`
+                                    : undefined
+                                }
+                              >
                                 {targetable && !palette
                                   ? `HP ${Math.ceil(a.hp)} / ${a.maxHp}`
                                   : s.phase === 'battle'
-                                    ? executionStatus(a, s.config, s)
+                                    ? a.action && (s.controlMode === 'ai' || a.id !== s.selected)
+                                      ? `AI → ${targetName(s, a.action.target)} · ${executionStatus(a, s.config, s)}`
+                                      : executionStatus(a, s.config, s)
                                     : w.archetype}
                               </small>
                               <span className="unit-gauges">
@@ -266,7 +227,8 @@ export function Battlefield({
                   : s.enemies
                       .filter((e) => e.row === row)
                       .map((e) => {
-                        const targetable = !!palette || (active && pending?.target === 'enemy'),
+                        const targetable =
+                            !!palette || (active && pending?.target.startsWith('enemy')),
                           aimed = targetable && aim?.kind === 'enemy' && aim.id === e.id;
                         return (
                           <button
@@ -275,12 +237,12 @@ export function Battlefield({
                             data-unit={`e${e.id}`}
                             role={targetable ? 'option' : undefined}
                             aria-selected={targetable ? aimed : undefined}
-                            className={`field-unit foe ${s.target === e.id ? 'selected' : ''} ${e.broken ? 'broken' : ''} ${targetable || rowTarget ? 'can-target' : ''} ${e.hp <= 0 ? 'fallen' : ''} ${aimed || aimedRow ? 'aimed' : ''}`}
+                            className={`field-unit foe ${e.broken ? 'broken' : ''} ${targetable ? 'can-target' : ''} ${e.hp <= 0 ? 'fallen' : ''} ${aimed ? 'aimed' : ''}`}
                             disabled={
                               e.hp <= 0 ||
                               s.phase !== 'battle' ||
                               s.controlMode === 'ai' ||
-                              (active && ((!targetable && !rowTarget) || full))
+                              (active && (!targetable || full))
                             }
                             aria-label={
                               palette
@@ -300,17 +262,12 @@ export function Battlefield({
                                 ? onCandidate('enemy', { kind: 'enemy', id: e.id })
                                 : targetable
                                   ? onTarget({ kind: 'enemy', id: e.id })
-                                  : rowTarget
-                                    ? onTarget({ kind: 'row', row })
-                                    : onEnemy(e.id)
+                                  : undefined
                             }
                           >
                             <span className="field-symbol">{e.glyph}</span>
                             <span className="field-unit-info">
-                              <strong>
-                                {s.target === e.id && '◎ '}
-                                {e.name}
-                              </strong>
+                              <strong>{e.name}</strong>
                               <span className="unit-gauges">
                                 <UnitGauge
                                   label={`${e.name}のHP`}
@@ -394,7 +351,7 @@ export function Battlefield({
         ) : (
           <div className="field-hint">
             {palette
-              ? '対象候補を選ぶ → 技を下書き → 行動開始。候補変更では積んだ対象もAIの狙いも変わりません。'
+              ? '敵を選ぶ → 技を下書き → 行動開始。範囲技は選んだ敵の列へ。AIはロールと戦況で判断。'
               : active
                 ? '薬の対象を選び、下書きへ追加'
                 : s.controlMode === 'ai'

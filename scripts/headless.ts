@@ -73,6 +73,7 @@ function sourceHashes() {
       'src/ai/adaptive-policy.ts',
       'src/sim/bonuses.ts',
       'src/sim/engine.ts',
+      'src/sim/targeting.ts',
       'src/sim/types.ts',
       'src/sim/plan.ts',
       'src/sim/tactics.ts',

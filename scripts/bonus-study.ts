@@ -29,6 +29,7 @@ if (existsSync(resolve(dir, 'receipt.json')))
 mkdirSync(dir, { recursive: true });
 const paths = [
   'src/sim/engine.ts',
+  'src/sim/targeting.ts',
   'src/sim/types.ts',
   'src/sim/plan.ts',
   'src/sim/tactics.ts',

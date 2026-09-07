@@ -78,7 +78,6 @@ describe('AI observation and command contract', () => {
           expect(view).toEqual(before);
           for (const c of d.commands) {
             expect([
-              'target',
               'optima',
               'move',
               'formation',

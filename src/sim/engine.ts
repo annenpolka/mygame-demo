@@ -1,3 +1,4 @@
+import { chooseTarget } from './targeting';
 import {
   advanceExecution,
   charging,
@@ -81,7 +82,6 @@ export function createState(
     selected: 0,
     pendingSelect: null,
     handoffSlow: 0,
-    target: 0,
     allies: [
       { name: 'アルト', initial: 'A', color: '#ddaa63', weapons: ['sword', 'shield'], maxHp: 1300 },
       { name: 'リネ', initial: 'L', color: '#77bdc2', weapons: ['staff', 'bow'], maxHp: 1100 },
@@ -237,7 +237,6 @@ export function command(s: State, c: Command): boolean {
     s.focus = 100;
     s.timeMode = 'normal';
     s.phase = 'battle';
-    s.target = 0;
     for (const a of s.allies) {
       a.hp = a.maxHp;
       a.atb = 1;
@@ -318,10 +317,6 @@ export function command(s: State, c: Command): boolean {
       emit(s, 'system', `${s.allies[c.id].name}へ交代予約：1 ATB・先頭優先。開始時に後続を解除`);
       return true;
     }
-    case 'target':
-      if (!s.enemies[c.id] || s.enemies[c.id].hp <= 0) return false;
-      s.target = c.id;
-      return true;
     case 'time': {
       if (c.mode === 'stop') s.handoffSlow = 0;
       if (c.mode !== 'normal' && s.timeMode === 'normal') {
@@ -487,24 +482,6 @@ export function command(s: State, c: Command): boolean {
   return false;
 }
 
-export function defaultTarget(s: State, a: Ally, skill: Skill): Target {
-  const enemy =
-    s.enemies.find((e) => e.id === s.target && e.hp > 0) ?? s.enemies.find((e) => e.hp > 0);
-  const ally =
-    s.allies.filter((e) => e.hp > 0).sort((x, y) => x.hp / x.maxHp - y.hp / y.maxHp)[0] ?? a;
-  switch (skill.target) {
-    case 'enemy':
-      return { kind: 'enemy', id: enemy?.id ?? 0 };
-    case 'enemyRow':
-      return { kind: 'row', row: enemy?.row ?? 'front' };
-    case 'ally':
-      return { kind: 'ally', id: ally.id };
-    case 'allyRow':
-      return { kind: 'row', row: ally.row };
-    case 'self':
-      return { kind: 'ally', id: a.id };
-  }
-}
 function beginAction(s: State, a: Ally, skillId: string, target: Target, comboIndex = 1) {
   const skill = SKILLS[skillId];
   if (a.atb + 1e-9 < skill.cost || !validTarget(s, a, skill, target)) return false;
@@ -527,20 +504,9 @@ function beginAction(s: State, a: Ally, skillId: string, target: Target, comboIn
 }
 function chooseAuto(s: State, a: Ally) {
   const skill = SKILLS[weaponOf(a).skills[0]];
-  let target = defaultTarget(s, a, skill);
-  if (skill.effect === 'heal') {
-    const hurt = s.allies
-      .filter((x) => x.hp > 0 && x.hp < x.maxHp * 0.83)
-      .sort((x, y) => x.hp / x.maxHp - y.hp / y.maxHp)[0];
-    if (!hurt) return;
-    target = { kind: 'ally', id: hurt.id };
-  } else if (skill.effect === 'shield') {
-    const vulnerable = s.allies
-      .filter((x) => x.hp > 0 && x.shield < 0.5)
-      .sort((x, y) => (x.row === 'front' ? -1 : 1) - (y.row === 'front' ? -1 : 1))[0];
-    if (!vulnerable) return;
-    target = { kind: 'ally', id: vulnerable.id };
-  } else if (a.atb < 2) return;
+  const target = chooseTarget(s, a, skill, s.config.bonusMode);
+  if (!target) return;
+  if (skill.target.startsWith('enemy') && a.atb < 2) return;
   if (a.atb + 1e-9 < skill.cost) return;
   const count =
     skill.link !== undefined && s.config.chainActions
@@ -701,25 +667,23 @@ function prunePlan(s: State, a: Ally) {
 function tickAlly(s: State, a: Ally, dt: number) {
   if (a.hp <= 0) return;
   a.shield = Math.max(0, a.shield - dt);
-  // Reconsider only AI-owned healing reservations; player targets stay fixed.
-  if (a.plan?.some((p) => p.auto && p.kind === 'skill' && p.skillId === 'heal')) {
-    a.plan = a.plan.filter(
-      (p) =>
-        !p.auto ||
-        p.kind !== 'skill' ||
-        p.skillId !== 'heal' ||
-        (p.target.kind === 'ally' &&
-          s.allies[p.target.id].hp > 0 &&
-          s.allies[p.target.id].hp < s.allies[p.target.id].maxHp * 0.83),
-    );
-  }
+  const targetFor = (p: import('./types').PlannedStep & { kind: 'skill' }) =>
+    p.auto ? chooseTarget(s, a, SKILLS[p.skillId], s.config.bonusMode) : p.target;
   advanceExecution(a, s.config, dt, {
-    valid: (p) =>
-      p.kind !== 'skill' ||
-      ((p.skillId === 'handoff' || canUse(a, p.skillId)) &&
-        validTarget(s, a, SKILLS[p.skillId], p.target) &&
-        (p.skillId !== 'potion' || s.potions > 0)),
-    start: (p, comboIndex) => beginAction(s, a, p.skillId, p.target, comboIndex),
+    valid: (p) => {
+      if (p.kind !== 'skill') return true;
+      const target = targetFor(p);
+      return (
+        !!target &&
+        (p.skillId === 'handoff' || canUse(a, p.skillId)) &&
+        validTarget(s, a, SKILLS[p.skillId], target) &&
+        (p.skillId !== 'potion' || s.potions > 0)
+      );
+    },
+    start: (p, comboIndex) => {
+      const target = targetFor(p);
+      return !!target && beginAction(s, a, p.skillId, target, comboIndex);
+    },
     impact: (action) => resolve(s, a, action),
     idle: () => {
       if (s.controlMode === 'ai' || a.id !== s.selected) chooseAuto(s, a);
@@ -913,7 +877,6 @@ export function step(s: State) {
     s.handoffSlow = 0;
     s.selected = s.allies.find((a) => a.hp > 0)?.id ?? 0;
   }
-  if (s.enemies[s.target]?.hp <= 0) s.target = s.enemies.find((e) => e.hp > 0)?.id ?? 0;
 }
 export function advance(s: State, seconds: number) {
   for (let i = 0; i < Math.round(seconds / DT); i++) step(s);

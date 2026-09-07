@@ -66,7 +66,6 @@ test('first battle, equipment update, preset edit, second battle and victory', a
   await page.getByRole('button', { name: '戦闘開始 →', exact: true }).click();
   await page.keyboard.press('3');
   await page.getByRole('option', { name: '灰の砲術師を対象候補にする', exact: true }).click();
-  await page.getByRole('button', { name: '仲間の集中攻撃対象にする', exact: true }).click();
   await page.keyboard.press('s');
   await page.clock.runFor(45000);
   const loot = page.getByRole('dialog', { name: '戦利品と編成' });
@@ -85,9 +84,37 @@ test('first battle, equipment update, preset edit, second battle and victory', a
   await expect(page.getByRole('option').filter({ hasText: '総崩し' })).toBeVisible();
   await page.keyboard.press('Escape');
   await page.getByRole('option', { name: '夜渡りの砲術師を対象候補にする', exact: true }).click();
-  await page.getByRole('button', { name: '仲間の集中攻撃対象にする', exact: true }).click();
   await page.keyboard.press('a');
-  await page.clock.runFor(75000);
+  // The manually controlled healer must act; target priority no longer suppresses all rear fire.
+  for (let i = 0; i < 15; i++) {
+    await page.clock.runFor(6000);
+    if (await page.getByRole('dialog', { name: '戦闘結果' }).isVisible()) break;
+    const health = await Promise.all(
+      ['アルト', 'リネ', 'セナ'].map(async (name) => ({
+        name,
+        hp: Number(
+          await page
+            .getByRole('meter', { name: `${name}のHP`, exact: true })
+            .getAttribute('aria-valuenow'),
+        ),
+        max: Number(
+          await page
+            .getByRole('meter', { name: `${name}のHP`, exact: true })
+            .getAttribute('aria-valuemax'),
+        ),
+      })),
+    );
+    const hurt = health.filter((x) => x.hp > 0).sort((a, b) => a.hp / a.max - b.hp / b.max)[0];
+    if (hurt.hp < hurt.max * 0.85) {
+      await page.getByRole('option', { name: `${hurt.name}を対象候補にする`, exact: true }).click();
+      await expect(
+        page.getByRole('button', { name: '基本技：小さな祈り', exact: true }),
+      ).toBeEnabled();
+      await page.keyboard.press('z');
+      await page.keyboard.press('z');
+      await page.keyboard.press('h');
+    }
+  }
   await expect(page.getByRole('dialog', { name: '戦闘結果' })).toContainText('境界を、越えた。');
   expect(errors).toEqual([]);
 });
@@ -143,7 +170,9 @@ test('mobile layout and touch controls stay within the viewport', async ({ page 
   await page.screenshot({ path: 'test-results/mobile.png', fullPage: true });
 });
 
-test('horizontal battlefield, direct row targeting, and a glanceable desktop', async ({ page }) => {
+test('horizontal battlefield, enemy-based range targeting, and a glanceable desktop', async ({
+  page,
+}) => {
   await page.setViewportSize({ width: 1440, height: 900 });
   await page.getByRole('button', { name: '戦闘開始 →', exact: true }).click();
   await page.clock.runFor(3200);

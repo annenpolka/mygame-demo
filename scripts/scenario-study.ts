@@ -56,6 +56,7 @@ const paths = [
   'src/ai/adaptive-policy.ts',
   'src/ai/composition.ts',
   'src/sim/engine.ts',
+  'src/sim/targeting.ts',
   'src/sim/plan.ts',
   'src/sim/tactics.ts',
   'src/ai/policies.ts',

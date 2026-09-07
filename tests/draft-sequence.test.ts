@@ -153,7 +153,6 @@ describe('explicit, bounded action sequences', () => {
     draft(s, { kind: 'weapon', slot: 1 });
     draft(s, { kind: 'skill', skillId: 'ward', target: { kind: 'ally', id: 2 } });
     const key = a.draft![1].key;
-    command(s, { type: 'target', id: 1 });
     expect(a.draft![1]).toMatchObject({ target: { kind: 'ally', id: 2 } });
     command(s, { type: 'removePlan', id: 0, key });
     expect(a.draft).toHaveLength(1);

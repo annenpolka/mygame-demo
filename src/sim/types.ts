@@ -170,7 +170,6 @@ export interface State {
   selected: number;
   pendingSelect: number | null;
   handoffSlow: number;
-  target: number;
   allies: Ally[];
   enemies: Enemy[];
   presets: Preset[];
@@ -188,7 +187,6 @@ export type Command =
   | { type: 'start' }
   | { type: 'pause'; value: boolean }
   | { type: 'select'; id: number }
-  | { type: 'target'; id: number }
   | { type: 'time'; mode: TimeMode }
   | { type: 'move'; id: number; row: Row }
   | { type: 'formation'; index: number }

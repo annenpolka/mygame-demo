@@ -91,7 +91,6 @@ const stateSchema = z
     selected: id,
     pendingSelect: id.nullable(),
     handoffSlow: n.max(0.8),
-    target: id,
     allies: z
       .array(
         z.object({
@@ -176,8 +175,7 @@ const stateSchema = z
   .superRefine((s, ctx) => {
     if (
       s.allies.some((a, i) => a.id !== i || a.hp > a.maxHp || a.atb > s.config.atbMax) ||
-      s.enemies.some((e, i) => e.id !== i || e.hp > e.maxHp) ||
-      s.target >= s.enemies.length
+      s.enemies.some((e, i) => e.id !== i || e.hp > e.maxHp)
     )
       ctx.addIssue({ code: 'custom', message: 'キャラまたは敵の状態が不正です。' });
     const keys = s.allies.flatMap((a) =>
@@ -272,7 +270,6 @@ const cmdSchema = z.discriminatedUnion('type', [
   z.object({ type: z.literal('start') }),
   z.object({ type: z.literal('pause'), value: z.boolean() }),
   z.object({ type: z.literal('select'), id }),
-  z.object({ type: z.literal('target'), id }),
   z.object({ type: z.literal('time'), mode }),
   z.object({ type: z.literal('move'), id, row }),
   z.object({ type: z.literal('formation'), index: id }),

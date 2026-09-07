@@ -3,7 +3,7 @@ import { DT, SKILLS, WEAPONS } from '../content/data';
 import type { Command, Row, Target } from '../sim/types';
 import type { Observation } from './observation';
 
-export const POLICY_VERSION = 'policies-3';
+export const POLICY_VERSION = 'policies-4';
 export const ABLATIONS = ['none', 'no-pull', 'no-row', 'no-defense'] as const;
 export type Ablation = (typeof ABLATIONS)[number];
 export const LEGACY_POLICY_IDS = [
@@ -36,19 +36,19 @@ export const POLICY_INFO: Record<PolicyId, { name: string; description: string }
   },
   autopilot: {
     name: '自動行動任せ',
-    description: '初期ABS・初期隊列・初期標的のまま。戦闘中の外部指示なし。',
+    description: '初期ABS・初期隊列。対象はロールと戦況から自動選択。戦闘中の外部指示なし。',
   },
   rush: {
     name: '攻撃優先',
-    description: '全員前列。砲術師優先、ABBで崩し、ブレイク中はAAB。回復指示なし。',
+    description: '全員前列。ABBで崩し、ブレイク中はAAB。回復指示なし。',
   },
   balanced: {
     name: '均衡型',
-    description: '既存AIの方針。砲術師優先、HP72%未満でABS、それ以外はABB→AAB。隊列は維持。',
+    description: '既存AIの方針。HP72%未満でABS、それ以外はABB→AAB。隊列は維持。',
   },
   rear: {
     name: '後列維持',
-    description: '全員後列のABSを維持。砲術師優先。範囲予告にも移動しない。',
+    description: '全員後列のABSを維持。範囲予告にも移動しない。',
   },
   tactician: {
     name: '予告対応',
@@ -74,13 +74,6 @@ function preferredTarget(v: Observation) {
     targets(v).find((e) => e.kind === 'cannon') ??
     targets(v)[0]
   );
-}
-function focusTarget(v: Observation, commands: CombatCommand[], preserveBreak = false) {
-  const t = preserveBreak
-    ? preferredTarget(v)
-    : (targets(v).find((e) => e.kind === 'cannon') ?? targets(v)[0]);
-  if (t && t.id !== v.target) commands.push({ type: 'target', id: t.id });
-  return t;
 }
 function setPreset(v: Observation, commands: CombatCommand[], index: number) {
   if (v.activePreset !== index) commands.push({ type: 'optima', index });
@@ -128,7 +121,6 @@ export function createPolicy(
       const reasons: string[] = [];
       if (id === 'autopilot') return { reason: '自動行動を継続', commands };
       if (id === 'rush' || id === 'balanced' || id === 'rear') {
-        focusTarget(v, commands);
         if (id === 'rush' || id === 'rear') {
           const row = id === 'rush' ? 'front' : 'back';
           if (alive(v).some((a) => (a.nextRow ?? a.row) !== row))
@@ -181,7 +173,7 @@ export function createPolicy(
         slowed = false;
       }
 
-      const t = focusTarget(v, commands, true);
+      const t = preferredTarget(v);
       if (!t) return { reason: '標的なし', commands };
       if (alive(v).some((a) => healthy(a) < 0.55)) healing = true;
       if (alive(v).every((a) => healthy(a) >= 0.82)) healing = false;

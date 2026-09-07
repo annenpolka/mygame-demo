@@ -74,7 +74,7 @@ describe('target palette and explicit sequences', () => {
       { skillId: 'sweep', target: { kind: 'row', row: 'back' } },
     ]);
     ui = selectCandidate(x.state, ui, 'enemy', { kind: 'enemy', id: 0 });
-    expect(x.state.target).toBe(0);
+    expect(x.state).not.toHaveProperty('target');
     expect(x.state.allies[0].draft![0]).toMatchObject({ target: { kind: 'enemy', id: 1 } });
     expect(x.state.allies[0].action).toBeNull();
     const r = battleInput(x.state, ui, 'execute');
@@ -101,7 +101,7 @@ describe('target palette and explicit sequences', () => {
     x.send(...battleInput(x.state, ui, 'toggleWeapon').commands);
     expect(paletteCursor(x.state, ui)).toEqual({ side: 'enemy', target: { kind: 'enemy', id: 1 } });
     ui = selectCandidate(x.state, ui, 'enemy', { kind: 'row', row: 'back' });
-    expect(skillPreview(x.state, ui, 'slash').target).toBeNull();
+    expect(skillPreview(x.state, ui, 'slash').target).toEqual({ kind: 'enemy', id: 1 });
     expect(skillPreview(x.state, ui, 'sweep').target).toEqual({ kind: 'row', row: 'back' });
     ui = selectCandidate(x.state, ui, 'ally', { kind: 'ally', id: 1 });
     expect(battleInput(x.state, ui, 'skill').commands).toEqual([]);
@@ -110,14 +110,40 @@ describe('target palette and explicit sequences', () => {
       step: { skillId: 'guard', target: { kind: 'ally', id: 0 } },
     });
   });
-  it('does not replace an unavailable candidate and allows an empty row for a row skill', () => {
+  it('cycles only living units and never loses the single target to a row entry', () => {
     const x = session();
-    x.state.enemies[1].hp = 0;
-    let ui = selectCandidate(x.state, newBattlePad(), 'enemy', { kind: 'enemy', id: 1 });
-    expect(battleInput(x.state, ui, 'confirm').commands).toEqual([]);
+    let ui = newBattlePad();
+    for (const id of [1, 0, 1, 0]) {
+      ui = battleInput(x.state, ui, 'right').ui;
+      expect(paletteCursor(x.state, ui).target).toEqual({ kind: 'enemy', id });
+      expect(battleInput(x.state, ui, 'confirm').commands[0]).toMatchObject({
+        step: { skillId: 'slash', target: { kind: 'enemy', id } },
+      });
+    }
+    const before = ui;
     ui = selectCandidate(x.state, ui, 'enemy', { kind: 'row', row: 'back' });
-    expect(skillPreview(x.state, ui, 'sweep').label).toBe('敵後列・0体');
-    expect(battleInput(x.state, ui, 'skill').commands).toHaveLength(1);
+    expect(ui).toBe(before);
+    x.state.enemies[0].hp = 0;
+    expect(battleInput(x.state, ui, 'confirm').commands).toEqual([]);
+    expect(battleInput(x.state, ui, 'skill').commands).toEqual([]);
+    ui = battleInput(x.state, ui, 'right').ui;
+    expect(skillPreview(x.state, ui, 'sweep')).toEqual({
+      target: { kind: 'row', row: 'back' },
+      label: '敵後列・1体',
+    });
+    x.state.enemies[1].row = 'front';
+    expect(skillPreview(x.state, ui, 'sweep').label).toBe('敵前列・1体');
+  });
+  it('uses units even when opening a range-skill target picker directly', () => {
+    const x = session(),
+      ui = openPage(x.state, newBattlePad(), 'target', 'sweep');
+    expect(choices(x.state, ui).map((c) => c.target)).toEqual([
+      { kind: 'enemy', id: 0 },
+      { kind: 'enemy', id: 1 },
+    ]);
+    expect(confirmChoice(x.state, ui, 'enemy:1').commands).toMatchObject([
+      { type: 'draft', step: { skillId: 'sweep', target: { kind: 'row', row: 'back' } } },
+    ]);
   });
   it('requires another explicit queue selection after deletion and does not substitute an executed reservation', () => {
     const x = session();

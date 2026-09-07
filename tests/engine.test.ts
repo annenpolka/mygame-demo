@@ -26,9 +26,6 @@ function cast(overrides: Partial<EnemyCast> = {}): EnemyCast {
   };
 }
 function tactic(s: State) {
-  const target =
-    s.enemies.find((e) => e.kind === 'cannon' && e.hp > 0) ?? s.enemies.find((e) => e.hp > 0);
-  if (target && s.target !== target.id) command(s, { type: 'target', id: target.id });
   const hurt = s.allies.some((a) => a.hp > 0 && a.hp < a.maxHp * 0.72);
   const preset = hurt ? 0 : s.enemies.some((e) => e.broken > 0) ? 2 : 1;
   if (s.activePreset !== preset) command(s, { type: 'optima', index: preset });

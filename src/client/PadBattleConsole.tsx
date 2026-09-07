@@ -290,7 +290,7 @@ export function PadBattleConsole({
               <strong>↑ 戦場で対象を選択中</strong>
               <p>{ui.skillId && SKILLS[ui.skillId].description}</p>
               <p>
-                {navigationName}で駒・列を選び、{glyph('confirm')}
+                {navigationName}で駒を選び、{glyph('confirm')}
                 で末尾へ。決定を押すたびに同じ対象へ追加できます。
               </p>
               <p>{glyph('back')} コマンドへ戻る</p>

@@ -153,7 +153,7 @@ test('back spam never alters drafts or confirmed plans; C stays guard and P stay
   await expect(page.getByRole('dialog', { name: '休憩ポーズ' })).toHaveCount(0);
 });
 
-test('target candidates support mixed skills and explicit empty rows without redirecting the AI target or existing drafts', async ({
+test('unit targets support mixed skills and wrap without entering a row selection', async ({
   page,
 }) => {
   await start(page);
@@ -172,20 +172,24 @@ test('target candidates support mixed skills and explicit empty rows without red
   await field.getByRole('option', { name: '鐘楼の衛兵を対象候補にする', exact: true }).click();
   await expect(drafts(page).first()).toContainText('灰の砲術師');
   await expect(
-    field.getByRole('option', { name: '鐘楼の衛兵を対象候補にする', exact: true }),
-  ).toContainText('◎');
+    page.getByRole('button', { name: '仲間の集中攻撃対象にする', exact: true }),
+  ).toHaveCount(0);
   await page.keyboard.press('b'); // Draft-only cutoff is inert.
   await expect(drafts(page)).toHaveCount(3);
   await page.keyboard.press('h');
   await page.keyboard.press('b');
-  await field.getByRole('option', { name: '敵後列を対象候補にする', exact: true }).click();
-  await expect(page.getByRole('button', { name: '基本技：斬撃', exact: true })).toBeDisabled();
-  await expect(page.getByRole('button', { name: '主力技：円弧斬り', exact: true })).toBeEnabled();
-  await field.getByRole('option', { name: '灰の砲術師を対象候補にする', exact: true }).click();
-  await page.getByRole('button', { name: '仲間の集中攻撃対象にする', exact: true }).click();
-  await expect(
-    field.getByRole('option', { name: '灰の砲術師を対象候補にする', exact: true }),
-  ).toContainText('◎');
+  await expect(field.getByRole('option', { name: /敵.*列を対象候補にする/ })).toHaveCount(0);
+  for (const name of ['灰の砲術師', '鐘楼の衛兵', '灰の砲術師', '鐘楼の衛兵']) {
+    await page.keyboard.press('ArrowRight');
+    await expect(page.getByRole('button', { name: '基本技：斬撃', exact: true })).toBeEnabled();
+    await expect(page.getByRole('button', { name: '基本技：斬撃', exact: true })).toContainText(
+      name,
+    );
+  }
+  await page.keyboard.press('z');
+  await page.keyboard.press('x');
+  await expect(drafts(page).first()).toContainText('鐘楼の衛兵');
+  await expect(drafts(page).last()).toContainText('前列');
 });
 
 test('healing candidates and queued weapon skills stay distinct from the manual actor', async ({

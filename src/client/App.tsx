@@ -253,7 +253,7 @@ export function App() {
       const feedback = operationFeedback(c, session.state);
       const accepted = session.send(c)[0];
       sound.play(accepted ? feedback.cue : 'error', true);
-      if (c.type !== 'target' && !['editPreset', 'editPresetRow', 'editFormation'].includes(c.type))
+      if (!['editPreset', 'editPresetRow', 'editFormation'].includes(c.type))
         setNotice(accepted ? feedback.label : '今はこの操作を実行できません。');
     }
     refresh();
@@ -968,9 +968,6 @@ export function App() {
             }
             onCandidate={(side, target) => setBattleUI(selectCandidate(s, battleUI, side, target))}
             onAlly={select}
-            onEnemy={(id) => {
-              if (!watching) send({ type: 'target', id });
-            }}
             onTarget={chooseTarget}
             onAim={aimTarget}
             onBack={backFromTarget}
@@ -1496,7 +1493,7 @@ export function App() {
                   。射撃・魔法は後列でも威力を維持します。
                 </p>
                 <p>
-                  列技は追加時の列を保存し、技ボタンに範囲と人数を表示します。防御は常に自分。下書きの武器変更を見越した技も選べます。
+                  範囲技は選んだ敵・味方が追加時にいる列へ予約します。技ボタンに範囲と人数を表示します。防御は常に自分。下書きの武器変更を見越した技も選べます。
                 </p>
               </div>
               <div>

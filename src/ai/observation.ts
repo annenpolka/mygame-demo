@@ -11,7 +11,6 @@ export interface Observation {
   time: number;
   realTime: number;
   encounter: number;
-  target: number;
   activePreset: number;
   focus: number;
   timeMode: State['timeMode'];
@@ -55,7 +54,6 @@ export function observe(s: State): Observation {
     time: s.time,
     realTime: s.realTime,
     encounter: s.encounter,
-    target: s.target,
     activePreset: s.activePreset,
     focus: s.focus,
     timeMode: s.timeMode,

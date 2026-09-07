@@ -295,6 +295,12 @@ export function parseNotes(text: string): PlayNote[] {
       )
         throw new Error('印の場面情報が不正です。');
       if (sameRules(note)) {
+        if (
+          Object.values(f.view.battle.candidates ?? {}).some(
+            (t) => (t as { kind: string }).kind === 'row',
+          )
+        )
+          throw new Error('現在の対象候補は個体を指定してください。');
         parseSnapshot(JSON.stringify({ version: VERSION, kind: 'snapshot', state: st }));
         prefix(note, f);
         if (

@@ -91,8 +91,6 @@ export function operationFeedback(c: Command, s: State): { cue: SoundCue; label:
       return { cue: 'cancel', label: '先頭の予約を取消' };
     case 'removePlan':
       return { cue: 'cancel', label: '選んだ予約を取消' };
-    case 'target':
-      return { cue: 'nav', label: `集中攻撃：${s.enemies[c.id]?.name}` };
     case 'time':
       return {
         cue: 'time',
