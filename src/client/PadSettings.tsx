@@ -16,6 +16,7 @@ const names = {
   left: '前後移動を積む・左へ',
   right: '武器切替を積む・右へ',
   queue: '予約一覧・取消',
+  mark: '今のところに印・休憩中は印一覧',
 };
 export function PadSettings({
   controls: c,

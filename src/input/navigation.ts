@@ -1,5 +1,5 @@
 const selector =
-  'button:not(:disabled),select:not(:disabled),input:not(:disabled):not([type=hidden]),summary,[tabindex="0"]';
+  'button:not(:disabled),select:not(:disabled),input:not(:disabled):not([type=hidden]),textarea:not(:disabled),summary,[tabindex="0"]';
 export function inputScope() {
   const dialogs = [...document.querySelectorAll<HTMLElement>('[role=dialog]')];
   return (

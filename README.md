@@ -240,3 +240,5 @@ npm run sim -- --policy tactician --planning queue --set crossfire --level 6 --s
 前列は全職の威力・チェインが各1.25倍。[位置補正](docs/front-row.md)と[同条件で約3倍になったヘッドレス計測](docs/headless-performance.md)を参照。再計測は `npm run sim:bench -- --dir artifacts/new-bench`。
 
 最新の[前列補正あり・12,000戦の比較結果](docs/party-bonus-front-study.md)では、全員前列の攻撃優先は改善しましたが、予告対応AIがなお優勢でした。速度比較用の敵HP倍率は1.40です。
+
+プレイ中の **M／L3／「今のところ」** で場面に印を付けられます。「印の一覧」（Shift+M、休憩中のL3、戦闘結果からも開けます）で感想を残し、約3実秒前・印の瞬間・遭遇開始から再操作できます。選択キャラ・予約・対象選択画面も復元します。元の記録は残り、印はブラウザ保存とJSONの書き出し・読込に対応します。[使い方と検証の区切り](docs/playtest-loop.md)。

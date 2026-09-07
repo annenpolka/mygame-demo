@@ -96,3 +96,17 @@ describe('controller polling and mappings', () => {
     expect(r.read(pad([], [0, 0, 0, 0.8]), b, 30)).toEqual(['left']);
   });
 });
+
+it('adds a mark button without changing existing custom bindings, including an occupied L3', () => {
+  const previous: any = { ...defaultBindings('xbox'), previous: 10 };
+  delete previous.mark;
+  const migrated = migrateBindings(previous)!;
+  expect(validBindings(migrated)).toBe(true);
+  for (const [key, value] of Object.entries(previous)) expect((migrated as any)[key]).toBe(value);
+  expect(migrated.mark).not.toBe(10);
+  expect(
+    Object.keys(previous)
+      .filter((k) => typeof previous[k] === 'number' && !k.startsWith('axis'))
+      .every((k) => previous[k] !== migrated.mark),
+  ).toBe(true);
+});

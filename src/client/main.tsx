@@ -14,3 +14,5 @@ createRoot(document.getElementById('root')!).render(
 );
 
 import './formation-ui.css';
+
+import './playtest.css';

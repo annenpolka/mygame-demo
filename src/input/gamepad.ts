@@ -14,6 +14,7 @@ export const PAD_ACTIONS = [
   'left',
   'right',
   'queue',
+  'mark',
 ] as const;
 export type PadAction = (typeof PAD_ACTIONS)[number];
 export type PadFamily = 'xbox' | 'playstation' | 'switch';
@@ -55,6 +56,7 @@ export function defaultBindings(family: PadFamily): PadBindings {
     left: 14,
     right: 15,
     queue: 11,
+    mark: 10,
     axisX: 0,
     axisY: 1,
     invertX: false,
@@ -205,16 +207,21 @@ export function migrateBindings(input: unknown): PadBindings | null {
   if (validBindings(input)) return input;
   if (!input || typeof input !== 'object') return null;
   let b = input as PadBindings;
-  if (b.queue === undefined) {
-    const used = new Set(PAD_ACTIONS.filter((a) => a !== 'queue').map((a) => b[a]));
+  for (const [action, preferred] of [
+    ['queue', 11],
+    ['mark', 10],
+  ] as const) {
+    if (b[action] !== undefined) continue;
+    const used = new Set(PAD_ACTIONS.filter((a) => a !== action).map((a) => b[a]));
     b = {
       ...b,
-      queue: !used.has(11)
-        ? 11
+      [action]: !used.has(preferred)
+        ? preferred
         : Array.from({ length: 64 }, (_, i) => i).find((i) => !used.has(i))!,
     };
-    if (validBindings(b)) return b;
   }
+  const migrated: unknown = b;
+  if (validBindings(migrated)) return migrated;
   const legacy = PAD_ACTIONS.filter((a) => a !== 'skill' && a !== 'item');
   if (!legacy.every((k) => Number.isInteger(b[k]) && b[k] >= 0 && b[k] <= 63)) return null;
   const next = { ...b, skill: b.stop, item: b.slow };

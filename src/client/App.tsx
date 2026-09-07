@@ -1,3 +1,17 @@
+import { PlaytestNotes } from './PlaytestNotes';
+import {
+  PlayJournal,
+  NOTE_LIMIT,
+  NOTE_STORAGE,
+  exportNotes,
+  ensureNoteCapacity,
+  parseNotes,
+  prepareNoteReplay,
+  prepareNoteComparison,
+  emptyPlayView,
+  type PlayNote,
+  type PlayView,
+} from '../lab/playtest';
 import { COMBAT_RULES, percent } from '../content/rules';
 import { BattleSound, operationFeedback } from './audio/sound';
 import { prepareLoadout } from '../ai/composition';
@@ -30,9 +44,9 @@ import {
 import { buttonName, type PadAction } from '../input/gamepad';
 import { projectedSlot } from '../sim/plan';
 import { ENCOUNTER_SET_IDS, ENCOUNTER_SETS, encounterSet, pressure } from '../content/encounters';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { DEFAULT_CONFIG, SKILLS, WEAPONS } from '../content/data';
-import type { Command, Config, Target } from '../sim/types';
+import type { Command, Config, Target, State } from '../sim/types';
 import { Session } from '../lab/session';
 import { Battlefield } from './Battlefield';
 import { CombatLog } from './CombatLog';
@@ -63,6 +77,53 @@ export function App() {
   const [pending, setPending] = useState<string | null>(null);
   const [battleUI, setBattleUI] = useState(newBattlePad);
   const [notice, setNotice] = useState('');
+  const [journal] = useState(() => new PlayJournal());
+  const [notesOpen, setNotesOpen] = useState(false);
+  const [resumeGate, setResumeGate] = useState('');
+  const notesPause = useRef<boolean | null>(null);
+  const restoredView = useRef<{ initial: State; view: PlayView } | null>(null);
+  const [notebook, setNotebook] = useState<{ notes: PlayNote[]; error: string; dirty: boolean }>(
+    () => {
+      try {
+        const saved = localStorage.getItem(NOTE_STORAGE);
+        return { notes: saved ? parseNotes(saved) : [], error: '', dirty: false };
+      } catch (e) {
+        return {
+          notes: [],
+          error: e instanceof Error ? e.message : '保存した印を読めませんでした。',
+          dirty: false,
+        };
+      }
+    },
+  );
+  useEffect(() => {
+    if (!notebook.dirty) return;
+    try {
+      localStorage.setItem(NOTE_STORAGE, exportNotes(notebook.notes));
+      setNotebook((n) => ({ ...n, error: '', dirty: false }));
+    } catch {
+      setNotice(
+        '印はこのタブに残っています。ブラウザへ保存できないため、印の一覧からJSON保存してください。',
+      );
+      setNotebook((n) => ({
+        ...n,
+        dirty: false,
+        error: 'ブラウザへ保存できません。このタブには残っています。印をJSON保存してください。',
+      }));
+    }
+  }, [notebook]);
+  useLayoutEffect(() => {
+    journal.observe(session, { battle: battleUI, pending });
+  });
+  useEffect(() => {
+    if (!notesOpen) return;
+    const previous = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+    return () => {
+      document.body.style.overflow = previous;
+    };
+  }, [notesOpen]);
+
   const [snapshot, setSnapshot] = useState<string | null>(null);
   const [config, setConfig] = useState<Config>({ ...DEFAULT_CONFIG });
   const [compare, setCompare] = useState<string | null>(null);
@@ -72,8 +133,118 @@ export function App() {
     ally = s.allies[s.selected],
     weapon = WEAPONS[ally.weapons[projectedSlot(ally)]];
   const refresh = () => render((x) => x + 1);
+  const markNow = () => {
+    try {
+      if (notebook.notes.length >= NOTE_LIMIT)
+        throw new Error(`印は${NOTE_LIMIT}件までです。一覧で保存・整理してください。`);
+      const note = journal.mark(session, { battle: battleUI, pending });
+      ensureNoteCapacity([...notebook.notes, note]);
+      setNotebook((n) => ({ notes: [...n.notes, note], error: '', dirty: true }));
+      sound.play('confirm', true);
+      setNotice(`印 ${notebook.notes.length + 1} を付けました。感想は印の一覧から。`);
+    } catch (e) {
+      setNotice(e instanceof Error ? e.message : '印を付けられませんでした。');
+    }
+  };
+  const openNotes = () => {
+    notesPause.current = session.state.paused;
+    if (session.state.phase === 'battle' && !session.state.paused)
+      session.send({ type: 'pause', value: true });
+    setNotesOpen(true);
+    sound.play('open', true);
+    refresh();
+  };
+  const closeNotes = () => {
+    if (notesPause.current === false && session.state.phase === 'battle')
+      session.send({ type: 'pause', value: false });
+    notesPause.current = null;
+    setNotesOpen(false);
+    sound.play('cancel', true);
+    refresh();
+  };
+  const resumeNote = (note: PlayNote, point: 'before' | 'marked' | 'entry') => {
+    try {
+      const replay = prepareNoteReplay(note, point);
+      session.replay(JSON.stringify(replay.recording));
+      if (session.state.controlMode !== 'manual') session.send({ type: 'control', mode: 'manual' });
+      restoredView.current = { initial: session.initial, view: replay.view };
+      setBattleUI(replay.view.battle);
+      setPending(replay.view.pending);
+      journal.branch(session, note, replay.view);
+      session.send({ type: 'pause', value: true });
+      setResumeGate(
+        point === 'before'
+          ? '印の少し前に戻りました。'
+          : point === 'marked'
+            ? '印を付けた瞬間に戻りました。'
+            : 'この遭遇の最初に戻りました。',
+      );
+      notesPause.current = null;
+      setNotesOpen(false);
+      setLabOpen(false);
+      setHelp(false);
+      setPadOpen(false);
+      setLoadoutOpen(false);
+      setConfig({ ...session.state.config });
+      sound.play('confirm', true);
+      refresh();
+    } catch (e) {
+      setNotebook((n) => ({
+        ...n,
+        error: e instanceof Error ? e.message : '再操作を開始できませんでした。',
+      }));
+    }
+  };
+  const compareNote = (note: PlayNote) => {
+    try {
+      const state = prepareNoteComparison(note);
+      session.restore(JSON.stringify({ version: state.version, kind: 'snapshot', state }));
+      const view = emptyPlayView();
+      setBattleUI(view.battle);
+      setPending(null);
+      journal.observe(session, view);
+      journal.sourceId = note.id;
+      session.send({ type: 'pause', value: true });
+      setResumeGate('現在のルールで遭遇開始から比較します。');
+      notesPause.current = null;
+      setNotesOpen(false);
+      setLabOpen(false);
+      setHelp(false);
+      setPadOpen(false);
+      setLoadoutOpen(false);
+      setConfig({ ...session.state.config });
+      refresh();
+    } catch (e) {
+      setNotebook((n) => ({
+        ...n,
+        error: e instanceof Error ? e.message : '現在のルールで開始できませんでした。',
+      }));
+    }
+  };
+  const loadNotes = async (file: File) => {
+    try {
+      const incoming = parseNotes(await file.text());
+      const notes = [
+        ...notebook.notes,
+        ...incoming.filter((x) => !notebook.notes.some((y) => x.id === y.id)),
+      ];
+      if (notes.length > NOTE_LIMIT)
+        throw new Error(
+          `読み込み後の印が${NOTE_LIMIT}件を超えます。保存・整理してから読み込んでください。`,
+        );
+      ensureNoteCapacity(notes);
+      setNotebook({ notes, error: '', dirty: true });
+    } catch (e) {
+      setNotebook((n) => ({
+        ...n,
+        error: e instanceof Error ? e.message : '印を読めませんでした。',
+      }));
+    }
+  };
+
   const send = (...commands: Command[]) => {
     for (const c of commands) {
+      if (c.type === 'pause' && !c.value) setResumeGate('');
       if (c.type === 'start' && session.state.controlMode === 'ai')
         session.send(...prepareLoadout(session.state, player.loadout));
       const feedback = operationFeedback(c, session.state);
@@ -132,6 +303,7 @@ export function App() {
     setBattleUI(pending === id ? home(battleUI) : openPage(s, battleUI, 'target', id));
   };
   const restart = (newConfig?: Config, announce = true) => {
+    setResumeGate('');
     setBattleUI(newBattlePad());
     if (newConfig) session.reset(newConfig);
     else {
@@ -174,6 +346,7 @@ export function App() {
   }, [session, player, sound]);
   useEffect(() => {
     const blocked =
+      notesOpen ||
       loadoutOpen ||
       s.paused ||
       help ||
@@ -186,7 +359,7 @@ export function App() {
     const focusables = () =>
       [
         ...(dialog?.querySelectorAll<HTMLElement>(
-          'button:not(:disabled), select, input, summary',
+          'button:not(:disabled), select, input, textarea, summary',
         ) ?? []),
       ].filter((el) => el.getClientRects().length > 0);
     focusables()[0]?.focus();
@@ -205,7 +378,7 @@ export function App() {
     };
     document.addEventListener('keydown', trap);
     return () => document.removeEventListener('keydown', trap);
-  }, [s.paused, s.phase, help, padOpen, loadoutOpen]);
+  }, [s.paused, s.phase, help, padOpen, loadoutOpen, notesOpen]);
   useEffect(() => {
     if (pending)
       document
@@ -222,6 +395,22 @@ export function App() {
         (event.target instanceof Element && event.target.closest('input,select,textarea'))
       )
         return;
+      if (notesOpen) {
+        if (event.key === 'Escape') {
+          event.preventDefault();
+          closeNotes();
+        } else if (['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight'].includes(event.key)) {
+          event.preventDefault();
+          navigate(event.key.slice(5).toLowerCase() as 'up' | 'down' | 'left' | 'right');
+        }
+        return;
+      }
+      if (event.key.toLowerCase() === 'm' && !help && !padOpen && !loadoutOpen) {
+        event.preventDefault();
+        if (event.shiftKey || s.paused || s.phase !== 'battle') openNotes();
+        else markNow();
+        return;
+      }
       if (watching && !s.paused && !help && !padOpen && !labOpen && !loadoutOpen) {
         if (event.key === ' ' && ['battle', 'loot'].includes(s.phase)) {
           event.preventDefault();
@@ -354,6 +543,19 @@ export function App() {
   };
   const handlePad = (action: PadAction) => {
     void sound.unlock();
+    if (action === 'mark' && !notesOpen && !padOpen && !help && !loadoutOpen) {
+      if (s.phase === 'battle' && !s.paused) markNow();
+      else openNotes();
+      return;
+    }
+    if (notesOpen) {
+      if (action === 'cancel' || action === 'pause') closeNotes();
+      else if (action === 'confirm') activateFocused();
+      else if (['up', 'down', 'left', 'right'].includes(action))
+        navigate(action as 'up' | 'down' | 'left' | 'right');
+      else if (action === 'previous' || action === 'next') cycleFocus(action === 'next' ? 1 : -1);
+      return;
+    }
     if (
       s.phase === 'battle' &&
       !watching &&
@@ -431,6 +633,7 @@ export function App() {
     padOpen,
     battleUI.page !== 'command' ||
       s.phase !== 'battle' ||
+      notesOpen ||
       loadoutOpen ||
       s.paused ||
       help ||
@@ -465,9 +668,16 @@ export function App() {
     if (!padActive && result.commands.length) setPending(null);
   };
   useEffect(() => {
-    setBattleUI(home);
-    setPending(null);
-  }, [s.phase, s.selected, gamepad.usePadDisplay]);
+    const restored = restoredView.current;
+    restoredView.current = null;
+    if (restored?.initial === session.initial) {
+      setBattleUI(restored.view.battle);
+      setPending(restored.view.pending);
+    } else {
+      setBattleUI(home);
+      setPending(null);
+    }
+  }, [s.phase, s.selected, gamepad.usePadDisplay, session.initial]);
   useEffect(() => {
     if (pending && ![...weapon.skills, 'guard', 'potion'].includes(pending)) setPending(null);
   }, [weapon.id, pending]);
@@ -496,6 +706,7 @@ export function App() {
       <header
         className="topbar"
         inert={
+          notesOpen ||
           loadoutOpen ||
           s.paused ||
           help ||
@@ -598,6 +809,7 @@ export function App() {
       <main
         className={`battle-layout pad-layout ${!padActive && !watching ? 'keyboard-layout' : ''} ${watching ? 'watch-layout' : ''}`}
         inert={
+          notesOpen ||
           loadoutOpen ||
           s.paused ||
           help ||
@@ -617,6 +829,21 @@ export function App() {
                 {encounterSet(s.config).stages[s.encounter - 1]}
                 <span>ASHEN BELFRY</span>
               </h1>
+            </div>
+            <div className="playtest-shortcuts">
+              <button
+                aria-label="今のところに印を付ける"
+                disabled={s.phase !== 'battle'}
+                onClick={markNow}
+              >
+                <kbd>
+                  {gamepad.usePadDisplay ? buttonName(gamepad.bindings.mark, gamepad.family) : 'M'}
+                </kbd>
+                今のところ
+              </button>
+              <button aria-label="印の一覧" onClick={openNotes}>
+                印 {notebook.notes.length}
+              </button>
             </div>
             <div className="battle-clock">
               <small>BATTLE TIME</small>
@@ -782,6 +1009,7 @@ export function App() {
       <div
         className="log-container"
         inert={
+          notesOpen ||
           loadoutOpen ||
           s.paused ||
           help ||
@@ -806,6 +1034,7 @@ export function App() {
           className="lab-drawer"
           aria-label="実験室"
           inert={
+            notesOpen ||
             loadoutOpen ||
             s.paused ||
             help ||
@@ -1046,7 +1275,7 @@ export function App() {
       )}
 
       {loadoutOpen && s.phase === 'ready' && (
-        <div className="modal-backdrop">
+        <div className="modal-backdrop" inert={notesOpen}>
           <section className="loadout-modal" role="dialog" aria-modal="true" aria-label="編成編集">
             <header>
               <div>
@@ -1061,7 +1290,7 @@ export function App() {
       )}
 
       {s.phase === 'loot' && !watching && (
-        <div className="modal-backdrop">
+        <div className="modal-backdrop" inert={notesOpen}>
           <section className="loot-modal" role="dialog" aria-modal="true" aria-label="戦利品と編成">
             <span className="eyebrow">ENCOUNTER CLEAR</span>
             <h2>新しい武器、新しい戦い方。</h2>
@@ -1088,6 +1317,7 @@ export function App() {
               })}
             </div>
             <Loadout state={s} send={send} onCompare={setCompare} />
+            <button onClick={openNotes}>印の一覧（{notebook.notes.length}件）</button>
             <CombatLog
               entries={session.log}
               onExport={() =>
@@ -1119,7 +1349,7 @@ export function App() {
         </div>
       )}
       {(s.phase === 'victory' || s.phase === 'defeat') && (
-        <div className="modal-backdrop">
+        <div className="modal-backdrop" inert={notesOpen}>
           <section className="result-modal" role="dialog" aria-modal="true" aria-label="戦闘結果">
             <span className="eyebrow">
               {s.phase === 'victory' ? 'DEMO COMPLETE' : 'TRY ANOTHER APPROACH'}
@@ -1158,6 +1388,7 @@ export function App() {
                 )
               }
             />
+            <button onClick={openNotes}>印の一覧（{notebook.notes.length}件）</button>
             <button onClick={() => restart({ ...s.config, encounter: 1 })}>
               戦闘セットを選び直す
             </button>
@@ -1174,14 +1405,15 @@ export function App() {
           </section>
         </div>
       )}
-      {s.paused && !help && !padOpen && (
+      {s.paused && !help && !padOpen && !notesOpen && (
         <div className="pause-screen" role="dialog" aria-modal="true" aria-label="休憩ポーズ">
           <span className="eyebrow">INTERMISSION</span>
-          <h2>ひと休み。</h2>
+          <h2>{resumeGate || 'ひと休み。'}</h2>
           <p>戦闘と集中力の消費を停止しています。</p>
           <button className="primary" onClick={() => send({ type: 'pause', value: false })}>
-            戦場へ戻る <Key>Esc</Key>
+            {resumeGate ? 'この場面から操作する' : '戦場へ戻る'} <Key>Esc</Key>
           </button>
+          <button onClick={openNotes}>印の一覧（{notebook.notes.length}件）</button>
         </div>
       )}
       {help && (
@@ -1276,6 +1508,27 @@ export function App() {
         </div>
       )}
       {padOpen && <PadSettings controls={gamepad} onClose={() => setPadOpen(false)} />}
+      {notesOpen && (
+        <PlaytestNotes
+          notes={notebook.notes}
+          error={notebook.error}
+          close={closeNotes}
+          change={(id, patch) =>
+            setNotebook((n) => ({
+              ...n,
+              notes: n.notes.map((x) => (x.id === id ? { ...x, ...patch } : x)),
+              dirty: true,
+            }))
+          }
+          remove={(id) =>
+            setNotebook((n) => ({ ...n, notes: n.notes.filter((x) => x.id !== id), dirty: true }))
+          }
+          resume={resumeNote}
+          compare={compareNote}
+          save={() => download('orchestra-playtest-notes.json', exportNotes(notebook.notes))}
+          load={loadNotes}
+        />
+      )}
       {notice && (
         <div className="toast" role="status" aria-label="操作結果">
           {notice}

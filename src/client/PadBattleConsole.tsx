@@ -89,6 +89,7 @@ export function PadBattleConsole({
   const list = choices(s, ui),
     choice = selectedChoice(s, ui);
   const keyNames: Record<PadAction, string> = {
+    mark: 'M',
     confirm: ui.page === 'command' ? 'Z' : 'Enter',
     skill: 'X',
     item: 'V',

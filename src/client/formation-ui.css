@@ -1045,3 +1045,38 @@ body:has(.loadout-modal) {
     margin: 5px 0;
   }
 }
+/* Targeting keeps the same battle header height as the resting legend. */
+@media (min-width: 1200px) {
+  .field-target-bar {
+    min-height: 28px;
+    height: 28px;
+    padding: 2px 10px;
+  }
+  .field-target-bar > div {
+    flex-direction: row;
+    align-items: center;
+    gap: 8px;
+  }
+  .field-target-bar small {
+    margin: 0;
+    font-size: 9px;
+  }
+  .field-target-bar strong {
+    font-size: 12px;
+  }
+  .field-target-bar button {
+    padding: 2px 7px;
+    font-size: 11px;
+  }
+  .field-target-bar kbd {
+    font-size: 10px;
+    padding: 1px 4px;
+  }
+  .pad-layout .field-target-guide {
+    padding: 6px 10px;
+  }
+  .pad-layout .field-target-guide p {
+    margin: 4px 0;
+    line-height: 1.45;
+  }
+}
