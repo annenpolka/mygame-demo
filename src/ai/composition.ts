@@ -85,7 +85,7 @@ export function prepareLoadout(state: State, mode: LoadoutMode): Command[] {
     // Value the available envelope, not only the weapons currently facing out.
     return mode === 'assault'
       ? d + b * 3 + h * 0.035 + def * 0.08
-      : d + b * 6 + h * 0.42 + def * (s.config.encounterSet === 'attrition' ? 1.3 : 0.8);
+      : d + b * 6 + h * 0.85 + def * (s.config.encounterSet === 'attrition' ? 1.3 : 0.8);
   }
   function search(index: number, weapons: [string, string][], taken: Set<string>) {
     if (index === 6) {
