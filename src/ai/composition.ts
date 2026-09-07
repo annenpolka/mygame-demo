@@ -71,11 +71,20 @@ export function prepareLoadout(state: State, mode: LoadoutMode): Command[] {
   const spare = s.inventory.filter((w) => !used.has(w));
   let best = s.allies.map((a) => [...a.weapons] as [string, string]),
     bestScore = -Infinity;
+  // Reserve choices do not affect the output of an identical active trio.
+  // Keep this memo local: health, rows, inventory and rules may change next call.
+  const outputMemo = new Map<string, ReturnType<typeof teamOutput>>();
   function score(weapons: string[][]) {
     const team = s.allies.map((a, i) => ({ ...a, weapons: weapons[i] }));
-    const all = SLOT_SETS.map((slots) =>
-      teamOutput(team, slots, s.config.bonusMode, s.config.atbRate),
-    );
+    const all = SLOT_SETS.map((slots) => {
+      const key = slots.map((slot, id) => weapons[id][slot]).join(',');
+      let output = outputMemo.get(key);
+      if (!output) {
+        output = teamOutput(team, slots, s.config.bonusMode, s.config.atbRate);
+        outputMemo.set(key, output);
+      }
+      return output;
+    });
     const d = Math.max(...all.map((o) => o.damage)),
       b = Math.max(...all.map((o) => o.chain));
     const h = Math.max(...all.map((o) => o.heal)),

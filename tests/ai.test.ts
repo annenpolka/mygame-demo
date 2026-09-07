@@ -20,6 +20,50 @@ describe('AI observation and command contract', () => {
     Object.assign(view.allies[0], { hp: 0 });
     expect(s).toEqual(original);
   });
+  it('copies every nested observation field, so retained views remain stable and cannot change the battle', () => {
+    const s = createState();
+    command(s, { type: 'start' });
+    command(s, {
+      type: 'enqueue',
+      id: 0,
+      step: { kind: 'skill', skillId: 'slash', target: { kind: 'enemy', id: 0 } },
+    });
+    step(s);
+    command(s, {
+      type: 'enqueue',
+      id: 0,
+      step: { kind: 'skill', skillId: 'guard', target: { kind: 'ally', id: 0 } },
+    });
+    s.allies[0].queued = { skillId: 'slash', target: { kind: 'enemy', id: 0 } };
+    s.enemies[0].cast = {
+      name: 'visible',
+      target: 'row',
+      row: 'front',
+      allyId: 0,
+      remaining: 2,
+      total: 2,
+      power: 100,
+      movable: true,
+      push: false,
+    };
+    const view = observe(s),
+      retained = copy(view);
+    // Alter all mutable descendants, on either side of the observation boundary.
+    const alter = (value: unknown) => {
+      if (!value || typeof value !== 'object') return;
+      for (const [key, child] of Object.entries(value)) {
+        if (typeof child === 'number') Object.assign(value, { [key]: child + 1 });
+        else if (typeof child === 'string') Object.assign(value, { [key]: child + 'changed' });
+        else alter(child);
+      }
+    };
+    const original = copy(s);
+    alter(view);
+    expect(s).toEqual(original);
+    const next = observe(s);
+    alter(s);
+    expect(next).toEqual(retained);
+  });
   it.each(POLICY_IDS)(
     '%s issues only legal combat commands without mutating its observation',
     (id) => {

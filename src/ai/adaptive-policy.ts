@@ -70,11 +70,20 @@ export function createAdaptivePolicy(style: 'adaptive' | 'assault', reaction = 0
         return offense + o.heal * healWeight + protection - changes * 8;
       };
       const current = v.allies.map((a) => a.slot) as (typeof SLOT_SETS)[number];
-      const best = [...SLOT_SETS].sort((a, b) => evaluate(b) - evaluate(a))[0];
+      // Evaluate each of the eight compositions once, preserving stable tie order.
+      const ranked = SLOT_SETS.map((slots) => ({ slots, score: evaluate(slots) })).sort(
+        (a, b) => b.score - a.score,
+      );
+      const best = ranked[0].slots;
       const transition = live.some(
         (a) => a.nextSlot !== null || planned(a).some((p) => p.kind === 'weapon'),
       );
-      if (!transition && v.time - lastShift >= 4 && evaluate(best) > evaluate(current) * 1.12 + 3) {
+      if (
+        !transition &&
+        v.time - lastShift >= 4 &&
+        ranked[0].score >
+          ranked.find((o) => o.slots.every((slot, id) => slot === current[id]))!.score * 1.12 + 3
+      ) {
         const changed = live.filter((a) => a.slot !== best[a.id]);
         for (const a of changed)
           for (const p of planned(a)) commands.push({ type: 'removePlan', id: a.id, key: p.key });

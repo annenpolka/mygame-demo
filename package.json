@@ -14,7 +14,8 @@
     "sim:limits": "tsx scripts/limits.ts",
     "sim:queue": "tsx scripts/queue-study.ts",
     "sim:scenarios": "tsx scripts/scenario-study.ts",
-    "sim:bonuses": "tsx scripts/bonus-study.ts"
+    "sim:bonuses": "tsx scripts/bonus-study.ts",
+    "sim:bench": "tsx scripts/headless-bench.ts"
   },
   "dependencies": {
     "react": "^19.2.8",

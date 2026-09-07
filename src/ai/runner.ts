@@ -246,9 +246,10 @@ export function runPolicy(options: RunOptions): RunResult {
   const rowPersonSeconds = { front: 0, back: 0 },
     actorSeconds = { acting: 0, moving: 0, shifting: 0, waiting: 0 };
   const drain = (encounter = s.encounter) => {
+    if (s.eventSeq <= lastEvent) return [];
     const additions = s.events.filter((e) => e.id > lastEvent);
     for (const e of additions) {
-      events.push({ ...copy(e), encounter });
+      events.push({ ...e, encounter });
       lastEvent = e.id;
       if (e.type === 'action') {
         const name = e.text.split(' → ')[1];
@@ -353,7 +354,12 @@ export function runPolicy(options: RunOptions): RunResult {
       .join('');
     const casts = s.enemies
       .filter((e) => e.hp > 0 && e.cast)
-      .map((e) => ({ id: e.id, name: e.name, row: e.row, cast: copy(e.cast!) }));
+      .map((e) => ({
+        id: e.id,
+        name: e.name,
+        row: e.row,
+        cast: { name: e.cast!.name, movable: e.cast!.movable },
+      }));
     step(s);
     const dt = s.time - beforeTime;
     roleSeconds[roles] = (roleSeconds[roles] ?? 0) + dt;
@@ -451,4 +457,4 @@ export function runPolicy(options: RunOptions): RunResult {
   };
   return { summary, recording, events, decisions, samples, enemyActions, finalState: s };
 }
-export const EXPERIMENT_VERSION = `${VERSION}/${POLICY_VERSION}/${QUEUE_POLICY_VERSION}/runner-4`;
+export const EXPERIMENT_VERSION = `${VERSION}/${POLICY_VERSION}/${QUEUE_POLICY_VERSION}/runner-5`;

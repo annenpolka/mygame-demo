@@ -48,9 +48,9 @@ const hash = (path: string) =>
     .digest('hex');
 const frozen = {
   'src/ai/policies.ts': '1b4722e815973cafd706df6fbd61ba7a43bd0c730ad9a81810a3acce09dc4357',
-  'src/ai/observation.ts': 'd0b6928fa7b1bd1067893353a6c15aefeb01460f571337e2983d2eacfc643533',
-  'src/ai/adaptive-policy.ts': '5b9a053cae75e3763b8ce73441387fa790c6f49c7484a6183500e653c0418d9a',
-  'src/ai/composition.ts': '205d41116fd72069eaf181cde0d4bb0e1fdb550aa4a4ff67abb34f9f541d5885',
+  'src/ai/observation.ts': '127ebafef726fc715cdf82b5c0f7b4406c501563a267dacb8131f2f4d6fd867f',
+  'src/ai/adaptive-policy.ts': '2a8d0539512e01e4379738a7f2928ed92c7497dc0ed690522dbbe3b3f87c9ff2',
+  'src/ai/composition.ts': '9335be094d9c6d5a3fc20896cc3912ca51c975a14bfeeb58cfb6a0219d59f226',
   'src/ai/queue-policy.ts': 'dcca45f5dd1d26d60d88a87656b799f4ebf4f0514c275361ef240439eb0e479d',
 };
 for (const [path, expected] of Object.entries(frozen))

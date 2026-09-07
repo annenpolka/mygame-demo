@@ -43,7 +43,7 @@ export interface Observation {
 }
 
 export function observe(s: State): Observation {
-  return structuredClone({
+  return {
     tick: s.tick,
     time: s.time,
     realTime: s.realTime,
@@ -53,7 +53,21 @@ export function observe(s: State): Observation {
     focus: s.focus,
     timeMode: s.timeMode,
     potions: s.potions,
-    allies: s.allies,
+    allies: s.allies.map((a) => ({
+      ...a,
+      weapons: [...a.weapons],
+      action: a.action
+        ? { ...a.action, target: { ...a.action.target }, offense: { ...a.action.offense } }
+        : null,
+      queued: a.queued ? { ...a.queued, target: { ...a.queued.target } } : null,
+      ...(a.plan
+        ? {
+            plan: a.plan.map((p) =>
+              p.kind === 'skill' ? { ...p, target: { ...p.target } } : { ...p },
+            ),
+          }
+        : {}),
+    })),
     enemies: s.enemies.map(
       ({ id, name, kind, hp, maxHp, row, chain, hold, broken, steadfast, cast }) => ({
         id,
@@ -66,10 +80,10 @@ export function observe(s: State): Observation {
         hold,
         broken,
         steadfast,
-        cast,
+        cast: cast ? { ...cast } : null,
       }),
     ),
-    presets: s.presets,
+    presets: s.presets.map((p) => ({ ...p, slots: [...p.slots], rows: [...p.rows] })),
     rules: {
       atbMax: s.config.atbMax,
       atbRate: s.config.atbRate * partyBonus(s.allies, s.config.bonusMode).atb,
@@ -79,5 +93,5 @@ export function observe(s: State): Observation {
       shiftTime: s.config.shiftTime,
       enemyPower: s.config.enemyPower,
     },
-  });
+  };
 }
