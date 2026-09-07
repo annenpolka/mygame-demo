@@ -60,15 +60,15 @@ describe('two clocks and resources', () => {
       expect(a.shield).toBe(0);
       advance(s, 0.3);
       expect(a.action?.skillId).toBe('guard');
-      expect(a.atb).toBeCloseTo(0.05);
+      expect(a.atb).toBeCloseTo(0);
       expect(a.shield).toBe(0);
       advance(s, 0.4);
       expect(a.shield).toBeGreaterThan(BATTLE_TIMING.guardDuration - 0.1);
-      expect(a.atb).toBeCloseTo(0.45);
+      expect(a.atb).toBeCloseTo(0);
       expect(guard()).toBe(true);
       advance(s, 0.1);
       expect(a.action?.resolved).toBe(true);
-      expect(a.atb).toBeCloseTo(0.55);
+      expect(a.atb).toBeCloseTo(0);
       expect(s.events.filter((e) => e.type === 'action' && e.source === 'a0')).toHaveLength(1);
     },
   );
@@ -155,7 +155,7 @@ describe('commands and weapon boundaries', () => {
     expect(a.allies).toEqual(b.allies);
     expect(a.allies[0].row).toBe('back');
     expect(a.allies[0].slot).toBe(1);
-    expect(a.allies[0].atb).toBeCloseTo(1 + a.config.moveTime * a.config.atbRate);
+    expect(a.allies[0].atb).toBeCloseTo(1);
   });
   it('an executing attack completes before a weapon change or normal movement', () => {
     const s = battle();

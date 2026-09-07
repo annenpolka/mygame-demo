@@ -1,7 +1,7 @@
 import { COMBAT_RULES, percent } from './rules';
 import type { Config, Formation, Preset, Skill, Weapon } from '../sim/types';
 
-export const VERSION = 'orchestra-7';
+export const VERSION = 'orchestra-8';
 export const DT = 1 / 60;
 export const BATTLE_TIMING = {
   enemyWindupScale: 1.6,
@@ -18,7 +18,9 @@ export const DEFAULT_CONFIG: Config = {
   enemyHpScale: 1,
   atbMax: 4,
   seed: 1307,
-  atbRate: 0.55,
+  atbRate: 0.85,
+  atbMode: 'idle',
+  chainActions: true,
   moveTime: 0.85,
   shiftTime: 0.65,
   slowDrain: 4,
@@ -34,6 +36,7 @@ export const SKILLS: Record<string, Skill> = Object.fromEntries(
     [
       {
         id: 'slash',
+        link: 0.2,
         name: '斬撃',
         cost: 1,
         cast: 0.9,
@@ -60,6 +63,7 @@ export const SKILLS: Record<string, Skill> = Object.fromEntries(
       },
       {
         id: 'shot',
+        link: 0.2,
         name: '射撃',
         cost: 1,
         cast: 1.0,
@@ -86,6 +90,7 @@ export const SKILLS: Record<string, Skill> = Object.fromEntries(
       },
       {
         id: 'spark',
+        link: 0.2,
         name: '砕光',
         cost: 1,
         cast: 1.0,
@@ -112,6 +117,7 @@ export const SKILLS: Record<string, Skill> = Object.fromEntries(
       },
       {
         id: 'jab',
+        link: 0.2,
         name: '砕突',
         cost: 1,
         cast: 0.9,
@@ -138,6 +144,7 @@ export const SKILLS: Record<string, Skill> = Object.fromEntries(
       },
       {
         id: 'smash',
+        link: 0.2,
         name: '砕打',
         cost: 1,
         cast: 1.15,
@@ -164,6 +171,7 @@ export const SKILLS: Record<string, Skill> = Object.fromEntries(
       },
       {
         id: 'heal',
+        link: 0.2,
         name: '小さな祈り',
         cost: 1,
         cast: 1.2,

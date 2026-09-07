@@ -80,6 +80,8 @@ export function operationFeedback(c: Command, s: State): { cue: SoundCue; label:
         cue: c.skillId === 'guard' ? 'guard' : c.skillId === 'potion' ? 'item' : 'queue',
         label: `${SKILLS[c.skillId].name}を予約`,
       };
+    case 'hold':
+      return { cue: 'pause', label: c.value ? '実行保留' : '保留解除・実行再開' };
     case 'cancel':
       return { cue: 'cancel', label: '未実行の予約をすべて取消' };
     case 'cancelFirst':

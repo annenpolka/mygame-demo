@@ -227,6 +227,7 @@ export function createQueuePolicy(
             ],
           },
           v.rules,
+          v,
         ).at(-1)!.ends;
         const interruptible = rear.cast?.movable && arrival < rear.cast.remaining;
         const protectedRear = targets(v).some(
@@ -292,6 +293,7 @@ export function createQueuePolicy(
                 ],
               },
               v.rules,
+              v,
             ).at(-1)!.ends < threat.cast.remaining
           )
             queue(a, 'guard', { kind: 'ally', id: a.id }, `${a.name}は追尾・退避困難な攻撃を防御`);

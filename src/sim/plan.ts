@@ -1,19 +1,21 @@
-import { SKILLS, WEAPONS, ROW_NAMES, DT } from '../content/data';
+import {
+  advanceExecution,
+  charging,
+  makeAction,
+  pendingSteps,
+  validExecutionStep,
+  type ExecutionActor,
+  type ExecutionRules,
+  type TargetView,
+} from './execution';
+import { SKILLS, WEAPONS, ROW_NAMES, DT, DEFAULT_CONFIG } from '../content/data';
 import type { Ally, PlannedStep, PlanStep, State, Target } from './types';
 
 type Actor = Pick<
   Ally,
   'slot' | 'nextSlot' | 'queued' | 'action' | 'nextRow' | 'move' | 'shift' | 'atb'
 > & { weapons: readonly [string, string]; plan?: readonly PlannedStep[] };
-export function planned(a: {
-  queued: Ally['queued'];
-  plan?: readonly PlannedStep[];
-}): PlannedStep[] {
-  return [
-    ...(a.queued ? [{ key: 0, kind: 'skill' as const, ...a.queued }] : []),
-    ...(a.plan ?? []),
-  ];
-}
+export const planned = pendingSteps;
 export function projectedSlot(a: Actor) {
   let slot = a.nextSlot ?? a.slot;
   for (const step of planned(a)) if (step.kind === 'weapon') slot = step.slot;
@@ -62,38 +64,85 @@ export function pendingPotions(
     0,
   );
 }
-/** Earliest execution using visible state only; no enemy outcomes are predicted. */
+export interface PlanTiming {
+  key: number;
+  starts: number;
+  ends: number;
+  ready: number;
+  linked: boolean;
+  status: 'scheduled' | 'held' | 'invalid' | 'reset';
+}
+/** Conditional on visible targets and current party supply remaining unchanged.
+ * Uses the runtime scheduler; future damage, interruption, and AI decisions are not predicted.
+ * Times are battle seconds at normal fixed-step resolution (one DT conservative at slow speed).
+ */
 export function planTiming(
-  a: Actor,
-  rules: Pick<State['config'], 'atbMax' | 'atbRate' | 'moveTime' | 'shiftTime'>,
-) {
-  const head = planned(a)[0];
-  const handoffFirst = head && isHandoff(head);
-  let elapsed =
-    (a.action?.remaining ?? 0) +
-    Math.max(
-      a.nextRow && (!handoffFirst || a.move > 0) ? rules.moveTime - a.move : 0,
-      a.nextSlot !== null && (!handoffFirst || a.shift > 0) ? rules.shiftTime - a.shift : 0,
-    );
-  let atb = Math.min(rules.atbMax, a.atb + elapsed * rules.atbRate);
-  return planned(a).map((step) => {
-    if (step.kind === 'skill') {
-      const skill = SKILLS[step.skillId];
-      const wait = Math.max(0, (skill.cost - atb) / rules.atbRate);
-      elapsed += wait + DT;
-      atb = Math.min(rules.atbMax, atb + (wait + DT) * rules.atbRate) - skill.cost;
-      const starts = elapsed;
-      elapsed += skill.cast + DT;
-      atb = Math.min(rules.atbMax, atb + (skill.cast + DT) * rules.atbRate);
-      const ends = elapsed; // Impact deadline used by defensive AI.
-      elapsed += skill.recovery;
-      atb = Math.min(rules.atbMax, atb + skill.recovery * rules.atbRate);
-      return { key: step.key, starts, ends, ready: elapsed };
+  actor: Omit<ExecutionActor, 'plan'> & { plan?: readonly PlannedStep[] },
+  inputRules: Pick<ExecutionRules, 'atbMax' | 'atbRate' | 'moveTime' | 'shiftTime'> &
+    Partial<ExecutionRules>,
+  view?: TargetView,
+): PlanTiming[] {
+  const rules = { ...DEFAULT_CONFIG, ...inputRules };
+  const a = structuredClone(actor) as ExecutionActor;
+  const queue = planned(a);
+  const results = queue.map(
+    (p) =>
+      ({
+        key: p.key,
+        starts: Infinity,
+        ends: Infinity,
+        ready: Infinity,
+        linked: false,
+        status: a.executionHeld ? 'held' : 'scheduled',
+      }) as PlanTiming,
+  );
+  if (a.executionHeld || !queue.length) return results;
+  const byKey = new Map(results.map((r) => [r.key, r]));
+  let elapsed = 0;
+  let current: PlanTiming | undefined;
+  let transition: PlanTiming | undefined;
+  let potions = view?.potions ?? Infinity;
+  // Eight maximum-cost entries need far less than this even at minimum supply.
+  for (let tick = 0; tick < 12000; tick++) {
+    elapsed += DT;
+    const head = planned(a)[0];
+    const before = a.action;
+    if (charging(a, rules)) a.atb = Math.min(rules.atbMax, a.atb + DT * rules.atbRate);
+    advanceExecution(a, rules, DT, {
+      valid: (p) => validExecutionStep(a, p, view ? { ...view, potions } : undefined),
+      start: (p, comboIndex) => {
+        if (current) current.ready = elapsed;
+        current = byKey.get(p.key)!;
+        current.starts = elapsed;
+        current.linked = comboIndex > 1;
+        a.atb = Math.max(0, a.atb - SKILLS[p.skillId].cost);
+        if (p.skillId === 'potion') potions--;
+        a.action = makeAction(a, p.skillId, p.target, comboIndex);
+        return true;
+      },
+      impact: () => {
+        if (current) current.ends = elapsed;
+      },
+      discarded: (p) => {
+        byKey.get(p.key)!.status = 'invalid';
+      },
+      handoff: () => {
+        for (const r of results) if (!Number.isFinite(r.starts)) r.status = 'reset';
+      },
+    });
+    if (head && head.kind !== 'skill' && !planned(a).some((p) => p.key === head.key)) {
+      transition = byKey.get(head.key)!;
+      transition.starts = elapsed;
     }
-    const starts = elapsed + DT;
-    const duration = step.kind === 'move' ? rules.moveTime : rules.shiftTime;
-    elapsed = starts + duration + DT;
-    atb = Math.min(rules.atbMax, atb + (duration + 2 * DT) * rules.atbRate);
-    return { key: step.key, starts, ends: elapsed, ready: elapsed };
-  });
+    if (transition && a.nextRow === null && a.nextSlot === null) {
+      transition.ends = transition.ready = elapsed;
+      transition = undefined;
+    }
+    if (before && !a.action && current) {
+      current.ready = elapsed;
+      current = undefined;
+    }
+    if (!a.action && !planned(a).length && !transition) break;
+  }
+  return results;
 }

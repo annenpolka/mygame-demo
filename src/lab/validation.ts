@@ -28,13 +28,19 @@ const action = z.object({
     chain: z.number().min(1).max(2.85),
   }),
   resolved: z.boolean(),
+  cast: n,
+  recovery: n,
+  comboIndex: n.int().positive(),
 });
 const planStep = z.discriminatedUnion('kind', [
   z.object({ kind: z.literal('skill'), skillId: skill, target }),
   z.object({ kind: z.literal('move'), row }),
   z.object({ kind: z.literal('weapon'), slot }),
 ]);
-const plannedStep = z.intersection(planStep, z.object({ key: n.int().positive() }));
+const plannedStep = z.intersection(
+  planStep,
+  z.object({ key: n.int().positive(), auto: z.boolean().optional() }),
+);
 const config = z.object({
   bonusMode: z.enum(['none', 'modest', 'strong']),
   enemyHpScale: z.number().min(0.5).max(4),
@@ -43,6 +49,8 @@ const config = z.object({
   encounterLevel: z.number().int().min(1).max(10).optional(),
   seed: z.number().int().min(0).max(4294967295),
   atbRate: z.number().min(0.2).max(3),
+  atbMode: z.enum(['idle', 'continuous']),
+  chainActions: z.boolean(),
   moveTime: z.number().min(0.1).max(2),
   shiftTime: z.number().min(0.1).max(2),
   slowDrain: z.number().min(1).max(20),
@@ -100,6 +108,7 @@ const stateSchema = z
           queued: z.object({ skillId: skill, target }).nullable(),
           plan: z.array(plannedStep).max(9).optional(),
           shield: n,
+          executionHeld: z.boolean(),
         }),
       )
       .length(3),
@@ -179,6 +188,18 @@ const stateSchema = z
       (s.handoffSlow > 0 && (s.controlMode !== 'manual' || s.phase !== 'battle'))
     )
       ctx.addIssue({ code: 'custom', message: 'キャラ交代の状態が不正です。' });
+    for (const a of s.allies) {
+      const action = a.action;
+      if (
+        action &&
+        (action.cast !== SKILLS[action.skillId].cast ||
+          action.recovery !== SKILLS[action.skillId].recovery ||
+          Math.abs(action.total - action.cast - action.recovery) > 1e-9 ||
+          action.remaining > action.total ||
+          action.resolved !== action.remaining <= action.recovery + 1e-9)
+      )
+        ctx.addIssue({ code: 'custom', message: '行動の時間状態が技定義と一致しません。' });
+    }
     const equipped = s.allies.flatMap((a) => a.weapons);
     for (const a of s.allies) {
       const handoffs = (a.plan ?? []).filter(isHandoff);
@@ -231,6 +252,7 @@ const cmdSchema = z.discriminatedUnion('type', [
   z.object({ type: z.literal('skill'), id, skillId: skill, target }),
   z.object({ type: z.literal('cancel'), id }),
   z.object({ type: z.literal('cancelFirst'), id }),
+  z.object({ type: z.literal('hold'), id, value: z.boolean() }),
   z.object({ type: z.literal('toggleRow'), id }),
   z.object({ type: z.literal('toggleWeapon'), id }),
   z.object({ type: z.literal('enqueue'), id, step: planStep }),

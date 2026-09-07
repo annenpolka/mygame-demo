@@ -37,7 +37,14 @@ export interface Observation {
   rules: ReadonlyDeep<
     Pick<
       State['config'],
-      'atbMax' | 'atbRate' | 'moveTime' | 'shiftTime' | 'enemyPower' | 'bonusMode'
+      | 'atbMax'
+      | 'atbRate'
+      | 'moveTime'
+      | 'shiftTime'
+      | 'enemyPower'
+      | 'bonusMode'
+      | 'atbMode'
+      | 'chainActions'
     > & { baseAtbRate: number }
   >;
 }
@@ -88,6 +95,8 @@ export function observe(s: State): Observation {
       atbMax: s.config.atbMax,
       atbRate: s.config.atbRate * partyBonus(s.allies, s.config.bonusMode).atb,
       baseAtbRate: s.config.atbRate,
+      atbMode: s.config.atbMode,
+      chainActions: s.config.chainActions,
       bonusMode: s.config.bonusMode,
       moveTime: s.config.moveTime,
       shiftTime: s.config.shiftTime,

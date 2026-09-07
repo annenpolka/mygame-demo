@@ -34,7 +34,8 @@ export function teamOutput(
       skills = w.skills.map((id) => SKILLS[id]),
       position = positionBonus(a.row, w);
     const output = (sk: (typeof skills)[number], value: number) =>
-      value / Math.max(sk.cast + sk.recovery, sk.cost / (rate * bonus.atb));
+      value /
+      (sk.cast + ((sk.link ?? sk.recovery) + sk.recovery) / 2 + sk.cost / (rate * bonus.atb));
     damage +=
       Math.max(
         ...skills.map((sk) =>

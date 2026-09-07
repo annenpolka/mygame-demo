@@ -176,9 +176,7 @@ describe('one-ATB handoff at the head of the stack', () => {
     step(s);
     expect(a.action?.skillId).toBe('handoff');
     expect(planned(a)).toHaveLength(0);
-    expect(a.atb).toBeCloseTo(
-      Math.min(4, atb + 1.4 * s.config.atbRate) + DT * s.config.atbRate - 1,
-    );
+    expect(a.atb).toBeCloseTo(atb + DT * s.config.atbRate - 1);
     untilHandoff(s);
     expect(s.selected).toBe(1);
     expect(s.handoffSlow).toBe(0.8);
@@ -194,7 +192,7 @@ describe('one-ATB handoff at the head of the stack', () => {
     advance(s, 1);
     expect(s.selected).toBe(0);
     expect(a.action).toBeNull();
-    advance(s, 0.85);
+    advance(s, 1 / s.config.atbRate - 1 + DT);
     expect(a.action?.skillId).toBe('handoff');
     expect(s.selected).toBe(0);
     expect(command(s, { type: 'cancelFirst', id: 0 })).toBe(false);

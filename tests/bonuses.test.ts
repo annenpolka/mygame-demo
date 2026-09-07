@@ -91,7 +91,7 @@ describe('current party role bonuses', () => {
   it('integrates S equally for all actors, has no refill, and does not accelerate committed actions', () => {
     const s = quiet();
     advance(s, 0.5);
-    s.allies.forEach((a) => expect(a.atb).toBeCloseTo(0.5 * 0.55 * 1.15));
+    s.allies.forEach((a) => expect(a.atb).toBeCloseTo(0.5 * s.config.atbRate * 1.15));
     const atb = s.allies[0].atb;
     command(s, { type: 'toggleWeapon', id: 2 });
     expect(s.allies[0].atb).toBe(atb);
@@ -99,7 +99,7 @@ describe('current party role bonuses', () => {
     expect(s.allies[2].slot).toBe(1);
     const after = s.allies[0].atb;
     advance(s, 0.2);
-    expect(s.allies[0].atb - after).toBeCloseTo(0.2 * 0.55);
+    expect(s.allies[0].atb - after).toBeCloseTo(0.2 * s.config.atbRate);
     s.allies[0].atb = 4;
     command(s, {
       type: 'enqueue',

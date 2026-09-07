@@ -33,7 +33,7 @@ function add(s: State, skillId: string) {
 const starts = (s: State) => s.events.filter((e) => e.type === 'action' && e.source === 'a0');
 describe('human-scale action commitment', () => {
   it.each([
-    ['slash', 2],
+    ['slash', 3],
     ['guard', 3],
     ['potion', 2],
   ] as const)(

@@ -1,3 +1,4 @@
+import { advanceExecution, charging, makeAction, validExecutionTarget } from './execution';
 import { COMBAT_RULES } from '../content/rules';
 import { partyBonus, positionBonus } from './bonuses';
 import { renameTactics } from './tactics';
@@ -92,6 +93,7 @@ export function createState(
       action: null,
       queued: null,
       shield: 0,
+      executionHeld: false,
     })),
     enemies: createEnemies(c, c.encounter),
     presets: copy(PRESETS),
@@ -119,14 +121,7 @@ function queueRow(a: Ally, row: Row) {
 export function canUse(a: Ally, id: string) {
   return id === 'guard' || id === 'potion' || weaponOf(a).skills.includes(id);
 }
-export function validTarget(s: State, a: Ally, skill: Skill, target: Target) {
-  if (skill.target === 'enemy')
-    return target.kind === 'enemy' && !!s.enemies.find((e) => e.id === target.id && e.hp > 0);
-  if (skill.target === 'ally')
-    return target.kind === 'ally' && !!s.allies.find((e) => e.id === target.id && e.hp > 0);
-  if (skill.target === 'self') return target.kind === 'ally' && target.id === a.id;
-  return target.kind === 'row' && (target.row === 'front' || target.row === 'back');
-}
+export const validTarget = validExecutionTarget;
 export function command(s: State, c: Command): boolean {
   if (c.type === 'pause') {
     s.paused = c.value;
@@ -236,6 +231,7 @@ export function command(s: State, c: Command): boolean {
     for (const a of s.allies) {
       a.hp = a.maxHp;
       a.atb = 1;
+      a.executionHeld = false;
       a.shield = 0;
       a.action = null;
       a.queued = null;
@@ -287,6 +283,7 @@ export function command(s: State, c: Command): boolean {
         return true;
       }
       const a = s.allies[s.selected];
+      a.executionHeld = false;
       if (a.action?.skillId === 'handoff') return reject(s, '交代を実行中です。');
       a.plan ??= [];
       a.plan = a.plan.filter((p) => !isHandoff(p));
@@ -427,13 +424,25 @@ export function command(s: State, c: Command): boolean {
       prunePlan(s, a);
       return true;
     }
+    case 'hold': {
+      const a = s.allies[c.id];
+      if (!a || a.hp <= 0) return false;
+      a.executionHeld = c.value;
+      emit(
+        s,
+        'system',
+        `${a.name}：${c.value ? '実行保留（現在の一手で止める）' : '保留解除・実行再開'}`,
+      );
+      return true;
+    }
     case 'cancel': {
       if (!s.allies[c.id]) return false;
       if (c.id === s.selected && s.allies[c.id].action?.skillId !== 'handoff')
         s.pendingSelect = null;
-      s.allies[c.id].queued = null;
+      const a = s.allies[c.id];
+      a.queued = null;
       if (s.allies[c.id].plan) s.allies[c.id].plan = [];
-      if (s.allies[c.id].plan) emit(s, 'system', `${s.allies[c.id].name}：予約をすべて取消`);
+      emit(s, 'system', `${a.name}：残りを打ち切り（現在の行動・終了硬直は継続）`);
       return true;
     }
   }
@@ -458,9 +467,9 @@ export function defaultTarget(s: State, a: Ally, skill: Skill): Target {
       return { kind: 'ally', id: a.id };
   }
 }
-function beginAction(s: State, a: Ally, skillId: string, target: Target) {
+function beginAction(s: State, a: Ally, skillId: string, target: Target, comboIndex = 1) {
   const skill = SKILLS[skillId];
-  if (!validTarget(s, a, skill, target)) return false;
+  if (a.atb + 1e-9 < skill.cost || !validTarget(s, a, skill, target)) return false;
   if (skill.effect === 'potion') {
     if (s.potions <= 0) {
       emit(s, 'system', `${a.name}：救急薬がないため予約を解除`);
@@ -472,13 +481,8 @@ function beginAction(s: State, a: Ally, skillId: string, target: Target) {
   const bonus = partyBonus(s.allies, s.config.bonusMode),
     position = positionBonus(a.row, weaponOf(a));
   a.action = {
+    ...makeAction(a, skillId, target, comboIndex),
     offense: { damage: bonus.damage * position.damage, chain: bonus.chain * position.chain },
-    skillId,
-    target: copy(target),
-    remaining: skill.cast + skill.recovery,
-    total: skill.cast + skill.recovery,
-    resolved: false,
-    weaponId: weaponOf(a).id,
   };
   emit(s, 'action', `${a.name} → ${skill.name}`, { source: `a${a.id}` });
   return true;
@@ -499,7 +503,23 @@ function chooseAuto(s: State, a: Ally) {
     if (!vulnerable) return;
     target = { kind: 'ally', id: vulnerable.id };
   } else if (a.atb < 2) return;
-  if (a.atb >= skill.cost) beginAction(s, a, skill.id, target);
+  if (a.atb + 1e-9 < skill.cost) return;
+  const count =
+    skill.link !== undefined && s.config.chainActions
+      ? Math.min(3, Math.floor((a.atb + 1e-9) / skill.cost))
+      : 1;
+  if (!beginAction(s, a, skill.id, target)) return;
+  a.plan ??= [];
+  for (let i = 1; i < count; i++) {
+    s.planSeq = (s.planSeq ?? 0) + 1;
+    a.plan.push({
+      key: s.planSeq,
+      kind: 'skill',
+      skillId: skill.id,
+      target: copy(target),
+      auto: true,
+    });
+  }
 }
 function forceEnemy(s: State, e: Enemy, row: Row) {
   if (e.row === row) return;
@@ -531,6 +551,7 @@ function resolve(s: State, a: Ally, action: Action) {
       s.allies[action.target.id].hp > 0
     ) {
       s.selected = action.target.id;
+      s.allies[s.selected].plan = s.allies[s.selected].plan?.filter((p) => !p.auto);
       s.handoffSlow = BATTLE_TIMING.handoffSlow;
       emit(s, 'system', `${s.allies[s.selected].name}へ交代：引継ぎスロー`);
     } else emit(s, 'system', '交代先が不在のため交代を中止');
@@ -639,98 +660,37 @@ function prunePlan(s: State, a: Ally) {
 function tickAlly(s: State, a: Ally, dt: number) {
   if (a.hp <= 0) return;
   a.shield = Math.max(0, a.shield - dt);
-  if (a.action) {
-    const action = a.action;
-    action.remaining = Math.max(0, action.remaining - dt);
-    if (!action.resolved && action.remaining <= SKILLS[action.skillId].recovery + 1e-9) {
-      action.resolved = true;
-      resolve(s, a, action);
-    }
-    if (action.remaining <= 1e-9 && a.action === action) a.action = null;
-    return;
+  // Reconsider only AI-owned healing reservations; player targets stay fixed.
+  if (a.plan?.some((p) => p.auto && p.kind === 'skill' && p.skillId === 'heal')) {
+    a.plan = a.plan.filter(
+      (p) =>
+        !p.auto ||
+        p.kind !== 'skill' ||
+        p.skillId !== 'heal' ||
+        (p.target.kind === 'ally' &&
+          s.allies[p.target.id].hp > 0 &&
+          s.allies[p.target.id].hp < s.allies[p.target.id].maxHp * 0.83),
+    );
   }
-  const handoff = a.plan?.[0];
-  if (handoff && isHandoff(handoff) && handoff.kind === 'skill' && !a.move && !a.shift) {
-    if (handoff.target.kind !== 'ally' || s.allies[handoff.target.id].hp <= 0) {
-      a.plan!.shift();
-      s.pendingSelect = null;
-      emit(s, 'system', '交代先が戦闘不能のため、交代予約を解除');
-    } else if (a.atb >= SKILLS.handoff.cost) {
-      const reset = a.plan!.length - 1;
-      a.plan = [];
-      a.queued = null;
-      a.nextRow = null;
-      a.nextSlot = null;
-      beginAction(s, a, 'handoff', handoff.target);
-      emit(s, 'system', `交代開始：後続${reset}手を解除`);
-    }
-    return;
-  }
-  // Independent row/weapon transitions share elapsed battle time when issued together.
-  let transitioning = false;
-  if (a.nextRow !== null) {
-    transitioning = true;
-    a.move += dt;
-    if (a.move + 1e-9 >= s.config.moveTime) {
-      a.row = a.nextRow;
-      a.nextRow = null;
-      a.move = 0;
-      emit(s, 'move', `${a.name} → ${ROW_NAMES[a.row]}`, { target: `a${a.id}` });
-    }
-  }
-  if (a.nextSlot !== null) {
-    transitioning = true;
-    a.shift += dt;
-    if (a.shift + 1e-9 >= s.config.shiftTime) {
-      a.slot = a.nextSlot;
-      a.nextSlot = null;
-      a.shift = 0;
-      emit(s, 'shift', `${a.name} → ${weaponOf(a).archetype}`, { target: `a${a.id}` });
-    }
-  }
-  if (transitioning) return;
-  if (a.plan?.length) {
-    const p = a.plan[0];
-    if (p.kind === 'move') {
-      a.plan.shift();
-      queueRow(a, p.row);
-      emit(s, 'system', `${a.name}：予約した${ROW_NAMES[p.row]}への移動を開始`);
-    } else if (p.kind === 'weapon') {
-      a.plan.shift();
-      a.nextSlot = p.slot === a.slot ? null : p.slot;
-      a.shift = 0;
-      emit(s, 'system', `${a.name}：予約した武器変更を開始`);
-    } else {
-      const sk = SKILLS[p.skillId];
-      if (
-        !canUse(a, p.skillId) ||
-        !validTarget(s, a, sk, p.target) ||
-        (p.skillId === 'potion' && s.potions <= 0)
-      ) {
-        a.plan.shift();
-        emit(s, 'system', `${a.name}：「${sk.name}」の予約を解除（対象・武器・残数を確認）`);
-      } else if (a.atb >= sk.cost) {
-        a.plan.shift();
-        beginAction(s, a, p.skillId, p.target);
-      }
-    }
-    return;
-  }
-  if (a.queued) {
-    const q = a.queued,
-      skill = SKILLS[q.skillId];
-    if (!canUse(a, q.skillId) || !validTarget(s, a, skill, q.target)) {
-      a.queued = null;
-      emit(s, 'system', `${a.name}：無効になった予約を解除`);
-      return;
-    }
-    if (a.atb >= skill.cost) {
-      a.queued = null;
-      beginAction(s, a, q.skillId, q.target);
-    }
-    return;
-  }
-  if (s.controlMode === 'ai' || a.id !== s.selected) chooseAuto(s, a);
+  advanceExecution(a, s.config, dt, {
+    valid: (p) =>
+      p.kind !== 'skill' ||
+      ((p.skillId === 'handoff' || canUse(a, p.skillId)) &&
+        validTarget(s, a, SKILLS[p.skillId], p.target) &&
+        (p.skillId !== 'potion' || s.potions > 0)),
+    start: (p, comboIndex) => beginAction(s, a, p.skillId, p.target, comboIndex),
+    impact: (action) => resolve(s, a, action),
+    idle: () => {
+      if (s.controlMode === 'ai' || a.id !== s.selected) chooseAuto(s, a);
+    },
+    moved: () => emit(s, 'move', `${a.name} → ${ROW_NAMES[a.row]}`, { target: `a${a.id}` }),
+    shifted: () => emit(s, 'shift', `${a.name} → ${weaponOf(a).archetype}`, { target: `a${a.id}` }),
+    discarded: (p) => {
+      if (isHandoff(p)) s.pendingSelect = null;
+      emit(s, 'system', `${a.name}：「${stepName(a, p)}」の予約を解除（対象・武器・残数を確認）`);
+    },
+    handoff: (removed) => emit(s, 'system', `交代開始：後続${removed}手を解除`),
+  });
 }
 function startEnemyCast(s: State, e: Enemy) {
   const alive = s.allies.filter((a) => a.hp > 0);
@@ -872,7 +832,8 @@ export function step(s: State) {
   // Integrate the roles present at the beginning of this fixed battle-time interval.
   // Completed shifts affect the next interval; actor iteration cannot bias ATB supply.
   const supply = s.config.atbRate * partyBonus(s.allies, s.config.bonusMode).atb;
-  for (const a of s.allies) if (a.hp > 0) a.atb = Math.min(s.config.atbMax, a.atb + dt * supply);
+  for (const a of s.allies)
+    if (charging(a, s.config)) a.atb = Math.min(s.config.atbMax, a.atb + dt * supply);
   for (const a of s.allies) tickAlly(s, a, dt);
   for (const e of s.enemies) tickEnemy(s, e, dt);
   if (!s.allies.some((a) => a.hp > 0)) {

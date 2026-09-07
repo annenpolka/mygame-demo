@@ -13,6 +13,8 @@ export interface Skill {
   cost: number;
   cast: number;
   recovery: number;
+  /** Recovery between identical skills; absent means this skill cannot link. */
+  link?: number;
   power: number;
   chain: number;
   hold: number;
@@ -39,6 +41,9 @@ export interface Action {
   total: number;
   /** remaining/total include windup and recovery; impact happens once. */
   resolved: boolean;
+  cast: number;
+  recovery: number;
+  comboIndex: number;
   weaponId: string;
   offense: { damage: number; chain: number };
 }
@@ -46,7 +51,7 @@ export type PlanStep =
   | { kind: 'skill'; skillId: string; target: Target }
   | { kind: 'move'; row: Row }
   | { kind: 'weapon'; slot: Slot };
-export type PlannedStep = PlanStep & { key: number };
+export type PlannedStep = PlanStep & { key: number; auto?: boolean };
 export interface Ally {
   id: number;
   name: string;
@@ -65,6 +70,7 @@ export interface Ally {
   action: Action | null;
   queued: { skillId: string; target: Target } | null;
   plan?: PlannedStep[];
+  executionHeld: boolean;
   shield: number;
 }
 export interface EnemyCast {
@@ -111,6 +117,8 @@ export interface Config {
   encounterLevel?: number;
   seed: number;
   atbRate: number;
+  atbMode: 'idle' | 'continuous';
+  chainActions: boolean;
   moveTime: number;
   shiftTime: number;
   slowDrain: number;
@@ -179,6 +187,7 @@ export type Command =
   | { type: 'skill'; id: number; skillId: string; target: Target }
   | { type: 'cancel'; id: number }
   | { type: 'cancelFirst'; id: number }
+  | { type: 'hold'; id: number; value: boolean }
   | { type: 'toggleRow'; id: number }
   | { type: 'toggleWeapon'; id: number }
   | { type: 'enqueue'; id: number; step: PlanStep }

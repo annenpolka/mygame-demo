@@ -203,7 +203,7 @@ export function createAdaptivePolicy(style: 'adaptive' | 'assault', reaction = 0
                       : 1;
                   return (
                     (count * (sk.power * (target.broken > 0 ? 1.8 : 1) + sk.chain * chainWeight)) /
-                    Math.max(sk.cast + sk.recovery, sk.cost / v.rules.atbRate)
+                    (sk.cast + sk.recovery + sk.cost / v.rules.atbRate)
                   );
                 };
                 return worth(b) - worth(a);

@@ -188,6 +188,7 @@ describe('battle effects follow resolved simulation outcomes', () => {
     expect(
       effectCues(s).some((c) => c.type === 'heal' && c.target === 'a1' && c.value === 190),
     ).toBe(true);
+    s.selected = 2;
     command(s, { type: 'optima', index: 1 });
     advance(s, SKILLS.heal.recovery + s.config.shiftTime + 2 * DT);
     expect(effectCues(s).some((c) => c.type === 'shift')).toBe(true);
@@ -196,7 +197,7 @@ describe('battle effects follow resolved simulation outcomes', () => {
       id: 2,
       step: { kind: 'skill', skillId: 'pull', target: { kind: 'enemy', id: 1 } },
     });
-    advance(s, SKILLS.pull.cast + SKILLS.jab.cast + SKILLS.jab.recovery + 2 * DT);
+    for (let i = 0; i < 600 && s.enemies[1].row !== 'front'; i++) step(s);
     expect(s.enemies[1].row).toBe('front');
     expect(effectCues(s).some((c) => c.type === 'move' && c.target === 'e1')).toBe(true);
   });
