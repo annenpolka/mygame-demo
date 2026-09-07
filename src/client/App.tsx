@@ -1,3 +1,4 @@
+import { COMBAT_RULES, percent } from '../content/rules';
 import { BattleSound, operationFeedback } from './audio/sound';
 import { prepareLoadout } from '../ai/composition';
 import { BONUS_LABELS, BONUS_MODES } from '../sim/bonuses';
@@ -1189,7 +1190,8 @@ export function App() {
             <span className="eyebrow">HOW TO PLAY</span>
             <h2>全体を指揮し、一手を差し込む。</h2>
             <p>
-              選択中の仲間は、予約が空なら指示を待ちます。ほかの仲間は装備中の武器で自動行動します。AはHP削りとチェイン維持、Bはチェイン上昇、Dは被害を受け止める防護、Sは回復・強化・弱体。敵のチェインが200%になると
+              選択中の仲間は、予約が空なら指示を待ちます。ほかの仲間は装備中の武器で自動行動します。AはHP削りとチェイン維持、Bはチェイン上昇、Dは被害を受け止める防護、Sは回復・強化・弱体。敵のチェインが
+              {COMBAT_RULES.breakThreshold}%になると
               {BATTLE_TIMING.breakDuration}秒間ブレイクします。
             </p>
             <div className="help-grid">
@@ -1199,8 +1201,9 @@ export function App() {
                   <Key>1</Key>
                   <Key>2</Key>
                   <Key>3</Key> または <Key>Q</Key>
-                  <Key>E</Key> で交代を先頭に予約。1
-                  ATBで交代し、開始時に後続の予約を解除します。満杯でも交代を積めます。
+                  <Key>E</Key> で交代を先頭に予約。{SKILLS.handoff.cost} ATB・発動
+                  {SKILLS.handoff.cast}
+                  秒で交代し、開始時に後続の予約を解除します。満杯でも交代を積めます。
                 </p>
                 <p>
                   <Key>Z</Key> 基本技を選ぶ。<Key>X</Key>{' '}
@@ -1218,12 +1221,17 @@ export function App() {
                   <Key>S</Key>
                   <Key>D</Key>
                   <Key>G</Key>{' '}
-                  で武器構成を切り替え。Rで前後移動を積み、Backspaceで先頭予約を取り消せます。Wで武器切替も一押しで積めます。
+                  で武器構成を切り替え。Rで前後移動を積み、Backspaceで先頭の未実行予約を取り消せます。実行中の技は続き、支払い済みATBは戻りません。Wで武器切替も一押しで積めます。
                   <Key>7</Key>
                   <Key>8</Key>
                   <Key>9</Key> で一括隊列。
                 </p>
-                <p>前列は近接威力・崩し効率が上がり、後列は被害を28%軽減。全員後列でも戦えます。</p>
+                <p>
+                  前列は全職の威力×{COMBAT_RULES.frontDamage}・チェイン上昇×
+                  {COMBAT_RULES.frontChain}。後列は被害を{percent(1 - COMBAT_RULES.rearTaken)}
+                  %軽減し、近接の威力は×{COMBAT_RULES.rearMeleeDamage}
+                  。射撃・魔法は後列でも威力を維持します。
+                </p>
                 <p>
                   パッドのコマンド画面では↑が全員への指示、←の一押しで前後移動を積み、→の一押しで表示された役割へ武器を切り替えます。画面下に今使えるボタンが表示されます。
                 </p>
@@ -1231,12 +1239,15 @@ export function App() {
               <div>
                 <h3>考える時間を使う</h3>
                 <p>
-                  <Key>Space</Key> でスロー、<Key>F</Key>{' '}
-                  で戦術停止。もう一度押すと通常へ。開始時4、スローは毎秒4、停止は毎秒12の集中力を消費します。
+                  <Key>Space</Key> でスロー、<Key>F</Key> で戦術停止。もう一度押すと通常へ。開始時
+                  {COMBAT_RULES.focusActivation}、スローは毎実秒{s.config.slowDrain}、停止は毎実秒
+                  {s.config.stopDrain}の集中力を消費します。
                 </p>
                 <p>
                   <Key>Esc</Key>{' '}
-                  は休憩ポーズ。戦場を隠し、すべての時計を止めます。別タブへの移動でも休憩に入ります。交代後は毎回0.8秒間の無料スローで状況を確認できます。再発動待ちはありません。
+                  は休憩ポーズ。戦場を隠し、すべての時計を止めます。別タブへの移動でも休憩に入ります。交代後は毎回
+                  {BATTLE_TIMING.handoffSlow}
+                  実秒間の無料スローで状況を確認できます。再発動待ちはありません。
                 </p>
                 <p>
                   パッドは左トリガーでスロー、右トリガーで戦術停止。メニューを開くだけでは時間は止まりません。

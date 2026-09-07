@@ -1,3 +1,4 @@
+import { COMBAT_RULES, percent } from './rules';
 import type { Config, Formation, Preset, Skill, Weapon } from '../sim/types';
 
 export const VERSION = 'orchestra-7';
@@ -198,7 +199,9 @@ export const SKILLS: Record<string, Skill> = Object.fromEntries(
         hold: 0.0,
         effect: 'shield',
         target: 'ally',
-        description: '味方一人の被ダメージを9秒間半減する。',
+        get description() {
+          return `味方一人の被ダメージを${BATTLE_TIMING.shieldDuration}秒間${percent(1 - COMBAT_RULES.shieldTaken)}%軽減する。`;
+        },
       },
       {
         id: 'rampart',
@@ -211,7 +214,9 @@ export const SKILLS: Record<string, Skill> = Object.fromEntries(
         hold: 0.0,
         effect: 'shield',
         target: 'allyRow',
-        description: '指定列の味方に9秒間の防護。武器を替えても持続する。',
+        get description() {
+          return `指定列の味方に${BATTLE_TIMING.shieldDuration}秒間の防護（被害${percent(1 - COMBAT_RULES.shieldTaken)}%軽減）。武器を替えても持続する。`;
+        },
       },
       {
         id: 'evacuate',
@@ -224,7 +229,8 @@ export const SKILLS: Record<string, Skill> = Object.fromEntries(
         hold: 0.0,
         effect: 'evacuate',
         target: 'allyRow',
-        description: '指定列の味方を反対列へ退避。実行中の技を中断し、ATBは戻らない。',
+        description:
+          '指定列の味方を反対列へ退避。味方の実行中の技を中断し、ATBは戻らない。使用者自身は退避後も硬直が続く。',
       },
       {
         id: 'guard',
@@ -237,8 +243,9 @@ export const SKILLS: Record<string, Skill> = Object.fromEntries(
         hold: 0.0,
         effect: 'guard',
         target: 'self',
-        description:
-          '1 ATBを消費し、6秒間、自分の被ダメージを半減。準備0.4秒・硬直1秒。実行中の技の硬直とATB充填を待って構える。',
+        get description() {
+          return `${this.cost} ATBを消費し、${BATTLE_TIMING.guardDuration}秒間、自分の被ダメージを${percent(1 - COMBAT_RULES.shieldTaken)}%軽減。発動${this.cast}秒・硬直${this.recovery}秒。実行中の行動とATB充填を待って構える。`;
+        },
       },
       {
         id: 'potion',
@@ -251,7 +258,9 @@ export const SKILLS: Record<string, Skill> = Object.fromEntries(
         hold: 0.0,
         effect: 'potion',
         target: 'ally',
-        description: '味方一人を400回復。ラン全体で3個。',
+        get description() {
+          return `味方一人を${this.power}回復。残数はパーティーで共有。`;
+        },
       },
     ] satisfies Skill[]
   ).map((s) => [s.id, s]),
@@ -281,7 +290,9 @@ export const WEAPONS: Record<string, Weapon> = Object.fromEntries(
         role: 'A',
         specialty: '列攻撃',
         glyph: '♜',
-        trait: '前列で斬撃威力 +25%',
+        get trait() {
+          return `前列の威力＋${percent(COMBAT_RULES.frontDamage - 1)}%・チェイン＋${percent(COMBAT_RULES.frontChain - 1)}%（全職共通）`;
+        },
         melee: true,
         skills: ['slash', 'sweep'],
       },
@@ -303,7 +314,9 @@ export const WEAPONS: Record<string, Weapon> = Object.fromEntries(
         role: 'B',
         specialty: '列崩し',
         glyph: '✧',
-        trait: '前列でチェイン効率 +25%',
+        get trait() {
+          return `前列の威力＋${percent(COMBAT_RULES.frontDamage - 1)}%・チェイン＋${percent(COMBAT_RULES.frontChain - 1)}%（全職共通）`;
+        },
         melee: false,
         skills: ['spark', 'rain'],
       },
@@ -347,7 +360,9 @@ export const WEAPONS: Record<string, Weapon> = Object.fromEntries(
         role: 'B',
         specialty: '押し出し',
         glyph: '⚒',
-        trait: '前列のチェイン効果がさらに +20%',
+        get trait() {
+          return `前列のチェイン効果がさらに＋${percent(COMBAT_RULES.weaponFrontChain - 1)}%`;
+        },
         melee: true,
         skills: ['smash', 'push'],
         bonus: 'frontChain',
@@ -359,7 +374,9 @@ export const WEAPONS: Record<string, Weapon> = Object.fromEntries(
         role: 'A',
         specialty: 'ブレイク追撃',
         glyph: '⌁',
-        trait: 'ブレイク中のダメージ +35%',
+        get trait() {
+          return `ブレイク中のダメージ＋${percent(COMBAT_RULES.weaponBreakDamage - 1)}%`;
+        },
         melee: false,
         skills: ['shot', 'volley'],
         bonus: 'breakDamage',
@@ -371,7 +388,9 @@ export const WEAPONS: Record<string, Weapon> = Object.fromEntries(
         role: 'S',
         specialty: '緊急退避',
         glyph: '⚑',
-        trait: '0.2秒で列ごと救援',
+        get trait() {
+          return `発動${SKILLS.evacuate.cast}秒で列ごと救援・硬直${SKILLS.evacuate.recovery}秒`;
+        },
         melee: false,
         skills: ['ward', 'evacuate'],
       },

@@ -1,3 +1,4 @@
+import { COMBAT_RULES } from '../content/rules';
 import { WEAPONS } from '../content/data';
 import type { Ally, BonusMode, Role, Row, Weapon } from './types';
 
@@ -31,7 +32,12 @@ export function bonusText(b: ReturnType<typeof partyBonus>) {
 /** Position is independent of role; weapon traits compose only once. */
 export function positionBonus(row: Row, weapon: Pick<Weapon, 'melee' | 'bonus'>) {
   return {
-    damage: row === 'front' ? 1.25 : weapon.melee ? 0.85 : 1,
-    chain: row === 'front' ? 1.25 * (weapon.bonus === 'frontChain' ? 1.2 : 1) : 1,
+    damage:
+      row === 'front' ? COMBAT_RULES.frontDamage : weapon.melee ? COMBAT_RULES.rearMeleeDamage : 1,
+    chain:
+      row === 'front'
+        ? COMBAT_RULES.frontChain *
+          (weapon.bonus === 'frontChain' ? COMBAT_RULES.weaponFrontChain : 1)
+        : 1,
   };
 }

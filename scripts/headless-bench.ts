@@ -22,6 +22,7 @@ const paths = [
   'src/sim/engine.ts',
   'src/sim/bonuses.ts',
   'src/content/data.ts',
+  'src/content/rules.ts',
   'src/ai/runner.ts',
   'src/ai/observation.ts',
   'src/ai/composition.ts',

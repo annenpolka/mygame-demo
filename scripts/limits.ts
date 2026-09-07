@@ -68,6 +68,7 @@ const paths = [
   'src/sim/tactics.ts',
   'src/ai/queue-policy.ts',
   'src/content/data.ts',
+  'src/content/rules.ts',
   'src/content/encounters.ts',
   'src/lab/session.ts',
   'src/lab/validation.ts',

@@ -1,3 +1,4 @@
+import { COMBAT_RULES, percent } from '../content/rules';
 import { HandoffStatus } from './HandoffStatus';
 import { actionStatus } from './timing';
 import { canAppend, planned, stepName } from '../sim/plan';
@@ -72,7 +73,7 @@ export function Battlefield({
       ) : (
         <div className="field-legend">
           <span>
-            味方 → <small>後列は被害 −28%</small>
+            味方 → <small>後列は被害 −{percent(1 - COMBAT_RULES.rearTaken)}%</small>
           </span>
           <span>
             ← 敵 <small>◎ 集中攻撃の対象</small>
@@ -126,7 +127,9 @@ export function Battlefield({
                 >
                   {rowName}
                   {side === 'ally' && row === 'front' && !rowTarget && !danger && (
-                    <small className="front-bonus">威力・崩し＋25%</small>
+                    <small className="front-bonus">
+                      威力・崩し＋{percent(COMBAT_RULES.frontDamage - 1)}%
+                    </small>
                   )}
                   {rowTarget && <small>{aimedRow ? '▼ この列へ' : 'この列を選ぶ'}</small>}
                   {danger && <small>⚠ 攻撃予告</small>}
@@ -271,12 +274,16 @@ export function Battlefield({
                                 <UnitGauge
                                   label={`${e.name}のチェイン`}
                                   value={e.broken || e.chain - 100}
-                                  max={e.broken ? BATTLE_TIMING.breakDuration : 100}
+                                  max={
+                                    e.broken
+                                      ? BATTLE_TIMING.breakDuration
+                                      : COMBAT_RULES.breakThreshold - 100
+                                  }
                                   kind={e.broken ? 'break' : 'chain'}
                                   text={
                                     e.broken
                                       ? `BREAK ${e.broken.toFixed(1)}s`
-                                      : `CHAIN ${e.chain.toFixed(0)}% / 200%`
+                                      : `CHAIN ${e.chain.toFixed(0)}% / ${COMBAT_RULES.breakThreshold}%`
                                   }
                                 />
                               </span>
@@ -347,7 +354,7 @@ export function Battlefield({
               {s.timeMode === 'normal'
                 ? '通常 ×1.00'
                 : s.timeMode === 'slow'
-                  ? 'スロー ×0.25'
+                  ? `スロー ×${COMBAT_RULES.slowScale}`
                   : '戦術停止 ×0.00'}
             </span>
           </div>

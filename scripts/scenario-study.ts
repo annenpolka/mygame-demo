@@ -49,6 +49,7 @@ if (existsSync(resolve(dir, 'receipt.json')))
 mkdirSync(dir, { recursive: true });
 const paths = [
   'src/content/data.ts',
+  'src/content/rules.ts',
   'src/content/encounters.ts',
   'src/sim/types.ts',
   'src/sim/bonuses.ts',

@@ -1,3 +1,4 @@
+import { COMBAT_RULES } from '../content/rules';
 import { partyBonus } from '../sim/bonuses';
 import { weaponFunction } from './Loadout';
 import { skillTiming } from './timing';
@@ -130,7 +131,7 @@ export function PadBattleConsole({
       <button className={s.timeMode === 'slow' ? 'engaged' : ''} onClick={() => act('slow')}>
         {glyph('slow')}
         <span>
-          スロー<small>{s.timeMode === 'slow' ? '通常に戻す' : '×0.25'}</small>
+          スロー<small>{s.timeMode === 'slow' ? '通常に戻す' : `×${COMBAT_RULES.slowScale}`}</small>
         </span>
       </button>
       <button className={s.timeMode === 'stop' ? 'engaged' : ''} onClick={() => act('stop')}>

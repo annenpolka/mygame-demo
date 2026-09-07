@@ -34,6 +34,7 @@ const paths = [
   'src/sim/tactics.ts',
   'src/sim/bonuses.ts',
   'src/content/data.ts',
+  'src/content/rules.ts',
   'src/content/encounters.ts',
   'src/ai/runner.ts',
   'src/ai/observation.ts',

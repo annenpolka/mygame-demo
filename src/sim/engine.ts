@@ -1,3 +1,4 @@
+import { COMBAT_RULES } from '../content/rules';
 import { partyBonus, positionBonus } from './bonuses';
 import { renameTactics } from './tactics';
 import {
@@ -315,9 +316,10 @@ export function command(s: State, c: Command): boolean {
     case 'time': {
       if (c.mode === 'stop') s.handoffSlow = 0;
       if (c.mode !== 'normal' && s.timeMode === 'normal') {
-        if (s.focus <= 4) return reject(s, '集中力が足りません。通常速度で続行します。');
-        s.focus -= 4;
-        s.metrics.focusUsed += 4;
+        if (s.focus <= COMBAT_RULES.focusActivation)
+          return reject(s, '集中力が足りません。通常速度で続行します。');
+        s.focus -= COMBAT_RULES.focusActivation;
+        s.metrics.focusUsed += COMBAT_RULES.focusActivation;
       }
       s.timeMode = c.mode;
       return true;
@@ -579,7 +581,8 @@ function resolve(s: State, a: Ally, action: Action) {
     const protectedRear =
       e.row === 'back' &&
       s.enemies.some((g) => g.hp > 0 && g.kind === 'guard' && g.row === 'front' && !g.broken);
-    const bonus = weapon.bonus === 'breakDamage' && e.broken > 0 ? 1.35 : 1;
+    const bonus =
+      weapon.bonus === 'breakDamage' && e.broken > 0 ? COMBAT_RULES.weaponBreakDamage : 1;
     const damage = Math.min(
       e.hp,
       Math.round(
@@ -605,7 +608,7 @@ function resolve(s: State, a: Ally, action: Action) {
       emit(s, 'system', `${e.name}を倒した`);
       continue;
     }
-    if (!e.broken && e.chain >= 200) {
+    if (!e.broken && e.chain >= COMBAT_RULES.breakThreshold) {
       e.broken = BATTLE_TIMING.breakDuration;
       e.cast = null;
       e.nextAttack = 2 * BATTLE_TIMING.enemyIntervalScale;
@@ -812,8 +815,8 @@ function tickEnemy(s: State, e: Enemy, dt: number) {
           cast.power *
             taken *
             s.config.enemyPower *
-            (a.row === 'back' ? 0.72 : 1) *
-            (a.shield > 0 ? 0.5 : 1),
+            (a.row === 'back' ? COMBAT_RULES.rearTaken : 1) *
+            (a.shield > 0 ? COMBAT_RULES.shieldTaken : 1),
         ),
       );
       a.hp -= damage;
@@ -849,7 +852,7 @@ export function step(s: State) {
   s.realTime += DT;
   const handoff = s.handoffSlow > 0;
   s.handoffSlow = Math.max(0, s.handoffSlow - DT);
-  let speed = s.timeMode === 'normal' ? 1 : s.timeMode === 'slow' ? 0.25 : 0;
+  let speed = s.timeMode === 'normal' ? 1 : s.timeMode === 'slow' ? COMBAT_RULES.slowScale : 0;
   if (s.timeMode !== 'normal' && !(handoff && s.timeMode === 'slow')) {
     const rate = s.timeMode === 'slow' ? s.config.slowDrain : s.config.stopDrain;
     const cost = Math.min(s.focus, rate * DT);
@@ -862,7 +865,7 @@ export function step(s: State) {
       emit(s, 'system', '集中力を使い切りました。通常速度へ。');
     }
   }
-  if (handoff && speed === 1) speed = 0.25;
+  if (handoff && speed === 1) speed = COMBAT_RULES.slowScale;
   const dt = DT * speed;
   if (dt === 0) return;
   s.time += dt;
