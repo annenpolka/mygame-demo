@@ -68,21 +68,19 @@ describe('dual target interface semantics', () => {
     expect(html).not.toContain('outside-target');
     expect(html).toContain('actor-marker');
   });
-  it('leaves an invalid skill clickable and identifies only the original recovery skill as a repeat press', () => {
+  it('exposes an automatically replaced support target without a repeat-press prompt', () => {
     const s = battle();
     let ui = selectCandidate(s, newBattlePad(), 'ally', { kind: 'ally', id: 1 });
     ui = battleInput(s, ui, 'targetEnemies').ui;
     s.allies[1].hp = 0;
     ui = syncPaletteTargets(s, ui);
     const initial = skillButton(consoleMarkup(s, ui), 'ward');
-    expect(initial).toContain('対象が不在');
+    expect(initial).toContain('アルト');
+    expect(initial).not.toContain('対象が不在');
+    expect(initial).not.toContain('もう一度');
     expect(initial).not.toContain('disabled');
-    ui = battleInput(s, ui, 'confirm').ui;
-    const html = consoleMarkup(s, ui);
-    expect(skillButton(html, 'ward')).toContain('同じ技をもう一度押すと追加');
-    expect(skillButton(html, 'rampart')).toContain('押すと対象候補を確認');
-    expect(html).toContain('recipient-portraits');
-    expect(html).toContain('role="status"');
-    expect(html).toContain('class="sr-only"');
+    const added = battleInput(s, ui, 'confirm');
+    expect(added.commands).toMatchObject([{ step: { target: { kind: 'ally', id: 0 } } }]);
+    expect(consoleMarkup(s, added.ui)).toContain('role="status"');
   });
 });

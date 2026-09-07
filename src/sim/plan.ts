@@ -4,6 +4,7 @@ import {
   makeAction,
   pendingSteps,
   validExecutionStep,
+  executionTarget,
   type ExecutionActor,
   type ExecutionRules,
   type TargetView,
@@ -152,7 +153,8 @@ export function planTiming(
         current.linked = comboIndex > 1;
         a.atb = Math.max(0, a.atb - SKILLS[p.skillId].cost);
         if (p.skillId === 'potion') potions--;
-        a.action = makeAction(a, p.skillId, p.target, comboIndex);
+        const target = view ? executionTarget(view, a, SKILLS[p.skillId], p.target)! : p.target;
+        a.action = makeAction(a, p.skillId, target, comboIndex);
         return true;
       },
       impact: () => {

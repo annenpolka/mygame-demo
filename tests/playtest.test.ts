@@ -227,17 +227,19 @@ it('restores candidate memory, an active committed group and a separate next dra
   expect(state.allies[0].sequences).toEqual(session.state.allies[0].sequences);
 });
 
-it('round-trips shared targets and a recovery prompt without adding its action', () => {
+it('round-trips repaired shared targets and their single submitted action', () => {
   const { session, journal, view } = fixture();
   view.battle = syncPaletteTargets(session.state, view.battle);
   view.battle = { ...view.battle, invalidTargets: { enemy: true } };
-  view.battle = battleInput(session.state, view.battle, 'confirm').ui;
-  expect(view.battle.targetRecovery?.skillId).toBe('slash');
+  const added = battleInput(session.state, view.battle, 'confirm');
+  view.battle = added.ui;
+  session.send(...added.commands);
+  expect(view.battle.targetRecovery).toBeUndefined();
   const note = parseNotes(exportNotes([journal.mark(session, view)]))[0];
   const restored = prepareNoteReplay(note, 'marked');
   expect(restored.view.battle).toEqual(view.battle);
   expect(runReplay(restored.recording)).toEqual(session.state);
-  expect(session.state.allies[0].draft ?? []).toHaveLength(0);
+  expect(session.state.allies[0].draft ?? []).toHaveLength(1);
   const confirmed = battleInput(session.state, restored.view.battle, 'confirm');
   expect(confirmed.commands).toMatchObject([
     { type: 'draft', step: { target: { kind: 'enemy', id: 0 } } },

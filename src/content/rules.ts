@@ -8,6 +8,7 @@ export const COMBAT_RULES = {
   weaponFrontChain: 1.2,
   weaponBreakDamage: 1.35,
   breakThreshold: 200,
+  chainMax: 500,
   focusActivation: 4,
   slowScale: 0.25,
 };

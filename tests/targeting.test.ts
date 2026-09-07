@@ -119,7 +119,7 @@ describe('role and situation based targets', () => {
 
 describe('target selection boundaries', () => {
   it.each(['break', 'death'] as const)(
-    'locks the current action and reconsiders AI-owned follow-ups after %s',
+    'preserves a living action target, retargets a lost one and reconsiders AI follow-ups after %s',
     (change) => {
       const s = battle(),
         a = s.allies[0];
@@ -134,7 +134,10 @@ describe('target selection boundaries', () => {
         s.enemies[1].chain = 250;
       }
       advance(s, 0.5);
-      expect(a.action).toMatchObject({ target: { kind: 'enemy', id: 0 }, resolved: false });
+      expect(a.action).toMatchObject({
+        target: { kind: 'enemy', id: change === 'death' ? 1 : 0 },
+        resolved: false,
+      });
       advance(s, 0.7);
       expect(a.action).toMatchObject({ target: { kind: 'enemy', id: 1 }, comboIndex: 2 });
       expect(a.atb).toBeCloseTo(paidAtb - 1);
@@ -173,7 +176,7 @@ describe('target selection boundaries', () => {
     recording.inputs.push({ tick: 0, order: 10, command: { type: 'target', id: 1 } } as never);
     expect(() => parseRecording(JSON.stringify(recording))).toThrow();
     const old = { ...copy(x.state), version: 'orchestra-11', target: 0 };
-    expect(VERSION).toBe('orchestra-14');
+    expect(VERSION).toBe('orchestra-15');
     expect(() =>
       parseSnapshot(JSON.stringify({ version: 'orchestra-11', kind: 'snapshot', state: old })),
     ).toThrow();

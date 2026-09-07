@@ -24,8 +24,8 @@ export type ExecutionActor = Pick<
   | 'executionHeld'
 > & { weapons: readonly [string, string] };
 export type TargetView = {
-  allies: readonly { id: number; hp: number; maxHp: number }[];
-  enemies: readonly { id: number; hp: number }[];
+  allies: readonly { id: number; hp: number; maxHp: number; row: 'front' | 'back' }[];
+  enemies: readonly { id: number; hp: number; row: 'front' | 'back' }[];
   potions: number;
 };
 export function pendingSteps(
@@ -71,8 +71,28 @@ export function validExecutionStep(a: ExecutionActor, p: PlannedStep, view?: Tar
     !!sk &&
     ['guard', 'potion', 'handoff', ...WEAPONS[a.weapons[a.slot]].skills].includes(p.skillId) &&
     (!view ||
-      (validExecutionTarget(view, a, sk, p.target) && (sk.effect !== 'potion' || view.potions > 0)))
+      (!!executionTarget(view, a, sk, p.target) && (sk.effect !== 'potion' || view.potions > 0)))
   );
+}
+/** Keep a living destination; replace an absent one on the same side in stable ID order.
+ * Explicit character handoffs and self actions do not select another actor.
+ */
+export function executionTarget(
+  view: TargetView,
+  a: Pick<Ally, 'id'>,
+  skill: Skill,
+  target: Target,
+): Target | null {
+  if (skill.target === 'self' || skill.effect === 'handoff')
+    return validExecutionTarget(view, a, skill, target) ? target : null;
+  const side = skill.target.startsWith('enemy') ? 'enemy' : 'ally';
+  const row = skill.target.endsWith('Row');
+  if (row ? target.kind !== 'row' : target.kind !== side) return null;
+  const units = (side === 'enemy' ? view.enemies : view.allies).filter((u) => u.hp > 0);
+  if (units.some((u) => (target.kind === 'row' ? u.row === target.row : u.id === target.id)))
+    return target;
+  const next = [...units].sort((a, b) => a.id - b.id)[0];
+  return next ? (row ? { kind: 'row', row: next.row } : { kind: side, id: next.id }) : null;
 }
 export function makeAction(
   a: ExecutionActor,

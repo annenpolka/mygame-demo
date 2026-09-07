@@ -91,7 +91,7 @@ describe('human and AI ordered plans', () => {
     expect(add(s, skill('potion'))).toBe(false);
     expect(s.potions).toBe(3);
   });
-  it('skips a dead target and continues; clears all plans at a battle boundary', () => {
+  it('retargets a dead target and continues; clears all plans at a battle boundary', () => {
     const s = battle(),
       a = s.allies[0];
     a.atb = 4;
@@ -100,7 +100,8 @@ describe('human and AI ordered plans', () => {
     s.enemies[0].hp = 0;
     step(s);
     expect(planned(a)).toHaveLength(1);
-    advance(s, SKILLS.guard.cast + 0.8 + 2 * DT);
+    expect(a.action).toMatchObject({ skillId: 'slash', target: { kind: 'enemy', id: 1 } });
+    advance(s, SKILLS.slash.cast + SKILLS.slash.recovery + SKILLS.guard.cast + 0.8 + 2 * DT);
     expect(a.shield).toBeGreaterThan(0);
     add(s, skill('guard'));
     s.enemies[1].hp = 0;

@@ -73,7 +73,7 @@ describe('bank ATB, link identical skills, and keep the final recovery', () => {
     expect(starts(low)).toHaveLength(2);
     expect(low.allies[0].action?.comboIndex).toBe(1);
   });
-  it.each(['cancel', 'cancelFirst', 'hold', 'death', 'weapon', 'move'] as const)(
+  it.each(['cancel', 'cancelFirst', 'hold', 'weapon', 'move'] as const)(
     '%s at the connection boundary cannot erase final recovery or refund payment',
     (interruption) => {
       const s = quiet(),
@@ -84,7 +84,6 @@ describe('bank ATB, link identical skills, and keep the final recovery', () => {
       advance(s, 1.1 - DT);
       const paid = a.atb;
       if (interruption === 'hold') command(s, { type: 'hold', id: 0, value: true });
-      else if (interruption === 'death') s.enemies[0].hp = 0;
       else if (interruption === 'weapon') command(s, { type: 'optima', index: 3 });
       else if (interruption === 'move') command(s, { type: 'move', id: 0, row: 'back' });
       else command(s, { type: interruption, id: 0 });

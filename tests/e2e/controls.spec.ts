@@ -640,7 +640,7 @@ test('support uses the marked ally while editing the enemy and keeps existing dr
   await expect(drafts(page).last().getByRole('button')).toHaveAccessibleName(/防御、アルト/);
 });
 
-test('a fallen marked ally remains invalid until a fresh second skill press accepts the visible candidate', async ({
+test('a fallen marked ally switches automatically and the next skill press adds exactly once', async ({
   page,
 }) => {
   const s = createState();
@@ -665,16 +665,14 @@ test('a fallen marked ally remains invalid until a fresh second skill press acce
   await sideStick(page, 1);
   await page.clock.runFor(450);
   await expect(page.locator('[data-unit=a1]')).toBeDisabled();
-  await expect(page.locator('[data-unit=a1]')).toHaveAttribute('aria-pressed', 'true');
-  await expect(page.locator('[data-unit=a1] .unit-target-marks')).toHaveClass(/invalid/);
+  await expect(page.locator('[data-unit=a1]')).toHaveAttribute('aria-pressed', 'false');
+  await expect(page.locator('[data-unit=a0]')).toHaveAttribute('aria-pressed', 'true');
+  await expect(page.locator('[data-unit=e0]')).toHaveAttribute('data-editing', 'true');
+  await expect(page.locator('[data-skill-id=ward]')).toHaveAccessibleName(/アルト/);
   await down(page, 0);
   await page.clock.runFor(600);
-  await expect(drafts(page)).toHaveCount(0);
-  await expect(page.locator('[data-unit=a0]')).toHaveAttribute('data-candidate', 'true');
-  await expect(page.locator('[data-skill-id=ward]')).toHaveAccessibleName(/候補：アルト/);
-  await release(page);
-  await press(page, 0);
   await expect(drafts(page)).toHaveCount(1);
+  await release(page);
   await expect(drafts(page).getByRole('button')).toHaveAccessibleName(/護りの誓い、アルト/);
   await expect(page.locator('[data-unit=a0]')).toHaveAttribute('aria-pressed', 'true');
   await expect(page.locator('[data-unit=a0]')).not.toHaveAttribute('data-candidate');

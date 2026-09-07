@@ -110,34 +110,38 @@ export interface PaletteCursor {
 const matchingCandidate = (target: UnitTarget | undefined, side: 'ally' | 'enemy') =>
   target?.kind === side && Number.isInteger(target.id) && target.id >= 0 ? target : undefined;
 export function paletteTargets(s: State, ui: BattlePad): Record<'ally' | 'enemy', UnitTarget> {
-  return {
-    ally: matchingCandidate(ui.candidates?.ally, 'ally') ??
-      matchingCandidate(ui.candidates?.[`${s.selected}:ally`], 'ally') ?? {
-        kind: 'ally',
-        id: s.allies[s.selected].id,
-      },
-    enemy: matchingCandidate(ui.candidates?.enemy, 'enemy') ??
-      matchingCandidate(ui.candidates?.[`${s.selected}:enemy`], 'enemy') ?? {
-        kind: 'enemy',
-        id: s.enemies.find((e) => e.hp > 0)?.id ?? s.enemies[0]?.id ?? 0,
-      },
+  const held = (side: 'ally' | 'enemy'): UnitTarget => {
+    const units = side === 'ally' ? s.allies : s.enemies;
+    const stored =
+      matchingCandidate(ui.candidates?.[side], side) ??
+      matchingCandidate(ui.candidates?.[`${s.selected}:${side}`], side);
+    if (stored && livingTarget(s, stored)) return stored;
+    const first = [...units].filter((u) => u.hp > 0).sort((a, b) => a.id - b.id)[0];
+    if (!first && stored) return stored;
+    return {
+      kind: side,
+      id:
+        !stored && side === 'ally' && s.allies[s.selected].hp > 0
+          ? s.selected
+          : (first?.id ?? stored?.id ?? 0),
+    };
   };
+  return { ally: held('ally'), enemy: held('enemy') };
 }
 const livingTarget = (s: State, target: UnitTarget) =>
   (target.kind === 'ally' ? s.allies : s.enemies).some((u) => u.id === target.id && u.hp > 0);
-/** Call at state boundaries, including restore. Invalidation survives a later revival. */
+/** Repair missing destinations at state and input boundaries, preserving the editing side. */
 export function syncPaletteTargets(s: State, ui: BattlePad): BattlePad {
   const targets = paletteTargets(s, ui);
-  const invalid = { ...ui.invalidTargets };
-  for (const side of ['ally', 'enemy'] as const) {
-    const stored = ui.candidates?.[side] ?? ui.candidates?.[`${s.selected}:${side}`];
-    if (!livingTarget(s, targets[side]) || (stored && !matchingCandidate(stored, side)))
-      invalid[side] = true;
-  }
+  const invalid = {
+    ally: !livingTarget(s, targets.ally),
+    enemy: !livingTarget(s, targets.enemy),
+  };
   if (
     ui.candidates?.ally === targets.ally &&
     ui.candidates?.enemy === targets.enemy &&
     ui.candidateSide &&
+    !ui.targetRecovery &&
     invalid.ally === ui.invalidTargets?.ally &&
     invalid.enemy === ui.invalidTargets?.enemy
   )
@@ -147,6 +151,7 @@ export function syncPaletteTargets(s: State, ui: BattlePad): BattlePad {
     candidates: targets,
     candidateSide: ui.candidateSide ?? 'enemy',
     invalidTargets: invalid,
+    targetRecovery: undefined,
   };
 }
 export function paletteCursor(s: State, ui: BattlePad): PaletteCursor {
@@ -230,58 +235,20 @@ function addPaletteSkill(
       },
       commands: [],
     };
-  let next = ui;
-  let preview = skillPreview(s, next, id);
+  const next = syncPaletteTargets(s, ui);
+  const preview = skillPreview(s, next, id);
   if (!preview.target) {
     const side = SKILLS[id].target.startsWith('enemy') ? 'enemy' : 'ally';
-    const recovery = ui.targetRecovery;
-    if (
-      recovery?.skillId === id &&
-      recovery.side === side &&
-      recovery.target.kind === side &&
-      livingTarget(s, recovery.target)
-    ) {
-      next = selectCandidate(s, ui, side, recovery.target);
-      preview = skillPreview(s, next, id);
-    } else {
-      const units = side === 'ally' ? s.allies : s.enemies;
-      const candidate =
-        side === 'ally' && s.allies[s.selected].hp > 0
-          ? s.allies[s.selected]
-          : units.find((u) => u.hp > 0);
-      const target: UnitTarget | undefined = candidate && { kind: side, id: candidate.id };
-      return {
-        ui: {
-          ...home(ui),
-          candidateSide: side,
-          targetRecovery: target
-            ? {
-                skillId: id,
-                side,
-                target,
-                previousSide: recovery?.previousSide ?? ui.candidateSide ?? 'enemy',
-              }
-            : undefined,
-          feedback: { kind: target ? 'candidate' : 'blocked', skillId: id, target },
-          message: candidate
-            ? `${candidate.name}が候補です。同じ技でもう一度確定、または対象を選び直してください。`
-            : `対象にできる${side === 'ally' ? '仲間' : '敵'}がいません。`,
-          stamp: ui.stamp + 1,
-        },
-        commands: [],
-      };
-    }
-  }
-  if (!preview.target)
     return {
       ui: {
         ...home(next),
-        message: '対象が変わりました。技をもう一度押してください。',
+        message: `対象にできる${side === 'ally' ? '仲間' : '敵'}がいません。`,
         feedback: { kind: 'blocked', skillId: id },
         stamp: ui.stamp + 1,
       },
       commands: [],
     };
+  }
   return {
     ui: {
       ...home(next),

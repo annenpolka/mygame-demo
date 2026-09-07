@@ -1,6 +1,7 @@
 import { ENCOUNTER_SET_IDS } from '../content/encounters';
 import { z } from 'zod';
 import { SKILLS, VERSION, WEAPONS } from '../content/data';
+import { COMBAT_RULES } from '../content/rules';
 import { plannedCost, planned, isHandoff } from '../sim/plan';
 import type { Recording, State } from '../sim/types';
 
@@ -141,7 +142,7 @@ const stateSchema = z
           hp: n,
           maxHp: n.positive(),
           row,
-          chain: z.number().min(100).max(500),
+          chain: z.number().min(100).max(COMBAT_RULES.chainMax),
           hold: n,
           broken: n,
           nextAttack: z.number().finite(),

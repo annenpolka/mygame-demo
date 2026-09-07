@@ -109,119 +109,71 @@ describe('target palette and explicit sequences', () => {
       step: { skillId: 'guard', target: { kind: 'ally', id: 1 } },
     });
   });
-  it('initializes once, preserves invalid targets across side changes and requires explicit recovery after revival', () => {
+  it('automatically replaces a lost target and keeps the replacement after revival or side changes', () => {
     const x = session();
     let ui = syncPaletteTargets(x.state, newBattlePad());
     expect(syncPaletteTargets(x.state, ui)).toBe(ui);
     const chosen = ui.candidates!.enemy;
     x.state.enemies[chosen.id].hp = 0;
     ui = syncPaletteTargets(x.state, ui);
-    expect(ui.invalidTargets?.enemy).toBe(true);
+    expect(ui.invalidTargets?.enemy).toBe(false);
+    expect(paletteTargets(x.state, ui).enemy).toEqual({ kind: 'enemy', id: 1 });
     ui = battleInput(x.state, ui, 'targetAllies').ui;
     ui = battleInput(x.state, ui, 'targetEnemies').ui;
-    expect(paletteTargets(x.state, ui).enemy).toEqual(chosen);
     x.state.enemies[chosen.id].hp = 500;
     ui = syncPaletteTargets(x.state, ui);
-    expect(skillPreview(x.state, ui, 'slash').target).toBeNull();
-    ui = selectCandidate(x.state, ui, 'enemy', chosen);
-    expect(skillPreview(x.state, ui, 'slash').target).toEqual(chosen);
+    expect(skillPreview(x.state, ui, 'slash').target).toEqual({ kind: 'enemy', id: 1 });
   });
-  it('proposes a living support target on the first press and adds exactly once on the next same skill press', () => {
+  it('adds support to a living replacement with one press while preserving the editing side', () => {
     const x = session();
     let ui = selectCandidate(x.state, newBattlePad(), 'ally', { kind: 'ally', id: 1 });
     ui = battleInput(x.state, ui, 'targetEnemies').ui;
     x.send(...battleInput(x.state, ui, 'weapon').commands);
     x.state.allies[1].hp = 0;
     const first = battleInput(x.state, ui, 'confirm');
-    expect(first.commands).toEqual([]);
-    expect(first.ui.targetRecovery).toEqual({
-      skillId: 'ward',
-      side: 'ally',
-      target: { kind: 'ally', id: 0 },
-      previousSide: 'enemy',
-    });
-    expect(first.ui.feedback?.kind).toBe('candidate');
-    expect(skillPreview(x.state, first.ui, 'ward')).toMatchObject({
-      target: null,
-      candidateTarget: { kind: 'ally', id: 0 },
-    });
-    const second = battleInput(x.state, first.ui, 'confirm');
-    expect(second.commands).toEqual([
+    expect(first.commands).toEqual([
       {
         type: 'draft',
         id: 0,
         step: { kind: 'skill', skillId: 'ward', target: { kind: 'ally', id: 0 } },
       },
     ]);
-    expect(second.ui.targetRecovery).toBeUndefined();
-    expect(second.ui.feedback?.kind).toBe('added');
-    x.send(...second.commands);
+    expect(first.ui.targetRecovery).toBeUndefined();
+    expect(first.ui.candidateSide).toBe('enemy');
+    expect(first.ui.feedback?.kind).toBe('added');
+    x.send(...first.commands);
+    expect(x.state.allies[0].draft).toHaveLength(1);
+    expect(battleInput(x.state, first.ui, 'skill').commands).toMatchObject([
+      { step: { skillId: 'rampart', target: { kind: 'row', row: 'front' } } },
+    ]);
+    expect(battleInput(x.state, first.ui, 'back').commands).toEqual([]);
+    expect(battleInput(x.state, first.ui, 'inputConflict').commands).toEqual([]);
     expect(x.state.allies[0].draft).toHaveLength(1);
   });
-  it('never dispatches the old recovery skill after another skill, back, explicit selection, execute or an input conflict', () => {
-    const x = session();
-    let ui = selectCandidate(x.state, newBattlePad(), 'ally', { kind: 'ally', id: 1 });
-    ui = battleInput(x.state, ui, 'targetEnemies').ui;
-    x.send(...battleInput(x.state, ui, 'weapon').commands);
-    x.state.allies[1].hp = 0;
-    const pending = battleInput(x.state, ui, 'confirm').ui;
-    const changed = battleInput(x.state, pending, 'skill');
-    expect(changed.commands).toEqual([]);
-    expect(changed.ui.targetRecovery?.skillId).toBe('rampart');
-    expect(battleInput(x.state, changed.ui, 'skill').commands).toMatchObject([
-      { step: { skillId: 'rampart' } },
-    ]);
-    const back = battleInput(x.state, pending, 'back');
-    expect(back.commands).toEqual([]);
-    expect(back.ui.targetRecovery).toBeUndefined();
-    expect(back.ui.candidateSide).toBe('enemy');
-    const selected = selectCandidate(x.state, pending, 'ally', { kind: 'ally', id: 2 });
-    expect(selected.targetRecovery).toBeUndefined();
-    expect(x.state.allies[0].draft).toEqual([]);
-    const conflict = battleInput(x.state, pending, 'inputConflict');
-    expect(conflict.commands).toEqual([]);
-    expect(conflict.ui.targetRecovery).toBeUndefined();
-    expect(conflict.ui.feedback?.kind).toBe('blocked');
-    const empty = battleInput(x.state, pending, 'execute');
-    expect(empty.commands).toEqual([]);
-    expect(empty.ui.targetRecovery).toBeUndefined();
-    x.send(...battleInput(x.state, ui, 'guard').commands);
-    const execute = battleInput(x.state, pending, 'execute');
-    expect(execute.commands).toEqual([{ type: 'executeSequence', id: 0 }]);
-    x.send(...execute.commands);
-    expect(planned(x.state.allies[0])).toMatchObject([{ skillId: 'guard' }]);
-  });
-  it('blocks an absent or newly lost recovery candidate and never revives a queued intention', () => {
+  it('blocks only when no living target remains, without creating a deferred input', () => {
     const x = session();
     let ui = syncPaletteTargets(x.state, newBattlePad());
     x.state.enemies[0].hp = 0;
-    ui = battleInput(x.state, ui, 'confirm').ui;
-    expect(ui.targetRecovery?.target).toEqual({ kind: 'enemy', id: 1 });
+    const replacement = battleInput(x.state, ui, 'confirm');
+    expect(replacement.commands).toMatchObject([{ step: { target: { kind: 'enemy', id: 1 } } }]);
+    ui = replacement.ui;
     x.state.enemies[1].hp = 0;
     const blocked = battleInput(x.state, ui, 'confirm');
     expect(blocked.commands).toEqual([]);
     expect(blocked.ui.targetRecovery).toBeUndefined();
     expect(blocked.ui.feedback?.kind).toBe('blocked');
+    x.state.enemies[0].hp = 500;
+    expect(battleInput(x.state, blocked.ui, 'back').commands).toEqual([]);
+    expect(battleInput(x.state, blocked.ui, 'confirm').commands).toHaveLength(1);
   });
-  it('rejects malformed cross-side stored candidates and recovery without emitting an invalid command', () => {
+  it('repairs malformed cross-side stored candidates without emitting a cross-side command', () => {
     const x = session();
     const initial = syncPaletteTargets(x.state, newBattlePad());
     const corrupted = {
       ...initial,
       candidates: { ...initial.candidates, enemy: { kind: 'ally' as const, id: 0 } },
     };
-    const first = battleInput(x.state, corrupted, 'confirm');
-    expect(first.commands).toEqual([]);
-    expect(first.ui.targetRecovery?.target.kind).toBe('enemy');
-    const malformedRecovery = {
-      ...first.ui,
-      targetRecovery: { ...first.ui.targetRecovery!, target: { kind: 'ally' as const, id: 0 } },
-    };
-    expect(skillPreview(x.state, malformedRecovery, 'slash').candidateTarget).toBeUndefined();
-    const retry = battleInput(x.state, malformedRecovery, 'confirm');
-    expect(retry.commands).toEqual([]);
-    expect(retry.ui.targetRecovery?.target.kind).toBe('enemy');
-    expect(battleInput(x.state, retry.ui, 'confirm').commands).toMatchObject([
+    expect(battleInput(x.state, corrupted, 'confirm').commands).toMatchObject([
       { step: { target: { kind: 'enemy', id: 0 } } },
     ]);
   });
@@ -281,8 +233,12 @@ describe('target palette and explicit sequences', () => {
     ui = selectCandidate(x.state, ui, 'enemy', { kind: 'row', row: 'back' });
     expect(ui).toBe(before);
     x.state.enemies[0].hp = 0;
-    expect(battleInput(x.state, ui, 'confirm').commands).toEqual([]);
-    expect(battleInput(x.state, ui, 'skill').commands).toEqual([]);
+    expect(battleInput(x.state, ui, 'confirm').commands).toMatchObject([
+      { step: { target: { kind: 'enemy', id: 1 } } },
+    ]);
+    expect(battleInput(x.state, ui, 'skill').commands).toMatchObject([
+      { step: { target: { kind: 'row', row: 'back' } } },
+    ]);
     ui = battleInput(x.state, ui, 'right').ui;
     expect(skillPreview(x.state, ui, 'sweep')).toEqual({
       target: { kind: 'row', row: 'back' },

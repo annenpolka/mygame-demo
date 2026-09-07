@@ -4,6 +4,7 @@ import {
   charging,
   makeAction,
   validExecutionTarget,
+  executionTarget,
   refreshSequences,
 } from './execution';
 import { COMBAT_RULES } from '../content/rules';
@@ -645,7 +646,7 @@ function resolve(s: State, a: Ally, action: Action) {
     );
     e.hp -= damage;
     s.metrics.damage += damage;
-    e.chain = Math.min(500, e.chain + skill.chain * action.offense.chain);
+    e.chain = Math.min(COMBAT_RULES.chainMax, e.chain + skill.chain * action.offense.chain);
     e.hold = Math.max(e.hold, skill.hold);
     emit(s, 'damage', `${a.name} → ${e.name} ${damage}`, {
       source: `a${a.id}`,
@@ -699,8 +700,25 @@ function prunePlan(s: State, a: Ally) {
 function tickAlly(s: State, a: Ally, dt: number) {
   if (a.hp <= 0) return;
   a.shield = Math.max(0, a.shield - dt);
+  // Repair paid actions and retained inputs without restarting, repaying, or dropping a step.
+  const retained = [
+    ...(a.action && !a.action.resolved ? [a.action] : []),
+    ...(a.queued ? [a.queued] : []),
+    ...[...(a.plan ?? []), ...(a.draft ?? [])]
+      .filter((p) => p.kind === 'skill')
+      .filter((p) => !p.auto),
+  ];
+  for (const p of retained) {
+    const target = executionTarget(s, a, SKILLS[p.skillId], p.target);
+    if (target && target !== p.target) p.target = target;
+  }
   const targetFor = (p: import('./types').PlannedStep & { kind: 'skill' }) =>
-    p.auto ? chooseTarget(s, a, SKILLS[p.skillId], s.config.bonusMode) : p.target;
+    p.auto
+      ? (chooseTarget(s, a, SKILLS[p.skillId], s.config.bonusMode) ??
+        (!validTarget(s, a, SKILLS[p.skillId], p.target)
+          ? executionTarget(s, a, SKILLS[p.skillId], p.target)
+          : null))
+      : p.target;
   advanceExecution(a, s.config, dt, {
     valid: (p) => {
       if (p.kind !== 'skill') return true;
