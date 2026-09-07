@@ -26,6 +26,9 @@ export interface RunOptions {
   seed?: number;
   enemyPower?: number;
   atbRate?: number;
+  atbMode?: State['config']['atbMode'];
+  chainActions?: boolean;
+  initialAtb?: number;
   atbMax?: number;
   decisionInterval?: number;
   reactionSeconds?: number;
@@ -87,6 +90,9 @@ export interface RunSummary {
   seed: number;
   enemyPower: number;
   atbRate: number;
+  atbMode: State['config']['atbMode'];
+  chainActions: boolean;
+  initialAtb: number;
   atbMax: number;
   decisionInterval: number;
   reactionSeconds: number;
@@ -156,6 +162,9 @@ export function runPolicy(options: RunOptions): RunResult {
     seed: 1307,
     enemyPower: 1,
     atbRate: DEFAULT_CONFIG.atbRate,
+    atbMode: DEFAULT_CONFIG.atbMode,
+    chainActions: DEFAULT_CONFIG.chainActions,
+    initialAtb: 1,
     atbMax: DEFAULT_CONFIG.atbMax,
     decisionInterval: 0.25,
     reactionSeconds: 0.35,
@@ -178,6 +187,11 @@ export function runPolicy(options: RunOptions): RunResult {
     !Number.isInteger(opts.atbMax) ||
     opts.atbMax < 2 ||
     opts.atbMax > 8 ||
+    !['idle', 'continuous'].includes(opts.atbMode) ||
+    typeof opts.chainActions !== 'boolean' ||
+    !Number.isFinite(opts.initialAtb) ||
+    opts.initialAtb < 0 ||
+    opts.initialAtb > opts.atbMax ||
     !Number.isFinite(opts.atbRate) ||
     opts.atbRate < 0.2 ||
     opts.atbRate > 3 ||
@@ -204,12 +218,15 @@ export function runPolicy(options: RunOptions): RunResult {
     seed: opts.seed,
     enemyPower: opts.enemyPower,
     atbRate: opts.atbRate,
+    atbMode: opts.atbMode,
+    chainActions: opts.chainActions,
     atbMax: opts.atbMax,
     bonusMode: opts.bonusMode,
     enemyHpScale: opts.enemyHpScale,
     ...(opts.encounterSet ? { encounterSet: opts.encounterSet } : {}),
     ...(opts.encounterLevel ? { encounterLevel: opts.encounterLevel } : {}),
   });
+  for (const a of s.allies) a.atb = opts.initialAtb;
   const initial = copy(s);
   s.controlMode = initial.controlMode = 'ai';
   const planning = opts.planning ?? 'legacy';
@@ -407,6 +424,7 @@ export function runPolicy(options: RunOptions): RunResult {
   if (opts.verifyReplay && !replayVerified)
     throw new Error(`AI ${opts.policy} seed=${opts.seed} のリプレイが一致しません。`);
   const summary: RunSummary = {
+    initialAtb: opts.initialAtb,
     loadout: opts.loadout,
     fullInventory: opts.fullInventory,
     loadoutWeapons: s.allies.map((a) => [...a.weapons]),
@@ -421,6 +439,8 @@ export function runPolicy(options: RunOptions): RunResult {
     seed: opts.seed,
     enemyPower: opts.enemyPower,
     atbRate: opts.atbRate,
+    atbMode: opts.atbMode,
+    chainActions: opts.chainActions,
     atbMax: opts.atbMax,
     bonusMode: opts.bonusMode,
     enemyHpScale: opts.enemyHpScale,

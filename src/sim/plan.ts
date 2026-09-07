@@ -74,7 +74,7 @@ export interface PlanTiming {
 }
 /** Conditional on visible targets and current party supply remaining unchanged.
  * Uses the runtime scheduler; future damage, interruption, and AI decisions are not predicted.
- * Times are battle seconds at normal fixed-step resolution (one DT conservative at slow speed).
+ * Times are battle seconds at normal fixed-step resolution (conservatively rounded per boundary at slow speed).
  */
 export function planTiming(
   actor: Omit<ExecutionActor, 'plan'> & { plan?: readonly PlannedStep[] },
