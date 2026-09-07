@@ -69,33 +69,33 @@ describe('two clocks and resources', () => {
       expect(s.events.filter((e) => e.type === 'action' && e.source === 'a0')).toHaveLength(1);
     },
   );
-  it('tactical stop drains focus while ATB, movement, casts and status timers remain frozen', () => {
+  it('system pause freezes ATB, movement, casts and status timers without draining focus', () => {
     const s = battle();
     s.allies[0].shield = 5;
     s.enemies[0].cast = cast();
     s.enemies[1].broken = 5;
     command(s, { type: 'move', id: 0, row: 'back' });
-    command(s, { type: 'time', mode: 'stop' });
+    command(s, { type: 'pause', value: true });
     const before = copy(s);
     advance(s, 2);
     expect(s.time).toBe(before.time);
-    expect(s.realTime).toBeCloseTo(2);
-    expect(s.focus).toBeCloseTo(72);
+    expect(s.realTime).toBe(before.realTime);
+    expect(s.focus).toBe(before.focus);
     expect(s.allies).toEqual(before.allies);
     expect(s.enemies).toEqual(before.enemies);
   });
-  it('slow is quarter speed; switching slow to stop does not charge entry twice', () => {
+  it('slow is quarter speed; repeating slow does not charge entry twice', () => {
     const s = battle();
     command(s, { type: 'time', mode: 'slow' });
     advance(s, 2);
     expect(s.time).toBeCloseTo(0.5);
     expect(s.focus).toBeCloseTo(88);
-    command(s, { type: 'time', mode: 'stop' });
+    command(s, { type: 'time', mode: 'slow' });
     expect(s.focus).toBeCloseTo(88);
   });
   it('system pause freezes both clocks and rejects tactical commands', () => {
     const s = battle();
-    command(s, { type: 'time', mode: 'stop' });
+    command(s, { type: 'time', mode: 'slow' });
     command(s, { type: 'pause', value: true });
     const before = copy(s);
     advance(s, 10);
@@ -104,8 +104,8 @@ describe('two clocks and resources', () => {
   });
   it('returns to normal on exhaustion without negative focus', () => {
     const s = battle();
-    command(s, { type: 'time', mode: 'stop' });
-    advance(s, 9);
+    command(s, { type: 'time', mode: 'slow' });
+    advance(s, 25);
     expect(s.focus).toBe(0);
     expect(s.timeMode).toBe('normal');
     expect(s.time).toBeGreaterThan(0);
@@ -154,7 +154,7 @@ describe('commands and weapon boundaries', () => {
     expect(a.allies[0].slot).toBe(1);
     expect(a.allies[0].atb).toBeCloseTo(1);
   });
-  it('an executing attack completes before a weapon change or normal movement', () => {
+  it('an executing attack keeps its weapon while direct movement proceeds alongside it', () => {
     const s = battle();
     s.allies[0].atb = 4;
     command(s, { type: 'skill', id: 0, skillId: 'sweep', target: { kind: 'row', row: 'front' } });
@@ -164,6 +164,10 @@ describe('commands and weapon boundaries', () => {
     advance(s, 0.5);
     expect(s.allies[0].action?.skillId).toBe('sweep');
     expect(s.allies[0].row).toBe('front');
+    expect(s.allies[0].slot).toBe(0);
+    advance(s, s.config.moveTime - 0.5);
+    expect(s.allies[0].action?.skillId).toBe('sweep');
+    expect(s.allies[0].row).toBe('back');
     expect(s.allies[0].slot).toBe(0);
     advance(s, SKILLS.sweep.cast + SKILLS.sweep.recovery + s.config.moveTime - 0.5);
     expect(s.allies[0].row).toBe('back');
@@ -355,11 +359,11 @@ describe('recordings and snapshots', () => {
     expect(session.state.presets[0].slots[0]).toBe(1);
     expect(session.state.allies.every((a) => a.row === 'back')).toBe(true);
   });
-  it('replays the exact seeded result, including ordered inputs while time is stopped', () => {
+  it('replays the exact seeded result, including ordered inputs during slow motion', () => {
     const session = new Session();
     session.send({ type: 'start' });
     for (let i = 0; i < 300; i++) session.advance(DT);
-    session.send({ type: 'time', mode: 'stop' });
+    session.send({ type: 'time', mode: 'slow' });
     session.send(
       { type: 'move', id: 0, row: 'back' },
       { type: 'optima', index: 1 },
@@ -436,7 +440,7 @@ describe('recordings and snapshots', () => {
             case 3:
               command(s, {
                 type: 'time',
-                mode: ['normal', 'slow', 'stop'][rand() % 3] as 'normal' | 'slow' | 'stop',
+                mode: rand() % 2 ? 'normal' : 'slow',
               });
               break;
             case 4:

@@ -133,7 +133,7 @@ export class Session {
   }
 }
 
-/** Replays use real-time ticks and stable input order, including multiple inputs during tactical stop. */
+/** Replays use real-time ticks and stable input order, including multiple inputs in one tick. */
 export function runReplay(
   data: Recording,
   configOverride?: Partial<Config>,

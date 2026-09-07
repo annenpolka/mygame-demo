@@ -30,14 +30,24 @@ it('updates automatic names after slot, weapon and formation edits and preserves
   expect(parsed).toEqual(s);
   expect(roleName(['D', 'A', 'B'])).toBe(roleName(['A', 'D', 'B']));
 });
-it('one-touch weapon switching toggles the projected slot and shares queue capacity and cancellation', () => {
+it('one-touch weapon switching toggles the direct request independently of queue capacity', () => {
   const s = createState();
   command(s, { type: 'start' });
-  for (let i = 0; i < 4; i++) expect(command(s, { type: 'toggleWeapon', id: 0 })).toBe(true);
-  expect(s.allies[0].plan?.map((p) => p.kind === 'weapon' && p.slot)).toEqual([1, 0, 1, 0]);
-  expect(command(s, { type: 'toggleWeapon', id: 0 })).toBe(false);
+  const unchanged = copy(s.allies[0].weapons);
+  for (let i = 0; i < 4; i++)
+    command(s, {
+      type: 'enqueue',
+      id: 0,
+      step: { kind: 'skill', skillId: 'guard', target: { kind: 'ally', id: 0 } },
+    });
+  const before = copy(s.allies[0].plan);
+  for (let i = 0; i < 6; i++) {
+    expect(command(s, { type: 'toggleWeapon', id: 0 })).toBe(true);
+    expect(s.allies[0].nextSlot).toBe(i % 2 ? null : 1);
+    expect(s.allies[0].plan).toEqual(before);
+  }
   command(s, { type: 'cancelFirst', id: 0 });
   expect(s.allies[0].plan?.map((p) => p.key)).toEqual([2, 3, 4]);
-  const unchanged = copy(s.allies[0].weapons);
+  expect(s.allies[0].nextSlot).toBeNull();
   expect(s.allies[0].weapons).toEqual(unchanged);
 });

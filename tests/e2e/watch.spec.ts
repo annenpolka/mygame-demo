@@ -10,14 +10,14 @@ test('candidate cursor remains on the battlefield and keeps selection separate f
 }) => {
   await page.getByRole('button', { name: '戦闘開始 →', exact: true }).click();
   await page.clock.runFor(2500);
-  await page.keyboard.press('f');
-  const field = page.getByRole('listbox', { name: '行動の対象候補' });
-  await expect(field.getByRole('option')).toHaveCount(5);
+  const field = page.getByRole('group', { name: '行動の対象候補' });
+  await expect(field.locator('[data-unit]')).toHaveCount(5);
+  await expect(field.locator('[data-unit][data-target]')).toHaveCount(2);
   await page.keyboard.press('ArrowRight');
-  await expect(
-    field.getByRole('option', { name: '灰の砲術師を対象候補にする', selected: true }),
-  ).toBeVisible();
-  await expect(page.locator('.field-aim-path')).toBeVisible();
+  await expect(field.locator('[data-unit=e1][data-target=enemy][data-editing=true]')).toBeVisible();
+  await expect(page.locator('[data-unit=e1] .target-edit-corners')).toBeVisible();
+  await expect(page.locator('[data-unit=a0] .target-floor')).toBeVisible();
+  await expect(page.locator('.field-aim-path')).toHaveCount(0);
   await page.keyboard.press('x');
   await page.keyboard.press('z');
   await page.keyboard.press('v');
@@ -78,7 +78,6 @@ test('AI viewing automatically equips rewards and completes both battles', async
 test('mobile battlefield targeting and AI viewing stay within the viewport', async ({ page }) => {
   await page.setViewportSize({ width: 390, height: 844 });
   await page.getByRole('button', { name: '戦闘開始 →', exact: true }).click();
-  await page.keyboard.press('f');
   await page.keyboard.press('v');
   const field = page.getByRole('listbox', { name: '戦場で対象を選ぶ', exact: true });
   await expect(field.getByRole('option')).toHaveCount(3);
@@ -89,6 +88,6 @@ test('mobile battlefield targeting and AI viewing stay within the viewport', asy
   await page.clock.runFor(1000);
   await page.getByRole('button', { name: 'Ⅱ 鑑賞を一時停止', exact: true }).click();
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
-  await expect(page.locator('.field-hint')).toContainText('通常');
+  await expect(page.locator('.field-time-symbol')).toHaveAttribute('title', '通常 ×1.00');
   await page.screenshot({ path: 'test-results/ai-viewing-mobile.png', fullPage: true });
 });

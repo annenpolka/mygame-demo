@@ -958,3 +958,501 @@
     flex-basis: 100%;
   }
 }
+
+/* Targets stay visible independently from the one cursor used to edit them. */
+.battle-layout .dual-target-field .field-unit.can-target {
+  border: 1px solid transparent;
+  background: #11233375;
+}
+.battle-layout .dual-target-field .field-unit.selected {
+  border-left: 1px solid transparent;
+}
+.battle-layout .dual-target-field .field-unit:focus-visible {
+  outline: 3px solid #f7f1d9;
+  outline-offset: 3px;
+}
+.battle-layout .dual-target-field .field-unit.fallen {
+  opacity: 0.65;
+}
+.battle-layout .dual-target-field .field-unit.fallen .field-symbol,
+.battle-layout .dual-target-field .field-unit.fallen .field-unit-info {
+  opacity: 0.45;
+}
+.unit-target-marks {
+  grid-column: 1;
+  grid-row: 2;
+  width: 64px;
+  height: 68px;
+  position: relative;
+  z-index: 9;
+  align-self: center;
+  pointer-events: none;
+  overflow: visible;
+  color: #8ee3d0;
+  stroke: currentColor;
+  stroke-width: 2.5;
+}
+.unit-target-marks.enemy {
+  color: #edba83;
+}
+.unit-target-marks .target-floor {
+  fill: #0c1c2aa8;
+}
+.unit-target-marks.candidate .target-floor,
+.unit-target-marks.invalid .target-floor {
+  stroke-dasharray: 6 5;
+}
+.unit-target-marks .actor-marker {
+  fill: #f8e4ae;
+  stroke: #10202d;
+  stroke-width: 1.5;
+}
+.unit-target-marks .target-slash {
+  stroke: #f4c0b5;
+  stroke-width: 3;
+}
+.target-edit-corners {
+  position: absolute;
+  inset: -1px;
+  pointer-events: none;
+  z-index: 10;
+  color: #fff0c7;
+  animation: target-cursor-arrive 180ms ease-out;
+}
+.target-edit-corners i {
+  position: absolute;
+  width: 11px;
+  height: 11px;
+  border: solid currentColor;
+  border-width: 2px 0 0 2px;
+}
+.target-edit-corners i:nth-child(1) {
+  top: 0;
+  left: 0;
+}
+.target-edit-corners i:nth-child(2) {
+  top: 0;
+  right: 0;
+  transform: rotate(90deg);
+}
+.target-edit-corners i:nth-child(3) {
+  bottom: 0;
+  right: 0;
+  transform: rotate(180deg);
+}
+.target-edit-corners i:nth-child(4) {
+  bottom: 0;
+  left: 0;
+  transform: rotate(270deg);
+}
+.target-edit-corners.candidate i {
+  border-style: dashed;
+}
+@keyframes target-cursor-arrive {
+  from {
+    transform: scale(1.05);
+  }
+  to {
+    transform: scale(1);
+  }
+}
+.palette-target-bar {
+  min-height: 0;
+}
+.target-symbol-help {
+  position: relative;
+  font-size: 12px;
+  z-index: 15;
+}
+.target-symbol-help summary {
+  list-style: none;
+  width: 32px;
+  min-height: 32px;
+  display: grid;
+  place-content: center;
+  border: 1px solid #a7c4ce88;
+  border-radius: 50%;
+  cursor: pointer;
+}
+.target-symbol-help > div {
+  position: absolute;
+  left: 0;
+  top: 38px;
+  width: min(480px, 75vw);
+  padding: 12px 16px;
+  background: #102331;
+  border: 1px solid #b7ccdb;
+  color: #eef3ee;
+  box-shadow: 0 8px 24px #0008;
+}
+.target-symbol-help p {
+  margin: 5px 0;
+  line-height: 1.7;
+}
+.field-time-symbol {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+.skill-icon {
+  width: 26px;
+  height: 26px;
+  display: inline-block;
+  flex: 0 0 auto;
+  vertical-align: middle;
+}
+.field-time-symbol .skill-icon {
+  width: 18px;
+  height: 18px;
+}
+.direct-command > .skill-icon {
+  width: 24px;
+  height: 24px;
+}
+.direct-command .command-identity {
+  min-width: 0;
+  flex: 1;
+}
+.direct-command .command-identity > strong {
+  font-size: 13px;
+  white-space: nowrap;
+}
+.command-recipient,
+.plan-recipient {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.recipient-portraits {
+  display: inline-flex;
+  position: relative;
+  gap: 2px;
+  flex: 0 0 auto;
+  padding: 1px;
+  align-items: center;
+}
+.recipient-portrait {
+  display: inline-block;
+  position: relative;
+  width: 27px;
+  height: 25px;
+  overflow: hidden;
+  border: 1.5px solid #438577;
+  border-radius: 50%;
+  background: #142b36;
+}
+.recipient-portrait.enemy {
+  border-color: #94642e;
+  border-radius: 3px;
+}
+.recipient-portrait .field-symbol {
+  display: block;
+  width: 25px;
+  height: 25px;
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+.recipient-portrait .unit-figure {
+  width: 25px;
+  height: 27px;
+}
+.recipient-portrait i {
+  position: absolute;
+  bottom: -1px;
+  right: 0;
+  font: 700 9px system-ui;
+  color: #fff3d1;
+  text-shadow:
+    -1px -1px 1px #000,
+    1px 1px 1px #000;
+}
+.recipient-portraits.recipient-row {
+  border-bottom: 2px solid currentColor;
+  border-radius: 0 0 4px 4px;
+}
+.recipient-portraits.candidate {
+  outline: 1px dashed currentColor;
+  outline-offset: 1px;
+}
+.recipient-portraits.invalid::after,
+.recipient-portrait.invalid::after {
+  content: '';
+  position: absolute;
+  height: 2px;
+  inset: 50% 0 auto;
+  background: #e2a09a;
+  transform: rotate(-38deg);
+}
+.recipient-portrait.invalid .unit-figure {
+  opacity: 0.4;
+}
+.recipient-missing {
+  display: grid;
+  place-content: center;
+  width: 27px;
+  height: 25px;
+}
+.recipient-missing .skill-icon {
+  width: 22px;
+  height: 22px;
+}
+.skill-cost {
+  display: flex;
+  gap: 3px;
+}
+.skill-cost i {
+  width: 5px;
+  height: 7px;
+  transform: skew(-12deg);
+  border: 1px solid currentColor;
+  background: currentColor;
+  opacity: 0.75;
+}
+.direct-command.candidate-command {
+  outline: 2px dashed #183f48;
+  outline-offset: -4px;
+}
+.command-condition {
+  margin-left: auto;
+  display: flex;
+}
+.command-condition .skill-icon {
+  width: 19px;
+  height: 19px;
+}
+.direct-command.blocked-command {
+  background: #c7beb0;
+}
+.pad-console .direct-command:focus-visible {
+  outline: 3px solid #61ddfa;
+  outline-offset: -4px;
+}
+.pad-direction-commands button {
+  min-height: 36px;
+  justify-content: center;
+}
+.pad-direction-commands .skill-icon {
+  width: 23px;
+  height: 23px;
+}
+.icon-feedback {
+  min-height: 28px;
+}
+.feedback-receipt {
+  display: inline-flex;
+  gap: 6px;
+  align-items: center;
+  color: #d8e6d7;
+}
+.feedback-receipt .skill-icon {
+  width: 22px;
+  height: 22px;
+}
+.feedback-blocked {
+  color: #ffc1ad;
+}
+.feedback-candidate {
+  color: #eadba8;
+}
+.input-flight {
+  position: fixed;
+  pointer-events: none;
+  z-index: 100;
+  color: #fff0b5;
+  opacity: 0;
+  filter: drop-shadow(0 1px 3px #102332);
+}
+.pad-plan-list .plan-skill-token {
+  flex: 0 0 auto;
+  width: 25px;
+}
+.pad-plan-list .plan-skill-token .skill-icon {
+  width: 24px;
+  height: 24px;
+}
+.pad-plan-list .plan-recipient small {
+  margin-left: auto;
+  white-space: nowrap;
+  font-size: 10px;
+}
+.plan-stage-icon {
+  display: inline-block;
+  vertical-align: middle;
+  margin-left: 4px;
+}
+.plan-stage-icon .skill-icon {
+  width: 15px;
+  height: 15px;
+  padding: 2px;
+  border: 1px solid currentColor;
+}
+.plan-stage-icon.draft .skill-icon {
+  border-style: dashed;
+}
+.plan-stage-icon.committed .skill-icon {
+  background: #244c45;
+  color: #d6f6e6;
+}
+.pad-plan-list .new-draft {
+  animation: draft-receipt-arrive 420ms ease-out;
+}
+@keyframes draft-receipt-arrive {
+  from {
+    background: #edd99538;
+  }
+  to {
+    background: transparent;
+  }
+}
+.pad-plan-empty {
+  padding: 16px 8px;
+}
+.empty-draft-symbol {
+  display: block;
+  border: 1px dashed #82a4b766;
+  font-size: 24px;
+  text-align: center;
+  padding: 4px;
+  color: #82a4b788;
+}
+@media (min-width: 1200px) {
+  .pad-layout .pad-console .direct-command {
+    min-height: 57px;
+  }
+  .pad-layout .pad-console:not(.keyboard-console) .command-diamond {
+    grid-template-rows: repeat(3, 61px);
+  }
+}
+@media (max-width: 1100px) {
+  .battle-layout .unit-target-marks {
+    width: 48px;
+    height: 56px;
+  }
+}
+@media (max-width: 800px) {
+  .battle-layout .unit-target-marks {
+    grid-column: 1;
+    grid-row: 2;
+  }
+  .pad-direction-commands {
+    grid-template-columns: repeat(5, 1fr);
+  }
+  .direct-command .command-identity > strong {
+    font-size: 12px;
+  }
+  .pad-direction-commands button {
+    min-height: 42px;
+  }
+}
+@media (max-width: 500px) {
+  .direct-command {
+    gap: 4px;
+  }
+  .direct-command > .skill-icon {
+    width: 18px;
+    height: 18px;
+  }
+  .direct-command .command-identity > strong {
+    font-size: 11px;
+  }
+  .command-recipient {
+    gap: 3px;
+  }
+  .recipient-portrait {
+    width: 22px;
+    height: 22px;
+  }
+  .recipient-portrait .field-symbol {
+    width: 21px;
+    height: 23px;
+  }
+  .recipient-portrait .unit-figure {
+    width: 21px;
+    height: 23px;
+  }
+  .pad-direction-commands {
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+  }
+  .pad-direction-commands button {
+    flex-direction: column;
+    gap: 3px;
+  }
+  .command-condition .skill-icon {
+    width: 15px;
+    height: 15px;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .target-edit-corners,
+  .pad-plan-list .new-draft {
+    animation: none;
+  }
+  .input-flight {
+    display: none;
+  }
+}
+
+@media (min-width: 801px) {
+  .battlefield[data-density='3'] .unit-target-marks {
+    width: 38px;
+    height: 39px;
+  }
+}
+@media (min-width: 801px) and (max-height: 800px) {
+  .battle-layout .unit-target-marks {
+    width: 46px;
+    height: 48px;
+  }
+  .battlefield[data-density='3'] .unit-target-marks {
+    width: 36px;
+    height: 38px;
+  }
+}
+@media (max-width: 800px) {
+  .battle-layout .unit-target-marks {
+    width: 44px;
+    height: 48px;
+    justify-self: center;
+  }
+}
+
+.battle-layout .dual-target-field .field-footer {
+  min-height: 38px;
+  height: auto;
+}
+.dual-target-field .field-hint {
+  padding: 3px 8px;
+}
+
+.pad-console .direct-command:hover:not(:disabled) {
+  background: #ffefce;
+  color: #182c36;
+}
+@media (min-width: 1200px) and (max-height: 800px) {
+  .pad-layout .pad-console:not(.keyboard-console) .command-diamond {
+    grid-template-rows: repeat(3, 46px);
+  }
+  .pad-layout .pad-console:not(.keyboard-console) .direct-command {
+    min-height: 44px;
+    padding: 2px 8px;
+  }
+  .pad-layout .pad-console:not(.keyboard-console) .command-identity > strong {
+    font-size: 12px;
+    line-height: 1.2;
+  }
+  .pad-layout .pad-console:not(.keyboard-console) .command-recipient .recipient-portrait {
+    width: 22px;
+    height: 22px;
+  }
+  .pad-layout .pad-console:not(.keyboard-console) .command-recipient .field-symbol,
+  .pad-layout .pad-console:not(.keyboard-console) .command-recipient .unit-figure {
+    width: 21px;
+    height: 23px;
+  }
+}
+@media (min-width: 801px) and (max-height: 800px) {
+  .battle-layout .dual-target-field:has(.field-target-bar) .field-footer {
+    min-height: 30px;
+  }
+}

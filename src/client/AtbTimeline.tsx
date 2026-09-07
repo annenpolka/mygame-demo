@@ -110,7 +110,7 @@ export function AtbTimeline({
           </button>
           <small>
             {keyboard
-              ? 'Escは戻る専用 · Tで一件取消'
+              ? 'Escは戻る専用 · 一件取消は補助から'
               : '戻るは予約を変更しません · 一件取消は予約一覧へ'}
           </small>
         </div>
@@ -159,7 +159,7 @@ export function AtbTimeline({
         <span>
           {q.some(isHandoff)
             ? '交代は先頭優先 · 後続は交代開始時に解除'
-            : `予約コスト ${offset} / ${s.config.atbMax} ATB · ${q.length}手（所持 ${a.atb.toFixed(1)}）`}
+            : `行動コスト ${offset} / ${s.config.atbMax} ATB · ${q.length}手（所持 ${a.atb.toFixed(1)}）`}
         </span>
         <span className="atb-free-steps">
           {entries

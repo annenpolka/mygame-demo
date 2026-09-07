@@ -3,7 +3,7 @@ export type Row = 'front' | 'back';
 export type BonusMode = 'none' | 'modest' | 'strong';
 export type Role = 'A' | 'B' | 'D' | 'S';
 export type Slot = 0 | 1;
-export type TimeMode = 'normal' | 'slow' | 'stop';
+export type TimeMode = 'normal' | 'slow';
 export type Target = { kind: 'enemy' | 'ally'; id: number } | { kind: 'row'; row: Row };
 export type Effect =
   'damage' | 'heal' | 'shield' | 'push' | 'pull' | 'evacuate' | 'guard' | 'potion' | 'handoff';
@@ -131,7 +131,6 @@ export interface Config {
   moveTime: number;
   shiftTime: number;
   slowDrain: number;
-  stopDrain: number;
   enemyPower: number;
   uiMode: 'separate' | 'individual' | 'linked';
   encounter: 1 | 2;
@@ -199,6 +198,7 @@ export type Command =
   | { type: 'select'; id: number }
   | { type: 'time'; mode: TimeMode }
   | { type: 'move'; id: number; row: Row }
+  | { type: 'weapon'; id: number; slot: Slot }
   | { type: 'formation'; index: number }
   | { type: 'optima'; index: number }
   | { type: 'skill'; id: number; skillId: string; target: Target }

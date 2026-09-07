@@ -16,7 +16,6 @@ import {
   isHandoff,
   planned,
   projectedSlot,
-  projectedRow,
   pendingPotions,
   stepName,
 } from './plan';
@@ -127,6 +126,13 @@ function queueRow(a: Ally, row: Row) {
   if (a.nextRow === row) return;
   a.nextRow = a.row === row ? null : row;
   a.move = 0;
+}
+function changeWeapon(s: State, a: Ally, slot: 0 | 1) {
+  if (slot !== (a.nextSlot ?? a.slot)) {
+    a.nextSlot = slot === a.slot ? null : slot;
+    a.shift = 0;
+  }
+  prunePlan(s, a);
 }
 export function canUse(a: Ally, id: string) {
   return id === 'guard' || id === 'potion' || weaponOf(a).skills.includes(id);
@@ -266,18 +272,18 @@ export function command(s: State, c: Command): boolean {
     const a = s.allies[c.id];
     if (!a || a.hp <= 0) return false;
     return command(s, {
-      type: 'enqueue',
+      type: 'weapon',
       id: c.id,
-      step: { kind: 'weapon', slot: projectedSlot(a) === 0 ? 1 : 0 },
+      slot: (a.nextSlot ?? a.slot) === 0 ? 1 : 0,
     });
   }
   if (c.type === 'toggleRow') {
     const a = s.allies[c.id];
     if (!a || a.hp <= 0) return false;
     return command(s, {
-      type: 'enqueue',
+      type: 'move',
       id: c.id,
-      step: { kind: 'move', row: opposite(projectedRow(a)) },
+      row: opposite(a.nextRow ?? a.row),
     });
   } else if (c.type === 'cancelFirst') {
     const a = s.allies[c.id],
@@ -318,7 +324,7 @@ export function command(s: State, c: Command): boolean {
       return true;
     }
     case 'time': {
-      if (c.mode === 'stop') s.handoffSlow = 0;
+      if (c.mode !== 'normal' && c.mode !== 'slow') return false;
       if (c.mode !== 'normal' && s.timeMode === 'normal') {
         if (s.focus <= COMBAT_RULES.focusActivation)
           return reject(s, '集中力が足りません。通常速度で続行します。');
@@ -330,9 +336,16 @@ export function command(s: State, c: Command): boolean {
     }
     case 'move': {
       const a = s.allies[c.id];
-      if (!a || a.hp <= 0) return false;
+      if (!a || a.hp <= 0 || (c.row !== 'front' && c.row !== 'back')) return false;
       queueRow(a, c.row);
       emit(s, 'system', `${a.name}：${ROW_NAMES[c.row]}へ移動指示`);
+      return true;
+    }
+    case 'weapon': {
+      const a = s.allies[c.id];
+      if (!a || a.hp <= 0 || (c.slot !== 0 && c.slot !== 1)) return false;
+      changeWeapon(s, a, c.slot);
+      emit(s, 'system', `${a.name}：${WEAPONS[a.weapons[c.slot]].name}へ武器変更指示`);
       return true;
     }
     case 'formation': {
@@ -348,22 +361,8 @@ export function command(s: State, c: Command): boolean {
       s.activePreset = c.index;
       for (const a of s.allies) {
         if (a.hp <= 0) continue;
-        const slot = preset.slots[a.id];
-        if (slot !== (a.nextSlot ?? a.slot)) {
-          a.nextSlot = slot === a.slot ? null : slot;
-          a.shift = 0;
-        }
-        const nextWeapon = WEAPONS[a.weapons[slot]];
-        if (a.queued && !['guard', 'potion', ...nextWeapon.skills].includes(a.queued.skillId)) {
-          emit(
-            s,
-            'system',
-            `${a.name}：武器変更のため「${SKILLS[a.queued.skillId].name}」の予約を解除`,
-          );
-          a.queued = null;
-        }
+        changeWeapon(s, a, preset.slots[a.id]);
       }
-      for (const a of s.allies) prunePlan(s, a);
       emit(s, 'shift', `オプティマ：${preset.name}`);
       return true;
     }
@@ -692,6 +691,7 @@ function prunePlan(s: State, a: Ally) {
     return false;
   });
   const keys = new Set(retained.map((p) => p.key));
+  if (a.queued && !keys.has(0)) a.queued = null;
   a.plan = a.plan?.filter((p) => keys.has(p.key));
   a.draft = a.draft?.filter((p) => keys.has(p.key));
   refreshSequences(a);
@@ -870,10 +870,9 @@ export function step(s: State) {
   s.realTime += DT;
   const handoff = s.handoffSlow > 0;
   s.handoffSlow = Math.max(0, s.handoffSlow - DT);
-  let speed = s.timeMode === 'normal' ? 1 : s.timeMode === 'slow' ? COMBAT_RULES.slowScale : 0;
-  if (s.timeMode !== 'normal' && !(handoff && s.timeMode === 'slow')) {
-    const rate = s.timeMode === 'slow' ? s.config.slowDrain : s.config.stopDrain;
-    const cost = Math.min(s.focus, rate * DT);
+  let speed = s.timeMode === 'slow' ? COMBAT_RULES.slowScale : 1;
+  if (s.timeMode === 'slow' && !handoff) {
+    const cost = Math.min(s.focus, s.config.slowDrain * DT);
     s.focus = Math.max(0, s.focus - cost);
     s.metrics.focusUsed += cost;
     if (s.focus < 1e-8) {
@@ -885,7 +884,6 @@ export function step(s: State) {
   }
   if (handoff && speed === 1) speed = COMBAT_RULES.slowScale;
   const dt = DT * speed;
-  if (dt === 0) return;
   s.time += dt;
   // Integrate the roles present at the beginning of this fixed battle-time interval.
   // Completed shifts affect the next interval; actor iteration cannot bias ATB supply.

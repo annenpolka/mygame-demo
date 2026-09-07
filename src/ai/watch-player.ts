@@ -23,8 +23,7 @@ function describe(s: State, c: Command): string {
   if (c.type === 'formation') return s.formations[c.index].name;
   if (c.type === 'move') return `${s.allies[c.id].name}：${ROW_NAMES[c.row]}へ`;
   if (c.type === 'removePlan' || c.type === 'cancel') return `${s.allies[c.id].name}：予約取消`;
-  if (c.type === 'time')
-    return c.mode === 'normal' ? '通常速度' : c.mode === 'slow' ? 'スロー' : '戦術停止';
+  if (c.type === 'time') return c.mode === 'normal' ? '通常速度' : 'スロー';
   return '';
 }
 export function nextEncounterCommands(s: State, mode: LoadoutMode = 'legacy'): Command[] {

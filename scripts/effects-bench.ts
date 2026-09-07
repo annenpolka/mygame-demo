@@ -61,8 +61,7 @@ try {
     }
     if (stress) {
       s.controlMode = 'manual';
-      s.timeMode = 'stop';
-      s.config.stopDrain = 1;
+      s.paused = true;
       s.time = s.realTime = 1;
       s.tick = 60;
       s.allies.forEach((a) => (a.executionHeld = true));
@@ -84,6 +83,9 @@ try {
       buffer: Buffer.from(JSON.stringify({ kind: 'snapshot', version: s.version, state: s })),
     });
     await expect(page.getByRole('complementary', { name: '実験室', exact: true })).toHaveCount(0);
+    // Freeze only this synthetic rendering fixture. The benchmark removes the
+    // ordinary pause overlay so the GPU still paints the battle effects beneath it.
+    if (stress) await page.addStyleTag({ content: '.pause-screen { display: none !important; }' });
     await page.waitForTimeout(3000);
     if (stress) await expect(page.locator('.fx-cue')).toHaveCount(24);
     const result = await page.evaluate(async () => {
@@ -167,7 +169,7 @@ try {
     cpu: cpus()[0]?.model,
     osRelease: release(),
     url,
-    conditions: `Production React; headless Chrome default GPU; 1366x900 DPR${dpr}; crossfire, ${stress ? 'manual, tactical stop, focus drain1/s, 24 synthetic break events held at age .2s' : 'AI, ATB 3/s max8, enemyPower .2'}; all HP 50000; warmup 3s, sample 10s x3; real rAF, no fake clock; sound off; particles/paint sampled every15 frames`,
+    conditions: `Production React; headless Chrome default GPU; 1366x900 DPR${dpr}; crossfire, ${stress ? 'manual, system pause with overlay hidden by fixture CSS, 24 synthetic break events held at age .2s' : 'AI, ATB 3/s max8, enemyPower .2'}; all HP 50000; warmup 3s, sample 10s x3; real rAF, no fake clock; sound off; particles/paint sampled every15 frames`,
     results,
   };
   writeFileSync(output, JSON.stringify(report, null, 2) + '\n');

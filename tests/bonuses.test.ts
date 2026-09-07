@@ -112,7 +112,7 @@ describe('current party role bonuses', () => {
     advance(s, 0.2);
     expect(s.allies[0].action!.remaining).toBeCloseTo(duration - 0.2);
     const freeze = copy(s.allies);
-    command(s, { type: 'time', mode: 'stop' });
+    command(s, { type: 'pause', value: true });
     advance(s, 0.2);
     expect(s.allies).toEqual(freeze);
   });

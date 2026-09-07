@@ -11,7 +11,7 @@ const row = z.enum(['front', 'back']);
 const weapon = z.string().refine((v) => !!WEAPONS[v], '不明な武器');
 const skill = z.string().refine((v) => !!SKILLS[v], '不明な技');
 const rows = z.tuple([row, row, row]);
-const mode = z.enum(['normal', 'slow', 'stop']);
+const mode = z.enum(['normal', 'slow']);
 const target = z.discriminatedUnion('kind', [
   z.object({ kind: z.literal('enemy'), id }),
   z.object({ kind: z.literal('ally'), id }),
@@ -59,7 +59,6 @@ const config = z.object({
   moveTime: z.number().min(0.1).max(2),
   shiftTime: z.number().min(0.1).max(2),
   slowDrain: z.number().min(1).max(20),
-  stopDrain: z.number().min(1).max(30),
   enemyPower: z.number().min(0.2).max(3),
   uiMode: z.enum(['separate', 'individual', 'linked']),
   encounter: z.union([z.literal(1), z.literal(2)]),
@@ -283,6 +282,7 @@ const cmdSchema = z.discriminatedUnion('type', [
   z.object({ type: z.literal('select'), id }),
   z.object({ type: z.literal('time'), mode }),
   z.object({ type: z.literal('move'), id, row }),
+  z.object({ type: z.literal('weapon'), id, slot }),
   z.object({ type: z.literal('formation'), index: id }),
   z.object({ type: z.literal('optima'), index: n.int().max(3) }),
   z.object({ type: z.literal('skill'), id, skillId: skill, target }),

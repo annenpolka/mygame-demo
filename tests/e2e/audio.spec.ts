@@ -20,9 +20,8 @@ test('real audio graph starts on interaction, gives action feedback, and respect
   await page.clock.install();
   await page.goto('/');
   await page.getByRole('button', { name: '戦闘開始 →', exact: true }).click();
-  await page.keyboard.press('f');
   await page.keyboard.press('c');
-  await expect(page.locator('.toast')).toContainText('防御を予約');
+  await expect(page.locator('div.sr-only[role=status]')).toContainText('防御を予約');
   await expect
     .poll(() => page.evaluate(() => (window as any).audioStats.voices))
     .toBeGreaterThan(0);
@@ -37,7 +36,7 @@ test('real audio graph starts on interaction, gives action feedback, and respect
   await page.keyboard.press('h');
   await page.keyboard.press('b');
   expect(await page.evaluate(() => (window as any).audioStats.voices)).toBe(voices);
-  await expect(page.locator('.toast')).toContainText('未実行の予約をすべて取消');
+  await expect(page.locator('div.sr-only[role=status]')).toContainText('未実行の予約をすべて取消');
   await page.reload();
   await expect(page.getByRole('button', { name: '効果音を切り替え', exact: true })).toContainText(
     '音OFF',

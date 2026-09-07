@@ -83,7 +83,7 @@ test('preparation points to real targets; simultaneous break, heal, cannon hit a
     }),
   );
   expect(unobscured).toBe(true);
-  await page.keyboard.press('f');
+  await page.keyboard.press('p');
   const before = await page.locator('.fx-foreground').innerHTML();
   const pixels = await page
     .locator('canvas.battle-particles')

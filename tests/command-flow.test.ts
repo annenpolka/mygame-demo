@@ -53,10 +53,17 @@ describe('capacity, direct stacking and head cancellation', () => {
       expect(a.atb).toBe(cap);
     },
   );
-  it('bounds zero-cost steps, toggles the projected row and keeps the surviving absolute destinations', () => {
+  it('bounds legacy zero-cost plans while a direct row toggle remains independent of their capacity', () => {
     const s = battle(),
       a = s.allies[0];
-    for (let i = 0; i < 4; i++) expect(command(s, { type: 'toggleRow', id: 0 })).toBe(true);
+    for (let i = 0; i < 4; i++)
+      expect(
+        command(s, {
+          type: 'enqueue',
+          id: 0,
+          step: { kind: 'move', row: i % 2 ? 'front' : 'back' },
+        }),
+      ).toBe(true);
     expect(planned(a).map((p) => p.kind === 'move' && p.row)).toEqual([
       'back',
       'front',
@@ -65,7 +72,7 @@ describe('capacity, direct stacking and head cancellation', () => {
     ]);
     expect(plannedCost(a)).toBe(0);
     expect(canAppend(a, s.config)).toBe(false);
-    expect(command(s, { type: 'toggleRow', id: 0 })).toBe(false);
+    expect(command(s, { type: 'enqueue', id: 0, step: { kind: 'move', row: 'back' } })).toBe(false);
     expect(command(s, { type: 'cancelFirst', id: 0 })).toBe(true);
     expect(planned(a).map((p) => p.key)).toEqual([2, 3, 4]);
     expect(projectedRow(a)).toBe('front');
@@ -75,7 +82,8 @@ describe('capacity, direct stacking and head cancellation', () => {
     command(s, { type: 'cancel', id: 0 });
     expect(projectedRow(a)).toBe('back');
     command(s, { type: 'toggleRow', id: 0 });
-    expect(planned(a)[0]).toMatchObject({ kind: 'move', row: 'front' });
+    expect(a.nextRow).toBeNull();
+    expect(planned(a)).toEqual([]);
   });
   it('cancels the current head after execution advances, leaving committed recovery and paid ATB intact', () => {
     const s = battle(),

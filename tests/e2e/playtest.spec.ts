@@ -134,7 +134,7 @@ for (const family of [
   'DualSense Wireless Controller',
   'Nintendo Switch Pro Controller',
 ]) {
-  test(`${family}: L3 marks once, pause opens notes, and confirm resumes the marked queue screen`, async ({
+  test(`${family}: L3 marks once, pause opens notes, and confirm resumes the marked auxiliary screen`, async ({
     page,
   }) => {
     await page.evaluate((id) => {
@@ -161,7 +161,7 @@ for (const family of [
     };
     await page.clock.runFor(32);
     await page.getByRole('button', { name: '戦闘開始 →', exact: true }).click();
-    await press(11); // Open reservation management.
+    await press(8); // Open the auxiliary menu; R3 is now slow.
     await press(10, 600); // Holding a mark button never repeats.
     await expect(page.getByRole('button', { name: '印の一覧', exact: true })).toHaveText('印 1');
     await press(9);
@@ -173,7 +173,7 @@ for (const family of [
     ).toBeFocused();
     await press(family.includes('Nintendo') ? 1 : 0);
     await expect(page.getByRole('dialog', { name: '休憩ポーズ' })).toHaveCount(0);
-    await expect(page.locator('.pad-page-heading')).toContainText('予約を取り消す');
+    await expect(page.locator('.pad-page-heading')).toContainText('補助メニュー');
   });
 }
 

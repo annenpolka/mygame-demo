@@ -26,8 +26,11 @@ import { PadBattleConsole } from './PadBattleConsole';
 import {
   battleInput,
   type BattleAction,
+  type BattlePad,
   newBattlePad,
   paletteCursor,
+  paletteTargets,
+  syncPaletteTargets,
   selectCandidate,
   home,
   openPage,
@@ -44,7 +47,7 @@ import {
   focusElement,
   inputScope,
 } from '../input/navigation';
-import { buttonName, type PadAction } from '../input/gamepad';
+import { buttonName, type PadInput } from '../input/gamepad';
 import { projectedSlot } from '../sim/plan';
 import { ENCOUNTER_SET_IDS, ENCOUNTER_SETS, encounterSet, pressure } from '../content/encounters';
 import { useEffect, useLayoutEffect, useRef, useState } from 'react';
@@ -78,8 +81,15 @@ export function App() {
   const [help, setHelp] = useState(false);
   const [padOpen, setPadOpen] = useState(false);
   const [pending, setPending] = useState<string | null>(null);
-  const [battleUI, setBattleUI] = useState(newBattlePad);
+  const [battleUI, storeBattleUI] = useState(newBattlePad);
+  const battleUIRef = useRef(battleUI);
+  const setBattleUI = (update: BattlePad | ((previous: BattlePad) => BattlePad)) => {
+    const next = typeof update === 'function' ? update(battleUIRef.current) : update;
+    battleUIRef.current = next;
+    storeBattleUI(next);
+  };
   const [notice, setNotice] = useState('');
+  const [commandNotice, setCommandNotice] = useState('');
   const [journal] = useState(() => new PlayJournal());
   const [notesOpen, setNotesOpen] = useState(false);
   const [resumeGate, setResumeGate] = useState('');
@@ -135,6 +145,9 @@ export function App() {
     watching = s.controlMode === 'ai',
     ally = s.allies[s.selected],
     weapon = WEAPONS[ally.weapons[projectedSlot(ally)]];
+  useLayoutEffect(() => {
+    setBattleUI((ui) => syncPaletteTargets(session.state, ui));
+  });
   const refresh = () => render((x) => x + 1);
   const markNow = () => {
     try {
@@ -253,8 +266,29 @@ export function App() {
       const feedback = operationFeedback(c, session.state);
       const accepted = session.send(c)[0];
       sound.play(accepted ? feedback.cue : 'error', true);
-      if (!['editPreset', 'editPresetRow', 'editFormation'].includes(c.type))
+      if (
+        [
+          'draft',
+          'enqueue',
+          'executeSequence',
+          'cancel',
+          'removePlan',
+          'cancelFirst',
+          'select',
+          'move',
+          'toggleRow',
+          'weapon',
+          'toggleWeapon',
+          'optima',
+          'formation',
+          'time',
+        ].includes(c.type)
+      ) {
+        setCommandNotice(accepted ? feedback.label : '今はこの操作を実行できません。');
+        setNotice('');
+      } else if (!['editPreset', 'editPresetRow', 'editFormation'].includes(c.type)) {
         setNotice(accepted ? feedback.label : '今はこの操作を実行できません。');
+      }
     }
     refresh();
   };
@@ -295,10 +329,7 @@ export function App() {
     send({ type: 'select', id });
   };
   const pickOptima = (index: number) => {
-    const cmds: Command[] = [{ type: 'optima', index }];
-    if (s.config.uiMode === 'linked')
-      s.presets[index].rows.forEach((row, id) => cmds.push({ type: 'move', id, row }));
-    send(...cmds);
+    send({ type: 'optima', index });
     setPending(null);
   };
   const useSkill = (id: string) => {
@@ -390,8 +421,16 @@ export function App() {
   }, [pending]);
   useEffect(() => {
     const listener = (event: KeyboardEvent) => {
+      const nativeActivation =
+        (event.key === 'Enter' || event.key === ' ') &&
+        event.target instanceof Element &&
+        !!event.target.closest('button,summary');
+      if (event.repeat) {
+        if (nativeActivation) event.preventDefault();
+        return;
+      }
+      if (nativeActivation) return;
       if (
-        event.repeat ||
         event.metaKey ||
         event.ctrlKey ||
         event.altKey ||
@@ -468,12 +507,13 @@ export function App() {
           q: 'previous',
           e: 'next',
           ' ': 'slow',
-          f: 'stop',
           Backspace: 'back',
           Delete: 'back',
           r: 'toggleRow',
-          w: 'toggleWeapon',
-          t: 'queue',
+          w: 'weapon',
+          j: 'rowBack',
+          k: 'rowFront',
+          t: 'menu',
           l: 'log',
           u: 'tactics',
           i: 'aux',
@@ -531,7 +571,6 @@ export function App() {
       else if (key === 'w') send({ type: 'toggleWeapon', id: s.selected });
       else if (key === 'r') send({ type: 'toggleRow', id: s.selected });
       else if (key === ' ') send({ type: 'time', mode: s.timeMode === 'slow' ? 'normal' : 'slow' });
-      else if (key === 'f') send({ type: 'time', mode: s.timeMode === 'stop' ? 'normal' : 'stop' });
       else if (/^[7-9]$/.test(key) && s.config.uiMode !== 'individual')
         send({ type: 'formation', index: Number(key) - 7 });
       else if (['a', 's', 'd', 'g'].includes(key)) pickOptima(['a', 's', 'd', 'g'].indexOf(key));
@@ -546,11 +585,16 @@ export function App() {
   }, [notice]);
 
   const applyBattleResult = (r: ReturnType<typeof battleInput>) => {
+    const previousUI = battleUIRef.current;
     if (!r.commands.length) {
-      if (r.ui.page !== battleUI.page)
+      if (r.ui.page !== previousUI.page)
         sound.play(r.ui.page === 'command' ? 'cancel' : 'open', true);
-      else if (r.ui.key !== battleUI.key) sound.play('nav', true);
-      else if (r.ui.message && r.ui.stamp !== battleUI.stamp) sound.play('error', true);
+      else if (r.ui.key !== previousUI.key) sound.play('nav', true);
+      else if (r.ui.stamp !== previousUI.stamp && r.ui.feedback?.kind === 'candidate')
+        sound.play('open', true);
+      else if (r.ui.stamp !== previousUI.stamp && r.ui.feedback?.kind === 'selection')
+        sound.play('nav', true);
+      else if (r.ui.message && r.ui.stamp !== previousUI.stamp) sound.play('error', true);
     }
     setPending(r.ui.page === 'target' ? r.ui.skillId : null);
     setBattleUI({
@@ -560,9 +604,9 @@ export function App() {
     if (r.commands.length) send(...r.commands);
   };
   const applyBattleInput = (action: BattleAction) => {
-    applyBattleResult(battleInput(s, battleUI, action));
+    applyBattleResult(battleInput(session.state, battleUIRef.current, action));
   };
-  const handlePad = (action: PadAction) => {
+  const handlePad = (action: PadInput) => {
     void sound.unlock();
     if (action === 'mark' && !notesOpen && !padOpen && !help && !loadoutOpen) {
       if (s.phase === 'battle' && !s.paused) markNow();
@@ -638,7 +682,6 @@ export function App() {
     if (action === 'skill') useSkill(weapon.skills[1]);
 
     if (action === 'slow') send({ type: 'time', mode: s.timeMode === 'slow' ? 'normal' : 'slow' });
-    if (action === 'stop') send({ type: 'time', mode: s.timeMode === 'stop' ? 'normal' : 'stop' });
   };
   const gamepad = useGamepad(
     handlePad,
@@ -680,17 +723,22 @@ export function App() {
     applyBattleResult(result);
     if (!padActive && result.commands.length) setPending(null);
   };
-  useEffect(() => {
+  const targetContext = useRef({ initial: session.initial, encounter: s.encounter });
+  useLayoutEffect(() => {
     const restored = restoredView.current;
     restoredView.current = null;
+    const fresh =
+      targetContext.current.initial !== session.initial ||
+      targetContext.current.encounter !== s.encounter;
+    targetContext.current = { initial: session.initial, encounter: s.encounter };
     if (restored?.initial === session.initial) {
-      setBattleUI(restored.view.battle);
+      setBattleUI(syncPaletteTargets(s, restored.view.battle));
       setPending(restored.view.pending);
     } else {
-      setBattleUI(home);
+      setBattleUI((ui) => syncPaletteTargets(s, fresh ? newBattlePad() : home(ui)));
       setPending(null);
     }
-  }, [s.phase, s.selected, gamepad.usePadDisplay, session.initial]);
+  }, [s.phase, s.encounter, s.selected, gamepad.usePadDisplay, session.initial]);
   useEffect(() => {
     if (pending && ![...weapon.skills, 'guard', 'potion'].includes(pending)) setPending(null);
   }, [weapon.id, pending]);
@@ -965,6 +1013,8 @@ export function App() {
             state={s}
             pending={shownPending ? SKILLS[shownPending] : null}
             aim={aim}
+            targets={s.phase === 'battle' && !watching ? paletteTargets(s, battleUI) : null}
+            recovery={battleUI.targetRecovery}
             palette={
               s.phase === 'battle' && !watching && !shownPending ? paletteCursor(s, battleUI) : null
             }
@@ -1107,14 +1157,13 @@ export function App() {
               操作方式
               <select
                 aria-label="操作方式"
-                value={config.uiMode}
+                value={config.uiMode === 'linked' ? 'separate' : config.uiMode}
                 onChange={(e) =>
                   setConfig({ ...config, uiMode: e.target.value as Config['uiMode'] })
                 }
               >
                 <option value="separate">分離＋一括隊列</option>
                 <option value="individual">分離＋個別隊列のみ</option>
-                <option value="linked">オプティマと隊列を一体化</option>
               </select>
             </label>
             <label>
@@ -1156,7 +1205,6 @@ export function App() {
                 ['shiftTime', '武器変更 / 秒', 0.1, 2, 0.05],
                 ['enemyPower', '敵の攻撃倍率', 0.2, 3, 0.1],
                 ['slowDrain', 'スロー消費 / 秒', 1, 20, 1],
-                ['stopDrain', '停止消費 / 秒', 1, 30, 1],
               ] as const
             ).map(([key, label, min, max, step]) => (
               <label key={key}>
@@ -1461,8 +1509,8 @@ export function App() {
                 </p>
                 <p>
                   <Key>Z</Key> 基本技、<Key>X</Key> 主力技、<Key>C</Key> 防御を下書きに追加。
-                  戦場の対象候補を先に選べます。候補を変えても、積んだ行動の対象や仲間AIの狙いは変わりません。
-                  <Key>V</Key> は救急薬、<Key>I</Key> は補助、<Key>U</Key> は全体指示。
+                  攻撃と支援の対象は同時に保持します。足元の丸が支援対象、角形が攻撃対象、頭上の印が操作キャラ、四隅の枠が選び直す対象です。敵側を選択中でも支援技は表示中の味方へ入ります。候補を変えても、追加済みの行動の対象や仲間AIの狙いは変わりません。対象不在で破線の候補が出たら同じ技をもう一度押すか、別の駒を選びます。
+                  <Key>V</Key> は救急薬、<Key>I</Key> は補助、<Key>U</Key> は次のオプティマ。
                 </p>
                 <p>
                   <Key>H</Key>{' '}
@@ -1472,8 +1520,8 @@ export function App() {
                 </p>
                 <p>
                   パッドでは×／Aが基本技、□／Xが主力技、△／Yが防御。○／Bは戻る専用。
-                  右トリガーで行動開始、左トリガーで後続取消。左スティックで駒の配置に沿って対象を選び、右スティックの左で味方・右で敵へ切り替えます。キーボードは矢印で移動、コンマで味方・ピリオドで敵。十字キーの左でスロー、右で戦術停止、上で全体指示、下で補助を開きます。
-                  薬・移動・武器変更は補助メニュー。十字キーで選択する代替配置も設定できます。
+                  右トリガーで行動開始、左トリガーで後続取消。左スティックで駒の配置に沿って対象を選び、右スティックの左で味方・右で敵へ切り替えます。キーボードは矢印で移動、コンマで味方・ピリオドで敵。十字キーの左で後列へ、右で前列へ移動。上で次のオプティマ、下で武器変更。R3でスロー、View／Share／−で補助を開きます。
+                  薬・一括隊列・対象の切替は補助メニュー。十字キーで選択する代替配置も設定できます。
                 </p>
               </div>
               <div>
@@ -1483,7 +1531,7 @@ export function App() {
                   <Key>S</Key>
                   <Key>D</Key>
                   <Key>G</Key>{' '}
-                  で武器構成を切り替え。Rで前後移動、Wで武器切替を積みます。Escは戻るだけ。Bで後続取消。確定分だけを消し、下書きは残します。Tの予約一覧で選んだ一件を訂正できます。取消後は方向入力で選び直すまで、決定の連打では次を消しません。実行中の技と終了硬直は続き、支払い済みATBは戻りません。未使用ATBは残ります。
+                  で武器構成を切り替え。Jで後列、Kで前列、Rで前後を切り替えてすぐ移動します。Wで武器変更を指示し、実行中の技があれば終了後に切り替えます。移動と武器変更は下書きを使いません。Escは戻る、Bは確定した後続の取消。TまたはIで補助を開きます。実行中の技と下書きは残ります。支払い済みATBは戻りません。
                   <Key>7</Key>
                   <Key>8</Key>
                   <Key>9</Key> で一括隊列。
@@ -1495,15 +1543,15 @@ export function App() {
                   。射撃・魔法は後列でも威力を維持します。
                 </p>
                 <p>
-                  範囲技は選んだ敵・味方が追加時にいる列へ予約します。技ボタンに範囲と人数を表示します。防御は常に自分。下書きの武器変更を見越した技も選べます。
+                  範囲技は選んだ敵・味方が追加時にいる列へ予約します。技ボタンには対象の小さな肖像をまとめて表示します。防御は常に自分。武器変更後に使えない未実行の技は解除されます。
                 </p>
               </div>
               <div>
                 <h3>考える時間を使う</h3>
                 <p>
-                  <Key>Space</Key> でスロー、<Key>F</Key> で戦術停止。もう一度押すと通常へ。開始時
-                  {COMBAT_RULES.focusActivation}、スローは毎実秒{s.config.slowDrain}、停止は毎実秒
-                  {s.config.stopDrain}の集中力を消費します。
+                  <Key>Space</Key> またはR3でスロー。もう一度押すと通常へ。開始時
+                  {COMBAT_RULES.focusActivation}、スロー中は毎実秒{s.config.slowDrain}
+                  の集中力を消費します。
                 </p>
                 <p>
                   <Key>P</Key>{' '}
@@ -1559,6 +1607,9 @@ export function App() {
           load={loadNotes}
         />
       )}
+      <div className="sr-only" role="status" aria-live="polite" aria-atomic="true">
+        {commandNotice}
+      </div>
       {notice && (
         <div className="toast" role="status" aria-label="操作結果">
           {notice}

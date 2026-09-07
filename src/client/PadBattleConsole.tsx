@@ -1,6 +1,7 @@
 import { COMBAT_RULES } from '../content/rules';
 import { partyBonus } from '../sim/bonuses';
 import { skillTiming } from './timing';
+import { SkillIcon, RecipientPortraits } from './TargetVisuals';
 import { ROLE_NAMES, SKILLS, WEAPONS } from '../content/data';
 import { Fragment, useEffect, useRef } from 'react';
 import {
@@ -14,6 +15,7 @@ import {
 } from '../sim/plan';
 import {
   choices,
+  paletteTargets,
   skillPreview,
   selectedChoice,
   unavailable,
@@ -70,6 +72,42 @@ export function PadBattleConsole({
   select,
 }: Props) {
   const consoleRoot = useRef<HTMLElement>(null);
+  const flight = useRef<HTMLSpanElement>(null);
+  useEffect(() => {
+    if (
+      ui.feedback?.kind !== 'added' ||
+      !ui.feedback.skillId ||
+      matchMedia('(prefers-reduced-motion: reduce)').matches
+    )
+      return;
+    const root = consoleRoot.current;
+    const source = root?.querySelector(`[data-skill-id="${ui.feedback.skillId}"] .skill-icon`);
+    const destination = [
+      ...(root?.querySelectorAll('[data-plan-status="draft"] .plan-skill-token') ?? []),
+    ].at(-1);
+    const token = flight.current;
+    if (!source || !destination || !token || !token.animate) return;
+    const from = source.getBoundingClientRect(),
+      to = destination.getBoundingClientRect();
+    token.style.left = `${from.left}px`;
+    token.style.top = `${from.top}px`;
+    const animation = token.animate(
+      [
+        { opacity: 1, transform: 'translate(0, 0) scale(1)' },
+        {
+          opacity: 1,
+          offset: 0.8,
+          transform: `translate(${to.left - from.left}px, ${to.top - from.top}px) scale(0.9)`,
+        },
+        {
+          opacity: 0,
+          transform: `translate(${to.left - from.left}px, ${to.top - from.top}px) scale(0.9)`,
+        },
+      ],
+      { duration: 420, easing: 'cubic-bezier(.2,.7,.2,1)' },
+    );
+    return () => animation.cancel();
+  }, [ui.stamp]);
   useEffect(() => {
     if (!matchMedia('(max-width: 800px)').matches) return;
     const root = consoleRoot.current;
@@ -108,7 +146,7 @@ export function PadBattleConsole({
     right: '→',
     targetAllies: ',',
     targetEnemies: '.',
-    queue: 'T',
+    queue: '—',
     log: 'L',
     menu: 'I',
     aux: 'I',
@@ -116,7 +154,9 @@ export function PadBattleConsole({
     execute: 'H',
     guard: 'C',
     slow: 'Space',
-    stop: 'F',
+    rowBack: 'J',
+    rowFront: 'K',
+    weapon: 'W',
     pause: 'P',
   };
   const glyph = (action: PadAction | 'log') =>
@@ -133,13 +173,14 @@ export function PadBattleConsole({
   const pageNames = {
     command: 'コマンド',
     target: '対象を選ぶ',
-    move: '移動を積む',
-    weapon: '武器変更を積む',
+    move: '列を移動',
+    weapon: '武器変更',
     tactics: '指示・道具',
     queue: '予約を取り消す',
     log: '戦闘ログ',
     aux: '補助メニュー',
   };
+  const recipients = paletteTargets(s, ui);
   const commandCards: { action: PadAction; skillId?: string; title: string; fallback: string }[] = [
     { action: 'skill', skillId: w.skills[1], title: '主力技', fallback: 'west' },
     { action: 'guard', skillId: 'guard', title: '防御', fallback: 'north' },
@@ -176,12 +217,6 @@ export function PadBattleConsole({
           スロー<small>{s.timeMode === 'slow' ? '通常に戻す' : `×${COMBAT_RULES.slowScale}`}</small>
         </span>
       </button>
-      <button className={s.timeMode === 'stop' ? 'engaged' : ''} onClick={() => act('stop')}>
-        {glyph('stop')}
-        <span>
-          戦術停止<small>{s.timeMode === 'stop' ? '通常に戻す' : '×0.00'}</small>
-        </span>
-      </button>
       <div
         className="pad-focus"
         role="meter"
@@ -196,9 +231,7 @@ export function PadBattleConsole({
         </strong>
         <span>
           集中力
-          {s.timeMode !== 'normal'
-            ? ` · あと ${(s.focus / (s.timeMode === 'slow' ? s.config.slowDrain : s.config.stopDrain)).toFixed(1)}秒`
-            : ''}
+          {s.timeMode !== 'normal' ? ` · あと ${(s.focus / s.config.slowDrain).toFixed(1)}秒` : ''}
         </span>
         <i style={{ width: `${s.focus}%` }} />
       </div>
@@ -210,6 +243,11 @@ export function PadBattleConsole({
       className={`pad-console ${keyboard ? 'keyboard-console' : ''}`}
       aria-label={keyboard ? 'キーボード用戦闘コマンド' : 'パッド用戦闘コマンド'}
     >
+      {ui.feedback?.kind === 'added' && (
+        <span className="input-flight" ref={flight} aria-hidden="true">
+          <SkillIcon skillId={ui.feedback.skillId} />
+        </span>
+      )}
       <div className="pad-desk">
         <div className="pad-command-area">
           <div className="pad-page-heading">
@@ -235,44 +273,74 @@ export function PadBattleConsole({
                 {commandCards.map((card) => {
                   const skill = card.skillId ? SKILLS[card.skillId] : undefined;
                   const preview = skill ? skillPreview(s, ui, skill.id) : null;
+                  const candidate = !!preview?.candidateTarget;
+                  const retry = candidate && ui.targetRecovery?.skillId === skill?.id;
+                  const target =
+                    preview?.target ??
+                    preview?.candidateTarget ??
+                    (skill?.target === 'self'
+                      ? { kind: 'ally' as const, id: a.id }
+                      : skill?.target.startsWith('enemy')
+                        ? recipients.enemy
+                        : recipients.ally);
+                  const reason = skill ? unavailable(s, skill.id) : undefined;
+                  const failed =
+                    ui.feedback?.kind === 'blocked' && ui.feedback.skillId === skill?.id;
                   return (
                     <button
                       key={card.action}
-                      className={`direct-command command-${card.action}`}
+                      className={`direct-command command-${card.action} ${candidate ? 'candidate-command' : ''} ${reason || failed ? 'blocked-command' : ''}`}
+                      data-skill-id={skill?.id}
+                      data-candidate={candidate || undefined}
+                      title={
+                        skill
+                          ? `${skill.name} · ${preview?.label} · ${skill.cost} ATB · ${skillTiming(skill)}${reason ? ` · ${reason}` : ''}`
+                          : '戻る。下書きと確定済み行動は変わりません。'
+                      }
                       style={{
                         gridArea: keyboard
                           ? card.action
                           : (['south', 'east', 'west', 'north'][bindings[card.action]] ??
                             card.fallback),
                       }}
-                      disabled={
-                        card.action === 'cutQueue'
-                          ? !q.length
-                          : skill
-                            ? !!unavailable(s, skill.id) || !preview?.target
-                            : false
-                      }
                       onClick={() => act(card.action)}
                       aria-label={
-                        card.action === 'guard'
-                          ? '防御を下書き'
-                          : skill
-                            ? `${card.title}：${skill.name}`
-                            : card.title
+                        skill
+                          ? `${card.title}：${skill.name}、${preview?.label}、${skill.cost} ATB${candidate ? (retry ? '。同じ技をもう一度押すと追加' : '。押すと対象候補を確認') : ''}${reason ? `。${reason}` : ''}`
+                          : card.title
                       }
                     >
                       {glyph(card.action)}
-                      <span>
-                        <small>{card.title}</small>
+                      <SkillIcon skillId={skill?.id} symbol={skill ? undefined : 'back'} />
+                      <span className="command-identity">
                         <strong>{skill?.name ?? card.title}</strong>
-                        <em>
-                          {skill
-                            ? `${preview?.label} · ${skill.cost} ATB · ${skillTiming(skill)}`
-                            : card.action === 'back'
-                              ? '予約は変えない'
-                              : '未開始分を取消 · 今の一手は続行'}
-                        </em>
+                        {skill && (
+                          <span className="command-recipient">
+                            <RecipientPortraits
+                              state={s}
+                              target={target}
+                              skillId={skill.id}
+                              candidate={candidate}
+                              invalid={!preview?.target && !candidate}
+                            />
+                            <span className="skill-cost" aria-hidden="true">
+                              {Array.from({ length: skill.cost }, (_, i) => (
+                                <i key={i} />
+                              ))}
+                            </span>
+                          </span>
+                        )}
                       </span>
+                      {retry && (
+                        <span className="command-condition">
+                          <SkillIcon symbol="retry" />
+                        </span>
+                      )}
+                      {(reason || failed) && (
+                        <span className="command-condition">
+                          <SkillIcon symbol="blocked" />
+                        </span>
+                      )}
                     </button>
                   );
                 })}
@@ -280,11 +348,43 @@ export function PadBattleConsole({
                   ◈
                 </div>
               </div>
-              <div className="pad-direction-commands">
-                <span>対象を選び、技を下書きへ</span>
-                <button onClick={() => act('tactics')}>{glyph('tactics')} 全体指示</button>
-                <button onClick={() => act('aux')}>{glyph('aux')} 補助メニュー</button>
-                <small>移動・武器変更・薬は補助へ</small>
+              <div className="pad-direction-commands" aria-label="即時操作">
+                <button
+                  onClick={() => act('rowBack')}
+                  aria-label="選択キャラを後列へ移動"
+                  title="後列へ移動"
+                >
+                  {glyph('rowBack')}
+                  <SkillIcon symbol="rear" />
+                </button>
+                <button
+                  onClick={() => act('rowFront')}
+                  aria-label="選択キャラを前列へ移動"
+                  title="前列へ移動"
+                >
+                  {glyph('rowFront')}
+                  <SkillIcon symbol="front" />
+                </button>
+                <button
+                  onClick={() => act('tactics')}
+                  aria-label="次のオプティマへ切り替え"
+                  title="オプティマ変更"
+                >
+                  {glyph('tactics')}
+                  <SkillIcon symbol="optima" />
+                </button>
+                <button
+                  onClick={() => act('weapon')}
+                  aria-label="選択キャラの武器を切り替え"
+                  title="武器変更"
+                >
+                  {glyph('weapon')}
+                  <SkillIcon symbol="weapon" />
+                </button>
+                <button onClick={() => act('aux')} aria-label="補助メニュー" title="補助メニュー">
+                  {glyph('aux')}
+                  <SkillIcon symbol="menu" />
+                </button>
               </div>
             </div>
           ) : ui.page === 'target' ? (
@@ -361,6 +461,8 @@ export function PadBattleConsole({
                         ? !!unavailable(s, c.skillId)
                         : ui.page !== 'tactics' &&
                           ui.page !== 'aux' &&
+                          ui.page !== 'move' &&
+                          ui.page !== 'weapon' &&
                           !!unavailable(s, ui.skillId ?? undefined)
                     }
                   >
@@ -387,13 +489,39 @@ export function PadBattleConsole({
               )}
             </div>
           )}
-          <div className="pad-feedback" role="status" key={ui.stamp}>
-            {ui.message ||
-              (q.length >= s.config.atbMax
-                ? '確定分＋下書きが満杯です。下書きの訂正は予約一覧、攻撃の打ち切りは後続取消。'
-                : ui.page === 'target'
-                  ? '決定を押すたび、同じ対象へ末尾に積みます。'
-                  : `下書きを組んだら行動開始。確定分と合わせて${s.config.atbMax} ATBまで。`)}
+          <div
+            className={`pad-feedback ${ui.page === 'command' ? 'icon-feedback' : ''}`}
+            role="status"
+            aria-live="polite"
+            aria-atomic="true"
+          >
+            {ui.page === 'command' ? (
+              <>
+                {ui.message && (
+                  <span
+                    className={`feedback-receipt feedback-${ui.feedback?.kind ?? 'selection'}`}
+                    title={ui.message}
+                    aria-hidden="true"
+                  >
+                    {ui.feedback?.skillId && <SkillIcon skillId={ui.feedback.skillId} />}
+                    <SkillIcon
+                      symbol={
+                        ui.feedback?.kind === 'blocked'
+                          ? 'blocked'
+                          : ui.feedback?.kind === 'candidate'
+                            ? 'retry'
+                            : 'check'
+                      }
+                    />
+                  </span>
+                )}
+                <span className="sr-only" key={ui.stamp}>
+                  {ui.message}
+                </span>
+              </>
+            ) : (
+              ui.message
+            )}
           </div>
         </div>
         <aside
@@ -403,7 +531,7 @@ export function PadBattleConsole({
           {timeButtons}
           <div
             className="pad-plan-heading"
-            title="予測は通常速度の戦闘秒。時間停止中は進まず、未来の撃破・編成変更は含みません。"
+            title="予測は通常速度の戦闘秒。未来の撃破・編成変更は含みません。"
           >
             <button onClick={() => open('queue')}>
               確定＋下書き{' '}
@@ -421,45 +549,62 @@ export function PadBattleConsole({
                   data-plan-key={p.key}
                   data-plan-status={a.draft?.some((d) => d.key === p.key) ? 'draft' : 'committed'}
                   key={p.key}
-                  className={ui.page === 'queue' && choice?.key === String(p.key) ? 'selected' : ''}
+                  className={`${ui.page === 'queue' && choice?.key === String(p.key) ? 'selected' : ''} ${ui.feedback?.kind === 'added' && i === q.length - 1 && a.draft?.some((d) => d.key === p.key) ? 'new-draft' : ''}`}
                 >
                   <button
-                    aria-label={`${i + 1}手目の${stepName(a, p)}を取消`}
+                    aria-label={`${i + 1}手目の${stepName(a, p)}${p.kind === 'skill' ? `、${targetName(s, p.target)}` : ''}、${a.draft?.some((d) => d.key === p.key) ? '下書き' : '確定済み'}を取消`}
                     onClick={() => remove(String(p.key))}
                   >
                     <b>{timing[i].linked ? '↳' : i + 1}</b>
+                    <span className="plan-skill-token" aria-hidden="true">
+                      <SkillIcon
+                        skillId={p.kind === 'skill' ? p.skillId : undefined}
+                        symbol={
+                          p.kind === 'move'
+                            ? p.row === 'front'
+                              ? 'front'
+                              : 'rear'
+                            : p.kind === 'weapon'
+                              ? 'weapon'
+                              : undefined
+                        }
+                      />
+                    </span>
                     <span>
                       <strong>
                         {stepName(a, p)}{' '}
-                        <em className="plan-stage">
-                          {a.draft?.some((d) => d.key === p.key) ? '下書き' : '確定'}
+                        <em
+                          className={`plan-stage-icon ${a.draft?.some((d) => d.key === p.key) ? 'draft' : 'committed'}`}
+                          title={a.draft?.some((d) => d.key === p.key) ? '下書き' : '確定'}
+                          aria-hidden="true"
+                        >
+                          <SkillIcon symbol="check" />
                         </em>
                         {timing[i].linked && <em className="link-tag">連結予定</em>}
                       </strong>
-                      <small>
-                        {p.kind === 'skill'
-                          ? targetName(s, p.target)
-                          : p.kind === 'move'
-                            ? '列を変更'
-                            : '以降の技が変わります'}{' '}
-                        ·{' '}
-                        {i > 0 && q[0]?.kind === 'skill' && q[0].skillId === 'handoff'
-                          ? '交代開始時に解除'
-                          : timing[i].status === 'draft'
-                            ? Number.isFinite(timing[i].ends)
-                              ? `今開始なら効果まで約${timing[i].ends.toFixed(1)}秒`
-                              : '次の列の確定待ち'
-                            : timing[i].status === 'held'
-                              ? '保留解除待ち'
-                              : timing[i].status === 'invalid'
-                                ? '開始不可・取消予定'
-                                : `効果まで約${timing[i].ends.toFixed(1)}秒`}
-                      </small>
+                      <span className="plan-recipient">
+                        {p.kind === 'skill' && (
+                          <RecipientPortraits state={s} target={p.target} skillId={p.skillId} />
+                        )}
+                        <small
+                          title={
+                            timing[i].status === 'invalid'
+                              ? '開始不可・取消予定'
+                              : timing[i].status === 'held'
+                                ? '保留解除待ち'
+                                : '通常速度での効果発生までの予測時間'
+                          }
+                        >
+                          {Number.isFinite(timing[i].ends)
+                            ? `◷ ${timing[i].ends.toFixed(1)}s`
+                            : '◷ —'}
+                        </small>
+                      </span>
                     </span>
                     {ui.page === 'queue' && choice?.key === String(p.key) ? (
                       glyph('confirm')
                     ) : (
-                      <i>取消</i>
+                      <i aria-hidden="true">×</i>
                     )}
                   </button>
                 </li>
@@ -469,7 +614,10 @@ export function PadBattleConsole({
           </ol>
           {!q.length && !receipt && (
             <div className="pad-plan-empty">
-              まだ予約はありません。<small>技・移動・武器変更を、使いたい順に積めます。</small>
+              <span className="empty-draft-symbol" aria-hidden="true">
+                ＋
+              </span>
+              <span className="sr-only">まだ下書きはありません。技ボタンで追加できます。</span>
             </div>
           )}
         </aside>
@@ -481,7 +629,7 @@ export function PadBattleConsole({
             <span>{glyph('back')} 戻る</span>
             <span>
               {keyboard
-                ? 'H 行動開始 · B 後続取消 · U 全体指示 · I 補助'
+                ? 'H 行動開始 · B 後続取消 · U オプティマ · I 補助'
                 : `${navigationName}で対象 · ${bindings.sideAxis < 0 ? '補助で敵味方' : '右スティックで敵味方'}`}
             </span>
           </>

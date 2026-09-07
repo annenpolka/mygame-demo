@@ -211,6 +211,29 @@ const viewSchema = z.object({
       .optional(),
     candidateSide: z.enum(['enemy', 'ally']).optional(),
     candidateWeapon: z.string().max(100).optional(),
+    invalidTargets: z
+      .object({ ally: z.boolean().optional(), enemy: z.boolean().optional() })
+      .optional(),
+    targetRecovery: z
+      .object({
+        skillId: z.string().max(100),
+        side: z.enum(['ally', 'enemy']),
+        target: z.object({ kind: z.enum(['ally', 'enemy']), id: int.max(2) }),
+        previousSide: z.enum(['ally', 'enemy']),
+      })
+      .optional(),
+    feedback: z
+      .object({
+        kind: z.enum(['added', 'candidate', 'blocked', 'selection']),
+        skillId: z.string().max(100).optional(),
+        target: z
+          .union([
+            z.object({ kind: z.enum(['ally', 'enemy']), id: int.max(2) }),
+            z.object({ kind: z.literal('row'), row: z.enum(['front', 'back']) }),
+          ])
+          .optional(),
+      })
+      .optional(),
     queueFocus: z
       .object({
         key: z.string().max(200),
@@ -301,6 +324,22 @@ export function parseNotes(text: string): PlayNote[] {
           )
         )
           throw new Error('現在の対象候補は個体を指定してください。');
+        for (const [key, target] of Object.entries(f.view.battle.candidates ?? {})) {
+          const side = key === 'ally' || key === 'enemy' ? key : key.split(':')[1];
+          if ((side === 'ally' || side === 'enemy') && target.kind !== side)
+            throw new Error('印の対象候補の側が一致しません。');
+        }
+        const recovery = f.view.battle.targetRecovery;
+        if (recovery) {
+          const skill = SKILLS[recovery.skillId];
+          if (
+            !skill ||
+            skill.target === 'self' ||
+            recovery.target.kind !== recovery.side ||
+            (skill.target.startsWith('enemy') ? 'enemy' : 'ally') !== recovery.side
+          )
+            throw new Error('印の再選択候補が技の対象と一致しません。');
+        }
         parseSnapshot(JSON.stringify({ version: VERSION, kind: 'snapshot', state: st }));
         prefix(note, f);
         if (

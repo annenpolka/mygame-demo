@@ -1,7 +1,7 @@
 import { COMBAT_RULES, percent } from './rules';
 import type { Config, Formation, Preset, Skill, Weapon } from '../sim/types';
 
-export const VERSION = 'orchestra-13';
+export const VERSION = 'orchestra-14';
 export const DT = 1 / 60;
 export const BATTLE_TIMING = {
   enemyWindupScale: 1.6,
@@ -24,7 +24,6 @@ export const DEFAULT_CONFIG: Config = {
   moveTime: 0.85,
   shiftTime: 0.65,
   slowDrain: 4,
-  stopDrain: 12,
   enemyPower: 1,
   uiMode: 'separate',
   encounter: 1,

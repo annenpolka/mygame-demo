@@ -8,11 +8,12 @@ import {
   migrateBindings,
   navigationPreset,
   type PadAction,
+  type PadInput,
   type PadBindings,
   type PadFamily,
   type PadSnapshot,
 } from '../input/gamepad';
-const STORAGE = 'orchestra-gamepad-v6';
+const STORAGE = 'orchestra-gamepad-v7';
 interface Saved {
   family: PadFamily | 'auto';
   display: 'auto' | 'pad' | 'pointer';
@@ -22,6 +23,7 @@ function readSaved(): Saved {
   try {
     const x = JSON.parse(
       localStorage.getItem(STORAGE) ??
+        localStorage.getItem('orchestra-gamepad-v6') ??
         localStorage.getItem('orchestra-gamepad-v5') ??
         localStorage.getItem('orchestra-gamepad-v4') ??
         localStorage.getItem('orchestra-gamepad-v3') ??
@@ -43,7 +45,7 @@ function readSaved(): Saved {
   }
 }
 export function useGamepad(
-  onAction: (a: PadAction) => void,
+  onAction: (a: PadInput) => void,
   onDisconnect: () => void,
   settingsOpen: boolean,
   repeatNavigation = true,

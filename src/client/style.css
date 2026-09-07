@@ -663,13 +663,6 @@ button.text-button {
 .time-ribbon span {
   padding-left: 8px;
 }
-.stop .arena {
-  box-shadow: inset 0 0 100px #83c4c517;
-}
-.stop .moving .unit-symbol,
-.stop .floating {
-  animation-play-state: paused;
-}
 .start-overlay {
   position: absolute;
   inset: 0;

@@ -31,15 +31,16 @@ export const SOUNDS = {
 export type SoundCue = keyof typeof SOUNDS;
 export function operationFeedback(c: Command, s: State): { cue: SoundCue; label: string } {
   switch (c.type) {
+    case 'weapon':
     case 'toggleWeapon': {
       const a = s.allies[c.id],
-        w = WEAPONS[a.weapons[projectedSlot(a) === 0 ? 1 : 0]];
-      return { cue: 'weapon', label: `武器変更を予約：${w.archetype} ${w.role}` };
+        w = WEAPONS[a.weapons[c.type === 'weapon' ? c.slot : projectedSlot(a) === 0 ? 1 : 0]];
+      return { cue: 'weapon', label: `武器変更：${w.archetype} ${w.role}` };
     }
     case 'toggleRow':
       return {
         cue: 'move',
-        label: `${projectedRow(s.allies[c.id]) === 'front' ? '後列' : '前列'}への移動を予約`,
+        label: `${projectedRow(s.allies[c.id]) === 'front' ? '後列' : '前列'}へ移動`,
       };
     case 'move':
       return {
@@ -94,7 +95,7 @@ export function operationFeedback(c: Command, s: State): { cue: SoundCue; label:
     case 'time':
       return {
         cue: 'time',
-        label: c.mode === 'normal' ? '通常速度へ' : c.mode === 'slow' ? 'スローへ' : '戦術停止',
+        label: c.mode === 'normal' ? '通常速度へ' : 'スローへ',
       };
     case 'pause':
       return { cue: 'pause', label: c.value ? '休憩ポーズ' : '戦闘を再開' };

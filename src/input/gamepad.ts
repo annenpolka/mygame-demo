@@ -8,7 +8,9 @@ export const PAD_ACTIONS = [
   'previous',
   'next',
   'slow',
-  'stop',
+  'rowBack',
+  'rowFront',
+  'weapon',
   'pause',
   'menu',
   'tactics',
@@ -23,6 +25,7 @@ export const PAD_ACTIONS = [
   'targetEnemies',
 ] as const;
 export type PadAction = (typeof PAD_ACTIONS)[number];
+export type PadInput = PadAction | 'inputConflict';
 export type PadFamily = 'xbox' | 'playstation' | 'switch';
 export type PadBindings = Record<PadAction, number> & {
   navigation: 'stick' | 'dpad';
@@ -58,18 +61,20 @@ export function defaultBindings(family: PadFamily): PadBindings {
     guard: 3,
     execute: 7,
     cutQueue: 6,
-    slow: 14,
-    stop: 15,
+    slow: 11,
+    rowBack: 14,
+    rowFront: 15,
+    weapon: 13,
     pause: 9,
     menu: 8,
     tactics: 12,
-    aux: 13,
+    aux: -1,
     up: -1,
     down: -1,
     left: -1,
     right: -1,
     navigation: 'stick',
-    queue: 11,
+    queue: -1,
     mark: 10,
     axisX: 0,
     axisY: 1,
@@ -85,16 +90,29 @@ export function defaultBindings(family: PadFamily): PadBindings {
 export function navigationPreset(b: PadBindings, navigation: 'stick' | 'dpad'): PadBindings {
   if (b.navigation === navigation) return b;
   const [up, down, left, right] =
-    b.navigation === 'stick' ? [b.tactics, b.aux, b.slow, b.stop] : [b.up, b.down, b.left, b.right];
+    b.navigation === 'stick'
+      ? [b.tactics, b.weapon, b.rowBack, b.rowFront]
+      : [b.up, b.down, b.left, b.right];
   return navigation === 'dpad'
-    ? { ...b, navigation, up, down, left, right, tactics: -1, aux: -1, slow: -1, stop: -1 }
+    ? {
+        ...b,
+        navigation,
+        up,
+        down,
+        left,
+        right,
+        tactics: -1,
+        weapon: -1,
+        rowBack: -1,
+        rowFront: -1,
+      }
     : {
         ...b,
         navigation,
         tactics: up,
-        aux: down,
-        slow: left,
-        stop: right,
+        weapon: down,
+        rowBack: left,
+        rowFront: right,
         up: -1,
         down: -1,
         left: -1,
@@ -168,11 +186,9 @@ export class PadReader {
   private identity = '';
   private held = new Set<PadAction>();
   private repeats = new Map<PadAction, number>();
-  private sideTransition = false;
   private axisHeld = { x: 0, y: 0, side: 0 };
   reset() {
     this.identity = '';
-    this.sideTransition = false;
     this.held.clear();
     this.repeats.clear();
     this.axisHeld = { x: 0, y: 0, side: 0 };
@@ -183,7 +199,7 @@ export class PadReader {
     now: number,
     enabled = true,
     repeatNavigation = true,
-  ): PadAction[] {
+  ): PadInput[] {
     if (!pad?.connected) {
       this.reset();
       return [];
@@ -231,25 +247,22 @@ export class PadReader {
     }
     for (const a of this.held) if (!down.has(a)) this.repeats.delete(a);
     this.held = down;
-    const side = output.find((a) => a === 'targetAllies' || a === 'targetEnemies');
-    if (side) {
-      this.sideTransition = true;
-      // Apply the side first; defer simultaneous navigation/actions to the next poll.
-      for (const action of output)
-        if (action !== 'targetAllies' && action !== 'targetEnemies') this.held.delete(action);
-      return [side];
-    }
-    if (this.sideTransition) {
-      this.sideTransition = false;
-      const nav = output.find((a) => directions.has(a));
-      if (nav) {
-        for (const action of output) if (!directions.has(action)) this.held.delete(action);
-        return [nav];
-      }
-    }
     // A diagonal is a single navigation choice; avoid jumping twice per frame.
     const nav = output.find((a) => directions.has(a));
-    return output.filter((a) => !directions.has(a) || a === nav);
+    const edges = output.filter((a) => !directions.has(a) || a === nav);
+    const contextual = (a: PadAction) =>
+      directions.has(a) ||
+      ['weapon', 'tactics', 'previous', 'next', 'rowFront', 'rowBack'].includes(a);
+    const skill = (a: PadAction) => ['confirm', 'skill', 'guard', 'execute'].includes(a);
+    const conflict = edges.some(contextual) && edges.some(skill);
+    // Consume rejected edges too: holding a button never confirms an unseen new context.
+    const accepted = conflict ? edges.filter((a) => !skill(a)) : edges;
+    const side = accepted.filter((a) => a === 'targetAllies' || a === 'targetEnemies');
+    const ordered = [
+      ...side,
+      ...accepted.filter((a) => a !== 'targetAllies' && a !== 'targetEnemies'),
+    ];
+    return conflict ? [...ordered, 'inputConflict'] : ordered;
   }
 }
 export function validBindings(input: unknown): input is PadBindings {
@@ -271,54 +284,68 @@ export function validBindings(input: unknown): input is PadBindings {
   );
 }
 
-/** Preserve physical slots while moving their roles to the sequence palette. */
+/** Migrate old physical positions to direct controls, preserving custom axes and face buttons. */
 export function migrateBindings(input: unknown): PadBindings | null {
   if (validBindings(input)) return input;
   if (!input || typeof input !== 'object' || Array.isArray(input)) return null;
   const old = input as Record<string, unknown>;
+  // A malformed current layout must not be silently interpreted as an older layout.
+  if (['rowBack', 'rowFront', 'weapon'].some((key) => key in old)) return null;
   const sideDefaults = {
     targetAllies: -1,
     targetEnemies: -1,
     sideAxis: old.axisX === 0 && old.axisY === 1 ? 2 : -1,
     invertSideAxis: false,
   };
-  if (old.execute !== undefined) {
-    const migrated = { ...sideDefaults, ...old };
-    return validBindings(migrated) ? migrated : null;
-  }
   const early = old.skill === undefined;
-  const b = {
-    ...sideDefaults,
-    ...old,
-    navigation: 'stick',
-    back: old.back ?? old.cancel,
-    skill: old.cutQueue ?? old.item ?? (early ? old.slow : undefined),
-    guard: old.skill ?? old.stop,
-    cutQueue: early ? undefined : old.slow,
-    execute: early ? undefined : old.stop,
-    slow: old.left,
-    stop: old.right,
-    tactics: old.up,
-    aux: old.down,
-    menu: old.log,
-    up: -1,
-    down: -1,
-    left: -1,
-    right: -1,
-  } as unknown as PadBindings;
-  for (const key of ['cancel', 'item', 'log'])
-    delete (b as unknown as Record<string, unknown>)[key];
+  const sequence: Record<string, unknown> =
+    old.execute !== undefined
+      ? { ...sideDefaults, ...old }
+      : {
+          ...sideDefaults,
+          ...old,
+          navigation: 'stick',
+          back: old.back ?? old.cancel,
+          skill: old.cutQueue ?? old.item ?? (early ? old.slow : undefined),
+          guard: old.skill ?? old.stop,
+          cutQueue: early ? undefined : old.slow,
+          execute: early ? undefined : old.stop,
+          slow: old.left,
+          stop: old.right,
+          tactics: old.up,
+          aux: old.down,
+          menu: old.log,
+          up: -1,
+          down: -1,
+          left: -1,
+          right: -1,
+        };
+  for (const key of ['cancel', 'item', 'log']) delete sequence[key];
   for (const [action, preferred] of [
     ['queue', 11],
     ['mark', 10],
     ['cutQueue', 6],
     ['execute', 7],
   ] as const) {
-    if (b[action] !== undefined) continue;
-    const used = new Set(PAD_ACTIONS.map((a) => b[a]).filter((i) => i >= 0));
-    b[action] = !used.has(preferred)
+    if (sequence[action] !== undefined) continue;
+    const used = new Set(
+      [...PAD_ACTIONS, 'stop']
+        .map((a) => sequence[a])
+        .filter((i) => typeof i === 'number' && i >= 0),
+    );
+    sequence[action] = !used.has(preferred)
       ? preferred
-      : Array.from({ length: 64 }, (_, i) => i).find((i) => !used.has(i))!;
+      : Array.from({ length: 64 }, (_, i) => i).find((i) => !used.has(i));
   }
-  return validBindings(b) ? b : null;
+  const result = {
+    ...sequence,
+    rowBack: sequence.slow,
+    rowFront: sequence.stop,
+    weapon: sequence.aux,
+    slow: sequence.queue,
+    aux: -1,
+    queue: -1,
+  };
+  delete (result as Record<string, unknown>).stop;
+  return validBindings(result) ? result : null;
 }

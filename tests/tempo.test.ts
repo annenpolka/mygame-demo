@@ -46,7 +46,7 @@ describe('human-scale action commitment', () => {
       expect(s.allies[0].plan!.length).toBeGreaterThan(0);
     },
   );
-  it('hits once before recovery ends, accepts cancellation, and delays movement and weapon change until free', () => {
+  it('hits once before recovery ends, moves immediately, and delays the weapon change until free', () => {
     const s = isolated(),
       a = s.allies[0];
     add(s, 'slash');
@@ -64,7 +64,7 @@ describe('human-scale action commitment', () => {
     command(s, { type: 'optima', index: 3 });
     expect(a.atb).toBe(atb);
     advance(s, SKILLS.slash.recovery - DT);
-    expect(a.row).toBe('front');
+    expect(a.row).toBe('back');
     expect(a.slot).toBe(0);
     expect(starts(s)).toHaveLength(1);
     expect(s.metrics.damage).toBe(damage);
@@ -103,7 +103,7 @@ describe('human-scale action commitment', () => {
     const impact = s.events.find((e) => e.text.includes('防護'))!;
     expect(Math.abs(impact.time - prediction[1].ends)).toBeLessThanOrEqual(2 * DT + 1e-9);
   });
-  it('stop freezes recovery; snapshot and replay restoration cannot apply a resolved hit twice', () => {
+  it('pause freezes recovery; snapshot and replay restoration cannot apply a resolved hit twice', () => {
     const session = new Session();
     // Use an isolated already-resolved state as the recording's explicit initial state.
     const s = isolated();
@@ -111,11 +111,11 @@ describe('human-scale action commitment', () => {
     advance(s, SKILLS.slash.cast + 2 * DT);
     session.restore(JSON.stringify({ kind: 'snapshot', version: s.version, state: s }));
     const damage = session.state.metrics.damage;
-    session.send({ type: 'time', mode: 'stop' });
+    session.send({ type: 'pause', value: true });
     const before = copy(session.state.allies[0].action);
     session.advance(0.1);
     expect(session.state.allies[0].action).toEqual(before);
-    session.send({ type: 'time', mode: 'normal' });
+    session.send({ type: 'pause', value: false });
     for (let i = 0; i < 20; i++) session.advance(0.1);
     expect(session.state.metrics.damage).toBe(damage);
     expect(runReplay(parseRecording(JSON.stringify(session.recording())))).toEqual(session.state);

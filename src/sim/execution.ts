@@ -120,9 +120,12 @@ export function canLink(
 export function charging(a: ExecutionActor, rules: ExecutionRules) {
   if (a.hp <= 0) return false;
   if (rules.atbMode === 'continuous') return true;
-  if (a.action || a.move > 0 || a.shift > 0) return false;
-  if (a.executionHeld) return true;
+  if (a.action || a.nextRow !== null || a.shift > 0) return false;
+  if (a.executionHeld) return a.nextSlot === null;
   const head = pendingSteps(a)[0];
+  // Handoff overrides an unstarted weapon request. It must be able to earn its
+  // ATB here, otherwise both the handoff and the weapon request would wait forever.
+  if (head?.kind === 'skill' && head.skillId === 'handoff') return true;
   if (
     head?.sequenceId &&
     !a.sequences?.find((b) => b.key === head.sequenceId)?.started &&
@@ -130,8 +133,6 @@ export function charging(a: ExecutionActor, rules: ExecutionRules) {
     a.nextSlot === null
   )
     return true;
-  // Handoff overrides unstarted row/weapon orders, but can wait for its ATB.
-  if (head?.kind === 'skill' && head.skillId === 'handoff') return true;
   return a.nextRow === null && a.nextSlot === null && (!head || head.kind === 'skill');
 }
 function pop(a: ExecutionActor) {
@@ -165,6 +166,19 @@ export function advanceExecution(
     if (a.action && p.sequenceId !== undefined) a.action.sequenceId = p.sequenceId;
     return true;
   };
+  // A direct row command starts at input, independently of the current action.
+  // Entries still in a plan only reach nextRow after the scheduler starts them.
+  // Keep the action's paid target, weapon, offense and recovery intact while moving.
+  const moving = a.nextRow !== null;
+  if (moving) {
+    a.move += dt;
+    if (a.move + 1e-9 >= rules.moveTime) {
+      a.row = a.nextRow!;
+      a.nextRow = null;
+      a.move = 0;
+      h.moved?.();
+    }
+  }
   if (a.action) {
     const action = a.action;
     action.remaining = Math.max(0, action.remaining - dt);
@@ -191,13 +205,13 @@ export function advanceExecution(
     }
     return;
   }
-  if (a.executionHeld && !a.move && !a.shift) return;
+  if (a.executionHeld && !moving && a.nextSlot === null) return;
   const head = pendingSteps(a)[0];
   if (
     !a.executionHeld &&
     head?.kind === 'skill' &&
     head.skillId === 'handoff' &&
-    !a.move &&
+    !moving &&
     !a.shift
   ) {
     if (!h.valid(head)) {
@@ -213,18 +227,8 @@ export function advanceExecution(
     }
     return;
   }
-  let transitioning = false;
-  if (a.nextRow !== null && (!a.executionHeld || a.move > 0)) {
-    transitioning = true;
-    a.move += dt;
-    if (a.move + 1e-9 >= rules.moveTime) {
-      a.row = a.nextRow;
-      a.nextRow = null;
-      a.move = 0;
-      h.moved?.();
-    }
-  }
-  if (a.nextSlot !== null && (!a.executionHeld || a.shift > 0)) {
+  let transitioning = moving;
+  if (a.nextSlot !== null) {
     transitioning = true;
     a.shift += dt;
     if (a.shift + 1e-9 >= rules.shiftTime) {

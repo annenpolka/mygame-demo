@@ -11,7 +11,13 @@ import {
   prepareNoteComparison,
   sameRules,
 } from '../src/lab/playtest';
-import { openPage, battleInput, selectCandidate, paletteCursor } from '../src/input/battle-pad';
+import {
+  openPage,
+  battleInput,
+  selectCandidate,
+  paletteCursor,
+  syncPaletteTargets,
+} from '../src/input/battle-pad';
 import { WatchPlayer } from '../src/ai/watch-player';
 function fixture() {
   const session = new Session(),
@@ -23,7 +29,7 @@ function fixture() {
 }
 it('restores a cancelled queue focus without arming another reservation', () => {
   const { session, journal, view } = fixture();
-  session.send({ type: 'time', mode: 'stop' });
+  session.send({ type: 'time', mode: 'slow' });
   for (let i = 0; i < 3; i++)
     session.send(...battleInput(session.state, view.battle, 'guard').commands);
   const removed = battleInput(
@@ -71,10 +77,10 @@ it('marks without commands or time changes and replays the earlier state with UI
   expect(runReplay(session.recording())).toEqual(session.state);
   expect(runReplay(prepareNoteReplay(branch, 'marked').recording)).toEqual(branch.marked.state);
 });
-it('preserves the exact input prefix when several commands share the same stopped tick', () => {
+it('preserves the exact input prefix when several commands share the same tick', () => {
   const { session, journal, view } = fixture();
   session.send(
-    { type: 'time', mode: 'stop' },
+    { type: 'time', mode: 'slow' },
     {
       type: 'enqueue',
       id: 0,
@@ -110,7 +116,9 @@ it('retains handoff cost, following reservations and the pending selection throu
   const restored = runReplay(replay.recording);
   expect(restored).toEqual(session.state);
   expect(replay.view.battle.page).toBe('queue');
-  expect(restored.allies[0].plan?.map((x) => x.kind)).toEqual(['skill', 'move', 'weapon']);
+  expect(restored.allies[0].plan?.map((x) => x.kind)).toEqual(['skill']);
+  expect(restored.allies[0].nextRow).toBe('back');
+  expect(restored.allies[0].nextSlot).toBe(1);
 });
 it('clamps rewind to the current encounter, retains notes through reset, and does not require a manual session', () => {
   const session = new Session({ enemyHpScale: 0.5, atbRate: 3 }, 'ai'),
@@ -217,4 +225,44 @@ it('restores candidate memory, an active committed group and a separate next dra
     target: { kind: 'enemy', id: 0 },
   });
   expect(state.allies[0].sequences).toEqual(session.state.allies[0].sequences);
+});
+
+it('round-trips shared targets and a recovery prompt without adding its action', () => {
+  const { session, journal, view } = fixture();
+  view.battle = syncPaletteTargets(session.state, view.battle);
+  view.battle = { ...view.battle, invalidTargets: { enemy: true } };
+  view.battle = battleInput(session.state, view.battle, 'confirm').ui;
+  expect(view.battle.targetRecovery?.skillId).toBe('slash');
+  const note = parseNotes(exportNotes([journal.mark(session, view)]))[0];
+  const restored = prepareNoteReplay(note, 'marked');
+  expect(restored.view.battle).toEqual(view.battle);
+  expect(runReplay(restored.recording)).toEqual(session.state);
+  expect(session.state.allies[0].draft ?? []).toHaveLength(0);
+  const confirmed = battleInput(session.state, restored.view.battle, 'confirm');
+  expect(confirmed.commands).toMatchObject([
+    { type: 'draft', step: { target: { kind: 'enemy', id: 0 } } },
+  ]);
+});
+it('rejects same-rule notes with cross-side candidates or a mismatched recovery target', () => {
+  const { session, journal, view } = fixture();
+  view.battle = syncPaletteTargets(session.state, view.battle);
+  const note = journal.mark(session, view);
+  const wrongCandidate = copy(note);
+  wrongCandidate.marked.view.battle.candidates!.ally = { kind: 'enemy', id: 0 };
+  expect(() => parseNotes(exportNotes([wrongCandidate]))).toThrow('側が一致');
+  const wrongRecovery = copy(note);
+  wrongRecovery.marked.view.battle.targetRecovery = {
+    skillId: 'ward',
+    side: 'ally',
+    target: { kind: 'enemy', id: 0 },
+    previousSide: 'enemy',
+  };
+  expect(() => parseNotes(exportNotes([wrongRecovery]))).toThrow('再選択候補');
+  wrongRecovery.marked.view.battle.targetRecovery = {
+    skillId: 'slash',
+    side: 'ally',
+    target: { kind: 'ally', id: 0 },
+    previousSide: 'enemy',
+  };
+  expect(() => parseNotes(exportNotes([wrongRecovery]))).toThrow('再選択候補');
 });

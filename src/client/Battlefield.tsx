@@ -1,6 +1,6 @@
 import { FIELD_COLUMNS } from '../input/field-navigation';
 import { targetName } from '../sim/plan';
-import type { PaletteCursor } from '../input/battle-pad';
+import type { BattlePad, PaletteCursor, UnitTarget } from '../input/battle-pad';
 import { COMBAT_RULES, percent } from '../content/rules';
 import { HandoffStatus } from './HandoffStatus';
 import { executionStatus } from './timing';
@@ -8,6 +8,7 @@ import { canAppend, planned, stepName } from '../sim/plan';
 import { useEffect, useRef, type CSSProperties } from 'react';
 import { BattleEffects } from './effects/BattleEffects';
 import { UnitEmblem } from './effects/UnitEmblem';
+import { UnitTargetMarks, SkillIcon } from './TargetVisuals';
 import { actionCues, effectCues } from './effects/events';
 import { BATTLE_TIMING, ROW_NAMES } from '../content/data';
 import { weaponOf } from '../sim/engine';
@@ -17,6 +18,8 @@ export function Battlefield({
   state: s,
   pending,
   palette = null,
+  targets = null,
+  recovery,
   onCandidate,
   onAlly,
   onTarget,
@@ -30,6 +33,8 @@ export function Battlefield({
   state: State;
   pending: Skill | null;
   palette?: PaletteCursor | null;
+  targets?: { ally: UnitTarget; enemy: UnitTarget } | null;
+  recovery?: BattlePad['targetRecovery'];
   onCandidate: (side: 'enemy' | 'ally', target: Target) => void;
   onAlly: (id: number) => void;
   onTarget: (t: Target) => void;
@@ -89,22 +94,23 @@ export function Battlefield({
       ? `${sideForSkill === 'enemy' ? '敵' : '味方'}${ROW_NAMES[aim.row]}`
       : (aim.kind === 'enemy' ? s.enemies : s.allies)[aim.id]?.name;
   useEffect(() => {
-    if (active) field.current?.focus({ preventScroll: true });
-  }, [active, pending?.id]);
+    if (active && !palette) field.current?.focus({ preventScroll: true });
+  }, [active, pending?.id, !!palette]);
   return (
     <div
-      className={`battlefield ${active ? 'targeting' : ''}`}
+      className={`battlefield ${active ? 'targeting' : ''} ${targets ? 'dual-target-field' : ''}`}
       aria-label="敵味方の前後列"
       style={{ '--field-tracks': tracks } as CSSProperties}
       data-density={tracks}
     >
       {palette ? (
-        <div className="field-target-bar palette-target-bar">
-          <div>
-            <small>対象候補 · 技ボタンで下書きへ</small>
-            <strong>{aimName}</strong>
-          </div>
-          <small>{navigationLabel}</small>
+        <div className="palette-target-bar">
+          <span className="sr-only" aria-live="polite" aria-atomic="true">
+            攻撃対象：{targets ? s.enemies.find((u) => u.id === targets.enemy.id)?.name : ''}。
+            支援対象：{targets ? s.allies.find((u) => u.id === targets.ally.id)?.name : ''}。
+            {palette.side === 'ally' ? '味方' : '敵'}の対象を変更中：{aimName}。
+            {recovery ? '破線は未確定の候補です。技ボタンをもう一度押すと下書きに追加します。' : ''}
+          </span>
         </div>
       ) : active ? (
         <div className="field-target-bar">
@@ -140,10 +146,10 @@ export function Battlefield({
       <div
         className="horizontal-field"
         ref={field}
-        role={active ? 'listbox' : undefined}
+        role={palette ? 'group' : active ? 'listbox' : undefined}
         aria-label={palette ? '行動の対象候補' : active ? '戦場で対象を選ぶ' : undefined}
-        tabIndex={active ? 0 : undefined}
-        aria-activedescendant={active && aim ? `field-target-${keyOf(aim)}` : undefined}
+        tabIndex={active && !palette ? 0 : undefined}
+        aria-activedescendant={active && !palette && aim ? `field-target-${keyOf(aim)}` : undefined}
       >
         {FIELD_COLUMNS.map(({ side, row }) => {
           const danger =
@@ -158,7 +164,7 @@ export function Battlefield({
           return (
             <section
               key={`${side}-${row}`}
-              className={`battle-lane ${side} ${row} ${danger ? 'danger-lane' : ''} ${active && side !== sideForSkill ? 'outside-target' : ''}`}
+              className={`battle-lane ${side} ${row} ${danger ? 'danger-lane' : ''} ${active && !palette && side !== sideForSkill ? 'outside-target' : ''}`}
               aria-label={rowName}
             >
               <button className="lane-heading" disabled>
@@ -181,15 +187,24 @@ export function Battlefield({
                             (pending?.target.startsWith('ally') ||
                               (pending?.target === 'self' && a.id === s.selected)));
                       const aimed = targetable && aim?.kind === 'ally' && aim.id === a.id;
+                      const marked = targets?.ally.id === a.id;
+                      const candidate =
+                        !!recovery &&
+                        recovery.target.kind === 'ally' &&
+                        recovery.target.id === a.id;
                       return (
                         <button
                           key={a.id}
                           id={targetable ? `field-target-ally-${a.id}` : undefined}
                           data-unit={`a${a.id}`}
-                          role={targetable ? 'option' : undefined}
-                          aria-selected={targetable ? aimed : undefined}
+                          data-target={marked ? 'ally' : undefined}
+                          data-editing={(!!palette && aimed) || undefined}
+                          data-candidate={candidate || undefined}
+                          aria-pressed={palette ? marked : undefined}
+                          role={targetable && !palette ? 'option' : undefined}
+                          aria-selected={targetable && !palette ? aimed : undefined}
                           style={{ '--unit-color': a.color } as CSSProperties}
-                          className={`field-unit friend ${a.id === s.selected ? 'selected' : ''} ${targetable ? 'can-target' : ''} ${a.hp <= 0 ? 'fallen' : ''} ${aimed ? 'aimed' : ''} ${active && !targetable ? 'outside-target' : ''}`}
+                          className={`field-unit friend ${a.id === s.selected ? 'selected' : ''} ${targetable ? 'can-target' : ''} ${a.hp <= 0 ? 'fallen' : ''} ${aimed && !palette ? 'aimed' : ''} ${active && !targetable ? 'outside-target' : ''}`}
                           disabled={
                             a.hp <= 0 ||
                             s.phase !== 'battle' ||
@@ -198,7 +213,7 @@ export function Battlefield({
                           }
                           aria-label={
                             palette
-                              ? `${a.name}を対象候補にする`
+                              ? `${a.name}を支援対象にする${marked ? '、現在の支援対象' : ''}${candidate ? '、未確定の候補' : ''}${aimed ? '、対象を変更中' : ''}${a.id === s.selected ? '、操作キャラ' : ''}`
                               : targetable
                                 ? `${a.name}に${pending?.name}を積む`
                                 : `${a.name}を選択`
@@ -218,6 +233,16 @@ export function Battlefield({
                           }
                         >
                           {intentLabel(`a${a.id}`)}
+                          {targets && (
+                            <UnitTargetMarks
+                              side="ally"
+                              marked={marked}
+                              editing={!!palette && aimed}
+                              candidate={candidate}
+                              dead={a.hp <= 0}
+                              actor={a.id === s.selected && s.controlMode === 'manual'}
+                            />
+                          )}
                           <UnitEmblem
                             kind={
                               w.skills.includes('shot')
@@ -235,7 +260,7 @@ export function Battlefield({
                           <span className="field-unit-info">
                             <strong>
                               {a.name} <b className={`role role-${w.role}`}>{w.role}</b>
-                              {a.id === s.selected && s.controlMode === 'manual' && (
+                              {!targets && a.id === s.selected && s.controlMode === 'manual' && (
                                 <i className="manual-tag">手動</i>
                               )}
                             </strong>
@@ -285,15 +310,24 @@ export function Battlefield({
                     .map((e) => {
                       const targetable =
                           !!palette || (active && pending?.target.startsWith('enemy')),
-                        aimed = targetable && aim?.kind === 'enemy' && aim.id === e.id;
+                        aimed = !!targetable && aim?.kind === 'enemy' && aim.id === e.id;
+                      const marked = targets?.enemy.id === e.id;
+                      const candidate =
+                        !!recovery &&
+                        recovery.target.kind === 'enemy' &&
+                        recovery.target.id === e.id;
                       return (
                         <button
                           key={e.id}
                           id={targetable ? `field-target-enemy-${e.id}` : undefined}
                           data-unit={`e${e.id}`}
-                          role={targetable ? 'option' : undefined}
-                          aria-selected={targetable ? aimed : undefined}
-                          className={`field-unit foe ${e.broken ? 'broken' : ''} ${targetable ? 'can-target' : ''} ${e.hp <= 0 ? 'fallen' : ''} ${aimed ? 'aimed' : ''}`}
+                          data-target={marked ? 'enemy' : undefined}
+                          data-editing={(!!palette && aimed) || undefined}
+                          data-candidate={candidate || undefined}
+                          aria-pressed={palette ? marked : undefined}
+                          role={targetable && !palette ? 'option' : undefined}
+                          aria-selected={targetable && !palette ? aimed : undefined}
+                          className={`field-unit foe ${e.broken ? 'broken' : ''} ${targetable ? 'can-target' : ''} ${e.hp <= 0 ? 'fallen' : ''} ${aimed && !palette ? 'aimed' : ''}`}
                           disabled={
                             e.hp <= 0 ||
                             s.phase !== 'battle' ||
@@ -302,7 +336,7 @@ export function Battlefield({
                           }
                           aria-label={
                             palette
-                              ? `${e.name}を対象候補にする`
+                              ? `${e.name}を攻撃対象にする${marked ? '、現在の攻撃対象' : ''}${candidate ? '、未確定の候補' : ''}${aimed ? '、対象を変更中' : ''}`
                               : targetable
                                 ? `${e.name}に${pending?.name}を積む`
                                 : `${e.name}を狙う`
@@ -322,6 +356,15 @@ export function Battlefield({
                           }
                         >
                           {intentLabel(`e${e.id}`)}
+                          {targets && (
+                            <UnitTargetMarks
+                              side="enemy"
+                              marked={marked}
+                              editing={!!palette && aimed}
+                              candidate={candidate}
+                              dead={e.hp <= 0}
+                            />
+                          )}
                           <UnitEmblem
                             kind={e.kind}
                             id={`e${e.id}`}
@@ -401,7 +444,7 @@ export function Battlefield({
           cues={effects}
           actions={actions}
           field={field}
-          aim={active ? aim : null}
+          aim={active && !palette ? aim : null}
           targetSide={sideForSkill}
         />
       </div>
@@ -410,19 +453,35 @@ export function Battlefield({
           <HandoffStatus state={s} cancel={() => onAlly(s.selected)} />
         ) : (
           <div className="field-hint">
-            {palette
-              ? '敵を選ぶ → 技を下書き → 行動開始。範囲技は選んだ敵の列へ。AIはロールと戦況で判断。'
-              : active
-                ? '薬の対象を選び、下書きへ追加'
-                : s.controlMode === 'ai'
-                  ? 'AI鑑賞中 · 下に全員の予約と判断を表示'
-                  : `${s.allies[s.selected].name}を手動操作 · 技を選んで戦場の対象へ`}
-            <span>
-              {s.timeMode === 'normal'
-                ? '通常 ×1.00'
-                : s.timeMode === 'slow'
-                  ? `スロー ×${COMBAT_RULES.slowScale}`
-                  : '戦術停止 ×0.00'}
+            {palette ? (
+              <details className="target-symbol-help">
+                <summary aria-label="対象の印と操作のヘルプ">?</summary>
+                <div>
+                  <p>丸い環：支援対象。角形の照準：攻撃対象。頭上の印：操作キャラ。</p>
+                  <p>四隅の枠：選び直している対象。破線：未確定の候補。斜線：対象が不在。</p>
+                  <p>
+                    {navigationLabel}
+                    。技は表示中の宛先へ下書きします。破線のときは同じ技をもう一度押して確定します。
+                  </p>
+                </div>
+              </details>
+            ) : (
+              <span>
+                {active
+                  ? '薬の対象を選び、下書きへ追加'
+                  : s.controlMode === 'ai'
+                    ? 'AI鑑賞中'
+                    : `${s.allies[s.selected].name}を手動操作`}
+              </span>
+            )}
+            <span
+              className="field-time-symbol"
+              title={s.timeMode === 'slow' ? `スロー ×${COMBAT_RULES.slowScale}` : '通常 ×1.00'}
+            >
+              {s.timeMode === 'slow' && <SkillIcon symbol="slow" />}
+              <span aria-label={s.timeMode === 'slow' ? 'スロー倍率' : '時間倍率'}>
+                ×{s.timeMode === 'slow' ? COMBAT_RULES.slowScale : '1.00'}
+              </span>
             </span>
           </div>
         )}

@@ -58,21 +58,25 @@ test('full-width formation shows HP, chain, break duration and enemy cast withou
   });
   await expect(page.getByRole('complementary', { name: '実験室', exact: true })).toHaveCount(0);
   await expect(page.locator('.enemy-strip')).toHaveCount(0);
-  const meter = page.getByRole('meter', { name: '鐘楼の衛兵のチェイン', exact: true });
+  const meter = page.getByRole('meter', {
+    name: '鐘楼の衛兵のチェイン',
+    exact: true,
+    includeHidden: true,
+  });
   await expect(meter).toHaveAttribute('aria-valuenow', '12');
   await expect(page.locator('[data-unit=e0]')).toContainText('BREAK 12.0s');
   const field = await page.locator('.battlefield').boundingBox();
   expect(field!.width).toBeGreaterThan(950);
   await page.clock.runFor(400);
   expect(Number(await meter.getAttribute('aria-valuenow'))).toBeLessThan(12);
-  await page.keyboard.press('f');
+  await page.keyboard.press('p');
   const held = await meter.getAttribute('aria-valuenow');
   await page.clock.runFor(300);
   await expect(meter).toHaveAttribute('aria-valuenow', held!);
   await page.screenshot({ path: 'test-results/formation-break.png', fullPage: true });
 });
 
-test('fixed formation height and selected ATB budget map multi-cost skills and free transitions', async ({
+test('fixed formation height maps multi-cost drafts while movement and weapons execute outside the draft', async ({
   page,
 }) => {
   await page.setViewportSize({ width: 1366, height: 752 });
@@ -83,23 +87,28 @@ test('fixed formation height and selected ATB budget map multi-cost skills and f
   await page.keyboard.press('7');
   await page.clock.runFor(1100);
   expect(await height()).toBe(before);
-  await page.keyboard.press('f');
   await page.keyboard.press('x');
   expect(await height()).toBe(before);
   await page.keyboard.press('Escape');
-  await page.keyboard.press('r');
-  await page.keyboard.press('w');
   const band = page.getByRole('region', { name: 'アルトのATBと行動予約' });
   await expect(band.locator('.atb-cell')).toHaveCount(4);
   await expect(band.locator('.atb-reservation')).toHaveCSS('grid-column-end', 'span 2');
-  await expect(band.locator('.atb-free-steps')).toContainText('2. 前列へ移動');
-  await expect(band.locator('.atb-free-steps')).toContainText('3. 誓いの盾槍に変更');
+  await expect(band.locator('.atb-free-steps > span')).toHaveCount(0);
   const bandBox = await band.boundingBox();
   const fieldBox = await page.locator('.battlefield').boundingBox();
   expect(bandBox!.y).toBeGreaterThanOrEqual(fieldBox!.y + fieldBox!.height);
   await page.screenshot({ path: 'test-results/atb-keyboard.png', fullPage: true });
-  await page.getByRole('button', { name: '1手目の円弧斬りを取消', exact: true }).click();
+  await page.getByRole('button', { name: /^1手目の円弧斬り、.*下書きを取消$/ }).click();
   await expect(band.locator('.atb-reservation')).toHaveCount(0);
+  await page.keyboard.press('r');
+  await page.clock.runFor(1100);
+  await expect(page.locator('.battle-lane.ally.front [data-unit=a0]')).toBeVisible();
+  await page.keyboard.press('w');
+  await page.clock.runFor(800);
+  await expect(page.locator('.pad-page-heading')).toContainText('誓いの盾槍');
+  await expect(band.locator('.atb-free-steps > span')).toHaveCount(0);
+  await expect(band.locator('.atb-reservation')).toHaveCount(0);
+  expect(await height()).toBe(before);
   await page.keyboard.press('2');
   await expect(band.locator('.atb-reservation')).toContainText('キャラ交代');
 });

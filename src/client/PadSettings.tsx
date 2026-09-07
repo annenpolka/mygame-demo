@@ -8,19 +8,21 @@ const names = {
   previous: '前の仲間',
   next: '次の仲間',
   slow: 'スロー',
-  stop: '戦術停止',
+  rowBack: '後列へ移動',
+  rowFront: '前列へ移動',
+  weapon: '武器変更',
   pause: '休憩ポーズ',
   menu: '補助メニュー（時間操作・ログも収録）',
   execute: '行動開始（下書きの列を確定）',
   guard: '自分への防御を下書き',
-  tactics: '全体指示',
+  tactics: '次のオプティマ',
   aux: '補助メニュー',
   up: '上へ',
   down: '下へ',
   left: '左へ',
   right: '右へ',
-  targetAllies: '味方を対象にする',
-  targetEnemies: '敵を対象にする',
+  targetAllies: '支援対象を選び直す',
+  targetEnemies: '攻撃対象を選び直す',
   queue: '予約一覧・取消',
   mark: '今のところに印・休憩中は印一覧',
 };
@@ -77,7 +79,7 @@ export function PadSettings({
           </select>
         </label>
         <p className="muted">
-          右トリガーで行動開始、左トリガーで後続取消。4ボタンは基本技・主力技・防御・戻る。左スティックは駒の配置に沿って移動。右スティックの左で味方、右で敵へ切り替えます。十字キーは時間操作とメニュー。十字キー選択の配置では時間操作も補助メニューから選べます。敵味方の切替も補助から行えます。
+          右トリガーで行動開始、左トリガーで後続取消。4ボタンは基本技・主力技・防御・戻る。左スティックは駒の配置に沿って移動。右スティックの左で味方、右で敵へ切り替えます。十字キーの左右で後列・前列へ移動、上でオプティマ、下で武器変更。R3でスローを切り替えます。右スティックは選び直す側を指定し、攻撃と支援の対象は同時に保持します。十字キー選択の配置では移動・装備変更を補助メニューから使えます。
         </p>
         <label className="pad-family">
           選択の操作方式
@@ -87,8 +89,8 @@ export function PadSettings({
             disabled={!c.pad}
             onChange={(e) => c.setNavigation(e.target.value as 'stick' | 'dpad')}
           >
-            <option value="stick">左スティックで選択・十字キーで時間操作</option>
-            <option value="dpad">十字キーで選択・時間操作は補助メニュー</option>
+            <option value="stick">左スティックで選択・十字キーで移動と装備</option>
+            <option value="dpad">十字キーで選択・移動と装備は補助メニュー</option>
           </select>
         </label>
         <div className="pad-bindings">

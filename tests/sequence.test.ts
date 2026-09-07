@@ -214,7 +214,7 @@ describe('bank ATB, link identical skills, and keep the final recovery', () => {
     expect(s.selected).toBe(0);
     expect(s.time).toBeGreaterThan(3);
   });
-  it('restores and replays holds, links, cancellations, and frozen recovery exactly; rejects old and changed timing', () => {
+  it('restores and replays holds, links, cancellations, and slowed recovery exactly; rejects old and changed timing', () => {
     const session = new Session();
     const s = quiet();
     session.restore(JSON.stringify({ version: VERSION, kind: 'snapshot', state: s }));
@@ -228,7 +228,7 @@ describe('bank ATB, link identical skills, and keep the final recovery', () => {
     session.send({ type: 'hold', id: 0, value: false });
     for (let i = 0; i < 13; i++) session.advance(0.1);
     expect(session.state.allies[0].action?.comboIndex).toBe(2);
-    session.send({ type: 'cancel', id: 0 }, { type: 'time', mode: 'stop' });
+    session.send({ type: 'cancel', id: 0 }, { type: 'time', mode: 'slow' });
     const atb = session.state.allies[0].atb;
     session.advance(0.2);
     expect(session.state.allies[0].atb).toBe(atb);

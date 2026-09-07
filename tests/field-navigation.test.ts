@@ -59,7 +59,8 @@ describe('navigation follows battlefield columns and tracks', () => {
     s.allies[2].hp = 0;
     ui = battleInput(s, ui, 'targetEnemies').ui;
     ui = battleInput(s, ui, 'targetAllies').ui;
-    expect(paletteCursor(s, ui).target).toEqual({ kind: 'ally', id: 0 });
+    expect(paletteCursor(s, ui).target).toEqual({ kind: 'ally', id: 2 });
+    expect(ui.invalidTargets?.ally).toBe(true);
   });
   it('uses spatial navigation in target pickers, preserves menu navigation, and ignores side input there', () => {
     const s = battle();
