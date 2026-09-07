@@ -23,7 +23,10 @@ const action = z.object({
   remaining: n,
   total: n,
   weaponId: weapon,
-  offense: z.object({ damage: z.number().min(1).max(1.75), chain: z.number().min(1).max(1.9) }),
+  offense: z.object({
+    damage: z.number().min(0.85).max(2.1875),
+    chain: z.number().min(1).max(2.85),
+  }),
   resolved: z.boolean(),
 });
 const planStep = z.discriminatedUnion('kind', [

@@ -125,6 +125,9 @@ export function Battlefield({
                   onClick={() => onTarget({ kind: 'row', row })}
                 >
                   {rowName}
+                  {side === 'ally' && row === 'front' && !rowTarget && !danger && (
+                    <small className="front-bonus">威力・崩し＋25%</small>
+                  )}
                   {rowTarget && <small>{aimedRow ? '▼ この列へ' : 'この列を選ぶ'}</small>}
                   {danger && <small>⚠ 攻撃予告</small>}
                 </button>

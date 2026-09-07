@@ -1,6 +1,6 @@
 import type { Config, Formation, Preset, Skill, Weapon } from '../sim/types';
 
-export const VERSION = 'orchestra-6';
+export const VERSION = 'orchestra-7';
 export const DT = 1 / 60;
 export const BATTLE_TIMING = {
   enemyWindupScale: 1.6,

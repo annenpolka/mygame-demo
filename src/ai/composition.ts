@@ -1,5 +1,5 @@
 import { SKILLS, WEAPONS } from '../content/data';
-import { partyBonus } from '../sim/bonuses';
+import { partyBonus, positionBonus } from '../sim/bonuses';
 import { command, copy } from '../sim/engine';
 import type { Ally, BonusMode, Command, Slot, State } from '../sim/types';
 
@@ -31,7 +31,8 @@ export function teamOutput(
   for (const a of members) {
     if (a.hp <= 0) continue;
     const w = WEAPONS[a.weapons[a.slot]],
-      skills = w.skills.map((id) => SKILLS[id]);
+      skills = w.skills.map((id) => SKILLS[id]),
+      position = positionBonus(a.row, w);
     const output = (sk: (typeof skills)[number], value: number) =>
       value / Math.max(sk.cast + sk.recovery, sk.cost / (rate * bonus.atb));
     damage +=
@@ -41,11 +42,8 @@ export function teamOutput(
         ),
       ) *
       bonus.damage *
-      (w.melee ? (a.row === 'front' ? 1.25 : 0.85) : 1);
-    chain +=
-      Math.max(...skills.map((sk) => output(sk, sk.chain))) *
-      bonus.chain *
-      (w.role === 'B' && a.row === 'front' ? 1.25 : 1);
+      position.damage;
+    chain += Math.max(...skills.map((sk) => output(sk, sk.chain))) * bonus.chain * position.chain;
     heal += Math.max(...skills.map((sk) => output(sk, sk.effect === 'heal' ? sk.power : 0)));
     ward += skills.some((sk) => sk.effect === 'shield') ? 1 : 0;
   }

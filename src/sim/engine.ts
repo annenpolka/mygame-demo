@@ -1,4 +1,4 @@
-import { partyBonus } from './bonuses';
+import { partyBonus, positionBonus } from './bonuses';
 import { renameTactics } from './tactics';
 import {
   canAppend,
@@ -467,9 +467,10 @@ function beginAction(s: State, a: Ally, skillId: string, target: Target) {
     s.potions--;
   }
   a.atb = Math.max(0, a.atb - skill.cost);
-  const bonus = partyBonus(s.allies, s.config.bonusMode);
+  const bonus = partyBonus(s.allies, s.config.bonusMode),
+    position = positionBonus(a.row, weaponOf(a));
   a.action = {
-    offense: { damage: bonus.damage, chain: bonus.chain },
+    offense: { damage: bonus.damage * position.damage, chain: bonus.chain * position.chain },
     skillId,
     target: copy(target),
     remaining: skill.cast + skill.recovery,
@@ -578,14 +579,12 @@ function resolve(s: State, a: Ally, action: Action) {
     const protectedRear =
       e.row === 'back' &&
       s.enemies.some((g) => g.hp > 0 && g.kind === 'guard' && g.row === 'front' && !g.broken);
-    const position = weapon.melee ? (a.row === 'front' ? 1.25 : 0.85) : 1;
     const bonus = weapon.bonus === 'breakDamage' && e.broken > 0 ? 1.35 : 1;
     const damage = Math.min(
       e.hp,
       Math.round(
         skill.power *
           action.offense.damage *
-          position *
           (e.chain / 100) *
           bonus *
           (protectedRear ? 0.6 : 1) *
@@ -594,11 +593,7 @@ function resolve(s: State, a: Ally, action: Action) {
     );
     e.hp -= damage;
     s.metrics.damage += damage;
-    const chainBonus =
-      a.row === 'front' && weapon.role === 'B'
-        ? 1.25 * (weapon.bonus === 'frontChain' ? 1.2 : 1)
-        : 1;
-    e.chain = Math.min(500, e.chain + skill.chain * chainBonus * action.offense.chain);
+    e.chain = Math.min(500, e.chain + skill.chain * action.offense.chain);
     e.hold = Math.max(e.hold, skill.hold);
     emit(s, 'damage', `${a.name} → ${e.name} ${damage}`, {
       source: `a${a.id}`,

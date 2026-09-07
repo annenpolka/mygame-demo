@@ -50,7 +50,7 @@ const frozen = {
   'src/ai/policies.ts': '1b4722e815973cafd706df6fbd61ba7a43bd0c730ad9a81810a3acce09dc4357',
   'src/ai/observation.ts': 'd0b6928fa7b1bd1067893353a6c15aefeb01460f571337e2983d2eacfc643533',
   'src/ai/adaptive-policy.ts': '5b9a053cae75e3763b8ce73441387fa790c6f49c7484a6183500e653c0418d9a',
-  'src/ai/composition.ts': '26310609efa549573a5555450dc896fff90d5c60b70a018cabf0e0fdbf0451d1',
+  'src/ai/composition.ts': '205d41116fd72069eaf181cde0d4bb0e1fdb550aa4a4ff67abb34f9f541d5885',
   'src/ai/queue-policy.ts': 'dcca45f5dd1d26d60d88a87656b799f4ebf4f0514c275361ef240439eb0e479d',
 };
 for (const [path, expected] of Object.entries(frozen))

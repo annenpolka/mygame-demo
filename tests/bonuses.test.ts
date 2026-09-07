@@ -62,7 +62,7 @@ describe('current party role bonuses', () => {
     s.allies[1].slot = 1; // B to A while the queued attack waits for ATB.
     a.atb = 4;
     step(s);
-    expect(a.action?.offense).toEqual({ damage: 1.5, chain: 1 });
+    expect(a.action?.offense).toEqual({ damage: 1.875, chain: 1.25 });
     const control = copy(s);
     s.allies[1].slot = 0;
     advance(s, SKILLS.slash.cast);

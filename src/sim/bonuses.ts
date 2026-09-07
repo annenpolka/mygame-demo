@@ -1,5 +1,5 @@
 import { WEAPONS } from '../content/data';
-import type { Ally, BonusMode, Role } from './types';
+import type { Ally, BonusMode, Role, Row, Weapon } from './types';
 
 export const BONUS_MODES = ['none', 'modest', 'strong'] as const;
 export const BONUS_LABELS = { none: 'なし', modest: '控えめ', strong: '強め' };
@@ -26,4 +26,12 @@ export function partyBonus(allies: readonly Member[], mode: BonusMode) {
 }
 export function bonusText(b: ReturnType<typeof partyBonus>) {
   return `威力 ×${b.damage.toFixed(2)} · チェイン ×${b.chain.toFixed(2)} · 被害 ×${b.taken.toFixed(2)} · ATB ×${b.atb.toFixed(2)}`;
+}
+
+/** Position is independent of role; weapon traits compose only once. */
+export function positionBonus(row: Row, weapon: Pick<Weapon, 'melee' | 'bonus'>) {
+  return {
+    damage: row === 'front' ? 1.25 : weapon.melee ? 0.85 : 1,
+    chain: row === 'front' ? 1.25 * (weapon.bonus === 'frontChain' ? 1.2 : 1) : 1,
+  };
 }
