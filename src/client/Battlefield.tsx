@@ -1,6 +1,6 @@
 import { COMBAT_RULES, percent } from '../content/rules';
 import { HandoffStatus } from './HandoffStatus';
-import { actionStatus } from './timing';
+import { executionStatus } from './timing';
 import { canAppend, planned, stepName } from '../sim/plan';
 import { useEffect, useRef, type CSSProperties } from 'react';
 import { BattleEffects } from './effects/BattleEffects';
@@ -189,17 +189,9 @@ export function Battlefield({
                               <small>
                                 {targetable
                                   ? `HP ${Math.ceil(a.hp)} / ${a.maxHp}`
-                                  : a.action
-                                    ? actionStatus(a.action)
-                                    : a.nextRow
-                                      ? `${ROW_NAMES[a.nextRow]}へ移動中`
-                                      : planned(a).length
-                                        ? `次：${stepName(a, planned(a)[0])}`
-                                        : s.controlMode === 'manual' &&
-                                            a.id === s.selected &&
-                                            !a.action
-                                          ? '指示待ち'
-                                          : w.archetype}
+                                  : s.phase === 'battle'
+                                    ? executionStatus(a, s.config, s)
+                                    : w.archetype}
                               </small>
                               <span className="unit-gauges">
                                 <UnitGauge

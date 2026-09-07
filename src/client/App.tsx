@@ -434,6 +434,16 @@ export function App() {
         !labOpen &&
         !loadoutOpen
       ) {
+        if (event.key.toLowerCase() === 'h') {
+          event.preventDefault();
+          send({ type: 'hold', id: s.selected, value: !s.allies[s.selected].executionHeld });
+          return;
+        }
+        if (event.shiftKey && ['Backspace', 'Delete'].includes(event.key)) {
+          event.preventDefault();
+          send({ type: 'cancel', id: s.selected });
+          return;
+        }
         const keys: Record<string, PadAction> = {
           ArrowUp: 'up',
           ArrowDown: 'down',
@@ -967,6 +977,7 @@ export function App() {
           {s.phase === 'battle' && (
             <AtbTimeline
               state={s}
+              send={send}
               select={select}
               act={applyBattleInput}
               keyboard={!padActive}
@@ -1443,7 +1454,7 @@ export function App() {
                   救急薬。先行入力は合計最大ATBまで、移動・武器・薬を含む手数も最大ATBと同じです。
                 </p>
                 <p>
-                  パッドでは×／Aが基本技、△／Yが主力技、□／Xが薬。○／Bはコマンド画面で先頭予約を取消、選択画面で戻る。↓で防御、R3で予約一覧を開きます。
+                  パッドでは×／Aが基本技、△／Yが主力技、□／Xが薬。○／Bはコマンド画面で先頭予約を取消、選択画面で戻る。↓で防御、R3で予約一覧を開きます。予約一覧では△／Yで実行保留・解除、□／Xで残りを打ち切ります。キーボードはHで保留、Shift＋Backspaceで打ち切り。現在の行動と最後の硬直中はATB補充が止まります。
                 </p>
               </div>
               <div>

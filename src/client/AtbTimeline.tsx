@@ -5,8 +5,8 @@ import { PadGlyph } from './PadBattleConsole';
 import type { PadBindings, PadFamily, PadAction } from '../input/gamepad';
 import { weaponOf } from '../sim/engine';
 import { isHandoff, planCost, planned, stepName, targetName } from '../sim/plan';
-import type { State } from '../sim/types';
-import { actionStatus } from './timing';
+import type { State, Command } from '../sim/types';
+import { executionStatus } from './timing';
 
 /** Paid reservations occupy exactly their cost in the segmented ATB budget. */
 export function AtbTimeline({
@@ -16,6 +16,7 @@ export function AtbTimeline({
   keyboard,
   bindings,
   family,
+  send,
 }: {
   state: State;
   select: (id: number) => void;
@@ -23,6 +24,7 @@ export function AtbTimeline({
   keyboard: boolean;
   bindings: PadBindings;
   family: PadFamily;
+  send: (command: Command) => void;
 }) {
   const a = s.allies[s.selected],
     q = planned(a),
@@ -66,21 +68,29 @@ export function AtbTimeline({
             )}
           </button>
         </div>
-        <span className="atb-action-now">
-          {a.action
-            ? actionStatus(a.action)
-            : a.nextRow
-              ? '列を移動中'
-              : a.nextSlot !== null
-                ? '武器を変更中'
-                : q.length
-                  ? 'ATB充填待ち'
-                  : '指示待ち'}
-        </span>
+        <span className="atb-action-now">{executionStatus(a, s.config, s)}</span>
         <b className="atb-number">
           {a.atb.toFixed(1)}
           <small> / {s.config.atbMax} ATB</small>
         </b>
+        <div className="sequence-controls" aria-label="連続行動の操作">
+          <button
+            aria-pressed={a.executionHeld}
+            disabled={s.controlMode !== 'manual'}
+            title="現在の一手と硬直は続け、次の開始を保留。保留中も予約を編集できます。"
+            onClick={() => send({ type: 'hold', id: a.id, value: !a.executionHeld })}
+          >
+            {keyboard && <kbd>H</kbd>} {a.executionHeld ? '保留解除・放つ' : '実行保留・貯める'}
+          </button>
+          <button
+            disabled={!q.length || s.controlMode !== 'manual'}
+            title="未開始の予約をすべて取り消し、残ったATBを保持。現在の一手と終了硬直は続きます。"
+            onClick={() => send({ type: 'cancel', id: a.id })}
+          >
+            {keyboard && <kbd>Shift ⌫</kbd>} 残りを打ち切る
+          </button>
+          <small>{keyboard ? '⌫ は先頭1件の取消' : 'R3の予約一覧：△/Yで保留、□/Xで打ち切り'}</small>
+        </div>
       </header>
       <div className="atb-budget" style={{ '--atb-columns': columns } as CSSProperties}>
         {entries
@@ -121,7 +131,7 @@ export function AtbTimeline({
         <span>
           {q.some(isHandoff)
             ? '交代は先頭優先 · 後続は交代開始時に解除'
-            : `予約 ${offset} / ${s.config.atbMax} ATB · ${q.length}手`}
+            : `予約コスト ${offset} / ${s.config.atbMax} ATB · ${q.length}手（所持 ${a.atb.toFixed(1)}）`}
         </span>
         <span className="atb-free-steps">
           {entries

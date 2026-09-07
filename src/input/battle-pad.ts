@@ -302,6 +302,10 @@ export function battleInput(
     if (action === 'confirm') return result({ ...ui, logOffset: 0 });
     return result();
   }
+  if (ui.page === 'queue' && action === 'skill')
+    return result({ ...ui, stamp: ui.stamp + 1 }, [
+      { type: 'hold', id: s.selected, value: !s.allies[s.selected].executionHeld },
+    ]);
   if (ui.page === 'queue' && action === 'item')
     return result(
       { ...ui, key: '', message: '未実行の予約をすべて取り消しました。', stamp: ui.stamp + 1 },

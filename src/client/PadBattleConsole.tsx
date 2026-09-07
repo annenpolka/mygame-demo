@@ -82,10 +82,14 @@ export function PadBattleConsole({
   const a = s.allies[s.selected],
     w = WEAPONS[a.weapons[projectedSlot(a)]],
     q = planned(a),
-    timing = planTiming(a, {
-      ...s.config,
-      atbRate: s.config.atbRate * partyBonus(s.allies, s.config.bonusMode).atb,
-    });
+    timing = planTiming(
+      a,
+      {
+        ...s.config,
+        atbRate: s.config.atbRate * partyBonus(s.allies, s.config.bonusMode).atb,
+      },
+      s,
+    );
   const list = choices(s, ui),
     choice = selectedChoice(s, ui);
   const keyNames: Record<PadAction, string> = {
@@ -282,9 +286,12 @@ export function PadBattleConsole({
           ) : ui.page === 'queue' ? (
             <div className="pad-queue-help">
               <strong>取り消す手を選んでください。</strong>
-              <p>右の一覧を上下で選択し、{glyph('confirm')}で取消。実行中の行動は続きます。</p>
+              <p>
+                右の一覧を上下で選択し、{glyph('confirm')}で1件取消。{glyph('skill')}
+                で実行保留・解除。現在の一手と硬直は続きます。
+              </p>
               <button disabled={!q.length} onClick={() => act('item')}>
-                {glyph('item')} 未実行をすべて取消
+                {glyph('item')} 残りを打ち切る
               </button>
               <p>残した手の順序は変わりません。</p>
             </div>
@@ -368,7 +375,7 @@ export function PadBattleConsole({
           aria-label={`${a.name}の予約`}
         >
           {timeButtons}
-          <div className="pad-plan-heading">
+          <div className="pad-plan-heading" title="時刻・連結は現在の対象と編成での予測">
             <button onClick={() => open('queue')}>
               積んだ手{' '}
               <b>
@@ -387,9 +394,12 @@ export function PadBattleConsole({
                   aria-label={`${i + 1}手目の${stepName(a, p)}を取消`}
                   onClick={() => remove(String(p.key))}
                 >
-                  <b>{i + 1}</b>
+                  <b>{timing[i].linked ? '↳' : i + 1}</b>
                   <span>
-                    <strong>{stepName(a, p)}</strong>
+                    <strong>
+                      {stepName(a, p)}
+                      {timing[i].linked && <em className="link-tag">連結予定</em>}
+                    </strong>
                     <small>
                       {p.kind === 'skill'
                         ? targetName(s, p.target)
@@ -399,7 +409,11 @@ export function PadBattleConsole({
                       ·{' '}
                       {i > 0 && q[0]?.kind === 'skill' && q[0].skillId === 'handoff'
                         ? '交代開始時に解除'
-                        : `約${timing[i].starts.toFixed(1)}秒後`}
+                        : timing[i].status === 'held'
+                          ? '保留解除待ち'
+                          : timing[i].status === 'invalid'
+                            ? '開始不可・取消予定'
+                            : `効果まで約${timing[i].ends.toFixed(1)}秒`}
                     </small>
                   </span>
                   {ui.page === 'queue' && choice?.key === String(p.key) ? (

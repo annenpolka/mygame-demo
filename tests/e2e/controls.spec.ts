@@ -88,7 +88,7 @@ test('human fills four entries including movement and future weapon skills, and 
   await page.keyboard.press('Backspace');
   await expect(page.locator('.pad-plan-list li')).toHaveCount(3);
   await page.keyboard.press('t');
-  await page.getByRole('button', { name: 'V 未実行をすべて取消', exact: true }).click();
+  await page.getByRole('button', { name: 'V 残りを打ち切る', exact: true }).click();
   await expect(page.locator('.pad-plan-list li')).toHaveCount(0);
 });
 
@@ -198,7 +198,7 @@ for (const mode of ['mouse', 'pad'] as const) {
     await expect(page.locator('.handoff-status')).toContainText('アルト → リネ');
     await expect(page.locator('[data-unit=a0]')).toContainText('硬直');
     await page.screenshot({ path: `test-results/handoff-${mode}-waiting.png`, fullPage: true });
-    await page.clock.runFor(1700);
+    await page.clock.runFor(2600);
     await expect(page.locator('.handoff-status')).toContainText('引継ぎスロー');
     await expect(page.locator('.handoff-status')).toContainText('集中力消費なし');
     const after = await page.locator('.horizontal-field').evaluate((el) => ({
@@ -317,7 +317,7 @@ test('effects visualize resolved damage and shields; tactical stop freezes their
   await expect(page.locator('[data-status=shield]')).toHaveCount(1);
   await page.keyboard.press('z');
   await page.getByRole('option', { name: '鐘楼の衛兵に斬撃を積む', exact: true }).click();
-  await page.clock.runFor(2350);
+  await page.clock.runFor(2950);
   const fx = page.locator('[data-effect=slash]').first();
   await expect(fx).toBeVisible();
   const value = Number(await fx.getAttribute('data-value'));
@@ -487,5 +487,67 @@ for (const mode of ['mouse', 'pad'] as const) {
     await page.screenshot({ path: `test-results/tempo-${mode}-recovery.png`, fullPage: true });
     await page.clock.runFor(1000);
     await expect(page.locator('[data-unit=a0]')).toContainText('指示待ち');
+  });
+}
+
+for (const control of ['keyboard', 'pad'] as const) {
+  test(`${control} banks ATB with a held queue, releases links, and cuts only the remaining actions`, async ({
+    page,
+  }) => {
+    await page.setViewportSize({ width: 1366, height: 752 });
+    if (control === 'pad') await virtualPad(page, 'DualSense Wireless Controller (054c)');
+    await page.getByRole('button', { name: '戦闘開始 →', exact: true }).click();
+    if (control === 'keyboard') await page.keyboard.press('h');
+    else {
+      await press(page, 11);
+      await press(page, 3);
+      await press(page, 11);
+    }
+    await page.getByRole('button', { name: '基本技：斬撃', exact: true }).click();
+    for (let i = 0; i < 4; i++)
+      await page.getByRole('option', { name: '鐘楼の衛兵に斬撃を積む', exact: true }).click();
+    await page.keyboard.press('Escape');
+    await page.clock.runFor(3500);
+    await expect(page.locator('.atb-action-now')).toContainText('実行保留中');
+    await expect(page.locator('.pad-plan-list li')).toHaveCount(4);
+    await expect(page.getByRole('meter', { name: '操作キャラのATB', exact: true })).toHaveAttribute(
+      'aria-valuenow',
+      '4',
+    );
+    if (control === 'keyboard') await page.keyboard.press('h');
+    else {
+      await press(page, 11);
+      await press(page, 3);
+      await press(page, 11);
+    }
+    await page.clock.runFor(1200);
+    await expect(page.locator('.atb-action-now')).toContainText('連続2手目');
+    await expect(page.locator('.atb-action-now')).toContainText('補充停止');
+    const atb = await page
+      .getByRole('meter', { name: '操作キャラのATB', exact: true })
+      .getAttribute('aria-valuenow');
+    expect(atb).toBe('2');
+    if (control === 'keyboard') await page.keyboard.press('Shift+Backspace');
+    else {
+      await press(page, 11);
+      await press(page, 2);
+      await press(page, 11);
+    }
+    await expect(page.locator('.pad-plan-list li')).toHaveCount(0);
+    await page.clock.runFor(900);
+    await expect(page.locator('.atb-action-now')).toContainText('終了硬直');
+    await expect(page.getByRole('meter', { name: '操作キャラのATB', exact: true })).toHaveAttribute(
+      'aria-valuenow',
+      atb!,
+    );
+    await page.screenshot({ path: `test-results/sequence-${control}-cut.png`, fullPage: true });
+    await page.clock.runFor(1200);
+    expect(
+      Number(
+        await page
+          .getByRole('meter', { name: '操作キャラのATB', exact: true })
+          .getAttribute('aria-valuenow'),
+      ),
+    ).toBeGreaterThan(2);
   });
 }
