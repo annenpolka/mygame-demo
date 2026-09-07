@@ -99,7 +99,7 @@ test('fixed formation height and selected ATB budget map multi-cost skills and f
   const fieldBox = await page.locator('.battlefield').boundingBox();
   expect(bandBox!.y).toBeGreaterThanOrEqual(fieldBox!.y + fieldBox!.height);
   await page.screenshot({ path: 'test-results/atb-keyboard.png', fullPage: true });
-  await page.keyboard.press('Backspace');
+  await page.getByRole('button', { name: '1手目の円弧斬りを取消', exact: true }).click();
   await expect(band.locator('.atb-reservation')).toHaveCount(0);
   await page.keyboard.press('2');
   await expect(band.locator('.atb-reservation')).toContainText('キャラ交代');

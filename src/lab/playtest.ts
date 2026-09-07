@@ -199,7 +199,16 @@ const viewSchema = z.object({
     page: z.enum(['command', 'target', 'move', 'weapon', 'tactics', 'queue', 'log']),
     key: z.string().max(200),
     skillId: z.string().max(100).nullable(),
-    tactics: z.enum(['optima', 'formation']),
+    tactics: z.enum(['optima', 'formation', 'items']),
+    queueFocus: z
+      .object({
+        key: z.string().max(200),
+        actorId: int.max(2),
+        index: int.max(9),
+        title: z.string().max(100),
+        status: z.enum(['selected', 'removed', 'gone']),
+      })
+      .optional(),
     remembered: z.record(z.string().max(200), z.string().max(200)),
     message: z.string().max(1000),
     stamp: z.number().finite(),

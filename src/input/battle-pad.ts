@@ -1,15 +1,32 @@
 import { partyBonus, bonusText } from '../sim/bonuses';
 import { SKILLS, WEAPONS, ROW_NAMES } from '../content/data';
-import { canAppend, planned, projectedSlot, projectedRow, pendingPotions } from '../sim/plan';
+import {
+  canAppend,
+  planned,
+  projectedSlot,
+  projectedRow,
+  pendingPotions,
+  stepName,
+} from '../sim/plan';
 import type { Command, State, Target } from '../sim/types';
 import type { PadAction } from './gamepad';
 
+export type BattleAction =
+  PadAction | 'guard' | 'potion' | 'itemMenu' | 'optimaMenu' | 'formationMenu';
+export interface QueueFocus {
+  key: string;
+  actorId: number;
+  index: number;
+  title: string;
+  status: 'selected' | 'removed' | 'gone';
+}
 export type BattlePage = 'command' | 'target' | 'move' | 'weapon' | 'tactics' | 'queue' | 'log';
 export interface BattlePad {
   page: BattlePage;
   key: string;
   skillId: string | null;
-  tactics: 'optima' | 'formation';
+  tactics: 'optima' | 'formation' | 'items';
+  queueFocus?: QueueFocus;
   remembered: Record<string, string>;
   message: string;
   stamp: number;
@@ -19,7 +36,8 @@ export interface BattleChoice {
   key: string;
   title: string;
   detail: string;
-  command: Command;
+  command?: Command;
+  skillId?: string;
   target?: Target;
 }
 export const newBattlePad = (): BattlePad => ({
@@ -32,12 +50,26 @@ export const newBattlePad = (): BattlePad => ({
   stamp: 0,
   logOffset: 0,
 });
-export const home = (ui: BattlePad): BattlePad => ({
-  ...ui,
-  page: 'command',
-  key: '',
-  skillId: null,
-});
+export const home = (ui: BattlePad): BattlePad => {
+  const { queueFocus: _focus, ...rest } = ui;
+  return { ...rest, page: 'command', key: '', skillId: null };
+};
+function focusQueue(s: State, ui: BattlePad, key: string): BattlePad {
+  const list = planned(s.allies[s.selected]),
+    index = list.findIndex((p) => String(p.key) === key);
+  if (index < 0) return ui;
+  return {
+    ...ui,
+    key,
+    queueFocus: {
+      key,
+      actorId: s.selected,
+      index,
+      title: stepName(s.allies[s.selected], list[index]),
+      status: 'selected',
+    },
+  };
+}
 const targetKey = (t: Target) => (t.kind === 'row' ? `row:${t.row}` : `${t.kind}:${t.id}`);
 export function choices(s: State, ui: BattlePad): BattleChoice[] {
   const a = s.allies[s.selected];
@@ -90,31 +122,42 @@ export function choices(s: State, ui: BattlePad): BattleChoice[] {
       command: { type: 'enqueue', id: a.id, step: { kind: 'weapon', slot: slot as 0 | 1 } },
     }));
   if (ui.page === 'tactics')
-    return ui.tactics === 'optima'
-      ? s.presets.map((p, i) => ({
-          key: String(i),
-          title: p.name,
-          detail:
-            p.slots
-              .map((slot, id) => `${s.allies[id].name} ${WEAPONS[s.allies[id].weapons[slot]].role}`)
-              .join(' / ') +
-            ' · ' +
-            bonusText(
-              partyBonus(
-                s.allies.map((a, id) => ({ ...a, slot: p.slots[id] })),
-                s.config.bonusMode,
-              ),
-            ),
-          command: { type: 'optima', index: i },
-        }))
-      : s.config.uiMode === 'individual'
-        ? []
-        : s.formations.map((f, i) => ({
+    return ui.tactics === 'items'
+      ? [
+          {
+            key: 'potion',
+            title: '救急薬',
+            detail: `味方一人を回復 · 残${Math.max(0, s.potions - pendingPotions(s.allies))}個 · 対象を選ぶ`,
+            skillId: 'potion',
+          },
+        ]
+      : ui.tactics === 'optima'
+        ? s.presets.map((p, i) => ({
             key: String(i),
-            title: f.name,
-            detail: f.rows.map((row, id) => `${s.allies[id].name} ${ROW_NAMES[row]}`).join(' / '),
-            command: { type: 'formation', index: i },
-          }));
+            title: p.name,
+            detail:
+              p.slots
+                .map(
+                  (slot, id) => `${s.allies[id].name} ${WEAPONS[s.allies[id].weapons[slot]].role}`,
+                )
+                .join(' / ') +
+              ' · ' +
+              bonusText(
+                partyBonus(
+                  s.allies.map((a, id) => ({ ...a, slot: p.slots[id] })),
+                  s.config.bonusMode,
+                ),
+              ),
+            command: { type: 'optima', index: i },
+          }))
+        : s.config.uiMode === 'individual'
+          ? []
+          : s.formations.map((f, i) => ({
+              key: String(i),
+              title: f.name,
+              detail: f.rows.map((row, id) => `${s.allies[id].name} ${ROW_NAMES[row]}`).join(' / '),
+              command: { type: 'formation', index: i },
+            }));
   if (ui.page === 'queue')
     return planned(a).map((p) => ({
       key: String(p.key),
@@ -126,10 +169,11 @@ export function choices(s: State, ui: BattlePad): BattleChoice[] {
 }
 export function selectedChoice(s: State, ui: BattlePad) {
   const items = choices(s, ui);
-  return items.find((c) => c.key === ui.key) ?? items[0];
+  return items.find((c) => c.key === ui.key) ?? (ui.page === 'queue' ? undefined : items[0]);
 }
 export function unavailable(s: State, skillId?: string) {
-  if (s.pendingSelect !== null) return '交代を予約中です。先頭取消で予約を戻せます。';
+  if (s.pendingSelect !== null)
+    return '交代を予約中です。予約一覧の一件取消、または後続取消で解除できます。';
   const a = s.allies[s.selected];
   if (a.hp <= 0) return '戦闘不能です。肩ボタンで仲間を選んでください。';
   if (!canAppend(a, s.config, skillId ? (SKILLS[skillId]?.cost ?? Infinity) : 0))
@@ -149,7 +193,7 @@ export function openPage(
   page: BattlePage,
   skillId: string | null = null,
 ): BattlePad {
-  const next = { ...ui, page, skillId, key: '', message: '', stamp: ui.stamp + 1 };
+  const next = { ...home(ui), page, skillId, key: '', message: '', stamp: ui.stamp + 1 };
   const list = choices(s, next);
   next.key =
     (page === 'queue'
@@ -165,7 +209,7 @@ export function openPage(
     list[0]?.key ??
     '';
   if (!list.some((c) => c.key === next.key)) next.key = list[0]?.key ?? '';
-  return next;
+  return page === 'queue' ? focusQueue(s, next, next.key) : next;
 }
 export function confirmChoice(
   s: State,
@@ -178,8 +222,37 @@ export function confirmChoice(
     ui: { ...next, message, stamp: ui.stamp + 1 },
     commands: [] as Command[],
   });
+  if (ui.page === 'queue') {
+    const focus = ui.queueFocus;
+    if (key === ui.key && focus && (focus.actorId !== s.selected || focus.status !== 'selected'))
+      return { ui, commands: [] };
+    if (!choice)
+      return {
+        ui: {
+          ...ui,
+          key,
+          queueFocus: {
+            key,
+            actorId: s.selected,
+            index: focus?.index ?? 0,
+            title: focus?.title ?? '予約',
+            status: 'gone',
+          },
+          message: 'この予約は実行・取消済みです。方向入力で選び直してください。',
+          stamp: ui.stamp + 1,
+        },
+        commands: [],
+      };
+  }
   if (!choice)
     return feedback('状態が変わりました。選び直してください。', { ...ui, key: list[0]?.key ?? '' });
+  if (choice.skillId) {
+    const reason = unavailable(s, choice.skillId);
+    return reason
+      ? feedback(reason)
+      : { ui: openPage(s, ui, 'target', choice.skillId), commands: [] };
+  }
+  if (!choice.command) return { ui, commands: [] };
   if (choice.command.type === 'enqueue') {
     const reason = unavailable(s, ui.skillId ?? undefined);
     if (reason) return feedback(reason);
@@ -187,12 +260,10 @@ export function confirmChoice(
   let next = { ...ui, key };
   if (ui.page === 'target')
     next.remembered = { ...ui.remembered, [`${s.selected}:${ui.skillId}`]: key };
-  else if (ui.page === 'queue')
-    next.key =
-      list[Math.min(list.findIndex((c) => c.key === key) + 1, list.length - 1)]?.key === key
-        ? (list.at(-2)?.key ?? '')
-        : list[list.findIndex((c) => c.key === key) + 1].key;
-  else next = home(ui);
+  else if (ui.page === 'queue') {
+    next = focusQueue(s, next, key);
+    next.queueFocus = { ...next.queueFocus!, status: 'removed' };
+  } else next = home(ui);
   const commands: Command[] = [choice.command];
   if (choice.command.type === 'optima' && s.config.uiMode === 'linked')
     s.presets[choice.command.index].rows.forEach((row, id) =>
@@ -200,7 +271,7 @@ export function confirmChoice(
     );
   const message =
     ui.page === 'queue'
-      ? '予約を取り消しました。'
+      ? '一件取消済み。方向入力で次に取り消す予約を選んでください。'
       : choice.command.type === 'enqueue'
         ? `${choice.command.step.kind === 'skill' ? SKILLS[choice.command.step.skillId].name : choice.title}を${planned(s.allies[s.selected]).length + 1}手目に追加`
         : `${choice.title}へ切り替えました。`;
@@ -210,10 +281,49 @@ export function confirmChoice(
 export function battleInput(
   s: State,
   ui: BattlePad,
-  action: PadAction,
+  action: BattleAction,
 ): { ui: BattlePad; commands: Command[] } {
   const result = (next = ui, commands: Command[] = []) => ({ ui: next, commands });
   if (s.phase !== 'battle' || s.paused) return result();
+  if (action === 'back') return result(ui.page === 'command' ? ui : home(ui));
+  if (action === 'cutQueue') {
+    const hasQueue = planned(s.allies[s.selected]).length > 0;
+    return result(
+      hasQueue
+        ? {
+            ...home(ui),
+            message: '後続取消：現在の一手と終了硬直は続きます。',
+            stamp: ui.stamp + 1,
+          }
+        : home(ui),
+      hasQueue ? [{ type: 'cancel', id: s.selected }] : [],
+    );
+  }
+  if (action === 'itemMenu' || action === 'optimaMenu' || action === 'formationMenu')
+    return result(
+      openPage(
+        s,
+        {
+          ...ui,
+          tactics:
+            action === 'itemMenu' ? 'items' : action === 'optimaMenu' ? 'optima' : 'formation',
+        },
+        'tactics',
+      ),
+    );
+  if (action === 'guard' || action === 'potion') {
+    const reason = unavailable(s, action);
+    if (reason) return result({ ...ui, message: reason, stamp: ui.stamp + 1 });
+    return action === 'potion'
+      ? result(openPage(s, ui, 'target', 'potion'))
+      : result({ ...home(ui), message: '防御を予約に追加', stamp: ui.stamp + 1 }, [
+          {
+            type: 'enqueue',
+            id: s.selected,
+            step: { kind: 'skill', skillId: 'guard', target: { kind: 'ally', id: s.selected } },
+          },
+        ]);
+  }
   if (action === 'previous' || action === 'next') {
     const ids = s.allies.filter((a) => a.hp > 0).map((a) => a.id),
       i = ids.indexOf(s.pendingSelect ?? s.selected);
@@ -239,17 +349,6 @@ export function battleInput(
         reason ? [] : [{ type: 'toggleRow', id: s.selected }],
       );
     }
-    if (action === 'cancel') {
-      const first = planned(s.allies[s.selected])[0];
-      return result(
-        {
-          ...ui,
-          message: first ? '先頭の予約を取り消しました。' : '取り消す予約はありません。',
-          stamp: ui.stamp + 1,
-        },
-        first ? [{ type: 'cancelFirst', id: s.selected }] : [],
-      );
-    }
     if (action === 'right') {
       const reason = unavailable(s),
         a = s.allies[s.selected],
@@ -270,11 +369,9 @@ export function battleInput(
         ? w.skills[0]
         : action === 'skill'
           ? w.skills[1]
-          : action === 'item'
-            ? 'potion'
-            : action === 'down'
-              ? 'guard'
-              : null;
+          : action === 'down'
+            ? 'guard'
+            : null;
     if (!id) return result();
     const reason = unavailable(s, id);
     if (reason) return result({ ...ui, message: reason, stamp: ui.stamp + 1 });
@@ -295,7 +392,6 @@ export function battleInput(
       );
     return result(openPage(s, ui, 'target', id));
   }
-  if (action === 'cancel') return result(home(ui));
   if (ui.page === 'log') {
     if (action === 'up' || action === 'down')
       return result({ ...ui, logOffset: Math.max(0, ui.logOffset + (action === 'up' ? 1 : -1)) });
@@ -306,27 +402,25 @@ export function battleInput(
     return result({ ...ui, stamp: ui.stamp + 1 }, [
       { type: 'hold', id: s.selected, value: !s.allies[s.selected].executionHeld },
     ]);
-  if (ui.page === 'queue' && action === 'item')
+  if (ui.page === 'tactics' && (action === 'left' || action === 'right')) {
+    const tabs = ['optima', 'formation', 'items'] as const;
     return result(
-      { ...ui, key: '', message: '未実行の予約をすべて取り消しました。', stamp: ui.stamp + 1 },
-      [{ type: 'cancel', id: s.selected }],
+      openPage(
+        s,
+        { ...ui, tactics: tabs[(tabs.indexOf(ui.tactics) + (action === 'right' ? 1 : 2)) % 3] },
+        'tactics',
+      ),
     );
-  if (ui.page === 'tactics' && (action === 'left' || action === 'right'))
-    return result(
-      openPage(s, { ...ui, tactics: ui.tactics === 'optima' ? 'formation' : 'optima' }, 'tactics'),
-    );
+  }
   if (['up', 'down', 'left', 'right'].includes(action)) {
-    const list = choices(s, ui),
-      i = Math.max(
-        0,
-        list.findIndex((c) => c.key === ui.key),
-      );
+    const list = choices(s, ui);
+    if (!list.length) return result();
+    const i = list.findIndex((c) => c.key === ui.key);
     const delta = action === 'up' || action === 'left' ? -1 : 1;
-    return result({
-      ...ui,
-      key: list[(i + delta + list.length) % list.length]?.key ?? '',
-      message: '',
-    });
+    const nextIndex = i >= 0 ? i + delta : (ui.queueFocus?.index ?? 0) + (delta < 0 ? -1 : 0);
+    const key = list[(nextIndex + list.length) % list.length].key;
+    const next = { ...ui, key, message: '' };
+    return result(ui.page === 'queue' ? focusQueue(s, next, key) : next);
   }
   if (action === 'confirm') return confirmChoice(s, ui);
   return result();

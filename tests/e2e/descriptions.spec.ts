@@ -11,4 +11,9 @@ test('help reflects current combat rules and the configured focus drain', async 
   await expect(help).toContainText('スローは毎実秒7、停止は毎実秒18');
   await expect(help).toContainText('発動0.6秒で交代');
   await expect(help).toContainText('支払い済みATBは戻りません');
+  await expect(help).toContainText('○／Bは戻る専用');
+  await expect(help).toContainText('Bで後続取消');
+  await expect(help).toContainText('P は休憩ポーズ');
+  await expect(help).not.toContainText('先頭予約を取消');
+  await expect(help).not.toContainText('Esc は休憩ポーズ');
 });

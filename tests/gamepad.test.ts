@@ -20,6 +20,23 @@ const pad = (buttons: number[] = [], axes: number[] = [0, 0], id = 'Xbox'): PadS
   axes,
 });
 describe('controller polling and mappings', () => {
+  it.each(['xbox', 'playstation', 'switch'] as const)(
+    'migrates %s back and cutoff as separate physical buttons',
+    (family) => {
+      const current = { ...defaultBindings(family), back: 21, cutQueue: 22 };
+      const { back, cutQueue, ...rest } = current;
+      const migrated = migrateBindings({ ...rest, cancel: back, item: cutQueue });
+      expect(migrated).toEqual(current);
+      expect(validBindings({ ...current, cutQueue: current.back })).toBe(false);
+      const r = new PadReader();
+      r.read(pad(), current, 0);
+      expect(r.read(pad([21]), current, 20)).toEqual(['back']);
+      expect(r.read(pad([21]), current, 1000)).toEqual([]);
+      r.read(pad(), current, 1020);
+      expect(r.read(pad([22]), current, 1040)).toEqual(['cutQueue']);
+      expect(r.read(pad([22]), current, 2040)).toEqual([]);
+    },
+  );
   it('does not repeat one-press movement or guard at home; menu navigation can still repeat', () => {
     const r = new PadReader(),
       b = defaultBindings('xbox');

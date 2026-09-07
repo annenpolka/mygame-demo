@@ -43,7 +43,7 @@ test('keyboard selection, tactical stop, command reservation, and opaque system 
   await page.keyboard.press('f');
   await page.getByRole('button', { name: '前後移動を積む', exact: true }).click();
   await expect(page.locator('.pad-actor').nth(0)).toContainText('前列');
-  await page.keyboard.press('Escape');
+  await page.keyboard.press('p');
   await expect(page.getByRole('dialog', { name: '休憩ポーズ' })).toBeVisible();
   const pausedFocus = await page
     .getByRole('meter', { name: '集中力', exact: true, includeHidden: true })

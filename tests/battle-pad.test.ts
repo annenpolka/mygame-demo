@@ -6,6 +6,7 @@ import {
   choices,
   confirmChoice,
   openPage,
+  type BattlePage,
 } from '../src/input/battle-pad';
 import { defaultBindings, migrateBindings } from '../src/input/gamepad';
 import { createState, command, step, advance, copy } from '../src/sim/engine';
@@ -19,6 +20,86 @@ const session = () => {
   return x;
 };
 describe('direct controller battle commands', () => {
+  it.each(['command', 'target', 'queue', 'tactics', 'move', 'weapon', 'log'] as BattlePage[])(
+    'back from %s never mutates combat, while cutoff closes the page and cancels only once',
+    (page) => {
+      const x = session();
+      for (let i = 0; i < 3; i++) x.send(...battleInput(x.state, newBattlePad(), 'guard').commands);
+      x.send({ type: 'time', mode: 'normal' });
+      x.advance(DT);
+      const before = copy(x.state);
+      const picker = openPage(x.state, newBattlePad(), page, page === 'target' ? 'slash' : null);
+      let ui = picker;
+      for (let i = 0; i < 10; i++) {
+        const r = battleInput(x.state, ui, 'back');
+        ui = r.ui;
+        expect(r.commands).toEqual([]);
+      }
+      expect(ui.page).toBe('command');
+      expect(x.state).toEqual(before);
+      const cut = battleInput(x.state, picker, 'cutQueue');
+      expect(cut.ui.page).toBe('command');
+      expect(cut.commands).toEqual([{ type: 'cancel', id: 0 }]);
+      x.send(...cut.commands);
+      expect(planned(x.state.allies[0])).toEqual([]);
+      expect(x.state.allies[0].action).toEqual(before.allies[0].action);
+      expect(x.state.allies[0].atb).toBe(before.allies[0].atb);
+      for (let i = 0; i < 10; i++)
+        expect(battleInput(x.state, cut.ui, 'cutQueue').commands).toEqual([]);
+      expect(runReplay(x.recording())).toEqual(x.state);
+    },
+  );
+  it('requires an explicit new selection after a removal, including an execution race', () => {
+    const x = session();
+    for (let i = 0; i < 3; i++) x.send(...battleInput(x.state, newBattlePad(), 'guard').commands);
+    let ui = battleInput(x.state, openPage(x.state, newBattlePad(), 'queue'), 'up').ui;
+    expect(ui.key).toBe('2');
+    let r = battleInput(x.state, ui, 'confirm');
+    x.send(...r.commands);
+    ui = r.ui;
+    expect(ui.queueFocus).toMatchObject({ key: '2', status: 'removed', index: 1 });
+    for (let i = 0; i < 10; i++) expect(battleInput(x.state, ui, 'confirm').commands).toEqual([]);
+    expect(planned(x.state.allies[0]).map((p) => p.key)).toEqual([1, 3]);
+    ui = battleInput(x.state, ui, 'up').ui;
+    expect(ui.key).toBe('1');
+    x.send({ type: 'time', mode: 'normal' });
+    x.advance(DT);
+    r = battleInput(x.state, ui, 'confirm');
+    expect(r.commands).toEqual([]);
+    expect(r.ui.queueFocus?.status).toBe('gone');
+    expect(battleInput(x.state, r.ui, 'confirm').commands).toEqual([]);
+    ui = battleInput(x.state, r.ui, 'down').ui;
+    expect(ui.key).toBe('3');
+    expect(battleInput(x.state, ui, 'confirm').commands).toEqual([
+      { type: 'removePlan', id: 0, key: 3 },
+    ]);
+  });
+  it('keeps keyboard guard independent of target back and offers potions in individual mode', () => {
+    const x = session();
+    x.state.config.uiMode = 'individual';
+    x.state.allies[0].atb = 0;
+    const r = battleInput(x.state, openPage(x.state, newBattlePad(), 'target', 'slash'), 'guard');
+    expect(r.ui.page).toBe('command');
+    expect(r.commands).toEqual([
+      {
+        type: 'enqueue',
+        id: 0,
+        step: { kind: 'skill', skillId: 'guard', target: { kind: 'ally', id: 0 } },
+      },
+    ]);
+    const menu = battleInput(x.state, newBattlePad(), 'itemMenu');
+    expect(menu.commands).toEqual([]);
+    const target = battleInput(x.state, menu.ui, 'confirm');
+    expect(target.ui).toMatchObject({ page: 'target', skillId: 'potion' });
+    expect(target.commands).toEqual([]);
+    expect(battleInput(x.state, target.ui, 'confirm').commands).toEqual([
+      {
+        type: 'enqueue',
+        id: 0,
+        step: { kind: 'skill', skillId: 'potion', target: { kind: 'ally', id: 0 } },
+      },
+    ]);
+  });
   it('opens a skill directly and keeps its target selected for repeated stacking', () => {
     const x = session();
     let ui = newBattlePad();
@@ -42,11 +123,11 @@ describe('direct controller battle commands', () => {
     press('confirm');
     expect(planned(x.state.allies[0])).toHaveLength(2);
     expect(ui.message).toContain('4 ATB');
-    press('cancel');
+    press('back');
     expect(ui.page).toBe('command');
     press('queue');
     press('confirm');
-    press('cancel');
+    press('back');
     press('skill');
     expect(ui.key).toBe('row:back');
     expect(runReplay(x.recording())).toEqual(x.state);
@@ -56,7 +137,7 @@ describe('direct controller battle commands', () => {
     let r = battleInput(x.state, newBattlePad(), 'down');
     x.send(...r.commands);
     expect(planned(x.state.allies[0])).toMatchObject([{ kind: 'skill', skillId: 'guard' }]);
-    r = battleInput(x.state, openPage(x.state, r.ui, 'target', 'sweep'), 'cancel');
+    r = battleInput(x.state, openPage(x.state, r.ui, 'target', 'sweep'), 'back');
     expect(r.commands).toEqual([]);
     expect(r.ui.page).toBe('command');
   });
@@ -74,7 +155,8 @@ describe('direct controller battle commands', () => {
     const r = battleInput(x.state, ui, 'confirm');
     x.send(...r.commands);
     expect(planned(x.state.allies[0]).map((p) => p.key)).toEqual([1, 3]);
-    ui = { ...r.ui, key: '1' };
+    ui = battleInput(x.state, r.ui, 'up').ui;
+    expect(ui.key).toBe('1');
     x.send({ type: 'time', mode: 'normal' });
     x.advance(1 / 60);
     const stale = battleInput(x.state, ui, 'confirm');
@@ -127,11 +209,11 @@ describe('direct controller battle commands', () => {
   it('preserves the old custom button layout while assigning distinct trigger controls', () => {
     const old: any = { ...defaultBindings('xbox'), confirm: 20, slow: 2, stop: 3 };
     delete old.skill;
-    delete old.item;
+    delete old.cutQueue;
     const b = migrateBindings(old)!;
     expect(b.confirm).toBe(20);
     expect(b.skill).toBe(3);
-    expect(b.item).toBe(2);
+    expect(b.cutQueue).toBe(2);
     expect(b.slow).toBe(6);
     expect(b.stop).toBe(7);
     expect(migrateBindings({ ...old, axisX: 999 })).toBeNull();

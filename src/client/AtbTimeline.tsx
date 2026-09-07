@@ -85,11 +85,20 @@ export function AtbTimeline({
           <button
             disabled={!q.length || s.controlMode !== 'manual'}
             title="未開始の予約をすべて取り消し、残ったATBを保持。現在の一手と終了硬直は続きます。"
-            onClick={() => send({ type: 'cancel', id: a.id })}
+            onClick={() => act('cutQueue')}
           >
-            {keyboard && <kbd>Shift ⌫</kbd>} 残りを打ち切る
+            {keyboard ? (
+              <kbd>B</kbd>
+            ) : (
+              <PadGlyph action="cutQueue" bindings={bindings} family={family} />
+            )}{' '}
+            後続取消
           </button>
-          <small>{keyboard ? '⌫ は先頭1件の取消' : 'R3の予約一覧：△/Yで保留、□/Xで打ち切り'}</small>
+          <small>
+            {keyboard
+              ? 'Escは戻る専用 · Tで一件取消'
+              : '戻るは予約を変更しません · 一件取消は予約一覧へ'}
+          </small>
         </div>
       </header>
       <div className="atb-budget" style={{ '--atb-columns': columns } as CSSProperties}>

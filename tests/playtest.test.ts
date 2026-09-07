@@ -11,7 +11,7 @@ import {
   prepareNoteComparison,
   sameRules,
 } from '../src/lab/playtest';
-import { openPage } from '../src/input/battle-pad';
+import { openPage, battleInput } from '../src/input/battle-pad';
 import { WatchPlayer } from '../src/ai/watch-player';
 function fixture() {
   const session = new Session(),
@@ -21,6 +21,25 @@ function fixture() {
   journal.observe(session, view);
   return { session, journal, view };
 }
+it('restores a cancelled queue focus without arming another reservation', () => {
+  const { session, journal, view } = fixture();
+  session.send({ type: 'time', mode: 'stop' });
+  for (let i = 0; i < 3; i++)
+    session.send(...battleInput(session.state, view.battle, 'guard').commands);
+  const removed = battleInput(
+    session.state,
+    openPage(session.state, view.battle, 'queue'),
+    'confirm',
+  );
+  session.send(...removed.commands);
+  view.battle = removed.ui;
+  const note = parseNotes(exportNotes([journal.mark(session, view)]))[0];
+  const restored = prepareNoteReplay(note, 'marked');
+  const state = runReplay(restored.recording);
+  expect(state).toEqual(session.state);
+  expect(restored.view.battle.queueFocus).toEqual(removed.ui.queueFocus);
+  expect(battleInput(state, restored.view.battle, 'confirm').commands).toEqual([]);
+});
 it('marks without commands or time changes and replays the earlier state with UI, then branches without original future inputs', () => {
   const { session, journal, view } = fixture();
   for (let i = 0; i < 300; i++) {

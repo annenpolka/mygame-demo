@@ -1,8 +1,8 @@
 export const PAD_ACTIONS = [
   'confirm',
-  'cancel',
+  'back',
   'skill',
-  'item',
+  'cutQueue',
   'previous',
   'next',
   'slow',
@@ -42,11 +42,11 @@ export function padFamily(id: string): PadFamily {
 export function defaultBindings(family: PadFamily): PadBindings {
   return {
     confirm: family === 'switch' ? 1 : 0,
-    cancel: family === 'switch' ? 0 : 1,
+    back: family === 'switch' ? 0 : 1,
     previous: 4,
     next: 5,
     skill: 3,
-    item: 2,
+    cutQueue: 2,
     slow: 6,
     stop: 7,
     pause: 9,
@@ -194,6 +194,7 @@ export function validBindings(input: unknown): input is PadBindings {
   const b = input as PadBindings;
   return (
     PAD_ACTIONS.every((k) => Number.isInteger(b[k]) && b[k] >= 0 && b[k] <= 63) &&
+    new Set(PAD_ACTIONS.map((k) => b[k])).size === PAD_ACTIONS.length &&
     ['axisX', 'axisY'].every(
       (k) => Number.isInteger(b[k as 'axisX']) && b[k as 'axisX'] >= -1 && b[k as 'axisX'] <= 15,
     ) &&
@@ -202,11 +203,17 @@ export function validBindings(input: unknown): input is PadBindings {
   );
 }
 
-/** Keep the user's old physical button layout when assigning the new battle roles. */
+/** Migrate names without moving custom physical buttons. The former item button is cutoff. */
 export function migrateBindings(input: unknown): PadBindings | null {
-  if (validBindings(input)) return input;
-  if (!input || typeof input !== 'object') return null;
-  let b = input as PadBindings;
+  if (!input || typeof input !== 'object' || Array.isArray(input)) return null;
+  const old = input as Record<string, unknown>;
+  let b = {
+    ...old,
+    back: old.back ?? old.cancel,
+    cutQueue: old.cutQueue ?? old.item,
+  } as unknown as PadBindings;
+  delete (b as unknown as Record<string, unknown>).cancel;
+  delete (b as unknown as Record<string, unknown>).item;
   for (const [action, preferred] of [
     ['queue', 11],
     ['mark', 10],
@@ -220,22 +227,20 @@ export function migrateBindings(input: unknown): PadBindings | null {
         : Array.from({ length: 64 }, (_, i) => i).find((i) => !used.has(i))!,
     };
   }
-  const migrated: unknown = b;
-  if (validBindings(migrated)) return migrated;
-  const legacy = PAD_ACTIONS.filter((a) => a !== 'skill' && a !== 'item');
-  if (!legacy.every((k) => Number.isInteger(b[k]) && b[k] >= 0 && b[k] <= 63)) return null;
-  const next = { ...b, skill: b.stop, item: b.slow };
-  const used = new Set(legacy.filter((a) => a !== 'slow' && a !== 'stop').map((a) => b[a]));
-  used.add(next.skill);
-  used.add(next.item);
-  const free = (preferred: number) => {
-    const n = !used.has(preferred)
-      ? preferred
-      : Array.from({ length: 64 }, (_, i) => i).find((i) => !used.has(i))!;
-    used.add(n);
-    return n;
-  };
-  next.slow = free(6);
-  next.stop = free(7);
-  return validBindings(next) ? next : null;
+  // Before direct skill/item buttons existed, those physical buttons were slow/stop.
+  if (b.skill === undefined && b.cutQueue === undefined) {
+    b = { ...b, skill: b.stop, cutQueue: b.slow };
+    const used = new Set(PAD_ACTIONS.filter((a) => a !== 'slow' && a !== 'stop').map((a) => b[a]));
+    for (const [action, preferred] of [
+      ['slow', 6],
+      ['stop', 7],
+    ] as const) {
+      const free = !used.has(preferred)
+        ? preferred
+        : Array.from({ length: 64 }, (_, i) => i).find((i) => !used.has(i))!;
+      b[action] = free;
+      used.add(free);
+    }
+  }
+  return validBindings(b) ? b : null;
 }

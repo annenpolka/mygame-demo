@@ -25,6 +25,7 @@ import { WatchConsole } from './WatchConsole';
 import { PadBattleConsole } from './PadBattleConsole';
 import {
   battleInput,
+  type BattleAction,
   newBattlePad,
   home,
   openPage,
@@ -419,9 +420,17 @@ export function App() {
           return;
         }
         if (
-          !['Escape', 'Enter', 'Tab', 'ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight'].includes(
-            event.key,
-          )
+          ![
+            'p',
+            'P',
+            'Escape',
+            'Enter',
+            'Tab',
+            'ArrowUp',
+            'ArrowDown',
+            'ArrowLeft',
+            'ArrowRight',
+          ].includes(event.key)
         )
           return;
       }
@@ -439,12 +448,7 @@ export function App() {
           send({ type: 'hold', id: s.selected, value: !s.allies[s.selected].executionHeld });
           return;
         }
-        if (event.shiftKey && ['Backspace', 'Delete'].includes(event.key)) {
-          event.preventDefault();
-          send({ type: 'cancel', id: s.selected });
-          return;
-        }
-        const keys: Record<string, PadAction> = {
+        const keys: Record<string, BattleAction> = {
           ArrowUp: 'up',
           ArrowDown: 'down',
           ArrowLeft: 'left',
@@ -452,48 +456,52 @@ export function App() {
           Enter: 'confirm',
           z: 'confirm',
           x: 'skill',
-          c: battleUI.page === 'command' ? 'down' : 'cancel',
-          v: 'item',
+          c: 'guard',
+          v: 'potion',
+          b: 'cutQueue',
+          p: 'pause',
+          Escape: 'back',
           q: 'previous',
           e: 'next',
           ' ': 'slow',
           f: 'stop',
-          Backspace: 'cancel',
-          Delete: 'cancel',
+          Backspace: 'back',
+          Delete: 'back',
           r: 'left',
           w: 'right',
           t: 'queue',
           l: 'log',
         };
-        const action =
-          event.key === 'Escape'
-            ? battleUI.page === 'command'
-              ? 'pause'
-              : 'cancel'
-            : (keys[event.key] ?? keys[event.key.toLowerCase()]);
+        const action = keys[event.key] ?? keys[event.key.toLowerCase()];
         if (action) {
           event.preventDefault();
           applyBattleInput(action);
           return;
         }
       }
-      if (event.key === 'Escape') {
+      if (
+        event.key.toLowerCase() === 'p' &&
+        s.phase === 'battle' &&
+        !help &&
+        !padOpen &&
+        !labOpen &&
+        !loadoutOpen
+      ) {
         event.preventDefault();
-        if (loadoutOpen) {
-          setLoadoutOpen(false);
-          return;
-        }
-        if (padOpen) {
-          setPadOpen(false);
-          return;
-        }
-        if (pending) {
+        send({ type: 'pause', value: !s.paused });
+        return;
+      }
+      if (['Escape', 'Backspace', 'Delete'].includes(event.key)) {
+        event.preventDefault();
+        if (loadoutOpen) setLoadoutOpen(false);
+        else if (padOpen) setPadOpen(false);
+        else if (labOpen) setLabOpen(false);
+        else if (help) setHelp(false);
+        else if (s.paused) send({ type: 'pause', value: false });
+        else if (pending) {
           setPending(null);
-          return;
+          setBattleUI(home(battleUI));
         }
-        setHelp(false);
-        setPending(null);
-        if (s.phase === 'battle') send({ type: 'pause', value: !s.paused });
         return;
       }
       if (['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight'].includes(event.key)) {
@@ -516,11 +524,7 @@ export function App() {
       else if (key === 'v') useSkill('potion');
       else if (key === 'w') send({ type: 'toggleWeapon', id: s.selected });
       else if (key === 'r') send({ type: 'toggleRow', id: s.selected });
-      else if (key === 'backspace' || key === 'delete') {
-        event.preventDefault();
-        send({ type: 'cancelFirst', id: s.selected });
-      } else if (key === ' ')
-        send({ type: 'time', mode: s.timeMode === 'slow' ? 'normal' : 'slow' });
+      else if (key === ' ') send({ type: 'time', mode: s.timeMode === 'slow' ? 'normal' : 'slow' });
       else if (key === 'f') send({ type: 'time', mode: s.timeMode === 'stop' ? 'normal' : 'stop' });
       else if (/^[7-9]$/.test(key) && s.config.uiMode !== 'individual')
         send({ type: 'formation', index: Number(key) - 7 });
@@ -542,13 +546,14 @@ export function App() {
       else if (r.ui.key !== battleUI.key) sound.play('nav', true);
       else if (r.ui.message && r.ui.stamp !== battleUI.stamp) sound.play('error', true);
     }
+    setPending(r.ui.page === 'target' ? r.ui.skillId : null);
     setBattleUI({
       ...r.ui,
       logOffset: Math.min(r.ui.logOffset, Math.max(0, session.log.length - 6)),
     });
     if (r.commands.length) send(...r.commands);
   };
-  const applyBattleInput = (action: PadAction) => {
+  const applyBattleInput = (action: BattleAction) => {
     applyBattleResult(battleInput(s, battleUI, action));
   };
   const handlePad = (action: PadAction) => {
@@ -559,7 +564,7 @@ export function App() {
       return;
     }
     if (notesOpen) {
-      if (action === 'cancel' || action === 'pause') closeNotes();
+      if (action === 'back' || action === 'pause') closeNotes();
       else if (action === 'confirm') activateFocused();
       else if (['up', 'down', 'left', 'right'].includes(action))
         navigate(action as 'up' | 'down' | 'left' | 'right');
@@ -587,7 +592,7 @@ export function App() {
       activateFocused();
       return;
     }
-    if (action === 'cancel') {
+    if (action === 'back') {
       sound.play('cancel', true);
       if (loadoutOpen) setLoadoutOpen(false);
       else if (padOpen) setPadOpen(false);
@@ -625,7 +630,7 @@ export function App() {
     }
     if (s.paused) return;
     if (action === 'skill') useSkill(weapon.skills[1]);
-    if (action === 'item') useSkill('potion');
+
     if (action === 'slow') send({ type: 'time', mode: s.timeMode === 'slow' ? 'normal' : 'slow' });
     if (action === 'stop') send({ type: 'time', mode: s.timeMode === 'stop' ? 'normal' : 'stop' });
   };
@@ -743,7 +748,7 @@ export function App() {
             {gamepad.supported ? (
               <>
                 <b>{buttonName(gamepad.bindings.confirm, gamepad.family)}</b> 基本技・決定{' '}
-                <b>{buttonName(gamepad.bindings.cancel, gamepad.family)}</b> 先頭取消・戻る{' '}
+                <b>{buttonName(gamepad.bindings.back, gamepad.family)}</b> 戻る{' '}
                 <b>
                   {buttonName(gamepad.bindings.previous, gamepad.family)} /{' '}
                   {buttonName(gamepad.bindings.next, gamepad.family)}
@@ -811,7 +816,7 @@ export function App() {
             disabled={s.phase !== 'battle'}
             onClick={() => send({ type: 'pause', value: !s.paused })}
           >
-            Ⅱ <Key>Esc</Key>
+            Ⅱ <Key>P</Key>
           </button>
         </nav>
       </header>
@@ -972,7 +977,7 @@ export function App() {
             confirmLabel={
               padActive ? buttonName(gamepad.bindings.confirm, gamepad.family) : 'Enter'
             }
-            backLabel={padActive ? buttonName(gamepad.bindings.cancel, gamepad.family) : 'Esc'}
+            backLabel={padActive ? buttonName(gamepad.bindings.back, gamepad.family) : 'Esc'}
           />
           {s.phase === 'battle' && (
             <AtbTimeline
@@ -1006,7 +1011,9 @@ export function App() {
             act={applyBattleInput}
             pick={(key) => applyBattleResult(confirmChoice(s, battleUI, key))}
             remove={(key) =>
-              applyBattleResult(confirmChoice(s, { ...battleUI, page: 'queue', key }, key))
+              applyBattleResult(
+                confirmChoice(s, { ...battleUI, page: 'queue', queueFocus: undefined, key }, key),
+              )
             }
             open={(page) => {
               sound.play('open', true);
@@ -1454,7 +1461,7 @@ export function App() {
                   救急薬。先行入力は合計最大ATBまで、移動・武器・薬を含む手数も最大ATBと同じです。
                 </p>
                 <p>
-                  パッドでは×／Aが基本技、△／Yが主力技、□／Xが薬。○／Bはコマンド画面で先頭予約を取消、選択画面で戻る。↓で防御、R3で予約一覧を開きます。予約一覧では△／Yで実行保留・解除、□／Xで残りを打ち切ります。キーボードはHで保留、Shift＋Backspaceで打ち切り。現在の行動と最後の硬直中はATB補充が止まります。
+                  パッドでは×／Aが基本技、△／Yが主力技。○／Bは戻る専用、□／Xはどの戦闘画面でも後続取消。薬は↑の指示メニュー内「道具」から選びます。↓で防御、R3で予約一覧、一件取消後は方向入力で選び直します。予約一覧の△／Yで保留・解除。キーボードはEscで戻る、Bで後続取消、Cで防御、Vで薬、Hで保留、Pで休憩です。実行中の一手と最後の硬直は後続取消でも続き、その間はATB補充が止まります。
                 </p>
               </div>
               <div>
@@ -1464,7 +1471,7 @@ export function App() {
                   <Key>S</Key>
                   <Key>D</Key>
                   <Key>G</Key>{' '}
-                  で武器構成を切り替え。Rで前後移動を積み、Backspaceで先頭の未実行予約を取り消せます。実行中の技は続き、支払い済みATBは戻りません。Wで武器切替も一押しで積めます。
+                  で武器構成を切り替え。Rで前後移動、Wで武器切替を積みます。Escは戻るだけ。Bで後続をまとめて取り消し、Tの予約一覧で一件ずつ取り消せます。実行中の技と終了硬直は続き、支払い済みATBは戻りません。未使用ATBは残ります。
                   <Key>7</Key>
                   <Key>8</Key>
                   <Key>9</Key> で一括隊列。
@@ -1476,7 +1483,7 @@ export function App() {
                   。射撃・魔法は後列でも威力を維持します。
                 </p>
                 <p>
-                  パッドのコマンド画面では↑が全員への指示、←の一押しで前後移動を積み、→の一押しで表示された役割へ武器を切り替えます。画面下に今使えるボタンが表示されます。
+                  パッドのコマンド画面では↑が指示・道具、←の一押しで前後移動を積み、→の一押しで表示された役割へ武器を切り替えます。画面下に今使えるボタンが表示されます。
                 </p>
               </div>
               <div>
@@ -1487,7 +1494,7 @@ export function App() {
                   {s.config.stopDrain}の集中力を消費します。
                 </p>
                 <p>
-                  <Key>Esc</Key>{' '}
+                  <Key>P</Key>{' '}
                   は休憩ポーズ。戦場を隠し、すべての時計を止めます。別タブへの移動でも休憩に入ります。交代後は毎回
                   {BATTLE_TIMING.handoffSlow}
                   実秒間の無料スローで状況を確認できます。再発動待ちはありません。

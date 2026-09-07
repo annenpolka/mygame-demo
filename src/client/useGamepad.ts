@@ -11,7 +11,7 @@ import {
   type PadFamily,
   type PadSnapshot,
 } from '../input/gamepad';
-const STORAGE = 'orchestra-gamepad-v3';
+const STORAGE = 'orchestra-gamepad-v4';
 interface Saved {
   family: PadFamily | 'auto';
   display: 'auto' | 'pad' | 'pointer';
@@ -21,6 +21,7 @@ function readSaved(): Saved {
   try {
     const x = JSON.parse(
       localStorage.getItem(STORAGE) ??
+        localStorage.getItem('orchestra-gamepad-v3') ??
         localStorage.getItem('orchestra-gamepad-v2') ??
         localStorage.getItem('orchestra-gamepad-v1') ??
         '{}',

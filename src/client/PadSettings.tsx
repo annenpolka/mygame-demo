@@ -2,9 +2,9 @@ import { PAD_ACTIONS, buttonName } from '../input/gamepad';
 import type { GamepadControls } from './useGamepad';
 const names = {
   confirm: '基本技・決定・積む',
-  cancel: '先頭予約を取消・戻る',
+  back: '戻る（予約は変えない）',
   skill: '主力技',
-  item: '救急薬・予約を全取消',
+  cutQueue: '後続取消（現在の一手は続行）',
   previous: '前の仲間',
   next: '次の仲間',
   slow: 'スロー',
@@ -71,7 +71,7 @@ export function PadSettings({
           </select>
         </label>
         <p className="muted">
-          戦闘では4ボタンから技・薬・取消を直接選べます。肩ボタンで仲間、トリガーで時間を操作。設定中は肩ボタンで項目を切り替えます。割り当ては接続機器ごとに保存します。
+          戦闘では4ボタンを基本技・主力技・戻る・後続取消に分けます。薬は↑の指示メニュー内「道具」から選びます。肩ボタンで仲間、トリガーで時間を操作。設定中は肩ボタンで項目を切り替えます。割り当ては接続機器ごとに保存します。
         </p>
         <div className="pad-bindings">
           {PAD_ACTIONS.map((a) => (
