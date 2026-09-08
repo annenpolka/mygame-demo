@@ -1,0 +1,212 @@
+.timeline-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 190;
+  display: grid;
+  place-items: center;
+  padding: 18px;
+  background: #08131ef5;
+}
+.battle-history {
+  width: min(1180px, 100%);
+  max-height: 100%;
+  overflow: auto;
+  padding: 20px;
+  border: 1px solid #667e86;
+  background: #14232e;
+  box-shadow: 0 15px 70px #0006;
+}
+.battle-history header,
+.timeline-toolbar,
+.timeline-actions,
+.battle-history footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+.battle-history h2 {
+  margin: 4px 0;
+  font-size: 24px;
+}
+.timeline-intro {
+  color: #b8cad2;
+  font-size: 12px;
+  line-height: 1.6;
+}
+.timeline-toolbar label {
+  white-space: nowrap;
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  font-size: 12px;
+}
+.timeline-toolbar select {
+  max-width: 360px;
+  padding: 7px;
+  background: #0b1925;
+  border: 1px solid #647c86;
+  color: #e8edf0;
+}
+.timeline-toolbar output {
+  font:
+    600 17px ui-monospace,
+    monospace;
+  text-align: right;
+  color: #f1cc7c;
+}
+.timeline-toolbar output span {
+  display: block;
+  font-size: 11px;
+  color: #bed1d7;
+  margin-top: 4px;
+}
+.timeline-scrubber {
+  margin: 12px 0;
+  padding: 10px 12px;
+  background: #091b28;
+  border: 1px solid #38525f;
+}
+.timeline-scrubber input {
+  width: 100%;
+  height: 28px;
+  cursor: ew-resize;
+  accent-color: #e9c579;
+}
+.timeline-actions {
+  justify-content: center;
+  gap: 6px;
+}
+.timeline-actions button {
+  font-size: 12px;
+  padding: 6px 14px;
+}
+.timeline-preview {
+  display: block !important;
+}
+.timeline-preview .battlefield {
+  margin: 0;
+}
+.timeline-preview .field-footer {
+  display: none;
+}
+.timeline-preview .field-unit {
+  cursor: default;
+}
+.timeline-state {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 10px 0;
+  font-size: 12px;
+  color: #c4d8df;
+}
+.timeline-events {
+  margin: 8px 0;
+  font-size: 12px;
+}
+.timeline-events summary {
+  cursor: pointer;
+  padding: 6px 0;
+}
+.timeline-events [role='list'] {
+  max-height: 120px;
+  overflow: auto;
+  border-block: 1px solid #344b58;
+}
+.timeline-events button {
+  display: flex;
+  gap: 14px;
+  text-align: left;
+  width: 100%;
+  border: 0;
+  border-bottom: 1px solid #29434c;
+  background: #10222d;
+  padding: 7px 10px;
+  font-size: 12px;
+}
+.timeline-events time {
+  flex: 0 0 115px;
+  color: #d7bd86;
+}
+.timeline-events [aria-current] {
+  background: #344650;
+  outline: 1px solid #cfae70;
+  outline-offset: -1px;
+}
+.battle-history footer {
+  border-top: 1px solid #47616e;
+  padding-top: 12px;
+  margin-top: 12px;
+}
+.battle-history footer span {
+  color: #adc2cd;
+  font-size: 11px;
+  line-height: 1.7;
+}
+@media (max-width: 800px) {
+  .timeline-backdrop {
+    padding: 8px;
+  }
+  .battle-history {
+    padding: 12px;
+  }
+  .battle-history header {
+    align-items: flex-start;
+  }
+  .battle-history h2 {
+    font-size: 19px;
+  }
+  .battle-history header button {
+    padding: 6px;
+    font-size: 10px;
+  }
+  .timeline-toolbar,
+  .timeline-state {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .timeline-toolbar output {
+    text-align: left;
+  }
+  .timeline-toolbar select {
+    min-width: 0;
+    width: 100%;
+  }
+  .timeline-actions {
+    gap: 3px;
+  }
+  .timeline-actions button {
+    padding: 7px 8px;
+    font-size: 11px;
+  }
+  .timeline-preview .battle-lane {
+    grid-template-rows: 24px repeat(var(--field-tracks), minmax(112px, auto));
+  }
+  .timeline-events time {
+    flex-basis: 90px;
+  }
+  .battle-history footer {
+    align-items: stretch;
+    flex-direction: column-reverse;
+  }
+}
+
+.battle-history {
+  display: flex;
+  flex-direction: column;
+}
+.battle-history > header,
+.timeline-intro,
+.timeline-toolbar,
+.timeline-scrubber,
+.battle-history > footer {
+  flex-shrink: 0;
+}
+.timeline-body {
+  min-height: 0;
+  overflow: auto;
+}
+.timeline-preview .battle-lane {
+  grid-template-rows: 20px repeat(var(--field-tracks), minmax(82px, auto));
+}

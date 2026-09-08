@@ -17,3 +17,5 @@ import './formation-ui.css';
 import './playtest.css';
 
 import './effects/effects.css';
+
+import './timeline.css';

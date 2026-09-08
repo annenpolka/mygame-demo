@@ -1,3 +1,5 @@
+import { BattleTimeline } from './BattleTimeline';
+import { BattleTimeline as TimelineHistory, type TimelineSelection } from '../lab/timeline';
 import { PlaytestNotes } from './PlaytestNotes';
 import {
   PlayJournal,
@@ -91,6 +93,19 @@ export function App() {
   const [notice, setNotice] = useState('');
   const [commandNotice, setCommandNotice] = useState('');
   const [journal] = useState(() => new PlayJournal());
+  const [timeline] = useState(() => new TimelineHistory());
+  const [timelineOpen, setTimelineOpen] = useState(false);
+  const timelineOpenRef = useRef(false);
+  const timelinePad = useRef<((action: PadInput) => void) | null>(null);
+  const playViewRef = useRef<PlayView>({ battle: battleUI, pending });
+  playViewRef.current = { battle: battleUI, pending };
+  useLayoutEffect(
+    () =>
+      session.subscribe(() => {
+        if (!timelineOpenRef.current) timeline.observe(session, playViewRef.current);
+      }),
+    [session, timeline],
+  );
   const [notesOpen, setNotesOpen] = useState(false);
   const [resumeGate, setResumeGate] = useState('');
   const notesPause = useRef<boolean | null>(null);
@@ -126,16 +141,19 @@ export function App() {
     }
   }, [notebook]);
   useLayoutEffect(() => {
-    journal.observe(session, { battle: battleUI, pending });
+    if (!timelineOpenRef.current) {
+      journal.observe(session, { battle: battleUI, pending });
+      timeline.observe(session, { battle: battleUI, pending });
+    }
   });
   useEffect(() => {
-    if (!notesOpen) return;
+    if (!notesOpen && !timelineOpen) return;
     const previous = document.body.style.overflow;
     document.body.style.overflow = 'hidden';
     return () => {
       document.body.style.overflow = previous;
     };
-  }, [notesOpen]);
+  }, [notesOpen, timelineOpen]);
 
   const [snapshot, setSnapshot] = useState<string | null>(null);
   const [config, setConfig] = useState<Config>({ ...DEFAULT_CONFIG });
@@ -149,6 +167,50 @@ export function App() {
     setBattleUI((ui) => syncPaletteTargets(session.state, ui));
   });
   const refresh = () => render((x) => x + 1);
+  const openTimeline = () => {
+    timeline.observe(session, { battle: battleUIRef.current, pending }, true);
+    timelineOpenRef.current = true;
+    setTimelineOpen(true);
+    sound.play('open', true);
+  };
+  const closeTimeline = () => {
+    timelineOpenRef.current = false;
+    setTimelineOpen(false);
+    sound.play('cancel', true);
+    requestAnimationFrame(() =>
+      document.querySelector<HTMLButtonElement>('.timeline-shortcut:not(:disabled)')?.focus(),
+    );
+  };
+  const resumeTimeline = (selection: TimelineSelection): string | undefined => {
+    if (
+      selection.branchId === timeline.activeId &&
+      selection.index === timeline.active!.points.length - 1
+    ) {
+      closeTimeline();
+      return;
+    }
+    try {
+      const replay = timeline.fork(session, selection);
+      if (session.state.controlMode !== 'manual') session.send({ type: 'control', mode: 'manual' });
+      restoredView.current = { initial: session.initial, view: replay.view };
+      setBattleUI(replay.view.battle);
+      setPending(replay.view.pending);
+      if (session.state.phase === 'battle') session.send({ type: 'pause', value: true });
+      setResumeGate(
+        session.state.phase === 'battle'
+          ? 'タイムラインの場面に戻りました。元の進行は履歴に残っています。'
+          : '',
+      );
+      setConfig({ ...session.state.config });
+      setLabOpen(false);
+      timelineOpenRef.current = false;
+      setTimelineOpen(false);
+      sound.play('confirm', true);
+      refresh();
+    } catch (e) {
+      return e instanceof Error ? e.message : 'この場面から再開できませんでした。';
+    }
+  };
   const markNow = () => {
     try {
       if (notebook.notes.length >= NOTE_LIMIT)
@@ -354,8 +416,10 @@ export function App() {
     let previous = performance.now(),
       frame = 0;
     const loop = (now: number) => {
-      player.advance(session, (now - previous) / 1000);
-      sound.observe(session.state, session.log, session.initial);
+      if (!timelineOpenRef.current) {
+        player.advance(session, (now - previous) / 1000);
+        sound.observe(session.state, session.log, session.initial);
+      }
       previous = now;
       render((x) => x + 1);
       frame = requestAnimationFrame(loop);
@@ -365,6 +429,7 @@ export function App() {
       previous = performance.now();
       if (
         document.hidden &&
+        !timelineOpenRef.current &&
         (session.state.phase === 'battle' ||
           (session.state.phase === 'loot' && session.state.controlMode === 'ai'))
       ) {
@@ -380,6 +445,7 @@ export function App() {
   }, [session, player, sound]);
   useEffect(() => {
     const blocked =
+      timelineOpen ||
       notesOpen ||
       loadoutOpen ||
       s.paused ||
@@ -412,7 +478,7 @@ export function App() {
     };
     document.addEventListener('keydown', trap);
     return () => document.removeEventListener('keydown', trap);
-  }, [s.paused, s.phase, help, padOpen, loadoutOpen, notesOpen]);
+  }, [s.paused, s.phase, help, padOpen, loadoutOpen, notesOpen, timelineOpen]);
   useEffect(() => {
     if (pending)
       document
@@ -421,6 +487,7 @@ export function App() {
   }, [pending]);
   useEffect(() => {
     const listener = (event: KeyboardEvent) => {
+      if (timelineOpen) return;
       const nativeActivation =
         (event.key === 'Enter' || event.key === ' ') &&
         event.target instanceof Element &&
@@ -437,6 +504,18 @@ export function App() {
         (event.target instanceof Element && event.target.closest('input,select,textarea'))
       )
         return;
+      if (
+        event.key.toLowerCase() === 'y' &&
+        !help &&
+        !padOpen &&
+        !loadoutOpen &&
+        !notesOpen &&
+        !labOpen
+      ) {
+        event.preventDefault();
+        openTimeline();
+        return;
+      }
       if (notesOpen) {
         if (event.key === 'Escape') {
           event.preventDefault();
@@ -608,6 +687,10 @@ export function App() {
   };
   const handlePad = (action: PadInput) => {
     void sound.unlock();
+    if (timelineOpen) {
+      timelinePad.current?.(action);
+      return;
+    }
     if (action === 'mark' && !notesOpen && !padOpen && !help && !loadoutOpen) {
       if (s.phase === 'battle' && !s.paused) markNow();
       else openNotes();
@@ -687,8 +770,9 @@ export function App() {
     handlePad,
     () => {
       if (
-        session.state.phase === 'battle' ||
-        (session.state.phase === 'loot' && session.state.controlMode === 'ai')
+        !timelineOpenRef.current &&
+        (session.state.phase === 'battle' ||
+          (session.state.phase === 'loot' && session.state.controlMode === 'ai'))
       ) {
         send({ type: 'pause', value: true });
         setNotice('パッドの接続が切れました。休憩ポーズに入りました。');
@@ -767,6 +851,7 @@ export function App() {
       <header
         className="topbar"
         inert={
+          timelineOpen ||
           notesOpen ||
           loadoutOpen ||
           s.paused ||
@@ -870,6 +955,7 @@ export function App() {
       <main
         className={`battle-layout pad-layout ${!padActive && !watching ? 'keyboard-layout' : ''} ${watching ? 'watch-layout' : ''}`}
         inert={
+          timelineOpen ||
           notesOpen ||
           loadoutOpen ||
           s.paused ||
@@ -901,6 +987,13 @@ export function App() {
                   {gamepad.usePadDisplay ? buttonName(gamepad.bindings.mark, gamepad.family) : 'M'}
                 </kbd>
                 今のところ
+              </button>
+              <button
+                className="timeline-shortcut"
+                aria-label="タイムライン"
+                onClick={openTimeline}
+              >
+                {!gamepad.usePadDisplay && <kbd>Y</kbd>} タイムライン
               </button>
               <button aria-label="印の一覧" onClick={openNotes}>
                 印 {notebook.notes.length}
@@ -1081,6 +1174,7 @@ export function App() {
       <div
         className="log-container"
         inert={
+          timelineOpen ||
           notesOpen ||
           loadoutOpen ||
           s.paused ||
@@ -1106,6 +1200,7 @@ export function App() {
           className="lab-drawer"
           aria-label="実験室"
           inert={
+            timelineOpen ||
             notesOpen ||
             loadoutOpen ||
             s.paused ||
@@ -1345,7 +1440,7 @@ export function App() {
       )}
 
       {loadoutOpen && s.phase === 'ready' && (
-        <div className="modal-backdrop" inert={notesOpen}>
+        <div className="modal-backdrop" inert={notesOpen || timelineOpen}>
           <section className="loadout-modal" role="dialog" aria-modal="true" aria-label="編成編集">
             <header>
               <div>
@@ -1360,7 +1455,7 @@ export function App() {
       )}
 
       {s.phase === 'loot' && !watching && (
-        <div className="modal-backdrop" inert={notesOpen}>
+        <div className="modal-backdrop" inert={notesOpen || timelineOpen}>
           <section className="loot-modal" role="dialog" aria-modal="true" aria-label="戦利品と編成">
             <span className="eyebrow">ENCOUNTER CLEAR</span>
             <h2>新しい武器、新しい戦い方。</h2>
@@ -1387,6 +1482,9 @@ export function App() {
               })}
             </div>
             <Loadout state={s} send={send} onCompare={setCompare} />
+            <button className="timeline-shortcut" onClick={openTimeline}>
+              タイムラインを開く
+            </button>
             <button onClick={openNotes}>印の一覧（{notebook.notes.length}件）</button>
             <CombatLog
               entries={session.log}
@@ -1419,7 +1517,7 @@ export function App() {
         </div>
       )}
       {(s.phase === 'victory' || s.phase === 'defeat') && (
-        <div className="modal-backdrop" inert={notesOpen}>
+        <div className="modal-backdrop" inert={notesOpen || timelineOpen}>
           <section className="result-modal" role="dialog" aria-modal="true" aria-label="戦闘結果">
             <span className="eyebrow">
               {s.phase === 'victory' ? 'DEMO COMPLETE' : 'TRY ANOTHER APPROACH'}
@@ -1458,6 +1556,9 @@ export function App() {
                 )
               }
             />
+            <button className="timeline-shortcut" onClick={openTimeline}>
+              タイムラインを開く
+            </button>
             <button onClick={openNotes}>印の一覧（{notebook.notes.length}件）</button>
             <button onClick={() => restart({ ...s.config, encounter: 1 })}>
               戦闘セットを選び直す
@@ -1475,13 +1576,16 @@ export function App() {
           </section>
         </div>
       )}
-      {s.paused && !help && !padOpen && !notesOpen && (
+      {s.paused && !help && !padOpen && !notesOpen && !timelineOpen && (
         <div className="pause-screen" role="dialog" aria-modal="true" aria-label="休憩ポーズ">
           <span className="eyebrow">INTERMISSION</span>
           <h2>{resumeGate || 'ひと休み。'}</h2>
           <p>戦闘と集中力の消費を停止しています。</p>
           <button className="primary" onClick={() => send({ type: 'pause', value: false })}>
             {resumeGate ? 'この場面から操作する' : '戦場へ戻る'} <Key>Esc</Key>
+          </button>
+          <button className="timeline-shortcut" onClick={openTimeline}>
+            タイムラインを開く
           </button>
           <button onClick={openNotes}>印の一覧（{notebook.notes.length}件）</button>
         </div>
@@ -1608,6 +1712,14 @@ export function App() {
           compare={compareNote}
           save={() => download('orchestra-playtest-notes.json', exportNotes(notebook.notes))}
           load={loadNotes}
+        />
+      )}
+      {timelineOpen && (
+        <BattleTimeline
+          history={timeline}
+          close={closeTimeline}
+          resume={resumeTimeline}
+          padAction={timelinePad}
         />
       )}
       <div className="sr-only" role="status" aria-live="polite" aria-atomic="true">
