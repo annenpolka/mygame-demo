@@ -12,7 +12,10 @@ test('help reflects current combat rules and the configured focus drain', async 
   await expect(help).toContainText('両方のキャラの予約を保持');
   await expect(help).not.toContainText('開始時に後続の予約を解除');
   await expect(help).toContainText('支払い済みATBは戻りません');
-  await expect(help).toContainText('○／Bは戻る専用');
+  await expect(help).toContainText('戻る操作なしで行き来できます');
+  await expect(help).toContainText('ダイアログは○／BやEscで閉じられます');
+  await expect(help).toContainText('対象・補助・予約の操作先を順に切り替えます');
+  await expect(help).not.toContainText('○／Bは戻る専用');
   await expect(help).toContainText('Bは確定した後続の取消');
   await expect(help).toContainText('P は休憩ポーズ');
   await expect(help).not.toContainText('戦術停止');

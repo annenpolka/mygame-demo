@@ -20,9 +20,8 @@ test('candidate cursor remains on the battlefield and keeps selection separate f
   await expect(page.locator('.field-aim-path')).toHaveCount(0);
   await page.keyboard.press('x');
   await page.keyboard.press('z');
+  await field.getByRole('button', { name: /^リネを支援対象にする/ }).click();
   await page.keyboard.press('v');
-  await page.getByRole('option', { name: 'リネに救急薬を積む', exact: true }).click();
-  await page.keyboard.press('Escape');
   await page.keyboard.press('c');
   await expect(page.locator('.pad-plan-list li')).toHaveCount(4);
   await expect(page.locator('[data-unit=a0]')).toContainText('行動開始待ち');
@@ -78,12 +77,15 @@ test('AI viewing automatically equips rewards and completes both battles', async
 test('mobile battlefield targeting and AI viewing stay within the viewport', async ({ page }) => {
   await page.setViewportSize({ width: 390, height: 844 });
   await page.getByRole('button', { name: '戦闘開始 →', exact: true }).click();
+  const field = page.getByRole('group', { name: '行動の対象候補', exact: true });
+  await field.getByRole('button', { name: /^リネを支援対象にする/ }).click();
   await page.keyboard.press('v');
-  const field = page.getByRole('listbox', { name: '戦場で対象を選ぶ', exact: true });
-  await expect(field.getByRole('option')).toHaveCount(3);
+  await expect(page.locator('[data-plan-status=draft]')).toHaveCount(1);
+  await expect(page.locator('[data-plan-status=draft]').getByRole('button')).toHaveAccessibleName(
+    /救急薬、リネ/,
+  );
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
   await page.screenshot({ path: 'test-results/field-target-mobile.png', fullPage: true });
-  await field.getByRole('option', { name: 'リネに救急薬を積む', exact: true }).click();
   await page.getByRole('button', { name: 'AI鑑賞', exact: true }).click();
   await page.clock.runFor(1000);
   await page.getByRole('button', { name: 'Ⅱ 鑑賞を一時停止', exact: true }).click();

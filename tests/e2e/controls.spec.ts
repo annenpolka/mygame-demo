@@ -61,7 +61,8 @@ async function stick(page: Page, x: number, y: number) {
   await page.evaluate(() => ((window as any).testPad.axes = [0, 0]));
   await page.clock.runFor(32);
 }
-const live = (page: Page) => page.locator('.pad-plan-list li[data-plan-key]');
+const live = (page: Page) =>
+  page.locator('.pad-plan-list li:is([data-plan-status=draft], [data-plan-status=committed])');
 const drafts = (page: Page) => page.locator('.pad-plan-list li[data-plan-status=draft]');
 const confirmed = (page: Page) => page.locator('.pad-plan-list li[data-plan-status=committed]');
 async function start(page: Page) {
@@ -159,13 +160,13 @@ test('back spam never alters drafts or confirmed plans; C stays guard and P stay
   for (const key of ['Escape', 'Backspace', 'Delete'])
     for (let i = 0; i < 10; i++) await page.keyboard.press(key);
   await expect(confirmed(page)).toHaveCount(1);
-  await expect(drafts(page)).toHaveCount(1);
+  await expect(drafts(page)).toHaveCount(2);
   await expect(page.getByRole('dialog', { name: '休憩ポーズ' })).toHaveCount(0);
   await page.keyboard.press('v');
   await page.keyboard.press('b');
   await expect(page.getByRole('listbox', { name: '戦場で対象を選ぶ' })).toHaveCount(0);
   await expect(confirmed(page)).toHaveCount(0);
-  await expect(drafts(page)).toHaveCount(1);
+  await expect(drafts(page)).toHaveCount(3);
   await page.keyboard.press('p');
   await expect(page.getByRole('dialog', { name: '休憩ポーズ' })).toBeVisible();
   await page.keyboard.press('p');
@@ -236,11 +237,19 @@ test('mouse double click and confirm spam delete only one explicitly chosen draf
 }) => {
   await start(page);
   for (let i = 0; i < 4; i++) await page.keyboard.press('c');
-  await page.getByRole('button', { name: /2手目の防御、.*下書きを取消/ }).dblclick();
+  const chosen = page.getByRole('button', { name: /2手目の防御、.*下書きを取消/ });
+  const chosenNode = await chosen.elementHandle();
+  await chosen.dblclick();
   for (let i = 0; i < 10; i++) await page.keyboard.press('Enter');
   await expect(drafts(page)).toHaveCount(3);
-  await expect(page.getByRole('button', { name: '防御：取消済み', exact: true })).toBeDisabled();
-  await page.keyboard.press('ArrowDown');
+  const receipt = page.getByRole('button', { name: '防御：取消済み', exact: true });
+  await expect(receipt).toHaveAttribute('aria-disabled', 'true');
+  await expect(receipt).toBeFocused();
+  expect(
+    await chosenNode!.evaluate((node) => node.isConnected && node === document.activeElement),
+  ).toBe(true);
+  await page.keyboard.press('Tab');
+  await expect(page.getByRole('button', { name: /2手目の防御、.*下書きを取消/ })).toBeFocused();
   await page.keyboard.press('Enter');
   await expect(drafts(page)).toHaveCount(2);
 });
@@ -273,20 +282,22 @@ for (const [id, label, confirm, back] of [
     await press(page, 6);
     await press(page, 6);
     await expect(live(page)).toHaveCount(0);
-    await press(page, 8); // Auxiliary menu.
+    await sideStick(page, -1);
+    await stick(page, -1, 0); // Hold Rine as the support recipient before adding medicine.
+    await press(page, 8); // Auxiliary navigation; the command controls remain visible.
     await stick(page, 0, 1);
     await stick(page, 0, 1); // Highlight potion.
     await press(page, 7); // No draft, so the highlighted potion is not added.
     await expect(live(page)).toHaveCount(0);
     await press(page, confirm);
-    await stick(page, -1, 0); // Ally behind the manual actor, at the top of the rear column.
-    await press(page, confirm);
     await expect(drafts(page)).toContainText('救急薬');
     await expect(drafts(page).getByRole('button', { name: /リネ/ })).toHaveCount(1);
-    await press(page, back);
-    await press(page, 13); // Direct weapon swap keeps the existing support target.
+    await expect(page.getByRole('group', { name: '補助メニュー', exact: true })).toBeVisible();
+    await press(page, 13); // Direct weapon swap keeps the existing support target and panel.
     await expect(drafts(page)).toHaveCount(1);
     await expect(page.locator('[data-skill-id=ward]')).toBeVisible();
+    await press(page, 8); // Auxiliary -> reservations.
+    await press(page, 8); // Reservations -> target navigation, without using Back.
     await press(page, confirm);
     await expect(drafts(page).last()).toContainText('護りの誓い');
     expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(
@@ -307,7 +318,7 @@ for (const [id, label, confirm, back] of [
   });
 }
 
-test('digital navigation preset reaches time and auxiliary commands without analog axes or chords', async ({
+test('digital navigation completes auxiliary and queue operations without analog axes, chords or Back', async ({
   page,
 }) => {
   await virtualPad(page, 'Xbox Wireless Controller');
@@ -315,27 +326,63 @@ test('digital navigation preset reaches time and auxiliary commands without anal
   await page.getByLabel('パッドの選択方式', { exact: true }).selectOption('dpad');
   await page.getByRole('button', { name: '設定を閉じる ×', exact: true }).click();
   await page.clock.runFor(32);
-  await start(page);
-  await press(page, 15); // Digital preset moves the target cursor.
-  await expect(page.locator('.field-time-symbol')).toHaveAttribute('title', '通常 ×1.00');
+  const state = createState({ atbRate: 0.2 });
+  command(state, { type: 'start' });
+  state.allies.forEach((ally) => {
+    ally.atb = 0;
+    ally.executionHeld = ally.id !== 0;
+  });
+  state.enemies.forEach((enemy) => {
+    enemy.nextAttack = 999;
+  });
+  await loadSnapshot(page, state);
+  const destination = (name: string) => page.getByRole('button', { name, exact: true });
+  await press(page, 15); // D-pad chooses an enemy without adding a command.
+  await expect(drafts(page)).toHaveCount(0);
   await press(page, 0);
   await expect(drafts(page).getByRole('button', { name: /灰の砲術師/ })).toHaveCount(1);
-  await press(page, 8);
+  await press(page, 0); // A second draft makes the group wait for its full ATB cost.
+  await press(page, 8); // Target -> auxiliary.
+  await expect(destination('補助を選ぶ')).toHaveAttribute('aria-pressed', 'true');
   for (let i = 0; i < 4; i++) await press(page, 13);
+  await expect(drafts(page)).toHaveCount(2);
   await press(page, 0);
   await expect(page.locator('.field-time-symbol')).toHaveAttribute('title', 'スロー ×0.25');
-  await press(page, 7);
-  await press(page, 6);
+  await expect(destination('補助を選ぶ')).toHaveAttribute('aria-pressed', 'true');
+  await expect(page.locator('[data-skill-id=slash]')).toBeVisible();
+  await press(page, 7); // Execute while auxiliary stays selected.
+  await expect(confirmed(page)).toHaveCount(2);
+  await expect(destination('補助を選ぶ')).toHaveAttribute('aria-pressed', 'true');
+  await press(page, 8); // Auxiliary -> reservations.
+  await expect(destination('予約を選ぶ')).toHaveAttribute('aria-pressed', 'true');
+  await press(page, 0); // Explicitly cancel the highlighted reservation.
+  await expect(live(page)).toHaveCount(1);
+  await press(page, 0); // The receipt cannot cancel another row or add a skill.
+  await expect(live(page)).toHaveCount(1);
+  await press(page, 13); // Deliberately select the next reservation.
+  await press(page, 0);
   await expect(live(page)).toHaveCount(0);
+  await press(page, 8); // Reservations -> target; the auxiliary panel remains present.
+  await expect(destination('対象を選ぶ')).toHaveAttribute('aria-pressed', 'true');
+  await expect(page.getByRole('group', { name: '補助メニュー', exact: true })).toBeVisible();
+  await press(page, 0);
+  await expect(drafts(page)).toHaveCount(1);
+  await expect(drafts(page).getByRole('button')).toHaveAccessibleName(/斬撃、灰の砲術師/);
   await press(page, 8);
-  await press(page, 12); // Wrap to the final enemy-side item.
-  await press(page, 12); // Ally-side item.
+  await expect(destination('補助を選ぶ')).toHaveAttribute('aria-pressed', 'true');
+  await press(page, 15); // Directly move through the flat auxiliary tabs.
+  await press(page, 15);
+  await press(page, 15);
+  await expect(page.locator('.pad-auxiliary')).toHaveAttribute('data-panel', 'log');
+  await press(page, 2); // The primary skill remains available while reading the log.
+  await expect(drafts(page)).toHaveCount(2);
+  await expect(page.locator('.pad-auxiliary')).toHaveAttribute('data-panel', 'log');
+  for (let i = 0; i < 3; i++) await press(page, 14);
+  await expect(page.getByRole('group', { name: '補助メニュー', exact: true })).toBeVisible();
+  for (let i = 0; i < 6; i++) await press(page, 13); // Auxiliary tabs start at the first item; choose ally targeting.
   await press(page, 0);
   await expect(page.locator('[data-unit=a0]')).toHaveAttribute('data-editing', 'true');
-  await press(page, 8);
-  await press(page, 12);
-  await press(page, 0);
-  await expect(page.locator('[data-unit=e1]')).toHaveAttribute('data-editing', 'true');
+  await expect(drafts(page)).toHaveCount(2);
   await page.reload();
   await virtualPad(page, 'Xbox Wireless Controller');
   await page.getByRole('button', { name: 'ゲームパッド設定', exact: true }).click();
@@ -490,8 +537,11 @@ for (const [id, label, confirm] of [
     await expect(drafts(page).getByRole('button')).toHaveAccessibleName(/後列狙いの砲手/);
     await press(page, 8);
     await sideStick(-1);
-    await expect(page.getByRole('heading', { name: '補助メニュー', exact: true })).toBeVisible();
-    await page.getByRole('option', { name: /味方を対象にする/ }).click();
+    await expect(page.getByRole('group', { name: '補助メニュー', exact: true })).toBeVisible();
+    await page
+      .getByRole('group', { name: '補助メニュー', exact: true })
+      .getByRole('button', { name: /味方を対象にする/ })
+      .click();
     await expect(selected('セナ')).toBeVisible();
     await expect(drafts(page)).toHaveCount(1);
     await page.screenshot({ path: test.info().outputPath(`spatial-${label}.png`), fullPage: true });
@@ -574,8 +624,11 @@ for (const [width, height] of [
           .evaluate((el) => el.getBoundingClientRect().bottom + scrollY),
       ).toBeLessThanOrEqual(height);
     await page.keyboard.press('i');
-    await expect(page.getByRole('listbox', { name: '補助メニュー' })).toBeVisible();
-    await page.getByRole('option', { name: /戦闘ログ.*記録/ }).click();
+    await expect(page.getByRole('group', { name: '補助メニュー', exact: true })).toBeVisible();
+    await page
+      .getByRole('group', { name: '補助メニュー', exact: true })
+      .getByRole('button', { name: /戦闘ログ.*記録/ })
+      .click();
     await expect(page.getByRole('log', { name: 'パッドの戦闘ログ' })).toBeVisible();
     expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(
       true,
@@ -733,7 +786,11 @@ test('digital navigation can move through the auxiliary menu while the draft is 
   await expect(drafts(page)).toHaveCount(4);
   await press(page, 8);
   await press(page, 0);
-  await expect(page.getByRole('option', { name: /後列へ移動/ })).toBeEnabled();
+  await expect(
+    page
+      .getByRole('group', { name: '列を移動', exact: true })
+      .getByRole('button', { name: /後列へ移動/ }),
+  ).toBeEnabled();
   await press(page, 0);
   await expect(drafts(page)).toHaveCount(4);
   await page.clock.runFor(950);

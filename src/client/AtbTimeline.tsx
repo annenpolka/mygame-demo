@@ -110,8 +110,8 @@ export function AtbTimeline({
           </button>
           <small>
             {keyboard
-              ? 'Escは戻る専用 · 一件取消は補助から'
-              : '戻るは予約を変更しません · 一件取消は予約一覧へ'}
+              ? '一件取消は予約の行で · Iで操作先を切替'
+              : '一件取消は予約の行で · Viewで操作先を切替'}
           </small>
         </div>
       </header>

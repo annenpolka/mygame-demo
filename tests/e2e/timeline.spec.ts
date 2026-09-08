@@ -100,23 +100,31 @@ test('rewinds an input, branches from it, keeps the original future and exports 
   await expect(page.locator('[data-plan-status=draft]')).toHaveCount(0);
   expect(errors).toEqual([]);
 });
-test('restores a past target-selection view and leaves an existing manual save intact', async ({
+test('restores a past auxiliary panel and held support target and leaves an existing manual save intact', async ({
   page,
 }) => {
   await load(page, quiet());
   await page.getByRole('button', { name: '⚙ 実験室', exact: true }).click();
   await page.getByRole('button', { name: '状態を保存', exact: true }).click();
   await page.getByRole('button', { name: '実験室を閉じる', exact: true }).click();
+  await page.getByRole('button', { name: /^リネを支援対象にする/ }).click();
   await page.keyboard.press('v');
+  await page.keyboard.press('i');
   await page.clock.runFor(6000);
-  await page.keyboard.press('Escape');
+  await page.locator('.pad-panel-tabs').getByRole('button', { name: 'ログ', exact: true }).click();
   await page.clock.runFor(1000);
   await page.keyboard.press('y');
   await dialog(page).getByRole('button', { name: '5秒前', exact: true }).click();
   await dialog(page).getByRole('button', { name: 'ここから再開', exact: true }).click();
   await page.getByRole('button', { name: 'この場面から操作する Esc', exact: true }).click();
-  await expect(page.locator('.field-target-bar')).toContainText('救急薬');
-  await page.keyboard.press('Escape');
+  await expect(page.getByRole('group', { name: '補助メニュー', exact: true })).toBeVisible();
+  await expect(page.locator('[data-plan-status=draft]').getByRole('button')).toHaveAccessibleName(
+    /救急薬、リネ/,
+  );
+  await expect(page.getByRole('button', { name: '補助を選ぶ', exact: true })).toHaveAttribute(
+    'aria-pressed',
+    'true',
+  );
   await page.getByRole('button', { name: '⚙ 実験室', exact: true }).click();
   await expect(page.getByRole('button', { name: '保存状態へ戻る', exact: true })).toBeEnabled();
   await page.getByRole('button', { name: '保存状態へ戻る', exact: true }).click();

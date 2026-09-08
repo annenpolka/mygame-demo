@@ -172,8 +172,11 @@ test('lab snapshot roundtrip, invalid JSON and separate/individual control modes
   await page.getByLabel('操作方式', { exact: true }).selectOption('individual');
   await page.getByRole('button', { name: '条件を反映して再開始' }).click();
   await page.getByRole('button', { name: '戦闘開始 →', exact: true }).click();
-  await page.getByRole('button', { name: '補助メニュー', exact: true }).click();
-  await page.getByRole('option', { name: /全体指示/ }).click();
+  await page.getByRole('button', { name: '補助を選ぶ', exact: true }).click();
+  await page
+    .getByRole('group', { name: '補助メニュー', exact: true })
+    .getByRole('button', { name: /全体指示/ })
+    .click();
   await page.keyboard.press('ArrowRight');
   await expect(page.locator('.pad-no-choices')).toContainText('個別操作モード');
 });

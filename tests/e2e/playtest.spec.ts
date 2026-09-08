@@ -12,7 +12,7 @@ test.beforeEach(async ({ page }) => {
   await page.goto('/');
   await page.clock.pauseAt(new Date('2026-01-01T01:00:00Z'));
 });
-test('mark, comment, reload and take over an earlier target screen while retaining the original recording', async ({
+test('mark, comment, reload and take over an earlier auxiliary panel while retaining the original recording', async ({
   page,
 }) => {
   const errors: string[] = [];
@@ -20,7 +20,9 @@ test('mark, comment, reload and take over an earlier target screen while retaini
   await page.setViewportSize({ width: 1366, height: 752 });
   await page.getByRole('button', { name: '戦闘開始 →', exact: true }).click();
   await page.clock.runFor(500);
+  await page.getByRole('button', { name: /^リネを支援対象にする/ }).click();
   await page.keyboard.press('v');
+  await page.keyboard.press('i');
   await page.clock.runFor(4000);
   const clock = await page.locator('.battle-clock strong').innerText();
   await page.keyboard.press('m');
@@ -37,12 +39,12 @@ test('mark, comment, reload and take over an earlier target screen while retaini
   await expect(notes).toBeVisible();
   await page
     .getByLabel('場面へのコメント', { exact: true })
-    .fill('対象を選べるまま、次の判断に迷った m');
+    .fill('補助を開いたまま、次の判断に迷った m');
   await page.getByLabel('場面の分類', { exact: true }).selectOption('unclear');
   const original = await exportBook(page);
   expect(original).toHaveLength(1);
-  expect(original[0].before.view.battle.page).toBe('target');
-  expect(original[0].before.view.battle.skillId).toBe('potion');
+  expect(original[0].before.view.battle.page).toBe('aux');
+  expect(original[0].before.view.battle.candidates?.ally).toEqual({ kind: 'ally', id: 1 });
   expect(
     original[0].marked.state.realTime - original[0].before.state.realTime,
   ).toBeGreaterThanOrEqual(2.99);
@@ -50,19 +52,22 @@ test('mark, comment, reload and take over an earlier target screen while retaini
   await page.reload();
   await page.getByRole('button', { name: '印の一覧', exact: true }).click();
   await expect(page.getByLabel('場面へのコメント', { exact: true })).toHaveValue(
-    '対象を選べるまま、次の判断に迷った m',
+    '補助を開いたまま、次の判断に迷った m',
   );
   await page.getByRole('button', { name: /秒前から再操作/ }).click();
   await expect(page.getByRole('dialog', { name: '休憩ポーズ' })).toContainText('印の少し前');
   await page.getByRole('button', { name: 'この場面から操作する Esc', exact: true }).click();
-  await expect(page.locator('.field-target-guide')).toBeVisible();
-  await expect(page.locator('.field-target-bar')).toContainText('救急薬');
+  await expect(page.getByRole('group', { name: '補助メニュー', exact: true })).toBeVisible();
+  await expect(page.locator('[data-plan-status=draft]').getByRole('button')).toHaveAccessibleName(
+    /救急薬、リネ/,
+  );
   await expect(page.getByRole('meter', { name: '操作キャラのATB' })).toHaveAttribute(
     'aria-valuenow',
     String(original[0].before.state.allies[0].atb),
   );
-  await page.keyboard.press('Enter');
-  await expect(page.locator('.pad-plan-list')).toContainText('救急薬');
+  await page.keyboard.press('z');
+  await expect(page.locator('[data-plan-status=draft]')).toHaveCount(2);
+  await expect(page.getByRole('group', { name: '補助メニュー', exact: true })).toBeVisible();
   await page.keyboard.press('m');
   await page.keyboard.press('Shift+M');
   const after = await exportBook(page);
@@ -173,7 +178,11 @@ for (const family of [
     ).toBeFocused();
     await press(family.includes('Nintendo') ? 1 : 0);
     await expect(page.getByRole('dialog', { name: '休憩ポーズ' })).toHaveCount(0);
-    await expect(page.locator('.pad-page-heading')).toContainText('補助メニュー');
+    await expect(page.getByRole('button', { name: '補助を選ぶ', exact: true })).toHaveAttribute(
+      'aria-pressed',
+      'true',
+    );
+    await expect(page.getByRole('group', { name: '補助メニュー', exact: true })).toBeVisible();
   });
 }
 

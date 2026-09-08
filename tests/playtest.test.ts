@@ -34,7 +34,7 @@ it('restores a cancelled queue focus without arming another reservation', () => 
     session.send(...battleInput(session.state, view.battle, 'guard').commands);
   const removed = battleInput(
     session.state,
-    openPage(session.state, view.battle, 'queue'),
+    openPage(session.state, { ...view.battle, panel: 'log', logOffset: 3 }, 'queue'),
     'confirm',
   );
   session.send(...removed.commands);
@@ -44,6 +44,8 @@ it('restores a cancelled queue focus without arming another reservation', () => 
   const state = runReplay(restored.recording);
   expect(state).toEqual(session.state);
   expect(restored.view.battle.queueFocus).toEqual(removed.ui.queueFocus);
+  expect(restored.view.battle.panel).toBe('log');
+  expect(restored.view.battle.logOffset).toBe(3);
   expect(battleInput(state, restored.view.battle, 'confirm').commands).toEqual([]);
 });
 it('marks without commands or time changes and replays the earlier state with UI, then branches without original future inputs', () => {

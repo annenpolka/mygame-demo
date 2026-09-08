@@ -252,7 +252,17 @@ export class PadReader {
     const edges = output.filter((a) => !directions.has(a) || a === nav);
     const contextual = (a: PadAction) =>
       directions.has(a) ||
-      ['weapon', 'tactics', 'previous', 'next', 'rowFront', 'rowBack'].includes(a);
+      [
+        'weapon',
+        'tactics',
+        'previous',
+        'next',
+        'rowFront',
+        'rowBack',
+        'menu',
+        'aux',
+        'queue',
+      ].includes(a);
     const skill = (a: PadAction) => ['confirm', 'skill', 'guard', 'execute'].includes(a);
     const conflict = edges.some(contextual) && edges.some(skill);
     // Consume rejected edges too: holding a button never confirms an unseen new context.

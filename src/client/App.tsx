@@ -37,6 +37,8 @@ import {
   home,
   openPage,
   confirmChoice,
+  removeQueueItem,
+  visiblePanel,
   choices,
   selectedChoice,
 } from '../input/battle-pad';
@@ -462,6 +464,7 @@ export function App() {
           'button:not(:disabled), select, input, textarea, summary',
         ) ?? []),
       ].filter((el) => el.getClientRects().length > 0);
+    const invoker = document.activeElement instanceof HTMLElement ? document.activeElement : null;
     focusables()[0]?.focus();
     const trap = (event: KeyboardEvent) => {
       if (event.key !== 'Tab') return;
@@ -477,7 +480,13 @@ export function App() {
       }
     };
     document.addEventListener('keydown', trap);
-    return () => document.removeEventListener('keydown', trap);
+    return () => {
+      document.removeEventListener('keydown', trap);
+      // React removes inert and any nested dialog before this frame runs.
+      requestAnimationFrame(() => {
+        if (invoker?.isConnected && !invoker.closest('[inert]')) invoker.focus();
+      });
+    };
   }, [s.paused, s.phase, help, padOpen, loadoutOpen, notesOpen, timelineOpen]);
   useEffect(() => {
     if (pending)
@@ -576,7 +585,7 @@ export function App() {
           ',': 'targetAllies',
           '.': 'targetEnemies',
           Enter: 'confirm',
-          z: 'confirm',
+          z: 'basic',
           x: 'skill',
           c: 'guard',
           v: 'potion',
@@ -621,8 +630,10 @@ export function App() {
         if (loadoutOpen) setLoadoutOpen(false);
         else if (padOpen) setPadOpen(false);
         else if (labOpen) setLabOpen(false);
-        else if (help) setHelp(false);
-        else if (s.paused) send({ type: 'pause', value: false });
+        else if (help) {
+          setHelp(false);
+          if (s.paused) send({ type: 'pause', value: false });
+        } else if (s.paused) send({ type: 'pause', value: false });
         else if (pending) {
           setPending(null);
           setBattleUI(home(battleUI));
@@ -678,7 +689,7 @@ export function App() {
     setPending(r.ui.page === 'target' ? r.ui.skillId : null);
     setBattleUI({
       ...r.ui,
-      logOffset: Math.min(r.ui.logOffset, Math.max(0, session.log.length - 6)),
+      logOffset: Math.min(r.ui.logOffset, Math.max(0, session.log.length - 1)),
     });
     if (r.commands.length) send(...r.commands);
   };
@@ -879,7 +890,7 @@ export function App() {
             {gamepad.supported ? (
               <>
                 <b>{buttonName(gamepad.bindings.confirm, gamepad.family)}</b> 基本技・決定{' '}
-                <b>{buttonName(gamepad.bindings.back, gamepad.family)}</b> 戻る{' '}
+                <b>{buttonName(gamepad.bindings.menu, gamepad.family)}</b> 操作先{' '}
                 <b>
                   {buttonName(gamepad.bindings.previous, gamepad.family)} /{' '}
                   {buttonName(gamepad.bindings.next, gamepad.family)}
@@ -1156,16 +1167,21 @@ export function App() {
             family={gamepad.family}
             log={session.log}
             act={applyBattleInput}
-            pick={(key) => applyBattleResult(confirmChoice(s, battleUI, key))}
-            remove={(key) =>
-              applyBattleResult(
-                confirmChoice(s, { ...battleUI, page: 'queue', queueFocus: undefined, key }, key),
-              )
-            }
+            pick={(key) => {
+              const panel = visiblePanel(battleUI);
+              applyBattleResult(confirmChoice(s, { ...battleUI, page: panel }, key));
+            }}
+            remove={(key) => applyBattleResult(removeQueueItem(s, battleUI, key))}
             open={(page) => {
               sound.play('open', true);
               setBattleUI(openPage(s, battleUI, page));
             }}
+            scrollLog={(offset) =>
+              setBattleUI({
+                ...battleUI,
+                logOffset: Math.max(0, Math.min(offset, session.log.length - 1)),
+              })
+            }
             select={select}
           />
         ) : null}
@@ -1617,7 +1633,8 @@ export function App() {
                 <p>
                   <Key>Z</Key> 基本技、<Key>X</Key> 主力技、<Key>C</Key> 防御を下書きに追加。
                   攻撃と支援の対象は同時に保持します。足元の丸が支援対象、角形が攻撃対象、頭上の印が操作キャラ、四隅の枠が選び直す対象です。敵側を選択中でも支援技は表示中の味方へ入ります。候補を変えても、追加済みの行動の対象や仲間AIの狙いは変わりません。対象が不在になった場合は、生存する別の対象へ自動で切り替え、下書き・予約・発動中の技を継続します。
-                  <Key>V</Key> は救急薬、<Key>I</Key> は補助、<Key>U</Key> は次のオプティマ。
+                  <Key>V</Key> は保持中の支援対象へ救急薬を直接追加。<Key>I</Key> は操作先の切替、
+                  <Key>U</Key> は次のオプティマ。
                 </p>
                 <p>
                   <Key>H</Key>{' '}
@@ -1626,9 +1643,9 @@ export function App() {
                   未開始の確定列は一組まで。開始を連打しても複製も停止もしません。
                 </p>
                 <p>
-                  パッドでは×／Aが基本技、□／Xが主力技、△／Yが防御。○／Bは戻る専用。
-                  右トリガーで行動開始、左トリガーで後続取消。左スティックで駒の配置に沿って対象を選び、右スティックの左で味方・右で敵へ切り替えます。キーボードは矢印で移動、コンマで味方・ピリオドで敵。十字キーの左で後列へ、右で前列へ移動。上で次のオプティマ、下で武器変更。R3でスロー、View／Share／−で補助を開きます。
-                  薬・一括隊列・対象の切替は補助メニュー。十字キーで選択する代替配置も設定できます。
+                  パッドでは対象選択中の×／Aが基本技、補助・予約の選択中は決定。□／Xの主力技と△／Yの防御はどの操作先でも追加できます。
+                  右トリガーで行動開始、左トリガーで後続取消。左スティックで駒の配置に沿って対象を選び、右スティックの左で味方・右で敵へ切り替えます。キーボードは矢印で移動、コンマで味方・ピリオドで敵。十字キーの左で後列へ、右で前列へ移動。上で次のオプティマ、下で武器変更。R3でスロー。View／Share／−は対象・補助・予約の操作先を順に切り替えます。補助では左右で補助・オプティマ・隊列・ログを切り替え、上下で選択します。
+                  薬は選択済みの支援対象へ直接追加します。技・補助・予約は常設され、戻る操作なしで行き来できます。十字キーで選択する代替配置も設定できます。ダイアログは○／BやEscで閉じられます。
                 </p>
               </div>
               <div>
@@ -1638,7 +1655,7 @@ export function App() {
                   <Key>S</Key>
                   <Key>D</Key>
                   <Key>G</Key>{' '}
-                  で武器構成を切り替え。Jで後列、Kで前列、Rで前後を切り替えてすぐ移動します。Wで武器変更を指示し、実行中の技があれば終了後に切り替えます。移動と武器変更は下書きを使いません。Escは戻る、Bは確定した後続の取消。TまたはIで補助を開きます。実行中の技と下書きは残ります。支払い済みATBは戻りません。
+                  で武器構成を切り替え。Jで後列、Kで前列、Rで前後を切り替えてすぐ移動します。Wで武器変更を指示し、実行中の技があれば終了後に切り替えます。移動と武器変更は下書きを使いません。Bは確定した後続の取消。TまたはIで操作先を切り替えます。予約の一件取消はその行で行い、取消済みの行にフォーカスを残します。Escでダイアログを閉じられます。実行中の技と下書きは残ります。支払い済みATBは戻りません。
                   <Key>7</Key>
                   <Key>8</Key>
                   <Key>9</Key> で一括隊列。

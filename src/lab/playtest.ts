@@ -197,6 +197,7 @@ const viewSchema = z.object({
   pending: z.string().max(100).nullable(),
   battle: z.object({
     page: z.enum(['command', 'target', 'move', 'weapon', 'tactics', 'queue', 'log', 'aux']),
+    panel: z.enum(['aux', 'move', 'weapon', 'tactics', 'log']).optional(),
     key: z.string().max(200),
     skillId: z.string().max(100).nullable(),
     tactics: z.enum(['optima', 'formation', 'items']),

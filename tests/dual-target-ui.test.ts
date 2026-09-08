@@ -34,6 +34,7 @@ function consoleMarkup(s: State, ui: BattlePad) {
       pick: noop,
       remove: noop,
       open: noop,
+      scrollLog: noop,
       select: noop,
     }),
   );

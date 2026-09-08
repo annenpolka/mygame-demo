@@ -62,17 +62,24 @@ describe('navigation follows battlefield columns and tracks', () => {
     expect(paletteCursor(s, ui).target).toEqual({ kind: 'ally', id: 0 });
     expect(ui.invalidTargets?.ally).toBe(false);
   });
-  it('uses spatial navigation in target pickers, preserves menu navigation, and ignores side input there', () => {
+  it('uses spatial navigation in target pickers and offers direct field navigation from menus', () => {
     const s = battle();
     let ui = openPage(s, newBattlePad(), 'target', 'potion');
     ui = battleInput(s, ui, 'left').ui;
     expect(ui.key).toBe('ally:1');
     ui = battleInput(s, ui, 'down').ui;
     expect(ui.key).toBe('ally:2');
-    expect(battleInput(s, ui, 'targetEnemies').ui).toEqual(ui);
+    expect(battleInput(s, ui, 'targetEnemies').ui).toMatchObject({
+      page: 'command',
+      candidateSide: 'enemy',
+    });
     const aux = openPage(s, ui, 'aux');
     expect(battleInput(s, aux, 'down').ui.key).toBe('weapon');
-    expect(battleInput(s, aux, 'targetEnemies').ui).toEqual(aux);
+    expect(battleInput(s, aux, 'targetEnemies').ui).toMatchObject({
+      page: 'command',
+      panel: 'aux',
+      candidateSide: 'enemy',
+    });
     const chosen = confirmChoice(s, aux, 'targetEnemies');
     expect(chosen.ui.page).toBe('command');
     expect(paletteCursor(s, chosen.ui).side).toBe('enemy');

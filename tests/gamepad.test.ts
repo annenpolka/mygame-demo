@@ -1,4 +1,7 @@
 import { it, expect, describe } from 'vitest';
+import { battleInput, newBattlePad, openPage } from '../src/input/battle-pad';
+import { Session, runReplay } from '../src/lab/session';
+import { planned } from '../src/sim/plan';
 import {
   PadReader,
   defaultBindings,
@@ -129,6 +132,67 @@ describe('separate analog navigation and physical control edges', () => {
       expect(r.read(pad([b[action], b.confirm]), b, 1000)).toEqual([]);
     },
   );
+  it.each(['menu', 'aux', 'queue'] as const)(
+    'consumes action presses made with the %s region change until a fresh press',
+    (region) => {
+      const b = { ...defaultBindings('xbox'), aux: 17, queue: 20 };
+      for (const action of ['confirm', 'skill', 'guard', 'execute'] as const) {
+        const reader = new PadReader();
+        reader.read(pad(), b, 0);
+        expect(reader.read(pad([b[region], b[action]]), b, 20)).toEqual([region, 'inputConflict']);
+        expect(reader.read(pad([b[region], b[action]]), b, 1000)).toEqual([]);
+        reader.read(pad(), b, 1020);
+        expect(reader.read(pad([b[action]]), b, 1040)).toEqual([action]);
+      }
+    },
+  );
+  it('digital View plus confirm changes region without cancelling a queue row or adding an action', () => {
+    const x = new Session();
+    x.send({ type: 'start' });
+    x.send(...battleInput(x.state, newBattlePad(), 'guard').commands);
+    let ui = openPage(x.state, newBattlePad(), 'queue');
+    const before = structuredClone(planned(x.state.allies[0]));
+    const b = navigationPreset(defaultBindings('xbox'), 'dpad'),
+      reader = new PadReader();
+    reader.read(pad(), b, 0);
+    const combined = pad([b.menu, b.confirm]);
+    for (const action of reader.read(combined, b, 20)) {
+      const result = battleInput(x.state, ui, action);
+      ui = result.ui;
+      expect(result.commands).toEqual([]);
+      x.send(...result.commands);
+    }
+    expect(ui.page).toBe('command');
+    expect(planned(x.state.allies[0])).toEqual(before);
+    expect(reader.read(combined, b, 1000)).toEqual([]);
+    reader.read(pad(), b, 1020);
+    for (const action of reader.read(pad([b.confirm]), b, 1040)) {
+      const result = battleInput(x.state, ui, action);
+      ui = result.ui;
+      x.send(...result.commands);
+    }
+    expect(planned(x.state.allies[0])).toMatchObject([{ skillId: 'guard' }, { skillId: 'slash' }]);
+    reader.read(pad(), b, 1060);
+    for (const action of reader.read(combined, b, 1080)) ui = battleInput(x.state, ui, action).ui;
+    expect(ui).toMatchObject({ page: 'aux', panel: 'aux' });
+    expect(runReplay(x.recording())).toEqual(x.state);
+  });
+  it('digital tab directions suppress confirm before changing the visible tools tab', () => {
+    const x = new Session();
+    x.send({ type: 'start' });
+    let ui = openPage(x.state, newBattlePad(), 'aux');
+    const b = navigationPreset(defaultBindings('xbox'), 'dpad'),
+      reader = new PadReader();
+    reader.read(pad(), b, 0);
+    const actions = reader.read(pad([b.right, b.confirm]), b, 20);
+    expect(actions).toEqual(['right', 'inputConflict']);
+    for (const action of actions) {
+      const result = battleInput(x.state, ui, action);
+      ui = result.ui;
+      expect(result.commands).toEqual([]);
+    }
+    expect(ui).toMatchObject({ page: 'tactics', panel: 'tactics', tactics: 'optima' });
+  });
   it.each([
     ['Xbox Wireless', 'xbox', 0],
     ['DualSense Wireless (054c)', 'playstation', 0],

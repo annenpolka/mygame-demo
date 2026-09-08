@@ -10,7 +10,9 @@ import {
   newBattlePad,
   choices,
   confirmChoice,
+  removeQueueItem,
   openPage,
+  visiblePanel,
   type BattlePage,
 } from '../src/input/battle-pad';
 import { createState, command, step, advance, copy } from '../src/sim/engine';
@@ -289,10 +291,9 @@ describe('target palette and explicit sequences', () => {
     x.send(...battleInput(x.state, menu, 'execute').commands);
     expect(planned(x.state.allies[0])).toMatchObject([{ skillId: 'guard' }]);
     expect(x.state.potions).toBe(3);
-    const target = confirmChoice(x.state, menu, 'potion');
-    expect(target.ui).toMatchObject({ page: 'target', skillId: 'potion' });
-    expect(target.commands).toEqual([]);
-    expect(battleInput(x.state, target.ui, 'confirm').commands[0]).toMatchObject({
+    const potion = confirmChoice(x.state, menu, 'potion');
+    expect(potion.ui).toMatchObject({ page: 'aux', key: 'potion', panel: 'aux' });
+    expect(potion.commands[0]).toMatchObject({
       type: 'draft',
       step: { skillId: 'potion' },
     });
@@ -319,6 +320,179 @@ describe('target palette and explicit sequences', () => {
     expect(choices(x.state, { ...menu, page: 'tactics', tactics: 'formation' })).toEqual([]);
     x.send({ type: 'pause', value: true });
     expect(battleInput(x.state, menu, 'guard').commands).toEqual([]);
+  });
+});
+describe('persistent battle desk navigation', () => {
+  it('restores legacy auxiliary views and remembers them when navigating to another region', () => {
+    const x = session();
+    for (const page of ['aux', 'move', 'weapon', 'tactics', 'log'] as const) {
+      const legacy = { ...newBattlePad(), page };
+      expect(visiblePanel(legacy)).toBe(page);
+      const field = battleInput(x.state, legacy, 'menu').ui;
+      expect(field.panel).toBe(page);
+    }
+    expect(visiblePanel(newBattlePad())).toBe('aux');
+  });
+  it.each(['aux', 'move', 'weapon', 'tactics', 'log', 'queue'] as const)(
+    'keeps %s visible and its cursor stable when adding and executing skills',
+    (page) => {
+      const x = session();
+      let ui = openPage(x.state, openPage(x.state, newBattlePad(), 'log'), page);
+      const origin = { page: ui.page, key: ui.key, panel: ui.panel };
+      for (const action of ['basic', 'skill', 'guard', 'execute'] as const) {
+        const result = battleInput(x.state, ui, action);
+        expect(result.commands).toHaveLength(1);
+        expect(result.ui).toMatchObject(origin);
+        ui = result.ui;
+        x.send(...result.commands);
+      }
+      expect(x.state.allies[0].draft).toEqual([]);
+      expect(planned(x.state.allies[0])).toMatchObject([
+        { skillId: 'slash' },
+        { skillId: 'sweep' },
+        { skillId: 'guard' },
+      ]);
+      expect(runReplay(x.recording())).toEqual(x.state);
+    },
+  );
+  it('adds a potion directly to the held ally through the shortcut and both tools lists', () => {
+    const x = session();
+    let ui = selectCandidate(x.state, newBattlePad(), 'ally', { kind: 'ally', id: 2 });
+    ui = battleInput(x.state, ui, 'targetEnemies').ui;
+    const direct = battleInput(x.state, ui, 'potion');
+    expect(direct.ui).toMatchObject({ page: 'command', candidateSide: 'enemy' });
+    expect(direct.commands).toMatchObject([
+      { type: 'draft', step: { skillId: 'potion', target: { kind: 'ally', id: 2 } } },
+    ]);
+    for (const menu of [openPage(x.state, ui, 'aux'), battleInput(x.state, ui, 'itemMenu').ui]) {
+      const result = confirmChoice(x.state, menu, 'potion');
+      expect(result.commands).toEqual(direct.commands);
+      expect(result.ui).toMatchObject({ page: menu.page, panel: menu.panel, key: menu.key });
+      expect(result.ui.skillId).toBeNull();
+    }
+    x.state.allies[2].hp = 0;
+    expect(battleInput(x.state, ui, 'potion').commands).toMatchObject([
+      { step: { target: { kind: 'ally', id: 0 } } },
+    ]);
+    x.state.potions = 0;
+    const blocked = battleInput(x.state, openPage(x.state, ui, 'log'), 'potion');
+    expect(blocked.commands).toEqual([]);
+    expect(blocked.ui).toMatchObject({ page: 'log', panel: 'log', feedback: { kind: 'blocked' } });
+  });
+  it('reaches tools, stable queue cancellation and field targeting using menu, directions and confirm', () => {
+    const x = session();
+    let ui = newBattlePad();
+    const input = (action: 'menu' | 'aux' | 'up' | 'down' | 'confirm') => {
+      const result = battleInput(x.state, ui, action);
+      ui = result.ui;
+      x.send(...result.commands);
+      return result;
+    };
+    input('confirm');
+    input('menu');
+    expect(ui).toMatchObject({ page: 'aux', panel: 'aux', key: 'move' });
+    input('down');
+    input('down');
+    expect(ui.key).toBe('potion');
+    input('confirm');
+    expect(planned(x.state.allies[0])).toMatchObject([{ skillId: 'slash' }, { skillId: 'potion' }]);
+    expect(ui.page).toBe('aux');
+    input('aux');
+    expect(ui.page).toBe('queue');
+    input('up');
+    input('confirm');
+    expect(planned(x.state.allies[0])).toMatchObject([{ skillId: 'potion' }]);
+    expect(input('confirm').commands).toEqual([]);
+    input('menu');
+    expect(ui).toMatchObject({ page: 'command', panel: 'aux' });
+    input('confirm');
+    expect(planned(x.state.allies[0])).toMatchObject([{ skillId: 'potion' }, { skillId: 'slash' }]);
+    ui = openPage(x.state, ui, 'log');
+    input('menu');
+    input('menu');
+    expect(ui).toMatchObject({ page: 'command', panel: 'log' });
+    input('menu');
+    expect(ui).toMatchObject({ page: 'log', panel: 'log' });
+    expect(runReplay(x.recording())).toEqual(x.state);
+  });
+  it('cancels an inline row while preserving the active tools pane and an inert receipt', () => {
+    const x = session();
+    for (let i = 0; i < 3; i++) x.send(...battleInput(x.state, newBattlePad(), 'guard').commands);
+    const origin = { ...openPage(x.state, newBattlePad(), 'aux'), key: 'potion' };
+    const result = removeQueueItem(x.state, origin, '2');
+    x.send(...result.commands);
+    expect(result.ui).toMatchObject({
+      page: 'aux',
+      key: 'potion',
+      panel: 'aux',
+      queueFocus: { key: '2', status: 'removed', index: 1, actorId: 0 },
+    });
+    for (let i = 0; i < 3; i++)
+      expect(removeQueueItem(x.state, result.ui, '2').commands).toEqual([]);
+    expect(planned(x.state.allies[0]).map((item) => item.key)).toEqual([1, 3]);
+    const another = removeQueueItem(x.state, result.ui, '3');
+    expect(another.commands).toEqual([{ type: 'removePlan', id: 0, key: 3 }]);
+    expect(another.ui.queueFocus).toMatchObject({ key: '3', status: 'removed' });
+    const queued = removeQueueItem(x.state, openPage(x.state, origin, 'queue'), '1');
+    expect(queued.ui).toMatchObject({ page: 'queue', key: '1', queueFocus: { status: 'removed' } });
+    expect(runReplay(x.recording())).toEqual(x.state);
+  });
+  it('reaches all tools with digital directions and confirm, including after movement and potion', () => {
+    const x = session();
+    let ui = battleInput(x.state, newBattlePad(), 'menu').ui;
+    const input = (action: 'up' | 'down' | 'left' | 'right' | 'confirm') => {
+      const result = battleInput(x.state, ui, action);
+      ui = result.ui;
+      x.send(...result.commands);
+    };
+    input('down');
+    input('down');
+    input('confirm');
+    expect(planned(x.state.allies[0])).toMatchObject([{ skillId: 'potion' }]);
+    input('up');
+    input('up');
+    input('confirm');
+    expect(ui.page).toBe('move');
+    input('confirm');
+    expect(ui.page).toBe('move');
+    input('left');
+    expect(ui).toMatchObject({ page: 'log', panel: 'log' });
+    input('right');
+    expect(ui.page).toBe('aux');
+    input('right');
+    expect(ui).toMatchObject({ page: 'tactics', tactics: 'optima' });
+    input('right');
+    expect(ui).toMatchObject({ page: 'tactics', tactics: 'formation' });
+    input('right');
+    expect(ui.page).toBe('log');
+    expect(battleInput(x.state, ui, 'log').ui.page).toBe('log');
+    expect(battleInput(x.state, ui, 'auxPanel').ui.page).toBe('aux');
+    expect(runReplay(x.recording())).toEqual(x.state);
+  });
+  it('keeps panes through direct changes and cancellation, including unavailable commands', () => {
+    const x = session();
+    const origin = openPage(x.state, newBattlePad(), 'log');
+    for (const action of ['rowFront', 'weapon', 'tactics', 'cutQueue', 'inputConflict'] as const) {
+      expect(battleInput(x.state, origin, action).ui).toMatchObject({
+        page: 'log',
+        panel: 'log',
+        key: '',
+      });
+    }
+    x.state.pendingSelect = 1;
+    for (const action of [
+      'basic',
+      'skill',
+      'guard',
+      'potion',
+      'execute',
+      'rowBack',
+      'weapon',
+    ] as const) {
+      const result = battleInput(x.state, origin, action);
+      expect(result.commands).toEqual([]);
+      expect(result.ui).toMatchObject({ page: 'log', panel: 'log', key: '' });
+    }
   });
 });
 describe('battle effects follow resolved simulation outcomes', () => {
