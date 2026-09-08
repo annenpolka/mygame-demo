@@ -10,6 +10,7 @@
     "test": "vitest run",
     "test:watch": "vitest",
     "test:e2e": "playwright test",
+    "record:ai": "tsx scripts/record-ai.ts",
     "sim": "tsx scripts/headless.ts",
     "sim:limits": "tsx scripts/limits.ts",
     "sim:queue": "tsx scripts/queue-study.ts",

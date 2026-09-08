@@ -61,6 +61,7 @@ import type { Command, Config, Target, State } from '../sim/types';
 import { Session } from '../lab/session';
 import { Battlefield } from './Battlefield';
 import { CombatLog } from './CombatLog';
+import { installCapture } from './capture';
 
 const fmt = (n: number) => n.toFixed(1);
 function Key({ children }: { children: React.ReactNode }) {
@@ -417,6 +418,8 @@ export function App() {
   };
 
   useEffect(() => {
+    if (new URLSearchParams(location.search).get('capture') === '1')
+      return installCapture(session, player, sound, () => render((x) => x + 1));
     let previous = performance.now(),
       frame = 0;
     const loop = (now: number) => {
