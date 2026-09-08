@@ -1,0 +1,18 @@
+{
+  "phase": "complete",
+  "iteration": 32,
+  "best_metric": 2,
+  "selected": [
+    "atb0.850-hp1.000-power1.000",
+    "atb1.000-hp0.850-power0.800",
+    "atb0.925-hp0.850-power0.800",
+    "atb0.700-hp1.150-power0.800"
+  ],
+  "runCount": 1330,
+  "allReplaysVerified": true,
+  "archive": {
+    "1:1": "atb0.850-hp1.000-power1.000",
+    "1:0": "atb0.700-hp0.850-power0.800"
+  },
+  "productAdoption": false
+}

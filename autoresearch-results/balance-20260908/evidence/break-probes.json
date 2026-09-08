@@ -1,0 +1,6511 @@
+{
+  "conditions": {
+    "experimentVersion": "balance-break-probes-1",
+    "combatVersion": "orchestra-15",
+    "synthetic": true,
+    "runCount": 24,
+    "seed": 1307,
+    "enemyHp": [
+      2000,
+      5000,
+      10000
+    ],
+    "initialChain": [
+      200,
+      300
+    ],
+    "breakWindowSeconds": 12,
+    "initialRoles": "ABB",
+    "targetRoles": "AAB",
+    "initialAtb": 1,
+    "allyRows": [
+      "front",
+      "front",
+      "front"
+    ],
+    "enemyCount": 1,
+    "enemyRow": "front",
+    "enemyNextAttack": 999,
+    "equipment": [
+      [
+        "sword",
+        "shield"
+      ],
+      [
+        "staff",
+        "bow"
+      ],
+      [
+        "bell",
+        "hook"
+      ]
+    ],
+    "config": {
+      "bonusMode": "strong",
+      "enemyHpScale": 1,
+      "atbMax": 4,
+      "seed": 1307,
+      "atbRate": 0.85,
+      "atbMode": "idle",
+      "chainActions": true,
+      "moveTime": 0.85,
+      "shiftTime": 0.65,
+      "slowDrain": 4,
+      "enemyPower": 1,
+      "uiMode": "separate",
+      "encounter": 1
+    },
+    "policies": [
+      {
+        "id": "keep-abb",
+        "switchSeconds": null
+      },
+      {
+        "id": "aab-now",
+        "switchSeconds": 0
+      },
+      {
+        "id": "aab-after-4s",
+        "switchSeconds": 4
+      },
+      {
+        "id": "aab-after-8s",
+        "switchSeconds": 8
+      }
+    ],
+    "actions": "Unmodified engine autopilot basic skills and follow-up queues for every policy.",
+    "switch": "Actual optima index 2 command; action completion, queue pruning and shift time are retained.",
+    "damageDefinition": "Actual enemy HP lost, capped at remaining HP; stop on kill or 12 seconds.",
+    "rules": {
+      "bonuses": {
+        "modest": {
+          "A": 0.1,
+          "B": 0.15,
+          "D": 0.1,
+          "S": 0.075
+        },
+        "none": {
+          "A": 0,
+          "B": 0,
+          "D": 0,
+          "S": 0
+        },
+        "strong": {
+          "A": 0.25,
+          "B": 0.3,
+          "D": 0.2,
+          "S": 0.15
+        }
+      },
+      "rules": {
+        "breakThreshold": 200,
+        "chainMax": 500,
+        "focusActivation": 4,
+        "frontChain": 1.25,
+        "frontDamage": 1.25,
+        "rearMeleeDamage": 0.85,
+        "rearTaken": 0.72,
+        "shieldTaken": 0.5,
+        "slowScale": 0.25,
+        "weaponBreakDamage": 1.35,
+        "weaponFrontChain": 1.2
+      },
+      "skills": [
+        {
+          "cast": 0.9,
+          "chain": 3,
+          "cost": 1,
+          "effect": "damage",
+          "hold": 6.08,
+          "id": "slash",
+          "link": 0.2,
+          "power": 85,
+          "recovery": 1,
+          "target": "enemy"
+        },
+        {
+          "cast": 1.8,
+          "chain": 4,
+          "cost": 2,
+          "effect": "damage",
+          "hold": 6.4,
+          "id": "sweep",
+          "power": 130,
+          "recovery": 1.2,
+          "target": "enemyRow"
+        },
+        {
+          "cast": 1,
+          "chain": 3,
+          "cost": 1,
+          "effect": "damage",
+          "hold": 6.08,
+          "id": "shot",
+          "link": 0.2,
+          "power": 76,
+          "recovery": 0.9,
+          "target": "enemy"
+        },
+        {
+          "cast": 1.9,
+          "chain": 4,
+          "cost": 2,
+          "effect": "damage",
+          "hold": 6.08,
+          "id": "volley",
+          "power": 118,
+          "recovery": 1.2,
+          "target": "enemyRow"
+        },
+        {
+          "cast": 1,
+          "chain": 15,
+          "cost": 1,
+          "effect": "damage",
+          "hold": 0.96,
+          "id": "spark",
+          "link": 0.2,
+          "power": 28,
+          "recovery": 0.9,
+          "target": "enemy"
+        },
+        {
+          "cast": 2,
+          "chain": 22,
+          "cost": 2,
+          "effect": "damage",
+          "hold": 1.28,
+          "id": "rain",
+          "power": 40,
+          "recovery": 1.2,
+          "target": "enemyRow"
+        },
+        {
+          "cast": 0.9,
+          "chain": 14,
+          "cost": 1,
+          "effect": "damage",
+          "hold": 0.96,
+          "id": "jab",
+          "link": 0.2,
+          "power": 32,
+          "recovery": 1,
+          "target": "enemy"
+        },
+        {
+          "cast": 1.1,
+          "chain": 19,
+          "cost": 2,
+          "effect": "pull",
+          "hold": 1.12,
+          "id": "pull",
+          "power": 38,
+          "recovery": 1.1,
+          "target": "enemy"
+        },
+        {
+          "cast": 1.15,
+          "chain": 16,
+          "cost": 1,
+          "effect": "damage",
+          "hold": 0.96,
+          "id": "smash",
+          "link": 0.2,
+          "power": 42,
+          "recovery": 1.05,
+          "target": "enemy"
+        },
+        {
+          "cast": 1.8,
+          "chain": 25,
+          "cost": 2,
+          "effect": "push",
+          "hold": 1.28,
+          "id": "push",
+          "power": 68,
+          "recovery": 1.2,
+          "target": "enemy"
+        },
+        {
+          "cast": 1.2,
+          "chain": 0,
+          "cost": 1,
+          "effect": "heal",
+          "hold": 0,
+          "id": "heal",
+          "link": 0.2,
+          "power": 190,
+          "recovery": 0.9,
+          "target": "ally"
+        },
+        {
+          "cast": 1.9,
+          "chain": 0,
+          "cost": 2,
+          "effect": "heal",
+          "hold": 0,
+          "id": "greatHeal",
+          "power": 460,
+          "recovery": 1.2,
+          "target": "ally"
+        },
+        {
+          "cast": 0.7,
+          "chain": 0,
+          "cost": 1,
+          "effect": "shield",
+          "hold": 0,
+          "id": "ward",
+          "power": 0,
+          "recovery": 0.9,
+          "target": "ally"
+        },
+        {
+          "cast": 1.2,
+          "chain": 0,
+          "cost": 2,
+          "effect": "shield",
+          "hold": 0,
+          "id": "rampart",
+          "power": 0,
+          "recovery": 1.1,
+          "target": "allyRow"
+        },
+        {
+          "cast": 0.45,
+          "chain": 0,
+          "cost": 2,
+          "effect": "evacuate",
+          "hold": 0,
+          "id": "evacuate",
+          "power": 0,
+          "recovery": 1.15,
+          "target": "allyRow"
+        },
+        {
+          "cast": 0.4,
+          "chain": 0,
+          "cost": 1,
+          "effect": "guard",
+          "hold": 0,
+          "id": "guard",
+          "power": 0,
+          "recovery": 1,
+          "target": "self"
+        },
+        {
+          "cast": 0.6,
+          "chain": 0,
+          "cost": 0,
+          "effect": "potion",
+          "hold": 0,
+          "id": "potion",
+          "power": 400,
+          "recovery": 1,
+          "target": "ally"
+        },
+        {
+          "cast": 0.6,
+          "chain": 0,
+          "cost": 1,
+          "effect": "handoff",
+          "hold": 0,
+          "id": "handoff",
+          "power": 0,
+          "recovery": 0,
+          "target": "ally"
+        }
+      ],
+      "timing": {
+        "breakDuration": 12,
+        "chainDecay": 7,
+        "enemyIntervalScale": 1.5,
+        "enemyWindupScale": 1.6,
+        "guardDuration": 6,
+        "handoffSlow": 0.8,
+        "shieldDuration": 9,
+        "steadfastDuration": 3
+      },
+      "version": "orchestra-15",
+      "weapons": [
+        {
+          "id": "sword",
+          "melee": true,
+          "role": "A",
+          "skills": [
+            "slash",
+            "sweep"
+          ]
+        },
+        {
+          "id": "shield",
+          "melee": true,
+          "role": "D",
+          "skills": [
+            "ward",
+            "rampart"
+          ]
+        },
+        {
+          "id": "staff",
+          "melee": false,
+          "role": "B",
+          "skills": [
+            "spark",
+            "rain"
+          ]
+        },
+        {
+          "id": "bow",
+          "melee": false,
+          "role": "A",
+          "skills": [
+            "shot",
+            "volley"
+          ]
+        },
+        {
+          "id": "bell",
+          "melee": false,
+          "role": "S",
+          "skills": [
+            "heal",
+            "greatHeal"
+          ]
+        },
+        {
+          "id": "hook",
+          "melee": true,
+          "role": "B",
+          "skills": [
+            "jab",
+            "pull"
+          ]
+        },
+        {
+          "bonus": "frontChain",
+          "id": "hammer",
+          "melee": true,
+          "role": "B",
+          "skills": [
+            "smash",
+            "push"
+          ]
+        },
+        {
+          "bonus": "breakDamage",
+          "id": "starbow",
+          "melee": false,
+          "role": "A",
+          "skills": [
+            "shot",
+            "volley"
+          ]
+        },
+        {
+          "id": "banner",
+          "melee": false,
+          "role": "S",
+          "skills": [
+            "ward",
+            "evacuate"
+          ]
+        }
+      ]
+    }
+  },
+  "caveats": [
+    "These 24 runs are synthetic local break-window probes, not global balance optimization or independent human playtests.",
+    "Initial ABB, empty action queues and ATB 1 are constructed at break onset; reaching this snapshot is not evaluated.",
+    "Enemy pressure is disabled. All-front exposure, recovery, survival and UI or handoff effort cannot be evaluated.",
+    "Higher post-break chain is only one effect: changing B to A also changes skill power, party bonuses, ATB supply and shift delay.",
+    "Equal damage after an early kill means the HP cap was reached; compare killSeconds and do not infer equal damage potential.",
+    "A null killSeconds means not killed within the observed 12-second window; it does not mean a zero-second kill.",
+    "A scheduled switch may never be issued or completed if the enemy dies first.",
+    "The single shared seed improves reproducibility; action changes can alter random-number consumption and this is not a seed-robust estimate.",
+    "No comparison freezes chain growth artificially. These probes compare real timing policies under current rules, not the isolated causal effect of chain alone."
+  ],
+  "runs": [
+    {
+      "fixture": "hp2000-chain200",
+      "enemyHp": 2000,
+      "initialChain": 200,
+      "initialStateHash": "e2d67ac7c632c4d37f9b5d5f1af497c0e2ed9486fd8a4120d933ef989759d5eb",
+      "policy": "keep-abb",
+      "damage": 2000,
+      "chainPeak": 398,
+      "killSeconds": 8.533333333333337,
+      "observedSeconds": 8.533333333333337,
+      "switchIssuedSeconds": null,
+      "switchCompletedSeconds": null,
+      "offensiveHits": 10,
+      "recording": {
+        "version": "orchestra-15",
+        "initial": {
+          "version": "orchestra-15",
+          "controlMode": "ai",
+          "phase": "battle",
+          "paused": false,
+          "tick": 0,
+          "time": 0,
+          "realTime": 0,
+          "focus": 100,
+          "timeMode": "normal",
+          "rng": 1307,
+          "config": {
+            "bonusMode": "strong",
+            "enemyHpScale": 1,
+            "atbMax": 4,
+            "seed": 1307,
+            "atbRate": 0.85,
+            "atbMode": "idle",
+            "chainActions": true,
+            "moveTime": 0.85,
+            "shiftTime": 0.65,
+            "slowDrain": 4,
+            "enemyPower": 1,
+            "uiMode": "separate",
+            "encounter": 1
+          },
+          "encounter": 1,
+          "selected": 0,
+          "pendingSelect": null,
+          "handoffSlow": 0,
+          "allies": [
+            {
+              "id": 0,
+              "name": "アルト",
+              "initial": "A",
+              "color": "#ddaa63",
+              "hp": 1300,
+              "maxHp": 1300,
+              "atb": 1,
+              "row": "front",
+              "weapons": [
+                "sword",
+                "shield"
+              ],
+              "slot": 0,
+              "nextSlot": null,
+              "nextRow": null,
+              "shift": 0,
+              "move": 0,
+              "action": null,
+              "queued": null,
+              "draft": [],
+              "sequences": [],
+              "shield": 0,
+              "executionHeld": false
+            },
+            {
+              "id": 1,
+              "name": "リネ",
+              "initial": "L",
+              "color": "#77bdc2",
+              "hp": 1100,
+              "maxHp": 1100,
+              "atb": 1,
+              "row": "front",
+              "weapons": [
+                "staff",
+                "bow"
+              ],
+              "slot": 0,
+              "nextSlot": null,
+              "nextRow": null,
+              "shift": 0,
+              "move": 0,
+              "action": null,
+              "queued": null,
+              "draft": [],
+              "sequences": [],
+              "shield": 0,
+              "executionHeld": false
+            },
+            {
+              "id": 2,
+              "name": "セナ",
+              "initial": "S",
+              "color": "#bea4dc",
+              "hp": 1150,
+              "maxHp": 1150,
+              "atb": 1,
+              "row": "front",
+              "weapons": [
+                "bell",
+                "hook"
+              ],
+              "slot": 1,
+              "nextSlot": null,
+              "nextRow": null,
+              "shift": 0,
+              "move": 0,
+              "action": null,
+              "queued": null,
+              "draft": [],
+              "sequences": [],
+              "shield": 0,
+              "executionHeld": false
+            }
+          ],
+          "enemies": [
+            {
+              "id": 0,
+              "name": "鐘楼の衛兵",
+              "glyph": "♜",
+              "kind": "guard",
+              "hp": 2000,
+              "maxHp": 2000,
+              "row": "front",
+              "chain": 200,
+              "hold": 0,
+              "broken": 12,
+              "nextAttack": 999,
+              "steadfast": 0,
+              "attackCount": 0,
+              "cast": null
+            }
+          ],
+          "presets": [
+            {
+              "name": "均衡の調べ",
+              "slots": [
+                0,
+                0,
+                0
+              ],
+              "rows": [
+                "front",
+                "back",
+                "back"
+              ]
+            },
+            {
+              "name": "崩しの連奏",
+              "slots": [
+                0,
+                0,
+                1
+              ],
+              "rows": [
+                "front",
+                "front",
+                "back"
+              ]
+            },
+            {
+              "name": "終幕の一撃",
+              "slots": [
+                0,
+                1,
+                1
+              ],
+              "rows": [
+                "front",
+                "back",
+                "back"
+              ]
+            },
+            {
+              "name": "崩し・防護・支援",
+              "slots": [
+                1,
+                0,
+                0
+              ],
+              "rows": [
+                "back",
+                "back",
+                "back"
+              ]
+            }
+          ],
+          "formations": [
+            {
+              "name": "全員後列",
+              "rows": [
+                "back",
+                "back",
+                "back"
+              ]
+            },
+            {
+              "name": "前衛1・後衛2",
+              "rows": [
+                "front",
+                "back",
+                "back"
+              ]
+            },
+            {
+              "name": "全員前列",
+              "rows": [
+                "front",
+                "front",
+                "front"
+              ]
+            }
+          ],
+          "activePreset": 1,
+          "inventory": [
+            "sword",
+            "shield",
+            "staff",
+            "bow",
+            "bell",
+            "hook"
+          ],
+          "potions": 3,
+          "events": [],
+          "eventSeq": 0,
+          "metrics": {
+            "damage": 0,
+            "taken": 0,
+            "healed": 0,
+            "breaks": 0,
+            "inputs": 0,
+            "focusUsed": 0
+          }
+        },
+        "inputs": [],
+        "endTick": 512
+      },
+      "finalStateHash": "6127902eaf6ea232f4aa7c26fb7689c4c47b8876397d009e4abf5b3a9af2515e",
+      "replayVerified": true
+    },
+    {
+      "fixture": "hp2000-chain200",
+      "enemyHp": 2000,
+      "initialChain": 200,
+      "initialStateHash": "e2d67ac7c632c4d37f9b5d5f1af497c0e2ed9486fd8a4120d933ef989759d5eb",
+      "policy": "aab-now",
+      "damage": 2000,
+      "chainPeak": 269.875,
+      "killSeconds": 7.433333333333312,
+      "observedSeconds": 7.433333333333312,
+      "switchIssuedSeconds": 0,
+      "switchCompletedSeconds": 0.6500000000000004,
+      "offensiveHits": 7,
+      "recording": {
+        "version": "orchestra-15",
+        "initial": {
+          "version": "orchestra-15",
+          "controlMode": "ai",
+          "phase": "battle",
+          "paused": false,
+          "tick": 0,
+          "time": 0,
+          "realTime": 0,
+          "focus": 100,
+          "timeMode": "normal",
+          "rng": 1307,
+          "config": {
+            "bonusMode": "strong",
+            "enemyHpScale": 1,
+            "atbMax": 4,
+            "seed": 1307,
+            "atbRate": 0.85,
+            "atbMode": "idle",
+            "chainActions": true,
+            "moveTime": 0.85,
+            "shiftTime": 0.65,
+            "slowDrain": 4,
+            "enemyPower": 1,
+            "uiMode": "separate",
+            "encounter": 1
+          },
+          "encounter": 1,
+          "selected": 0,
+          "pendingSelect": null,
+          "handoffSlow": 0,
+          "allies": [
+            {
+              "id": 0,
+              "name": "アルト",
+              "initial": "A",
+              "color": "#ddaa63",
+              "hp": 1300,
+              "maxHp": 1300,
+              "atb": 1,
+              "row": "front",
+              "weapons": [
+                "sword",
+                "shield"
+              ],
+              "slot": 0,
+              "nextSlot": null,
+              "nextRow": null,
+              "shift": 0,
+              "move": 0,
+              "action": null,
+              "queued": null,
+              "draft": [],
+              "sequences": [],
+              "shield": 0,
+              "executionHeld": false
+            },
+            {
+              "id": 1,
+              "name": "リネ",
+              "initial": "L",
+              "color": "#77bdc2",
+              "hp": 1100,
+              "maxHp": 1100,
+              "atb": 1,
+              "row": "front",
+              "weapons": [
+                "staff",
+                "bow"
+              ],
+              "slot": 0,
+              "nextSlot": null,
+              "nextRow": null,
+              "shift": 0,
+              "move": 0,
+              "action": null,
+              "queued": null,
+              "draft": [],
+              "sequences": [],
+              "shield": 0,
+              "executionHeld": false
+            },
+            {
+              "id": 2,
+              "name": "セナ",
+              "initial": "S",
+              "color": "#bea4dc",
+              "hp": 1150,
+              "maxHp": 1150,
+              "atb": 1,
+              "row": "front",
+              "weapons": [
+                "bell",
+                "hook"
+              ],
+              "slot": 1,
+              "nextSlot": null,
+              "nextRow": null,
+              "shift": 0,
+              "move": 0,
+              "action": null,
+              "queued": null,
+              "draft": [],
+              "sequences": [],
+              "shield": 0,
+              "executionHeld": false
+            }
+          ],
+          "enemies": [
+            {
+              "id": 0,
+              "name": "鐘楼の衛兵",
+              "glyph": "♜",
+              "kind": "guard",
+              "hp": 2000,
+              "maxHp": 2000,
+              "row": "front",
+              "chain": 200,
+              "hold": 0,
+              "broken": 12,
+              "nextAttack": 999,
+              "steadfast": 0,
+              "attackCount": 0,
+              "cast": null
+            }
+          ],
+          "presets": [
+            {
+              "name": "均衡の調べ",
+              "slots": [
+                0,
+                0,
+                0
+              ],
+              "rows": [
+                "front",
+                "back",
+                "back"
+              ]
+            },
+            {
+              "name": "崩しの連奏",
+              "slots": [
+                0,
+                0,
+                1
+              ],
+              "rows": [
+                "front",
+                "front",
+                "back"
+              ]
+            },
+            {
+              "name": "終幕の一撃",
+              "slots": [
+                0,
+                1,
+                1
+              ],
+              "rows": [
+                "front",
+                "back",
+                "back"
+              ]
+            },
+            {
+              "name": "崩し・防護・支援",
+              "slots": [
+                1,
+                0,
+                0
+              ],
+              "rows": [
+                "back",
+                "back",
+                "back"
+              ]
+            }
+          ],
+          "formations": [
+            {
+              "name": "全員後列",
+              "rows": [
+                "back",
+                "back",
+                "back"
+              ]
+            },
+            {
+              "name": "前衛1・後衛2",
+              "rows": [
+                "front",
+                "back",
+                "back"
+              ]
+            },
+            {
+              "name": "全員前列",
+              "rows": [
+                "front",
+                "front",
+                "front"
+              ]
+            }
+          ],
+          "activePreset": 1,
+          "inventory": [
+            "sword",
+            "shield",
+            "staff",
+            "bow",
+            "bell",
+            "hook"
+          ],
+          "potions": 3,
+          "events": [],
+          "eventSeq": 0,
+          "metrics": {
+            "damage": 0,
+            "taken": 0,
+            "healed": 0,
+            "breaks": 0,
+            "inputs": 0,
+            "focusUsed": 0
+          }
+        },
+        "inputs": [
+          {
+            "tick": 0,
+            "order": 0,
+            "command": {
+              "type": "optima",
+              "index": 2
+            }
+          }
+        ],
+        "endTick": 446
+      },
+      "finalStateHash": "d2c5b9f9ddeb7328b722ee090a238f3441a47d308153fabab0e5f45a5a0d7665",
+      "replayVerified": true
+    },
+    {
+      "fixture": "hp2000-chain200",
+      "enemyHp": 2000,
+      "initialChain": 200,
+      "initialStateHash": "e2d67ac7c632c4d37f9b5d5f1af497c0e2ed9486fd8a4120d933ef989759d5eb",
+      "policy": "aab-after-4s",
+      "damage": 2000,
+      "chainPeak": 360.5,
+      "killSeconds": 8.283333333333324,
+      "observedSeconds": 8.283333333333324,
+      "switchIssuedSeconds": 3.9999999999999907,
+      "switchCompletedSeconds": 4.933333333333321,
+      "offensiveHits": 9,
+      "recording": {
+        "version": "orchestra-15",
+        "initial": {
+          "version": "orchestra-15",
+          "controlMode": "ai",
+          "phase": "battle",
+          "paused": false,
+          "tick": 0,
+          "time": 0,
+          "realTime": 0,
+          "focus": 100,
+          "timeMode": "normal",
+          "rng": 1307,
+          "config": {
+            "bonusMode": "strong",
+            "enemyHpScale": 1,
+            "atbMax": 4,
+            "seed": 1307,
+            "atbRate": 0.85,
+            "atbMode": "idle",
+            "chainActions": true,
+            "moveTime": 0.85,
+            "shiftTime": 0.65,
+            "slowDrain": 4,
+            "enemyPower": 1,
+            "uiMode": "separate",
+            "encounter": 1
+          },
+          "encounter": 1,
+          "selected": 0,
+          "pendingSelect": null,
+          "handoffSlow": 0,
+          "allies": [
+            {
+              "id": 0,
+              "name": "アルト",
+              "initial": "A",
+              "color": "#ddaa63",
+              "hp": 1300,
+              "maxHp": 1300,
+              "atb": 1,
+              "row": "front",
+              "weapons": [
+                "sword",
+                "shield"
+              ],
+              "slot": 0,
+              "nextSlot": null,
+              "nextRow": null,
+              "shift": 0,
+              "move": 0,
+              "action": null,
+              "queued": null,
+              "draft": [],
+              "sequences": [],
+              "shield": 0,
+              "executionHeld": false
+            },
+            {
+              "id": 1,
+              "name": "リネ",
+              "initial": "L",
+              "color": "#77bdc2",
+              "hp": 1100,
+              "maxHp": 1100,
+              "atb": 1,
+              "row": "front",
+              "weapons": [
+                "staff",
+                "bow"
+              ],
+              "slot": 0,
+              "nextSlot": null,
+              "nextRow": null,
+              "shift": 0,
+              "move": 0,
+              "action": null,
+              "queued": null,
+              "draft": [],
+              "sequences": [],
+              "shield": 0,
+              "executionHeld": false
+            },
+            {
+              "id": 2,
+              "name": "セナ",
+              "initial": "S",
+              "color": "#bea4dc",
+              "hp": 1150,
+              "maxHp": 1150,
+              "atb": 1,
+              "row": "front",
+              "weapons": [
+                "bell",
+                "hook"
+              ],
+              "slot": 1,
+              "nextSlot": null,
+              "nextRow": null,
+              "shift": 0,
+              "move": 0,
+              "action": null,
+              "queued": null,
+              "draft": [],
+              "sequences": [],
+              "shield": 0,
+              "executionHeld": false
+            }
+          ],
+          "enemies": [
+            {
+              "id": 0,
+              "name": "鐘楼の衛兵",
+              "glyph": "♜",
+              "kind": "guard",
+              "hp": 2000,
+              "maxHp": 2000,
+              "row": "front",
+              "chain": 200,
+              "hold": 0,
+              "broken": 12,
+              "nextAttack": 999,
+              "steadfast": 0,
+              "attackCount": 0,
+              "cast": null
+            }
+          ],
+          "presets": [
+            {
+              "name": "均衡の調べ",
+              "slots": [
+                0,
+                0,
+                0
+              ],
+              "rows": [
+                "front",
+                "back",
+                "back"
+              ]
+            },
+            {
+              "name": "崩しの連奏",
+              "slots": [
+                0,
+                0,
+                1
+              ],
+              "rows": [
+                "front",
+                "front",
+                "back"
+              ]
+            },
+            {
+              "name": "終幕の一撃",
+              "slots": [
+                0,
+                1,
+                1
+              ],
+              "rows": [
+                "front",
+                "back",
+                "back"
+              ]
+            },
+            {
+              "name": "崩し・防護・支援",
+              "slots": [
+                1,
+                0,
+                0
+              ],
+              "rows": [
+                "back",
+                "back",
+                "back"
+              ]
+            }
+          ],
+          "formations": [
+            {
+              "name": "全員後列",
+              "rows": [
+                "back",
+                "back",
+                "back"
+              ]
+            },
+            {
+              "name": "前衛1・後衛2",
+              "rows": [
+                "front",
+                "back",
+                "back"
+              ]
+            },
+            {
+              "name": "全員前列",
+              "rows": [
+                "front",
+                "front",
+                "front"
+              ]
+            }
+          ],
+          "activePreset": 1,
+          "inventory": [
+            "sword",
+            "shield",
+            "staff",
+            "bow",
+            "bell",
+            "hook"
+          ],
+          "potions": 3,
+          "events": [],
+          "eventSeq": 0,
+          "metrics": {
+            "damage": 0,
+            "taken": 0,
+            "healed": 0,
+            "breaks": 0,
+            "inputs": 0,
+            "focusUsed": 0
+          }
+        },
+        "inputs": [
+          {
+            "tick": 240,
+            "order": 0,
+            "command": {
+              "type": "optima",
+              "index": 2
+            }
+          }
+        ],
+        "endTick": 497
+      },
+      "finalStateHash": "2b49ff348bebbac54a38fd21f3af2efed30e96530b6782eeb137dce2c20267c0",
+      "replayVerified": true
+    },
+    {
+      "fixture": "hp2000-chain200",
+      "enemyHp": 2000,
+      "initialChain": 200,
+      "initialStateHash": "e2d67ac7c632c4d37f9b5d5f1af497c0e2ed9486fd8a4120d933ef989759d5eb",
+      "policy": "aab-after-8s",
+      "damage": 2000,
+      "chainPeak": 398,
+      "killSeconds": 8.533333333333337,
+      "observedSeconds": 8.533333333333337,
+      "switchIssuedSeconds": 7.999999999999977,
+      "switchCompletedSeconds": null,
+      "offensiveHits": 10,
+      "recording": {
+        "version": "orchestra-15",
+        "initial": {
+          "version": "orchestra-15",
+          "controlMode": "ai",
+          "phase": "battle",
+          "paused": false,
+          "tick": 0,
+          "time": 0,
+          "realTime": 0,
+          "focus": 100,
+          "timeMode": "normal",
+          "rng": 1307,
+          "config": {
+            "bonusMode": "strong",
+            "enemyHpScale": 1,
+            "atbMax": 4,
+            "seed": 1307,
+            "atbRate": 0.85,
+            "atbMode": "idle",
+            "chainActions": true,
+            "moveTime": 0.85,
+            "shiftTime": 0.65,
+            "slowDrain": 4,
+            "enemyPower": 1,
+            "uiMode": "separate",
+            "encounter": 1
+          },
+          "encounter": 1,
+          "selected": 0,
+          "pendingSelect": null,
+          "handoffSlow": 0,
+          "allies": [
+            {
+              "id": 0,
+              "name": "アルト",
+              "initial": "A",
+              "color": "#ddaa63",
+              "hp": 1300,
+              "maxHp": 1300,
+              "atb": 1,
+              "row": "front",
+              "weapons": [
+                "sword",
+                "shield"
+              ],
+              "slot": 0,
+              "nextSlot": null,
+              "nextRow": null,
+              "shift": 0,
+              "move": 0,
+              "action": null,
+              "queued": null,
+              "draft": [],
+              "sequences": [],
+              "shield": 0,
+              "executionHeld": false
+            },
+            {
+              "id": 1,
+              "name": "リネ",
+              "initial": "L",
+              "color": "#77bdc2",
+              "hp": 1100,
+              "maxHp": 1100,
+              "atb": 1,
+              "row": "front",
+              "weapons": [
+                "staff",
+                "bow"
+              ],
+              "slot": 0,
+              "nextSlot": null,
+              "nextRow": null,
+              "shift": 0,
+              "move": 0,
+              "action": null,
+              "queued": null,
+              "draft": [],
+              "sequences": [],
+              "shield": 0,
+              "executionHeld": false
+            },
+            {
+              "id": 2,
+              "name": "セナ",
+              "initial": "S",
+              "color": "#bea4dc",
+              "hp": 1150,
+              "maxHp": 1150,
+              "atb": 1,
+              "row": "front",
+              "weapons": [
+                "bell",
+                "hook"
+              ],
+              "slot": 1,
+              "nextSlot": null,
+              "nextRow": null,
+              "shift": 0,
+              "move": 0,
+              "action": null,
+              "queued": null,
+              "draft": [],
+              "sequences": [],
+              "shield": 0,
+              "executionHeld": false
+            }
+          ],
+          "enemies": [
+            {
+              "id": 0,
+              "name": "鐘楼の衛兵",
+              "glyph": "♜",
+              "kind": "guard",
+              "hp": 2000,
+              "maxHp": 2000,
+              "row": "front",
+              "chain": 200,
+              "hold": 0,
+              "broken": 12,
+              "nextAttack": 999,
+              "steadfast": 0,
+              "attackCount": 0,
+              "cast": null
+            }
+          ],
+          "presets": [
+            {
+              "name": "均衡の調べ",
+              "slots": [
+                0,
+                0,
+                0
+              ],
+              "rows": [
+                "front",
+                "back",
+                "back"
+              ]
+            },
+            {
+              "name": "崩しの連奏",
+              "slots": [
+                0,
+                0,
+                1
+              ],
+              "rows": [
+                "front",
+                "front",
+                "back"
+              ]
+            },
+            {
+              "name": "終幕の一撃",
+              "slots": [
+                0,
+                1,
+                1
+              ],
+              "rows": [
+                "front",
+                "back",
+                "back"
+              ]
+            },
+            {
+              "name": "崩し・防護・支援",
+              "slots": [
+                1,
+                0,
+                0
+              ],
+              "rows": [
+                "back",
+                "back",
+                "back"
+              ]
+            }
+          ],
+          "formations": [
+            {
+              "name": "全員後列",
+              "rows": [
+                "back",
+                "back",
+                "back"
+              ]
+            },
+            {
+              "name": "前衛1・後衛2",
+              "rows": [
+                "front",
+                "back",
+                "back"
+              ]
+            },
+            {
+              "name": "全員前列",
+              "rows": [
+                "front",
+                "front",
+                "front"
+              ]
+            }
+          ],
+          "activePreset": 1,
+          "inventory": [
+            "sword",
+            "shield",
+            "staff",
+            "bow",
+            "bell",
+            "hook"
+          ],
+          "potions": 3,
+          "events": [],
+          "eventSeq": 0,
+          "metrics": {
+            "damage": 0,
+            "taken": 0,
+            "healed": 0,
+            "breaks": 0,
+            "inputs": 0,
+            "focusUsed": 0
+          }
+        },
+        "inputs": [
+          {
+            "tick": 480,
+            "order": 0,
+            "command": {
+              "type": "optima",
+              "index": 2
+            }
+          }
+        ],
+        "endTick": 512
+      },
+      "finalStateHash": "68562feed124ad81d5000dbf470c0784770febd2c5422a7f545e23c6a91f6024",
+      "replayVerified": true
+    },
+    {
+      "fixture": "hp2000-chain300",
+      "enemyHp": 2000,
+      "initialChain": 300,
+      "initialStateHash": "a12dbdf1dc55a9110280136fa84a4fdcfe725c1a6a12a37b6b61b1441a21e545",
+      "policy": "keep-abb",
+      "damage": 2000,
+      "chainPeak": 434,
+      "killSeconds": 7.433333333333312,
+      "observedSeconds": 7.433333333333312,
+      "switchIssuedSeconds": null,
+      "switchCompletedSeconds": null,
+      "offensiveHits": 7,
+      "recording": {
+        "version": "orchestra-15",
+        "initial": {
+          "version": "orchestra-15",
+          "controlMode": "ai",
+          "phase": "battle",
+          "paused": false,
+          "tick": 0,
+          "time": 0,
+          "realTime": 0,
+          "focus": 100,
+          "timeMode": "normal",
+          "rng": 1307,
+          "config": {
+            "bonusMode": "strong",
+            "enemyHpScale": 1,
+            "atbMax": 4,
+            "seed": 1307,
+            "atbRate": 0.85,
+            "atbMode": "idle",
+            "chainActions": true,
+            "moveTime": 0.85,
+            "shiftTime": 0.65,
+            "slowDrain": 4,
+            "enemyPower": 1,
+            "uiMode": "separate",
+            "encounter": 1
+          },
+          "encounter": 1,
+          "selected": 0,
+          "pendingSelect": null,
+          "handoffSlow": 0,
+          "allies": [
+            {
+              "id": 0,
+              "name": "アルト",
+              "initial": "A",
+              "color": "#ddaa63",
+              "hp": 1300,
+              "maxHp": 1300,
+              "atb": 1,
+              "row": "front",
+              "weapons": [
+                "sword",
+                "shield"
+              ],
+              "slot": 0,
+              "nextSlot": null,
+              "nextRow": null,
+              "shift": 0,
+              "move": 0,
+              "action": null,
+              "queued": null,
+              "draft": [],
+              "sequences": [],
+              "shield": 0,
+              "executionHeld": false
+            },
+            {
+              "id": 1,
+              "name": "リネ",
+              "initial": "L",
+              "color": "#77bdc2",
+              "hp": 1100,
+              "maxHp": 1100,
+              "atb": 1,
+              "row": "front",
+              "weapons": [
+                "staff",
+                "bow"
+              ],
+              "slot": 0,
+              "nextSlot": null,
+              "nextRow": null,
+              "shift": 0,
+              "move": 0,
+              "action": null,
+              "queued": null,
+              "draft": [],
+              "sequences": [],
+              "shield": 0,
+              "executionHeld": false
+            },
+            {
+              "id": 2,
+              "name": "セナ",
+              "initial": "S",
+              "color": "#bea4dc",
+              "hp": 1150,
+              "maxHp": 1150,
+              "atb": 1,
+              "row": "front",
+              "weapons": [
+                "bell",
+                "hook"
+              ],
+              "slot": 1,
+              "nextSlot": null,
+              "nextRow": null,
+              "shift": 0,
+              "move": 0,
+              "action": null,
+              "queued": null,
+              "draft": [],
+              "sequences": [],
+              "shield": 0,
+              "executionHeld": false
+            }
+          ],
+          "enemies": [
+            {
+              "id": 0,
+              "name": "鐘楼の衛兵",
+              "glyph": "♜",
+              "kind": "guard",
+              "hp": 2000,
+              "maxHp": 2000,
+              "row": "front",
+              "chain": 300,
+              "hold": 0,
+              "broken": 12,
+              "nextAttack": 999,
+              "steadfast": 0,
+              "attackCount": 0,
+              "cast": null
+            }
+          ],
+          "presets": [
+            {
+              "name": "均衡の調べ",
+              "slots": [
+                0,
+                0,
+                0
+              ],
+              "rows": [
+                "front",
+                "back",
+                "back"
+              ]
+            },
+            {
+              "name": "崩しの連奏",
+              "slots": [
+                0,
+                0,
+                1
+              ],
+              "rows": [
+                "front",
+                "front",
+                "back"
+              ]
+            },
+            {
+              "name": "終幕の一撃",
+              "slots": [
+                0,
+                1,
+                1
+              ],
+              "rows": [
+                "front",
+                "back",
+                "back"
+              ]
+            },
+            {
+              "name": "崩し・防護・支援",
+              "slots": [
+                1,
+                0,
+                0
+              ],
+              "rows": [
+                "back",
+                "back",
+                "back"
+              ]
+            }
+          ],
+          "formations": [
+            {
+              "name": "全員後列",
+              "rows": [
+                "back",
+                "back",
+                "back"
+              ]
+            },
+            {
+              "name": "前衛1・後衛2",
+              "rows": [
+                "front",
+                "back",
+                "back"
+              ]
+            },
+            {
+              "name": "全員前列",
+              "rows": [
+                "front",
+                "front",
+                "front"
+              ]
+            }
+          ],
+          "activePreset": 1,
+          "inventory": [
+            "sword",
+            "shield",
+            "staff",
+            "bow",
+            "bell",
+            "hook"
+          ],
+          "potions": 3,
+          "events": [],
+          "eventSeq": 0,
+          "metrics": {
+            "damage": 0,
+            "taken": 0,
+            "healed": 0,
+            "breaks": 0,
+            "inputs": 0,
+            "focusUsed": 0
+          }
+        },
+        "inputs": [],
+        "endTick": 446
+      },
+      "finalStateHash": "db599db1ee279387b2dccf6cff129425f5108facc59d7af29a8f6b8df61447df",
+      "replayVerified": true
+    },
+    {
+      "fixture": "hp2000-chain300",
+      "enemyHp": 2000,
+      "initialChain": 300,
+      "initialStateHash": "a12dbdf1dc55a9110280136fa84a4fdcfe725c1a6a12a37b6b61b1441a21e545",
+      "policy": "aab-now",
+      "damage": 2000,
+      "chainPeak": 365,
+      "killSeconds": 4.033333333333324,
+      "observedSeconds": 4.033333333333324,
+      "switchIssuedSeconds": 0,
+      "switchCompletedSeconds": 0.6500000000000004,
+      "offensiveHits": 6,
+      "recording": {
+        "version": "orchestra-15",
+        "initial": {
+          "version": "orchestra-15",
+          "controlMode": "ai",
+          "phase": "battle",
+          "paused": false,
+          "tick": 0,
+          "time": 0,
+          "realTime": 0,
+          "focus": 100,
+          "timeMode": "normal",
+          "rng": 1307,
+          "config": {
+            "bonusMode": "strong",
+            "enemyHpScale": 1,
+            "atbMax": 4,
+            "seed": 1307,
+            "atbRate": 0.85,
+            "atbMode": "idle",
+            "chainActions": true,
+            "moveTime": 0.85,
+            "shiftTime": 0.65,
+            "slowDrain": 4,
+            "enemyPower": 1,
+            "uiMode": "separate",
+            "encounter": 1
+          },
+          "encounter": 1,
+          "selected": 0,
+          "pendingSelect": null,
+          "handoffSlow": 0,
+          "allies": [
+            {
+              "id": 0,
+              "name": "アルト",
+              "initial": "A",
+              "color": "#ddaa63",
+              "hp": 1300,
+              "maxHp": 1300,
+              "atb": 1,
+              "row": "front",
+              "weapons": [
+                "sword",
+                "shield"
+              ],
+              "slot": 0,
+              "nextSlot": null,
+              "nextRow": null,
+              "shift": 0,
+              "move": 0,
+              "action": null,
+              "queued": null,
+              "draft": [],
+              "sequences": [],
+              "shield": 0,
+              "executionHeld": false
+            },
+            {
+              "id": 1,
+              "name": "リネ",
+              "initial": "L",
+              "color": "#77bdc2",
+              "hp": 1100,
+              "maxHp": 1100,
+              "atb": 1,
+              "row": "front",
+              "weapons": [
+                "staff",
+                "bow"
+              ],
+              "slot": 0,
+              "nextSlot": null,
+              "nextRow": null,
+              "shift": 0,
+              "move": 0,
+              "action": null,
+              "queued": null,
+              "draft": [],
+              "sequences": [],
+              "shield": 0,
+              "executionHeld": false
+            },
+            {
+              "id": 2,
+              "name": "セナ",
+              "initial": "S",
+              "color": "#bea4dc",
+              "hp": 1150,
+              "maxHp": 1150,
+              "atb": 1,
+              "row": "front",
+              "weapons": [
+                "bell",
+                "hook"
+              ],
+              "slot": 1,
+              "nextSlot": null,
+              "nextRow": null,
+              "shift": 0,
+              "move": 0,
+              "action": null,
+              "queued": null,
+              "draft": [],
+              "sequences": [],
+              "shield": 0,
+              "executionHeld": false
+            }
+          ],
+          "enemies": [
+            {
+              "id": 0,
+              "name": "鐘楼の衛兵",
+              "glyph": "♜",
+              "kind": "guard",
+              "hp": 2000,
+              "maxHp": 2000,
+              "row": "front",
+              "chain": 300,
+              "hold": 0,
+              "broken": 12,
+              "nextAttack": 999,
+              "steadfast": 0,
+              "attackCount": 0,
+              "cast": null
+            }
+          ],
+          "presets": [
+            {
+              "name": "均衡の調べ",
+              "slots": [
+                0,
+                0,
+                0
+              ],
+              "rows": [
+                "front",
+                "back",
+                "back"
+              ]
+            },
+            {
+              "name": "崩しの連奏",
+              "slots": [
+                0,
+                0,
+                1
+              ],
+              "rows": [
+                "front",
+                "front",
+                "back"
+              ]
+            },
+            {
+              "name": "終幕の一撃",
+              "slots": [
+                0,
+                1,
+                1
+              ],
+              "rows": [
+                "front",
+                "back",
+                "back"
+              ]
+            },
+            {
+              "name": "崩し・防護・支援",
+              "slots": [
+                1,
+                0,
+                0
+              ],
+              "rows": [
+                "back",
+                "back",
+                "back"
+              ]
+            }
+          ],
+          "formations": [
+            {
+              "name": "全員後列",
+              "rows": [
+                "back",
+                "back",
+                "back"
+              ]
+            },
+            {
+              "name": "前衛1・後衛2",
+              "rows": [
+                "front",
+                "back",
+                "back"
+              ]
+            },
+            {
+              "name": "全員前列",
+              "rows": [
+                "front",
+                "front",
+                "front"
+              ]
+            }
+          ],
+          "activePreset": 1,
+          "inventory": [
+            "sword",
+            "shield",
+            "staff",
+            "bow",
+            "bell",
+            "hook"
+          ],
+          "potions": 3,
+          "events": [],
+          "eventSeq": 0,
+          "metrics": {
+            "damage": 0,
+            "taken": 0,
+            "healed": 0,
+            "breaks": 0,
+            "inputs": 0,
+            "focusUsed": 0
+          }
+        },
+        "inputs": [
+          {
+            "tick": 0,
+            "order": 0,
+            "command": {
+              "type": "optima",
+              "index": 2
+            }
+          }
+        ],
+        "endTick": 242
+      },
+      "finalStateHash": "7cca9e00ae02df826ef76a5ad1596655828801921de553c3ffc328c5c8e2d5d9",
+      "replayVerified": true
+    },
+    {
+      "fixture": "hp2000-chain300",
+      "enemyHp": 2000,
+      "initialChain": 300,
+      "initialStateHash": "a12dbdf1dc55a9110280136fa84a4fdcfe725c1a6a12a37b6b61b1441a21e545",
+      "policy": "aab-after-4s",
+      "damage": 2000,
+      "chainPeak": 432.875,
+      "killSeconds": 7.433333333333312,
+      "observedSeconds": 7.433333333333312,
+      "switchIssuedSeconds": 3.9999999999999907,
+      "switchCompletedSeconds": 4.933333333333321,
+      "offensiveHits": 7,
+      "recording": {
+        "version": "orchestra-15",
+        "initial": {
+          "version": "orchestra-15",
+          "controlMode": "ai",
+          "phase": "battle",
+          "paused": false,
+          "tick": 0,
+          "time": 0,
+          "realTime": 0,
+          "focus": 100,
+          "timeMode": "normal",
+          "rng": 1307,
+          "config": {
+            "bonusMode": "strong",
+            "enemyHpScale": 1,
+            "atbMax": 4,
+            "seed": 1307,
+            "atbRate": 0.85,
+            "atbMode": "idle",
+            "chainActions": true,
+            "moveTime": 0.85,
+            "shiftTime": 0.65,
+            "slowDrain": 4,
+            "enemyPower": 1,
+            "uiMode": "separate",
+            "encounter": 1
+          },
+          "encounter": 1,
+          "selected": 0,
+          "pendingSelect": null,
+          "handoffSlow": 0,
+          "allies": [
+            {
+              "id": 0,
+              "name": "アルト",
+              "initial": "A",
+              "color": "#ddaa63",
+              "hp": 1300,
+              "maxHp": 1300,
+              "atb": 1,
+              "row": "front",
+              "weapons": [
+                "sword",
+                "shield"
+              ],
+              "slot": 0,
+              "nextSlot": null,
+              "nextRow": null,
+              "shift": 0,
+              "move": 0,
+              "action": null,
+              "queued": null,
+              "draft": [],
+              "sequences": [],
+              "shield": 0,
+              "executionHeld": false
+            },
+            {
+              "id": 1,
+              "name": "リネ",
+              "initial": "L",
+              "color": "#77bdc2",
+              "hp": 1100,
+              "maxHp": 1100,
+              "atb": 1,
+              "row": "front",
+              "weapons": [
+                "staff",
+                "bow"
+              ],
+              "slot": 0,
+              "nextSlot": null,
+              "nextRow": null,
+              "shift": 0,
+              "move": 0,
+              "action": null,
+              "queued": null,
+              "draft": [],
+              "sequences": [],
+              "shield": 0,
+              "executionHeld": false
+            },
+            {
+              "id": 2,
+              "name": "セナ",
+              "initial": "S",
+              "color": "#bea4dc",
+              "hp": 1150,
+              "maxHp": 1150,
+              "atb": 1,
+              "row": "front",
+              "weapons": [
+                "bell",
+                "hook"
+              ],
+              "slot": 1,
+              "nextSlot": null,
+              "nextRow": null,
+              "shift": 0,
+              "move": 0,
+              "action": null,
+              "queued": null,
+              "draft": [],
+              "sequences": [],
+              "shield": 0,
+              "executionHeld": false
+            }
+          ],
+          "enemies": [
+            {
+              "id": 0,
+              "name": "鐘楼の衛兵",
+              "glyph": "♜",
+              "kind": "guard",
+              "hp": 2000,
+              "maxHp": 2000,
+              "row": "front",
+              "chain": 300,
+              "hold": 0,
+              "broken": 12,
+              "nextAttack": 999,
+              "steadfast": 0,
+              "attackCount": 0,
+              "cast": null
+            }
+          ],
+          "presets": [
+            {
+              "name": "均衡の調べ",
+              "slots": [
+                0,
+                0,
+                0
+              ],
+              "rows": [
+                "front",
+                "back",
+                "back"
+              ]
+            },
+            {
+              "name": "崩しの連奏",
+              "slots": [
+                0,
+                0,
+                1
+              ],
+              "rows": [
+                "front",
+                "front",
+                "back"
+              ]
+            },
+            {
+              "name": "終幕の一撃",
+              "slots": [
+                0,
+                1,
+                1
+              ],
+              "rows": [
+                "front",
+                "back",
+                "back"
+              ]
+            },
+            {
+              "name": "崩し・防護・支援",
+              "slots": [
+                1,
+                0,
+                0
+              ],
+              "rows": [
+                "back",
+                "back",
+                "back"
+              ]
+            }
+          ],
+          "formations": [
+            {
+              "name": "全員後列",
+              "rows": [
+                "back",
+                "back",
+                "back"
+              ]
+            },
+            {
+              "name": "前衛1・後衛2",
+              "rows": [
+                "front",
+                "back",
+                "back"
+              ]
+            },
+            {
+              "name": "全員前列",
+              "rows": [
+                "front",
+                "front",
+                "front"
+              ]
+            }
+          ],
+          "activePreset": 1,
+          "inventory": [
+            "sword",
+            "shield",
+            "staff",
+            "bow",
+            "bell",
+            "hook"
+          ],
+          "potions": 3,
+          "events": [],
+          "eventSeq": 0,
+          "metrics": {
+            "damage": 0,
+            "taken": 0,
+            "healed": 0,
+            "breaks": 0,
+            "inputs": 0,
+            "focusUsed": 0
+          }
+        },
+        "inputs": [
+          {
+            "tick": 240,
+            "order": 0,
+            "command": {
+              "type": "optima",
+              "index": 2
+            }
+          }
+        ],
+        "endTick": 446
+      },
+      "finalStateHash": "2eed095fda088156266e6d7ae98ac4c77d7427e9efba71c87e1870542446f4f0",
+      "replayVerified": true
+    },
+    {
+      "fixture": "hp2000-chain300",
+      "enemyHp": 2000,
+      "initialChain": 300,
+      "initialStateHash": "a12dbdf1dc55a9110280136fa84a4fdcfe725c1a6a12a37b6b61b1441a21e545",
+      "policy": "aab-after-8s",
+      "damage": 2000,
+      "chainPeak": 434,
+      "killSeconds": 7.433333333333312,
+      "observedSeconds": 7.433333333333312,
+      "switchIssuedSeconds": null,
+      "switchCompletedSeconds": null,
+      "offensiveHits": 7,
+      "recording": {
+        "version": "orchestra-15",
+        "initial": {
+          "version": "orchestra-15",
+          "controlMode": "ai",
+          "phase": "battle",
+          "paused": false,
+          "tick": 0,
+          "time": 0,
+          "realTime": 0,
+          "focus": 100,
+          "timeMode": "normal",
+          "rng": 1307,
+          "config": {
+            "bonusMode": "strong",
+            "enemyHpScale": 1,
+            "atbMax": 4,
+            "seed": 1307,
+            "atbRate": 0.85,
+            "atbMode": "idle",
+            "chainActions": true,
+            "moveTime": 0.85,
+            "shiftTime": 0.65,
+            "slowDrain": 4,
+            "enemyPower": 1,
+            "uiMode": "separate",
+            "encounter": 1
+          },
+          "encounter": 1,
+          "selected": 0,
+          "pendingSelect": null,
+          "handoffSlow": 0,
+          "allies": [
+            {
+              "id": 0,
+              "name": "アルト",
+              "initial": "A",
+              "color": "#ddaa63",
+              "hp": 1300,
+              "maxHp": 1300,
+              "atb": 1,
+              "row": "front",
+              "weapons": [
+                "sword",
+                "shield"
+              ],
+              "slot": 0,
+              "nextSlot": null,
+              "nextRow": null,
+              "shift": 0,
+              "move": 0,
+              "action": null,
+              "queued": null,
+              "draft": [],
+              "sequences": [],
+              "shield": 0,
+              "executionHeld": false
+            },
+            {
+              "id": 1,
+              "name": "リネ",
+              "initial": "L",
+              "color": "#77bdc2",
+              "hp": 1100,
+              "maxHp": 1100,
+              "atb": 1,
+              "row": "front",
+              "weapons": [
+                "staff",
+                "bow"
+              ],
+              "slot": 0,
+              "nextSlot": null,
+              "nextRow": null,
+              "shift": 0,
+              "move": 0,
+              "action": null,
+              "queued": null,
+              "draft": [],
+              "sequences": [],
+              "shield": 0,
+              "executionHeld": false
+            },
+            {
+              "id": 2,
+              "name": "セナ",
+              "initial": "S",
+              "color": "#bea4dc",
+              "hp": 1150,
+              "maxHp": 1150,
+              "atb": 1,
+              "row": "front",
+              "weapons": [
+                "bell",
+                "hook"
+              ],
+              "slot": 1,
+              "nextSlot": null,
+              "nextRow": null,
+              "shift": 0,
+              "move": 0,
+              "action": null,
+              "queued": null,
+              "draft": [],
+              "sequences": [],
+              "shield": 0,
+              "executionHeld": false
+            }
+          ],
+          "enemies": [
+            {
+              "id": 0,
+              "name": "鐘楼の衛兵",
+              "glyph": "♜",
+              "kind": "guard",
+              "hp": 2000,
+              "maxHp": 2000,
+              "row": "front",
+              "chain": 300,
+              "hold": 0,
+              "broken": 12,
+              "nextAttack": 999,
+              "steadfast": 0,
+              "attackCount": 0,
+              "cast": null
+            }
+          ],
+          "presets": [
+            {
+              "name": "均衡の調べ",
+              "slots": [
+                0,
+                0,
+                0
+              ],
+              "rows": [
+                "front",
+                "back",
+                "back"
+              ]
+            },
+            {
+              "name": "崩しの連奏",
+              "slots": [
+                0,
+                0,
+                1
+              ],
+              "rows": [
+                "front",
+                "front",
+                "back"
+              ]
+            },
+            {
+              "name": "終幕の一撃",
+              "slots": [
+                0,
+                1,
+                1
+              ],
+              "rows": [
+                "front",
+                "back",
+                "back"
+              ]
+            },
+            {
+              "name": "崩し・防護・支援",
+              "slots": [
+                1,
+                0,
+                0
+              ],
+              "rows": [
+                "back",
+                "back",
+                "back"
+              ]
+            }
+          ],
+          "formations": [
+            {
+              "name": "全員後列",
+              "rows": [
+                "back",
+                "back",
+                "back"
+              ]
+            },
+            {
+              "name": "前衛1・後衛2",
+              "rows": [
+                "front",
+                "back",
+                "back"
+              ]
+            },
+            {
+              "name": "全員前列",
+              "rows": [
+                "front",
+                "front",
+                "front"
+              ]
+            }
+          ],
+          "activePreset": 1,
+          "inventory": [
+            "sword",
+            "shield",
+            "staff",
+            "bow",
+            "bell",
+            "hook"
+          ],
+          "potions": 3,
+          "events": [],
+          "eventSeq": 0,
+          "metrics": {
+            "damage": 0,
+            "taken": 0,
+            "healed": 0,
+            "breaks": 0,
+            "inputs": 0,
+            "focusUsed": 0
+          }
+        },
+        "inputs": [],
+        "endTick": 446
+      },
+      "finalStateHash": "db599db1ee279387b2dccf6cff129425f5108facc59d7af29a8f6b8df61447df",
+      "replayVerified": true
+    },
+    {
+      "fixture": "hp5000-chain200",
+      "enemyHp": 5000,
+      "initialChain": 200,
+      "initialStateHash": "e8563e5f87f94a16e1128afadfd5baccd8c0e3530e45671f35a63b82e99056b6",
+      "policy": "keep-abb",
+      "damage": 2779,
+      "chainPeak": 456,
+      "killSeconds": null,
+      "observedSeconds": 12.000000000000176,
+      "switchIssuedSeconds": null,
+      "switchCompletedSeconds": null,
+      "offensiveHits": 12,
+      "recording": {
+        "version": "orchestra-15",
+        "initial": {
+          "version": "orchestra-15",
+          "controlMode": "ai",
+          "phase": "battle",
+          "paused": false,
+          "tick": 0,
+          "time": 0,
+          "realTime": 0,
+          "focus": 100,
+          "timeMode": "normal",
+          "rng": 1307,
+          "config": {
+            "bonusMode": "strong",
+            "enemyHpScale": 1,
+            "atbMax": 4,
+            "seed": 1307,
+            "atbRate": 0.85,
+            "atbMode": "idle",
+            "chainActions": true,
+            "moveTime": 0.85,
+            "shiftTime": 0.65,
+            "slowDrain": 4,
+            "enemyPower": 1,
+            "uiMode": "separate",
+            "encounter": 1
+          },
+          "encounter": 1,
+          "selected": 0,
+          "pendingSelect": null,
+          "handoffSlow": 0,
+          "allies": [
+            {
+              "id": 0,
+              "name": "アルト",
+              "initial": "A",
+              "color": "#ddaa63",
+              "hp": 1300,
+              "maxHp": 1300,
+              "atb": 1,
+              "row": "front",
+              "weapons": [
+                "sword",
+                "shield"
+              ],
+              "slot": 0,
+              "nextSlot": null,
+              "nextRow": null,
+              "shift": 0,
+              "move": 0,
+              "action": null,
+              "queued": null,
+              "draft": [],
+              "sequences": [],
+              "shield": 0,
+              "executionHeld": false
+            },
+            {
+              "id": 1,
+              "name": "リネ",
+              "initial": "L",
+              "color": "#77bdc2",
+              "hp": 1100,
+              "maxHp": 1100,
+              "atb": 1,
+              "row": "front",
+              "weapons": [
+                "staff",
+                "bow"
+              ],
+              "slot": 0,
+              "nextSlot": null,
+              "nextRow": null,
+              "shift": 0,
+              "move": 0,
+              "action": null,
+              "queued": null,
+              "draft": [],
+              "sequences": [],
+              "shield": 0,
+              "executionHeld": false
+            },
+            {
+              "id": 2,
+              "name": "セナ",
+              "initial": "S",
+              "color": "#bea4dc",
+              "hp": 1150,
+              "maxHp": 1150,
+              "atb": 1,
+              "row": "front",
+              "weapons": [
+                "bell",
+                "hook"
+              ],
+              "slot": 1,
+              "nextSlot": null,
+              "nextRow": null,
+              "shift": 0,
+              "move": 0,
+              "action": null,
+              "queued": null,
+              "draft": [],
+              "sequences": [],
+              "shield": 0,
+              "executionHeld": false
+            }
+          ],
+          "enemies": [
+            {
+              "id": 0,
+              "name": "鐘楼の衛兵",
+              "glyph": "♜",
+              "kind": "guard",
+              "hp": 5000,
+              "maxHp": 5000,
+              "row": "front",
+              "chain": 200,
+              "hold": 0,
+              "broken": 12,
+              "nextAttack": 999,
+              "steadfast": 0,
+              "attackCount": 0,
+              "cast": null
+            }
+          ],
+          "presets": [
+            {
+              "name": "均衡の調べ",
+              "slots": [
+                0,
+                0,
+                0
+              ],
+              "rows": [
+                "front",
+                "back",
+                "back"
+              ]
+            },
+            {
+              "name": "崩しの連奏",
+              "slots": [
+                0,
+                0,
+                1
+              ],
+              "rows": [
+                "front",
+                "front",
+                "back"
+              ]
+            },
+            {
+              "name": "終幕の一撃",
+              "slots": [
+                0,
+                1,
+                1
+              ],
+              "rows": [
+                "front",
+                "back",
+                "back"
+              ]
+            },
+            {
+              "name": "崩し・防護・支援",
+              "slots": [
+                1,
+                0,
+                0
+              ],
+              "rows": [
+                "back",
+                "back",
+                "back"
+              ]
+            }
+          ],
+          "formations": [
+            {
+              "name": "全員後列",
+              "rows": [
+                "back",
+                "back",
+                "back"
+              ]
+            },
+            {
+              "name": "前衛1・後衛2",
+              "rows": [
+                "front",
+                "back",
+                "back"
+              ]
+            },
+            {
+              "name": "全員前列",
+              "rows": [
+                "front",
+                "front",
+                "front"
+              ]
+            }
+          ],
+          "activePreset": 1,
+          "inventory": [
+            "sword",
+            "shield",
+            "staff",
+            "bow",
+            "bell",
+            "hook"
+          ],
+          "potions": 3,
+          "events": [],
+          "eventSeq": 0,
+          "metrics": {
+            "damage": 0,
+            "taken": 0,
+            "healed": 0,
+            "breaks": 0,
+            "inputs": 0,
+            "focusUsed": 0
+          }
+        },
+        "inputs": [],
+        "endTick": 720
+      },
+      "finalStateHash": "2b599a87b1d793a3cb0f6b16b22dde688a816eb3e6ba05d446ac22fb706701d7",
+      "replayVerified": true
+    },
+    {
+      "fixture": "hp5000-chain200",
+      "enemyHp": 5000,
+      "initialChain": 200,
+      "initialStateHash": "e8563e5f87f94a16e1128afadfd5baccd8c0e3530e45671f35a63b82e99056b6",
+      "policy": "aab-now",
+      "damage": 3818,
+      "chainPeak": 330,
+      "killSeconds": null,
+      "observedSeconds": 12.000000000000176,
+      "switchIssuedSeconds": 0,
+      "switchCompletedSeconds": 0.6500000000000004,
+      "offensiveHits": 12,
+      "recording": {
+        "version": "orchestra-15",
+        "initial": {
+          "version": "orchestra-15",
+          "controlMode": "ai",
+          "phase": "battle",
+          "paused": false,
+          "tick": 0,
+          "time": 0,
+          "realTime": 0,
+          "focus": 100,
+          "timeMode": "normal",
+          "rng": 1307,
+          "config": {
+            "bonusMode": "strong",
+            "enemyHpScale": 1,
+            "atbMax": 4,
+            "seed": 1307,
+            "atbRate": 0.85,
+            "atbMode": "idle",
+            "chainActions": true,
+            "moveTime": 0.85,
+            "shiftTime": 0.65,
+            "slowDrain": 4,
+            "enemyPower": 1,
+            "uiMode": "separate",
+            "encounter": 1
+          },
+          "encounter": 1,
+          "selected": 0,
+          "pendingSelect": null,
+          "handoffSlow": 0,
+          "allies": [
+            {
+              "id": 0,
+              "name": "アルト",
+              "initial": "A",
+              "color": "#ddaa63",
+              "hp": 1300,
+              "maxHp": 1300,
+              "atb": 1,
+              "row": "front",
+              "weapons": [
+                "sword",
+                "shield"
+              ],
+              "slot": 0,
+              "nextSlot": null,
+              "nextRow": null,
+              "shift": 0,
+              "move": 0,
+              "action": null,
+              "queued": null,
+              "draft": [],
+              "sequences": [],
+              "shield": 0,
+              "executionHeld": false
+            },
+            {
+              "id": 1,
+              "name": "リネ",
+              "initial": "L",
+              "color": "#77bdc2",
+              "hp": 1100,
+              "maxHp": 1100,
+              "atb": 1,
+              "row": "front",
+              "weapons": [
+                "staff",
+                "bow"
+              ],
+              "slot": 0,
+              "nextSlot": null,
+              "nextRow": null,
+              "shift": 0,
+              "move": 0,
+              "action": null,
+              "queued": null,
+              "draft": [],
+              "sequences": [],
+              "shield": 0,
+              "executionHeld": false
+            },
+            {
+              "id": 2,
+              "name": "セナ",
+              "initial": "S",
+              "color": "#bea4dc",
+              "hp": 1150,
+              "maxHp": 1150,
+              "atb": 1,
+              "row": "front",
+              "weapons": [
+                "bell",
+                "hook"
+              ],
+              "slot": 1,
+              "nextSlot": null,
+              "nextRow": null,
+              "shift": 0,
+              "move": 0,
+              "action": null,
+              "queued": null,
+              "draft": [],
+              "sequences": [],
+              "shield": 0,
+              "executionHeld": false
+            }
+          ],
+          "enemies": [
+            {
+              "id": 0,
+              "name": "鐘楼の衛兵",
+              "glyph": "♜",
+              "kind": "guard",
+              "hp": 5000,
+              "maxHp": 5000,
+              "row": "front",
+              "chain": 200,
+              "hold": 0,
+              "broken": 12,
+              "nextAttack": 999,
+              "steadfast": 0,
+              "attackCount": 0,
+              "cast": null
+            }
+          ],
+          "presets": [
+            {
+              "name": "均衡の調べ",
+              "slots": [
+                0,
+                0,
+                0
+              ],
+              "rows": [
+                "front",
+                "back",
+                "back"
+              ]
+            },
+            {
+              "name": "崩しの連奏",
+              "slots": [
+                0,
+                0,
+                1
+              ],
+              "rows": [
+                "front",
+                "front",
+                "back"
+              ]
+            },
+            {
+              "name": "終幕の一撃",
+              "slots": [
+                0,
+                1,
+                1
+              ],
+              "rows": [
+                "front",
+                "back",
+                "back"
+              ]
+            },
+            {
+              "name": "崩し・防護・支援",
+              "slots": [
+                1,
+                0,
+                0
+              ],
+              "rows": [
+                "back",
+                "back",
+                "back"
+              ]
+            }
+          ],
+          "formations": [
+            {
+              "name": "全員後列",
+              "rows": [
+                "back",
+                "back",
+                "back"
+              ]
+            },
+            {
+              "name": "前衛1・後衛2",
+              "rows": [
+                "front",
+                "back",
+                "back"
+              ]
+            },
+            {
+              "name": "全員前列",
+              "rows": [
+                "front",
+                "front",
+                "front"
+              ]
+            }
+          ],
+          "activePreset": 1,
+          "inventory": [
+            "sword",
+            "shield",
+            "staff",
+            "bow",
+            "bell",
+            "hook"
+          ],
+          "potions": 3,
+          "events": [],
+          "eventSeq": 0,
+          "metrics": {
+            "damage": 0,
+            "taken": 0,
+            "healed": 0,
+            "breaks": 0,
+            "inputs": 0,
+            "focusUsed": 0
+          }
+        },
+        "inputs": [
+          {
+            "tick": 0,
+            "order": 0,
+            "command": {
+              "type": "optima",
+              "index": 2
+            }
+          }
+        ],
+        "endTick": 720
+      },
+      "finalStateHash": "7533bf02f49b410609cae8b93605e7250eaa28289f3174926e86faa675a5b1cb",
+      "replayVerified": true
+    },
+    {
+      "fixture": "hp5000-chain200",
+      "enemyHp": 5000,
+      "initialChain": 200,
+      "initialStateHash": "e8563e5f87f94a16e1128afadfd5baccd8c0e3530e45671f35a63b82e99056b6",
+      "policy": "aab-after-4s",
+      "damage": 3699,
+      "chainPeak": 393,
+      "killSeconds": null,
+      "observedSeconds": 12.000000000000176,
+      "switchIssuedSeconds": 3.9999999999999907,
+      "switchCompletedSeconds": 4.933333333333321,
+      "offensiveHits": 12,
+      "recording": {
+        "version": "orchestra-15",
+        "initial": {
+          "version": "orchestra-15",
+          "controlMode": "ai",
+          "phase": "battle",
+          "paused": false,
+          "tick": 0,
+          "time": 0,
+          "realTime": 0,
+          "focus": 100,
+          "timeMode": "normal",
+          "rng": 1307,
+          "config": {
+            "bonusMode": "strong",
+            "enemyHpScale": 1,
+            "atbMax": 4,
+            "seed": 1307,
+            "atbRate": 0.85,
+            "atbMode": "idle",
+            "chainActions": true,
+            "moveTime": 0.85,
+            "shiftTime": 0.65,
+            "slowDrain": 4,
+            "enemyPower": 1,
+            "uiMode": "separate",
+            "encounter": 1
+          },
+          "encounter": 1,
+          "selected": 0,
+          "pendingSelect": null,
+          "handoffSlow": 0,
+          "allies": [
+            {
+              "id": 0,
+              "name": "アルト",
+              "initial": "A",
+              "color": "#ddaa63",
+              "hp": 1300,
+              "maxHp": 1300,
+              "atb": 1,
+              "row": "front",
+              "weapons": [
+                "sword",
+                "shield"
+              ],
+              "slot": 0,
+              "nextSlot": null,
+              "nextRow": null,
+              "shift": 0,
+              "move": 0,
+              "action": null,
+              "queued": null,
+              "draft": [],
+              "sequences": [],
+              "shield": 0,
+              "executionHeld": false
+            },
+            {
+              "id": 1,
+              "name": "リネ",
+              "initial": "L",
+              "color": "#77bdc2",
+              "hp": 1100,
+              "maxHp": 1100,
+              "atb": 1,
+              "row": "front",
+              "weapons": [
+                "staff",
+                "bow"
+              ],
+              "slot": 0,
+              "nextSlot": null,
+              "nextRow": null,
+              "shift": 0,
+              "move": 0,
+              "action": null,
+              "queued": null,
+              "draft": [],
+              "sequences": [],
+              "shield": 0,
+              "executionHeld": false
+            },
+            {
+              "id": 2,
+              "name": "セナ",
+              "initial": "S",
+              "color": "#bea4dc",
+              "hp": 1150,
+              "maxHp": 1150,
+              "atb": 1,
+              "row": "front",
+              "weapons": [
+                "bell",
+                "hook"
+              ],
+              "slot": 1,
+              "nextSlot": null,
+              "nextRow": null,
+              "shift": 0,
+              "move": 0,
+              "action": null,
+              "queued": null,
+              "draft": [],
+              "sequences": [],
+              "shield": 0,
+              "executionHeld": false
+            }
+          ],
+          "enemies": [
+            {
+              "id": 0,
+              "name": "鐘楼の衛兵",
+              "glyph": "♜",
+              "kind": "guard",
+              "hp": 5000,
+              "maxHp": 5000,
+              "row": "front",
+              "chain": 200,
+              "hold": 0,
+              "broken": 12,
+              "nextAttack": 999,
+              "steadfast": 0,
+              "attackCount": 0,
+              "cast": null
+            }
+          ],
+          "presets": [
+            {
+              "name": "均衡の調べ",
+              "slots": [
+                0,
+                0,
+                0
+              ],
+              "rows": [
+                "front",
+                "back",
+                "back"
+              ]
+            },
+            {
+              "name": "崩しの連奏",
+              "slots": [
+                0,
+                0,
+                1
+              ],
+              "rows": [
+                "front",
+                "front",
+                "back"
+              ]
+            },
+            {
+              "name": "終幕の一撃",
+              "slots": [
+                0,
+                1,
+                1
+              ],
+              "rows": [
+                "front",
+                "back",
+                "back"
+              ]
+            },
+            {
+              "name": "崩し・防護・支援",
+              "slots": [
+                1,
+                0,
+                0
+              ],
+              "rows": [
+                "back",
+                "back",
+                "back"
+              ]
+            }
+          ],
+          "formations": [
+            {
+              "name": "全員後列",
+              "rows": [
+                "back",
+                "back",
+                "back"
+              ]
+            },
+            {
+              "name": "前衛1・後衛2",
+              "rows": [
+                "front",
+                "back",
+                "back"
+              ]
+            },
+            {
+              "name": "全員前列",
+              "rows": [
+                "front",
+                "front",
+                "front"
+              ]
+            }
+          ],
+          "activePreset": 1,
+          "inventory": [
+            "sword",
+            "shield",
+            "staff",
+            "bow",
+            "bell",
+            "hook"
+          ],
+          "potions": 3,
+          "events": [],
+          "eventSeq": 0,
+          "metrics": {
+            "damage": 0,
+            "taken": 0,
+            "healed": 0,
+            "breaks": 0,
+            "inputs": 0,
+            "focusUsed": 0
+          }
+        },
+        "inputs": [
+          {
+            "tick": 240,
+            "order": 0,
+            "command": {
+              "type": "optima",
+              "index": 2
+            }
+          }
+        ],
+        "endTick": 720
+      },
+      "finalStateHash": "a180a1c4dafe3a33bb6f8a792a133a125e306afc083b7f55b2a59f4720d5fded",
+      "replayVerified": true
+    },
+    {
+      "fixture": "hp5000-chain200",
+      "enemyHp": 5000,
+      "initialChain": 200,
+      "initialStateHash": "e8563e5f87f94a16e1128afadfd5baccd8c0e3530e45671f35a63b82e99056b6",
+      "policy": "aab-after-8s",
+      "damage": 2779,
+      "chainPeak": 456,
+      "killSeconds": null,
+      "observedSeconds": 12.000000000000176,
+      "switchIssuedSeconds": 7.999999999999977,
+      "switchCompletedSeconds": 10.383333333333429,
+      "offensiveHits": 12,
+      "recording": {
+        "version": "orchestra-15",
+        "initial": {
+          "version": "orchestra-15",
+          "controlMode": "ai",
+          "phase": "battle",
+          "paused": false,
+          "tick": 0,
+          "time": 0,
+          "realTime": 0,
+          "focus": 100,
+          "timeMode": "normal",
+          "rng": 1307,
+          "config": {
+            "bonusMode": "strong",
+            "enemyHpScale": 1,
+            "atbMax": 4,
+            "seed": 1307,
+            "atbRate": 0.85,
+            "atbMode": "idle",
+            "chainActions": true,
+            "moveTime": 0.85,
+            "shiftTime": 0.65,
+            "slowDrain": 4,
+            "enemyPower": 1,
+            "uiMode": "separate",
+            "encounter": 1
+          },
+          "encounter": 1,
+          "selected": 0,
+          "pendingSelect": null,
+          "handoffSlow": 0,
+          "allies": [
+            {
+              "id": 0,
+              "name": "アルト",
+              "initial": "A",
+              "color": "#ddaa63",
+              "hp": 1300,
+              "maxHp": 1300,
+              "atb": 1,
+              "row": "front",
+              "weapons": [
+                "sword",
+                "shield"
+              ],
+              "slot": 0,
+              "nextSlot": null,
+              "nextRow": null,
+              "shift": 0,
+              "move": 0,
+              "action": null,
+              "queued": null,
+              "draft": [],
+              "sequences": [],
+              "shield": 0,
+              "executionHeld": false
+            },
+            {
+              "id": 1,
+              "name": "リネ",
+              "initial": "L",
+              "color": "#77bdc2",
+              "hp": 1100,
+              "maxHp": 1100,
+              "atb": 1,
+              "row": "front",
+              "weapons": [
+                "staff",
+                "bow"
+              ],
+              "slot": 0,
+              "nextSlot": null,
+              "nextRow": null,
+              "shift": 0,
+              "move": 0,
+              "action": null,
+              "queued": null,
+              "draft": [],
+              "sequences": [],
+              "shield": 0,
+              "executionHeld": false
+            },
+            {
+              "id": 2,
+              "name": "セナ",
+              "initial": "S",
+              "color": "#bea4dc",
+              "hp": 1150,
+              "maxHp": 1150,
+              "atb": 1,
+              "row": "front",
+              "weapons": [
+                "bell",
+                "hook"
+              ],
+              "slot": 1,
+              "nextSlot": null,
+              "nextRow": null,
+              "shift": 0,
+              "move": 0,
+              "action": null,
+              "queued": null,
+              "draft": [],
+              "sequences": [],
+              "shield": 0,
+              "executionHeld": false
+            }
+          ],
+          "enemies": [
+            {
+              "id": 0,
+              "name": "鐘楼の衛兵",
+              "glyph": "♜",
+              "kind": "guard",
+              "hp": 5000,
+              "maxHp": 5000,
+              "row": "front",
+              "chain": 200,
+              "hold": 0,
+              "broken": 12,
+              "nextAttack": 999,
+              "steadfast": 0,
+              "attackCount": 0,
+              "cast": null
+            }
+          ],
+          "presets": [
+            {
+              "name": "均衡の調べ",
+              "slots": [
+                0,
+                0,
+                0
+              ],
+              "rows": [
+                "front",
+                "back",
+                "back"
+              ]
+            },
+            {
+              "name": "崩しの連奏",
+              "slots": [
+                0,
+                0,
+                1
+              ],
+              "rows": [
+                "front",
+                "front",
+                "back"
+              ]
+            },
+            {
+              "name": "終幕の一撃",
+              "slots": [
+                0,
+                1,
+                1
+              ],
+              "rows": [
+                "front",
+                "back",
+                "back"
+              ]
+            },
+            {
+              "name": "崩し・防護・支援",
+              "slots": [
+                1,
+                0,
+                0
+              ],
+              "rows": [
+                "back",
+                "back",
+                "back"
+              ]
+            }
+          ],
+          "formations": [
+            {
+              "name": "全員後列",
+              "rows": [
+                "back",
+                "back",
+                "back"
+              ]
+            },
+            {
+              "name": "前衛1・後衛2",
+              "rows": [
+                "front",
+                "back",
+                "back"
+              ]
+            },
+            {
+              "name": "全員前列",
+              "rows": [
+                "front",
+                "front",
+                "front"
+              ]
+            }
+          ],
+          "activePreset": 1,
+          "inventory": [
+            "sword",
+            "shield",
+            "staff",
+            "bow",
+            "bell",
+            "hook"
+          ],
+          "potions": 3,
+          "events": [],
+          "eventSeq": 0,
+          "metrics": {
+            "damage": 0,
+            "taken": 0,
+            "healed": 0,
+            "breaks": 0,
+            "inputs": 0,
+            "focusUsed": 0
+          }
+        },
+        "inputs": [
+          {
+            "tick": 480,
+            "order": 0,
+            "command": {
+              "type": "optima",
+              "index": 2
+            }
+          }
+        ],
+        "endTick": 720
+      },
+      "finalStateHash": "1e24b5789c76bb514e34a0583707cac2c019d9e3797fe816db9ca31987a6719b",
+      "replayVerified": true
+    },
+    {
+      "fixture": "hp5000-chain300",
+      "enemyHp": 5000,
+      "initialChain": 300,
+      "initialStateHash": "bfa515d12e9a6c7a23c6e3d3262faecda0527b9185a1003ef35eb4d64f0a03ae",
+      "policy": "keep-abb",
+      "damage": 3681,
+      "chainPeak": 500,
+      "killSeconds": null,
+      "observedSeconds": 12.000000000000176,
+      "switchIssuedSeconds": null,
+      "switchCompletedSeconds": null,
+      "offensiveHits": 12,
+      "recording": {
+        "version": "orchestra-15",
+        "initial": {
+          "version": "orchestra-15",
+          "controlMode": "ai",
+          "phase": "battle",
+          "paused": false,
+          "tick": 0,
+          "time": 0,
+          "realTime": 0,
+          "focus": 100,
+          "timeMode": "normal",
+          "rng": 1307,
+          "config": {
+            "bonusMode": "strong",
+            "enemyHpScale": 1,
+            "atbMax": 4,
+            "seed": 1307,
+            "atbRate": 0.85,
+            "atbMode": "idle",
+            "chainActions": true,
+            "moveTime": 0.85,
+            "shiftTime": 0.65,
+            "slowDrain": 4,
+            "enemyPower": 1,
+            "uiMode": "separate",
+            "encounter": 1
+          },
+          "encounter": 1,
+          "selected": 0,
+          "pendingSelect": null,
+          "handoffSlow": 0,
+          "allies": [
+            {
+              "id": 0,
+              "name": "アルト",
+              "initial": "A",
+              "color": "#ddaa63",
+              "hp": 1300,
+              "maxHp": 1300,
+              "atb": 1,
+              "row": "front",
+              "weapons": [
+                "sword",
+                "shield"
+              ],
+              "slot": 0,
+              "nextSlot": null,
+              "nextRow": null,
+              "shift": 0,
+              "move": 0,
+              "action": null,
+              "queued": null,
+              "draft": [],
+              "sequences": [],
+              "shield": 0,
+              "executionHeld": false
+            },
+            {
+              "id": 1,
+              "name": "リネ",
+              "initial": "L",
+              "color": "#77bdc2",
+              "hp": 1100,
+              "maxHp": 1100,
+              "atb": 1,
+              "row": "front",
+              "weapons": [
+                "staff",
+                "bow"
+              ],
+              "slot": 0,
+              "nextSlot": null,
+              "nextRow": null,
+              "shift": 0,
+              "move": 0,
+              "action": null,
+              "queued": null,
+              "draft": [],
+              "sequences": [],
+              "shield": 0,
+              "executionHeld": false
+            },
+            {
+              "id": 2,
+              "name": "セナ",
+              "initial": "S",
+              "color": "#bea4dc",
+              "hp": 1150,
+              "maxHp": 1150,
+              "atb": 1,
+              "row": "front",
+              "weapons": [
+                "bell",
+                "hook"
+              ],
+              "slot": 1,
+              "nextSlot": null,
+              "nextRow": null,
+              "shift": 0,
+              "move": 0,
+              "action": null,
+              "queued": null,
+              "draft": [],
+              "sequences": [],
+              "shield": 0,
+              "executionHeld": false
+            }
+          ],
+          "enemies": [
+            {
+              "id": 0,
+              "name": "鐘楼の衛兵",
+              "glyph": "♜",
+              "kind": "guard",
+              "hp": 5000,
+              "maxHp": 5000,
+              "row": "front",
+              "chain": 300,
+              "hold": 0,
+              "broken": 12,
+              "nextAttack": 999,
+              "steadfast": 0,
+              "attackCount": 0,
+              "cast": null
+            }
+          ],
+          "presets": [
+            {
+              "name": "均衡の調べ",
+              "slots": [
+                0,
+                0,
+                0
+              ],
+              "rows": [
+                "front",
+                "back",
+                "back"
+              ]
+            },
+            {
+              "name": "崩しの連奏",
+              "slots": [
+                0,
+                0,
+                1
+              ],
+              "rows": [
+                "front",
+                "front",
+                "back"
+              ]
+            },
+            {
+              "name": "終幕の一撃",
+              "slots": [
+                0,
+                1,
+                1
+              ],
+              "rows": [
+                "front",
+                "back",
+                "back"
+              ]
+            },
+            {
+              "name": "崩し・防護・支援",
+              "slots": [
+                1,
+                0,
+                0
+              ],
+              "rows": [
+                "back",
+                "back",
+                "back"
+              ]
+            }
+          ],
+          "formations": [
+            {
+              "name": "全員後列",
+              "rows": [
+                "back",
+                "back",
+                "back"
+              ]
+            },
+            {
+              "name": "前衛1・後衛2",
+              "rows": [
+                "front",
+                "back",
+                "back"
+              ]
+            },
+            {
+              "name": "全員前列",
+              "rows": [
+                "front",
+                "front",
+                "front"
+              ]
+            }
+          ],
+          "activePreset": 1,
+          "inventory": [
+            "sword",
+            "shield",
+            "staff",
+            "bow",
+            "bell",
+            "hook"
+          ],
+          "potions": 3,
+          "events": [],
+          "eventSeq": 0,
+          "metrics": {
+            "damage": 0,
+            "taken": 0,
+            "healed": 0,
+            "breaks": 0,
+            "inputs": 0,
+            "focusUsed": 0
+          }
+        },
+        "inputs": [],
+        "endTick": 720
+      },
+      "finalStateHash": "7a4876036e761c5e21b05d68914ce78ab87fc6ff5c1ac9124922b81970ad3544",
+      "replayVerified": true
+    },
+    {
+      "fixture": "hp5000-chain300",
+      "enemyHp": 5000,
+      "initialChain": 300,
+      "initialStateHash": "bfa515d12e9a6c7a23c6e3d3262faecda0527b9185a1003ef35eb4d64f0a03ae",
+      "policy": "aab-now",
+      "damage": 5000,
+      "chainPeak": 430,
+      "killSeconds": 9.483333333333384,
+      "observedSeconds": 9.483333333333384,
+      "switchIssuedSeconds": 0,
+      "switchCompletedSeconds": 0.6500000000000004,
+      "offensiveHits": 12,
+      "recording": {
+        "version": "orchestra-15",
+        "initial": {
+          "version": "orchestra-15",
+          "controlMode": "ai",
+          "phase": "battle",
+          "paused": false,
+          "tick": 0,
+          "time": 0,
+          "realTime": 0,
+          "focus": 100,
+          "timeMode": "normal",
+          "rng": 1307,
+          "config": {
+            "bonusMode": "strong",
+            "enemyHpScale": 1,
+            "atbMax": 4,
+            "seed": 1307,
+            "atbRate": 0.85,
+            "atbMode": "idle",
+            "chainActions": true,
+            "moveTime": 0.85,
+            "shiftTime": 0.65,
+            "slowDrain": 4,
+            "enemyPower": 1,
+            "uiMode": "separate",
+            "encounter": 1
+          },
+          "encounter": 1,
+          "selected": 0,
+          "pendingSelect": null,
+          "handoffSlow": 0,
+          "allies": [
+            {
+              "id": 0,
+              "name": "アルト",
+              "initial": "A",
+              "color": "#ddaa63",
+              "hp": 1300,
+              "maxHp": 1300,
+              "atb": 1,
+              "row": "front",
+              "weapons": [
+                "sword",
+                "shield"
+              ],
+              "slot": 0,
+              "nextSlot": null,
+              "nextRow": null,
+              "shift": 0,
+              "move": 0,
+              "action": null,
+              "queued": null,
+              "draft": [],
+              "sequences": [],
+              "shield": 0,
+              "executionHeld": false
+            },
+            {
+              "id": 1,
+              "name": "リネ",
+              "initial": "L",
+              "color": "#77bdc2",
+              "hp": 1100,
+              "maxHp": 1100,
+              "atb": 1,
+              "row": "front",
+              "weapons": [
+                "staff",
+                "bow"
+              ],
+              "slot": 0,
+              "nextSlot": null,
+              "nextRow": null,
+              "shift": 0,
+              "move": 0,
+              "action": null,
+              "queued": null,
+              "draft": [],
+              "sequences": [],
+              "shield": 0,
+              "executionHeld": false
+            },
+            {
+              "id": 2,
+              "name": "セナ",
+              "initial": "S",
+              "color": "#bea4dc",
+              "hp": 1150,
+              "maxHp": 1150,
+              "atb": 1,
+              "row": "front",
+              "weapons": [
+                "bell",
+                "hook"
+              ],
+              "slot": 1,
+              "nextSlot": null,
+              "nextRow": null,
+              "shift": 0,
+              "move": 0,
+              "action": null,
+              "queued": null,
+              "draft": [],
+              "sequences": [],
+              "shield": 0,
+              "executionHeld": false
+            }
+          ],
+          "enemies": [
+            {
+              "id": 0,
+              "name": "鐘楼の衛兵",
+              "glyph": "♜",
+              "kind": "guard",
+              "hp": 5000,
+              "maxHp": 5000,
+              "row": "front",
+              "chain": 300,
+              "hold": 0,
+              "broken": 12,
+              "nextAttack": 999,
+              "steadfast": 0,
+              "attackCount": 0,
+              "cast": null
+            }
+          ],
+          "presets": [
+            {
+              "name": "均衡の調べ",
+              "slots": [
+                0,
+                0,
+                0
+              ],
+              "rows": [
+                "front",
+                "back",
+                "back"
+              ]
+            },
+            {
+              "name": "崩しの連奏",
+              "slots": [
+                0,
+                0,
+                1
+              ],
+              "rows": [
+                "front",
+                "front",
+                "back"
+              ]
+            },
+            {
+              "name": "終幕の一撃",
+              "slots": [
+                0,
+                1,
+                1
+              ],
+              "rows": [
+                "front",
+                "back",
+                "back"
+              ]
+            },
+            {
+              "name": "崩し・防護・支援",
+              "slots": [
+                1,
+                0,
+                0
+              ],
+              "rows": [
+                "back",
+                "back",
+                "back"
+              ]
+            }
+          ],
+          "formations": [
+            {
+              "name": "全員後列",
+              "rows": [
+                "back",
+                "back",
+                "back"
+              ]
+            },
+            {
+              "name": "前衛1・後衛2",
+              "rows": [
+                "front",
+                "back",
+                "back"
+              ]
+            },
+            {
+              "name": "全員前列",
+              "rows": [
+                "front",
+                "front",
+                "front"
+              ]
+            }
+          ],
+          "activePreset": 1,
+          "inventory": [
+            "sword",
+            "shield",
+            "staff",
+            "bow",
+            "bell",
+            "hook"
+          ],
+          "potions": 3,
+          "events": [],
+          "eventSeq": 0,
+          "metrics": {
+            "damage": 0,
+            "taken": 0,
+            "healed": 0,
+            "breaks": 0,
+            "inputs": 0,
+            "focusUsed": 0
+          }
+        },
+        "inputs": [
+          {
+            "tick": 0,
+            "order": 0,
+            "command": {
+              "type": "optima",
+              "index": 2
+            }
+          }
+        ],
+        "endTick": 569
+      },
+      "finalStateHash": "a4ad3d6d922032cfcb49eb5d9587f1e8947057261d96930ca7f60247d40397fa",
+      "replayVerified": true
+    },
+    {
+      "fixture": "hp5000-chain300",
+      "enemyHp": 5000,
+      "initialChain": 300,
+      "initialStateHash": "bfa515d12e9a6c7a23c6e3d3262faecda0527b9185a1003ef35eb4d64f0a03ae",
+      "policy": "aab-after-4s",
+      "damage": 4887,
+      "chainPeak": 493,
+      "killSeconds": null,
+      "observedSeconds": 12.000000000000176,
+      "switchIssuedSeconds": 3.9999999999999907,
+      "switchCompletedSeconds": 4.933333333333321,
+      "offensiveHits": 12,
+      "recording": {
+        "version": "orchestra-15",
+        "initial": {
+          "version": "orchestra-15",
+          "controlMode": "ai",
+          "phase": "battle",
+          "paused": false,
+          "tick": 0,
+          "time": 0,
+          "realTime": 0,
+          "focus": 100,
+          "timeMode": "normal",
+          "rng": 1307,
+          "config": {
+            "bonusMode": "strong",
+            "enemyHpScale": 1,
+            "atbMax": 4,
+            "seed": 1307,
+            "atbRate": 0.85,
+            "atbMode": "idle",
+            "chainActions": true,
+            "moveTime": 0.85,
+            "shiftTime": 0.65,
+            "slowDrain": 4,
+            "enemyPower": 1,
+            "uiMode": "separate",
+            "encounter": 1
+          },
+          "encounter": 1,
+          "selected": 0,
+          "pendingSelect": null,
+          "handoffSlow": 0,
+          "allies": [
+            {
+              "id": 0,
+              "name": "アルト",
+              "initial": "A",
+              "color": "#ddaa63",
+              "hp": 1300,
+              "maxHp": 1300,
+              "atb": 1,
+              "row": "front",
+              "weapons": [
+                "sword",
+                "shield"
+              ],
+              "slot": 0,
+              "nextSlot": null,
+              "nextRow": null,
+              "shift": 0,
+              "move": 0,
+              "action": null,
+              "queued": null,
+              "draft": [],
+              "sequences": [],
+              "shield": 0,
+              "executionHeld": false
+            },
+            {
+              "id": 1,
+              "name": "リネ",
+              "initial": "L",
+              "color": "#77bdc2",
+              "hp": 1100,
+              "maxHp": 1100,
+              "atb": 1,
+              "row": "front",
+              "weapons": [
+                "staff",
+                "bow"
+              ],
+              "slot": 0,
+              "nextSlot": null,
+              "nextRow": null,
+              "shift": 0,
+              "move": 0,
+              "action": null,
+              "queued": null,
+              "draft": [],
+              "sequences": [],
+              "shield": 0,
+              "executionHeld": false
+            },
+            {
+              "id": 2,
+              "name": "セナ",
+              "initial": "S",
+              "color": "#bea4dc",
+              "hp": 1150,
+              "maxHp": 1150,
+              "atb": 1,
+              "row": "front",
+              "weapons": [
+                "bell",
+                "hook"
+              ],
+              "slot": 1,
+              "nextSlot": null,
+              "nextRow": null,
+              "shift": 0,
+              "move": 0,
+              "action": null,
+              "queued": null,
+              "draft": [],
+              "sequences": [],
+              "shield": 0,
+              "executionHeld": false
+            }
+          ],
+          "enemies": [
+            {
+              "id": 0,
+              "name": "鐘楼の衛兵",
+              "glyph": "♜",
+              "kind": "guard",
+              "hp": 5000,
+              "maxHp": 5000,
+              "row": "front",
+              "chain": 300,
+              "hold": 0,
+              "broken": 12,
+              "nextAttack": 999,
+              "steadfast": 0,
+              "attackCount": 0,
+              "cast": null
+            }
+          ],
+          "presets": [
+            {
+              "name": "均衡の調べ",
+              "slots": [
+                0,
+                0,
+                0
+              ],
+              "rows": [
+                "front",
+                "back",
+                "back"
+              ]
+            },
+            {
+              "name": "崩しの連奏",
+              "slots": [
+                0,
+                0,
+                1
+              ],
+              "rows": [
+                "front",
+                "front",
+                "back"
+              ]
+            },
+            {
+              "name": "終幕の一撃",
+              "slots": [
+                0,
+                1,
+                1
+              ],
+              "rows": [
+                "front",
+                "back",
+                "back"
+              ]
+            },
+            {
+              "name": "崩し・防護・支援",
+              "slots": [
+                1,
+                0,
+                0
+              ],
+              "rows": [
+                "back",
+                "back",
+                "back"
+              ]
+            }
+          ],
+          "formations": [
+            {
+              "name": "全員後列",
+              "rows": [
+                "back",
+                "back",
+                "back"
+              ]
+            },
+            {
+              "name": "前衛1・後衛2",
+              "rows": [
+                "front",
+                "back",
+                "back"
+              ]
+            },
+            {
+              "name": "全員前列",
+              "rows": [
+                "front",
+                "front",
+                "front"
+              ]
+            }
+          ],
+          "activePreset": 1,
+          "inventory": [
+            "sword",
+            "shield",
+            "staff",
+            "bow",
+            "bell",
+            "hook"
+          ],
+          "potions": 3,
+          "events": [],
+          "eventSeq": 0,
+          "metrics": {
+            "damage": 0,
+            "taken": 0,
+            "healed": 0,
+            "breaks": 0,
+            "inputs": 0,
+            "focusUsed": 0
+          }
+        },
+        "inputs": [
+          {
+            "tick": 240,
+            "order": 0,
+            "command": {
+              "type": "optima",
+              "index": 2
+            }
+          }
+        ],
+        "endTick": 720
+      },
+      "finalStateHash": "9be284de0fef529daf6a8e8c095edfb4b08fa493c9c96f1bf0384bfed491d70b",
+      "replayVerified": true
+    },
+    {
+      "fixture": "hp5000-chain300",
+      "enemyHp": 5000,
+      "initialChain": 300,
+      "initialStateHash": "bfa515d12e9a6c7a23c6e3d3262faecda0527b9185a1003ef35eb4d64f0a03ae",
+      "policy": "aab-after-8s",
+      "damage": 3681,
+      "chainPeak": 500,
+      "killSeconds": null,
+      "observedSeconds": 12.000000000000176,
+      "switchIssuedSeconds": 7.999999999999977,
+      "switchCompletedSeconds": 10.383333333333429,
+      "offensiveHits": 12,
+      "recording": {
+        "version": "orchestra-15",
+        "initial": {
+          "version": "orchestra-15",
+          "controlMode": "ai",
+          "phase": "battle",
+          "paused": false,
+          "tick": 0,
+          "time": 0,
+          "realTime": 0,
+          "focus": 100,
+          "timeMode": "normal",
+          "rng": 1307,
+          "config": {
+            "bonusMode": "strong",
+            "enemyHpScale": 1,
+            "atbMax": 4,
+            "seed": 1307,
+            "atbRate": 0.85,
+            "atbMode": "idle",
+            "chainActions": true,
+            "moveTime": 0.85,
+            "shiftTime": 0.65,
+            "slowDrain": 4,
+            "enemyPower": 1,
+            "uiMode": "separate",
+            "encounter": 1
+          },
+          "encounter": 1,
+          "selected": 0,
+          "pendingSelect": null,
+          "handoffSlow": 0,
+          "allies": [
+            {
+              "id": 0,
+              "name": "アルト",
+              "initial": "A",
+              "color": "#ddaa63",
+              "hp": 1300,
+              "maxHp": 1300,
+              "atb": 1,
+              "row": "front",
+              "weapons": [
+                "sword",
+                "shield"
+              ],
+              "slot": 0,
+              "nextSlot": null,
+              "nextRow": null,
+              "shift": 0,
+              "move": 0,
+              "action": null,
+              "queued": null,
+              "draft": [],
+              "sequences": [],
+              "shield": 0,
+              "executionHeld": false
+            },
+            {
+              "id": 1,
+              "name": "リネ",
+              "initial": "L",
+              "color": "#77bdc2",
+              "hp": 1100,
+              "maxHp": 1100,
+              "atb": 1,
+              "row": "front",
+              "weapons": [
+                "staff",
+                "bow"
+              ],
+              "slot": 0,
+              "nextSlot": null,
+              "nextRow": null,
+              "shift": 0,
+              "move": 0,
+              "action": null,
+              "queued": null,
+              "draft": [],
+              "sequences": [],
+              "shield": 0,
+              "executionHeld": false
+            },
+            {
+              "id": 2,
+              "name": "セナ",
+              "initial": "S",
+              "color": "#bea4dc",
+              "hp": 1150,
+              "maxHp": 1150,
+              "atb": 1,
+              "row": "front",
+              "weapons": [
+                "bell",
+                "hook"
+              ],
+              "slot": 1,
+              "nextSlot": null,
+              "nextRow": null,
+              "shift": 0,
+              "move": 0,
+              "action": null,
+              "queued": null,
+              "draft": [],
+              "sequences": [],
+              "shield": 0,
+              "executionHeld": false
+            }
+          ],
+          "enemies": [
+            {
+              "id": 0,
+              "name": "鐘楼の衛兵",
+              "glyph": "♜",
+              "kind": "guard",
+              "hp": 5000,
+              "maxHp": 5000,
+              "row": "front",
+              "chain": 300,
+              "hold": 0,
+              "broken": 12,
+              "nextAttack": 999,
+              "steadfast": 0,
+              "attackCount": 0,
+              "cast": null
+            }
+          ],
+          "presets": [
+            {
+              "name": "均衡の調べ",
+              "slots": [
+                0,
+                0,
+                0
+              ],
+              "rows": [
+                "front",
+                "back",
+                "back"
+              ]
+            },
+            {
+              "name": "崩しの連奏",
+              "slots": [
+                0,
+                0,
+                1
+              ],
+              "rows": [
+                "front",
+                "front",
+                "back"
+              ]
+            },
+            {
+              "name": "終幕の一撃",
+              "slots": [
+                0,
+                1,
+                1
+              ],
+              "rows": [
+                "front",
+                "back",
+                "back"
+              ]
+            },
+            {
+              "name": "崩し・防護・支援",
+              "slots": [
+                1,
+                0,
+                0
+              ],
+              "rows": [
+                "back",
+                "back",
+                "back"
+              ]
+            }
+          ],
+          "formations": [
+            {
+              "name": "全員後列",
+              "rows": [
+                "back",
+                "back",
+                "back"
+              ]
+            },
+            {
+              "name": "前衛1・後衛2",
+              "rows": [
+                "front",
+                "back",
+                "back"
+              ]
+            },
+            {
+              "name": "全員前列",
+              "rows": [
+                "front",
+                "front",
+                "front"
+              ]
+            }
+          ],
+          "activePreset": 1,
+          "inventory": [
+            "sword",
+            "shield",
+            "staff",
+            "bow",
+            "bell",
+            "hook"
+          ],
+          "potions": 3,
+          "events": [],
+          "eventSeq": 0,
+          "metrics": {
+            "damage": 0,
+            "taken": 0,
+            "healed": 0,
+            "breaks": 0,
+            "inputs": 0,
+            "focusUsed": 0
+          }
+        },
+        "inputs": [
+          {
+            "tick": 480,
+            "order": 0,
+            "command": {
+              "type": "optima",
+              "index": 2
+            }
+          }
+        ],
+        "endTick": 720
+      },
+      "finalStateHash": "6a9d8acd5a27b6c06b2b69f09c91a018af56a2d4926a501beb7e2ae49dda7d2a",
+      "replayVerified": true
+    },
+    {
+      "fixture": "hp10000-chain200",
+      "enemyHp": 10000,
+      "initialChain": 200,
+      "initialStateHash": "7346c0fc2cb059a2f794c24413375c70f938114ff9b8092a6b216d9e0213dd0c",
+      "policy": "keep-abb",
+      "damage": 2779,
+      "chainPeak": 456,
+      "killSeconds": null,
+      "observedSeconds": 12.000000000000176,
+      "switchIssuedSeconds": null,
+      "switchCompletedSeconds": null,
+      "offensiveHits": 12,
+      "recording": {
+        "version": "orchestra-15",
+        "initial": {
+          "version": "orchestra-15",
+          "controlMode": "ai",
+          "phase": "battle",
+          "paused": false,
+          "tick": 0,
+          "time": 0,
+          "realTime": 0,
+          "focus": 100,
+          "timeMode": "normal",
+          "rng": 1307,
+          "config": {
+            "bonusMode": "strong",
+            "enemyHpScale": 1,
+            "atbMax": 4,
+            "seed": 1307,
+            "atbRate": 0.85,
+            "atbMode": "idle",
+            "chainActions": true,
+            "moveTime": 0.85,
+            "shiftTime": 0.65,
+            "slowDrain": 4,
+            "enemyPower": 1,
+            "uiMode": "separate",
+            "encounter": 1
+          },
+          "encounter": 1,
+          "selected": 0,
+          "pendingSelect": null,
+          "handoffSlow": 0,
+          "allies": [
+            {
+              "id": 0,
+              "name": "アルト",
+              "initial": "A",
+              "color": "#ddaa63",
+              "hp": 1300,
+              "maxHp": 1300,
+              "atb": 1,
+              "row": "front",
+              "weapons": [
+                "sword",
+                "shield"
+              ],
+              "slot": 0,
+              "nextSlot": null,
+              "nextRow": null,
+              "shift": 0,
+              "move": 0,
+              "action": null,
+              "queued": null,
+              "draft": [],
+              "sequences": [],
+              "shield": 0,
+              "executionHeld": false
+            },
+            {
+              "id": 1,
+              "name": "リネ",
+              "initial": "L",
+              "color": "#77bdc2",
+              "hp": 1100,
+              "maxHp": 1100,
+              "atb": 1,
+              "row": "front",
+              "weapons": [
+                "staff",
+                "bow"
+              ],
+              "slot": 0,
+              "nextSlot": null,
+              "nextRow": null,
+              "shift": 0,
+              "move": 0,
+              "action": null,
+              "queued": null,
+              "draft": [],
+              "sequences": [],
+              "shield": 0,
+              "executionHeld": false
+            },
+            {
+              "id": 2,
+              "name": "セナ",
+              "initial": "S",
+              "color": "#bea4dc",
+              "hp": 1150,
+              "maxHp": 1150,
+              "atb": 1,
+              "row": "front",
+              "weapons": [
+                "bell",
+                "hook"
+              ],
+              "slot": 1,
+              "nextSlot": null,
+              "nextRow": null,
+              "shift": 0,
+              "move": 0,
+              "action": null,
+              "queued": null,
+              "draft": [],
+              "sequences": [],
+              "shield": 0,
+              "executionHeld": false
+            }
+          ],
+          "enemies": [
+            {
+              "id": 0,
+              "name": "鐘楼の衛兵",
+              "glyph": "♜",
+              "kind": "guard",
+              "hp": 10000,
+              "maxHp": 10000,
+              "row": "front",
+              "chain": 200,
+              "hold": 0,
+              "broken": 12,
+              "nextAttack": 999,
+              "steadfast": 0,
+              "attackCount": 0,
+              "cast": null
+            }
+          ],
+          "presets": [
+            {
+              "name": "均衡の調べ",
+              "slots": [
+                0,
+                0,
+                0
+              ],
+              "rows": [
+                "front",
+                "back",
+                "back"
+              ]
+            },
+            {
+              "name": "崩しの連奏",
+              "slots": [
+                0,
+                0,
+                1
+              ],
+              "rows": [
+                "front",
+                "front",
+                "back"
+              ]
+            },
+            {
+              "name": "終幕の一撃",
+              "slots": [
+                0,
+                1,
+                1
+              ],
+              "rows": [
+                "front",
+                "back",
+                "back"
+              ]
+            },
+            {
+              "name": "崩し・防護・支援",
+              "slots": [
+                1,
+                0,
+                0
+              ],
+              "rows": [
+                "back",
+                "back",
+                "back"
+              ]
+            }
+          ],
+          "formations": [
+            {
+              "name": "全員後列",
+              "rows": [
+                "back",
+                "back",
+                "back"
+              ]
+            },
+            {
+              "name": "前衛1・後衛2",
+              "rows": [
+                "front",
+                "back",
+                "back"
+              ]
+            },
+            {
+              "name": "全員前列",
+              "rows": [
+                "front",
+                "front",
+                "front"
+              ]
+            }
+          ],
+          "activePreset": 1,
+          "inventory": [
+            "sword",
+            "shield",
+            "staff",
+            "bow",
+            "bell",
+            "hook"
+          ],
+          "potions": 3,
+          "events": [],
+          "eventSeq": 0,
+          "metrics": {
+            "damage": 0,
+            "taken": 0,
+            "healed": 0,
+            "breaks": 0,
+            "inputs": 0,
+            "focusUsed": 0
+          }
+        },
+        "inputs": [],
+        "endTick": 720
+      },
+      "finalStateHash": "66f5617af8494ce3e15514c22df0beea73bc020a696411298c1ff2e99f7aa3df",
+      "replayVerified": true
+    },
+    {
+      "fixture": "hp10000-chain200",
+      "enemyHp": 10000,
+      "initialChain": 200,
+      "initialStateHash": "7346c0fc2cb059a2f794c24413375c70f938114ff9b8092a6b216d9e0213dd0c",
+      "policy": "aab-now",
+      "damage": 3818,
+      "chainPeak": 330,
+      "killSeconds": null,
+      "observedSeconds": 12.000000000000176,
+      "switchIssuedSeconds": 0,
+      "switchCompletedSeconds": 0.6500000000000004,
+      "offensiveHits": 12,
+      "recording": {
+        "version": "orchestra-15",
+        "initial": {
+          "version": "orchestra-15",
+          "controlMode": "ai",
+          "phase": "battle",
+          "paused": false,
+          "tick": 0,
+          "time": 0,
+          "realTime": 0,
+          "focus": 100,
+          "timeMode": "normal",
+          "rng": 1307,
+          "config": {
+            "bonusMode": "strong",
+            "enemyHpScale": 1,
+            "atbMax": 4,
+            "seed": 1307,
+            "atbRate": 0.85,
+            "atbMode": "idle",
+            "chainActions": true,
+            "moveTime": 0.85,
+            "shiftTime": 0.65,
+            "slowDrain": 4,
+            "enemyPower": 1,
+            "uiMode": "separate",
+            "encounter": 1
+          },
+          "encounter": 1,
+          "selected": 0,
+          "pendingSelect": null,
+          "handoffSlow": 0,
+          "allies": [
+            {
+              "id": 0,
+              "name": "アルト",
+              "initial": "A",
+              "color": "#ddaa63",
+              "hp": 1300,
+              "maxHp": 1300,
+              "atb": 1,
+              "row": "front",
+              "weapons": [
+                "sword",
+                "shield"
+              ],
+              "slot": 0,
+              "nextSlot": null,
+              "nextRow": null,
+              "shift": 0,
+              "move": 0,
+              "action": null,
+              "queued": null,
+              "draft": [],
+              "sequences": [],
+              "shield": 0,
+              "executionHeld": false
+            },
+            {
+              "id": 1,
+              "name": "リネ",
+              "initial": "L",
+              "color": "#77bdc2",
+              "hp": 1100,
+              "maxHp": 1100,
+              "atb": 1,
+              "row": "front",
+              "weapons": [
+                "staff",
+                "bow"
+              ],
+              "slot": 0,
+              "nextSlot": null,
+              "nextRow": null,
+              "shift": 0,
+              "move": 0,
+              "action": null,
+              "queued": null,
+              "draft": [],
+              "sequences": [],
+              "shield": 0,
+              "executionHeld": false
+            },
+            {
+              "id": 2,
+              "name": "セナ",
+              "initial": "S",
+              "color": "#bea4dc",
+              "hp": 1150,
+              "maxHp": 1150,
+              "atb": 1,
+              "row": "front",
+              "weapons": [
+                "bell",
+                "hook"
+              ],
+              "slot": 1,
+              "nextSlot": null,
+              "nextRow": null,
+              "shift": 0,
+              "move": 0,
+              "action": null,
+              "queued": null,
+              "draft": [],
+              "sequences": [],
+              "shield": 0,
+              "executionHeld": false
+            }
+          ],
+          "enemies": [
+            {
+              "id": 0,
+              "name": "鐘楼の衛兵",
+              "glyph": "♜",
+              "kind": "guard",
+              "hp": 10000,
+              "maxHp": 10000,
+              "row": "front",
+              "chain": 200,
+              "hold": 0,
+              "broken": 12,
+              "nextAttack": 999,
+              "steadfast": 0,
+              "attackCount": 0,
+              "cast": null
+            }
+          ],
+          "presets": [
+            {
+              "name": "均衡の調べ",
+              "slots": [
+                0,
+                0,
+                0
+              ],
+              "rows": [
+                "front",
+                "back",
+                "back"
+              ]
+            },
+            {
+              "name": "崩しの連奏",
+              "slots": [
+                0,
+                0,
+                1
+              ],
+              "rows": [
+                "front",
+                "front",
+                "back"
+              ]
+            },
+            {
+              "name": "終幕の一撃",
+              "slots": [
+                0,
+                1,
+                1
+              ],
+              "rows": [
+                "front",
+                "back",
+                "back"
+              ]
+            },
+            {
+              "name": "崩し・防護・支援",
+              "slots": [
+                1,
+                0,
+                0
+              ],
+              "rows": [
+                "back",
+                "back",
+                "back"
+              ]
+            }
+          ],
+          "formations": [
+            {
+              "name": "全員後列",
+              "rows": [
+                "back",
+                "back",
+                "back"
+              ]
+            },
+            {
+              "name": "前衛1・後衛2",
+              "rows": [
+                "front",
+                "back",
+                "back"
+              ]
+            },
+            {
+              "name": "全員前列",
+              "rows": [
+                "front",
+                "front",
+                "front"
+              ]
+            }
+          ],
+          "activePreset": 1,
+          "inventory": [
+            "sword",
+            "shield",
+            "staff",
+            "bow",
+            "bell",
+            "hook"
+          ],
+          "potions": 3,
+          "events": [],
+          "eventSeq": 0,
+          "metrics": {
+            "damage": 0,
+            "taken": 0,
+            "healed": 0,
+            "breaks": 0,
+            "inputs": 0,
+            "focusUsed": 0
+          }
+        },
+        "inputs": [
+          {
+            "tick": 0,
+            "order": 0,
+            "command": {
+              "type": "optima",
+              "index": 2
+            }
+          }
+        ],
+        "endTick": 720
+      },
+      "finalStateHash": "a06667c46e6c95d085f9aee34c6ce8b4398fcc5113943b91f7e0569b4b863775",
+      "replayVerified": true
+    },
+    {
+      "fixture": "hp10000-chain200",
+      "enemyHp": 10000,
+      "initialChain": 200,
+      "initialStateHash": "7346c0fc2cb059a2f794c24413375c70f938114ff9b8092a6b216d9e0213dd0c",
+      "policy": "aab-after-4s",
+      "damage": 3699,
+      "chainPeak": 393,
+      "killSeconds": null,
+      "observedSeconds": 12.000000000000176,
+      "switchIssuedSeconds": 3.9999999999999907,
+      "switchCompletedSeconds": 4.933333333333321,
+      "offensiveHits": 12,
+      "recording": {
+        "version": "orchestra-15",
+        "initial": {
+          "version": "orchestra-15",
+          "controlMode": "ai",
+          "phase": "battle",
+          "paused": false,
+          "tick": 0,
+          "time": 0,
+          "realTime": 0,
+          "focus": 100,
+          "timeMode": "normal",
+          "rng": 1307,
+          "config": {
+            "bonusMode": "strong",
+            "enemyHpScale": 1,
+            "atbMax": 4,
+            "seed": 1307,
+            "atbRate": 0.85,
+            "atbMode": "idle",
+            "chainActions": true,
+            "moveTime": 0.85,
+            "shiftTime": 0.65,
+            "slowDrain": 4,
+            "enemyPower": 1,
+            "uiMode": "separate",
+            "encounter": 1
+          },
+          "encounter": 1,
+          "selected": 0,
+          "pendingSelect": null,
+          "handoffSlow": 0,
+          "allies": [
+            {
+              "id": 0,
+              "name": "アルト",
+              "initial": "A",
+              "color": "#ddaa63",
+              "hp": 1300,
+              "maxHp": 1300,
+              "atb": 1,
+              "row": "front",
+              "weapons": [
+                "sword",
+                "shield"
+              ],
+              "slot": 0,
+              "nextSlot": null,
+              "nextRow": null,
+              "shift": 0,
+              "move": 0,
+              "action": null,
+              "queued": null,
+              "draft": [],
+              "sequences": [],
+              "shield": 0,
+              "executionHeld": false
+            },
+            {
+              "id": 1,
+              "name": "リネ",
+              "initial": "L",
+              "color": "#77bdc2",
+              "hp": 1100,
+              "maxHp": 1100,
+              "atb": 1,
+              "row": "front",
+              "weapons": [
+                "staff",
+                "bow"
+              ],
+              "slot": 0,
+              "nextSlot": null,
+              "nextRow": null,
+              "shift": 0,
+              "move": 0,
+              "action": null,
+              "queued": null,
+              "draft": [],
+              "sequences": [],
+              "shield": 0,
+              "executionHeld": false
+            },
+            {
+              "id": 2,
+              "name": "セナ",
+              "initial": "S",
+              "color": "#bea4dc",
+              "hp": 1150,
+              "maxHp": 1150,
+              "atb": 1,
+              "row": "front",
+              "weapons": [
+                "bell",
+                "hook"
+              ],
+              "slot": 1,
+              "nextSlot": null,
+              "nextRow": null,
+              "shift": 0,
+              "move": 0,
+              "action": null,
+              "queued": null,
+              "draft": [],
+              "sequences": [],
+              "shield": 0,
+              "executionHeld": false
+            }
+          ],
+          "enemies": [
+            {
+              "id": 0,
+              "name": "鐘楼の衛兵",
+              "glyph": "♜",
+              "kind": "guard",
+              "hp": 10000,
+              "maxHp": 10000,
+              "row": "front",
+              "chain": 200,
+              "hold": 0,
+              "broken": 12,
+              "nextAttack": 999,
+              "steadfast": 0,
+              "attackCount": 0,
+              "cast": null
+            }
+          ],
+          "presets": [
+            {
+              "name": "均衡の調べ",
+              "slots": [
+                0,
+                0,
+                0
+              ],
+              "rows": [
+                "front",
+                "back",
+                "back"
+              ]
+            },
+            {
+              "name": "崩しの連奏",
+              "slots": [
+                0,
+                0,
+                1
+              ],
+              "rows": [
+                "front",
+                "front",
+                "back"
+              ]
+            },
+            {
+              "name": "終幕の一撃",
+              "slots": [
+                0,
+                1,
+                1
+              ],
+              "rows": [
+                "front",
+                "back",
+                "back"
+              ]
+            },
+            {
+              "name": "崩し・防護・支援",
+              "slots": [
+                1,
+                0,
+                0
+              ],
+              "rows": [
+                "back",
+                "back",
+                "back"
+              ]
+            }
+          ],
+          "formations": [
+            {
+              "name": "全員後列",
+              "rows": [
+                "back",
+                "back",
+                "back"
+              ]
+            },
+            {
+              "name": "前衛1・後衛2",
+              "rows": [
+                "front",
+                "back",
+                "back"
+              ]
+            },
+            {
+              "name": "全員前列",
+              "rows": [
+                "front",
+                "front",
+                "front"
+              ]
+            }
+          ],
+          "activePreset": 1,
+          "inventory": [
+            "sword",
+            "shield",
+            "staff",
+            "bow",
+            "bell",
+            "hook"
+          ],
+          "potions": 3,
+          "events": [],
+          "eventSeq": 0,
+          "metrics": {
+            "damage": 0,
+            "taken": 0,
+            "healed": 0,
+            "breaks": 0,
+            "inputs": 0,
+            "focusUsed": 0
+          }
+        },
+        "inputs": [
+          {
+            "tick": 240,
+            "order": 0,
+            "command": {
+              "type": "optima",
+              "index": 2
+            }
+          }
+        ],
+        "endTick": 720
+      },
+      "finalStateHash": "f318ee4859a5a04c70a53c634082c33f8bb09cf9abf4bb85b0e19e7e35290085",
+      "replayVerified": true
+    },
+    {
+      "fixture": "hp10000-chain200",
+      "enemyHp": 10000,
+      "initialChain": 200,
+      "initialStateHash": "7346c0fc2cb059a2f794c24413375c70f938114ff9b8092a6b216d9e0213dd0c",
+      "policy": "aab-after-8s",
+      "damage": 2779,
+      "chainPeak": 456,
+      "killSeconds": null,
+      "observedSeconds": 12.000000000000176,
+      "switchIssuedSeconds": 7.999999999999977,
+      "switchCompletedSeconds": 10.383333333333429,
+      "offensiveHits": 12,
+      "recording": {
+        "version": "orchestra-15",
+        "initial": {
+          "version": "orchestra-15",
+          "controlMode": "ai",
+          "phase": "battle",
+          "paused": false,
+          "tick": 0,
+          "time": 0,
+          "realTime": 0,
+          "focus": 100,
+          "timeMode": "normal",
+          "rng": 1307,
+          "config": {
+            "bonusMode": "strong",
+            "enemyHpScale": 1,
+            "atbMax": 4,
+            "seed": 1307,
+            "atbRate": 0.85,
+            "atbMode": "idle",
+            "chainActions": true,
+            "moveTime": 0.85,
+            "shiftTime": 0.65,
+            "slowDrain": 4,
+            "enemyPower": 1,
+            "uiMode": "separate",
+            "encounter": 1
+          },
+          "encounter": 1,
+          "selected": 0,
+          "pendingSelect": null,
+          "handoffSlow": 0,
+          "allies": [
+            {
+              "id": 0,
+              "name": "アルト",
+              "initial": "A",
+              "color": "#ddaa63",
+              "hp": 1300,
+              "maxHp": 1300,
+              "atb": 1,
+              "row": "front",
+              "weapons": [
+                "sword",
+                "shield"
+              ],
+              "slot": 0,
+              "nextSlot": null,
+              "nextRow": null,
+              "shift": 0,
+              "move": 0,
+              "action": null,
+              "queued": null,
+              "draft": [],
+              "sequences": [],
+              "shield": 0,
+              "executionHeld": false
+            },
+            {
+              "id": 1,
+              "name": "リネ",
+              "initial": "L",
+              "color": "#77bdc2",
+              "hp": 1100,
+              "maxHp": 1100,
+              "atb": 1,
+              "row": "front",
+              "weapons": [
+                "staff",
+                "bow"
+              ],
+              "slot": 0,
+              "nextSlot": null,
+              "nextRow": null,
+              "shift": 0,
+              "move": 0,
+              "action": null,
+              "queued": null,
+              "draft": [],
+              "sequences": [],
+              "shield": 0,
+              "executionHeld": false
+            },
+            {
+              "id": 2,
+              "name": "セナ",
+              "initial": "S",
+              "color": "#bea4dc",
+              "hp": 1150,
+              "maxHp": 1150,
+              "atb": 1,
+              "row": "front",
+              "weapons": [
+                "bell",
+                "hook"
+              ],
+              "slot": 1,
+              "nextSlot": null,
+              "nextRow": null,
+              "shift": 0,
+              "move": 0,
+              "action": null,
+              "queued": null,
+              "draft": [],
+              "sequences": [],
+              "shield": 0,
+              "executionHeld": false
+            }
+          ],
+          "enemies": [
+            {
+              "id": 0,
+              "name": "鐘楼の衛兵",
+              "glyph": "♜",
+              "kind": "guard",
+              "hp": 10000,
+              "maxHp": 10000,
+              "row": "front",
+              "chain": 200,
+              "hold": 0,
+              "broken": 12,
+              "nextAttack": 999,
+              "steadfast": 0,
+              "attackCount": 0,
+              "cast": null
+            }
+          ],
+          "presets": [
+            {
+              "name": "均衡の調べ",
+              "slots": [
+                0,
+                0,
+                0
+              ],
+              "rows": [
+                "front",
+                "back",
+                "back"
+              ]
+            },
+            {
+              "name": "崩しの連奏",
+              "slots": [
+                0,
+                0,
+                1
+              ],
+              "rows": [
+                "front",
+                "front",
+                "back"
+              ]
+            },
+            {
+              "name": "終幕の一撃",
+              "slots": [
+                0,
+                1,
+                1
+              ],
+              "rows": [
+                "front",
+                "back",
+                "back"
+              ]
+            },
+            {
+              "name": "崩し・防護・支援",
+              "slots": [
+                1,
+                0,
+                0
+              ],
+              "rows": [
+                "back",
+                "back",
+                "back"
+              ]
+            }
+          ],
+          "formations": [
+            {
+              "name": "全員後列",
+              "rows": [
+                "back",
+                "back",
+                "back"
+              ]
+            },
+            {
+              "name": "前衛1・後衛2",
+              "rows": [
+                "front",
+                "back",
+                "back"
+              ]
+            },
+            {
+              "name": "全員前列",
+              "rows": [
+                "front",
+                "front",
+                "front"
+              ]
+            }
+          ],
+          "activePreset": 1,
+          "inventory": [
+            "sword",
+            "shield",
+            "staff",
+            "bow",
+            "bell",
+            "hook"
+          ],
+          "potions": 3,
+          "events": [],
+          "eventSeq": 0,
+          "metrics": {
+            "damage": 0,
+            "taken": 0,
+            "healed": 0,
+            "breaks": 0,
+            "inputs": 0,
+            "focusUsed": 0
+          }
+        },
+        "inputs": [
+          {
+            "tick": 480,
+            "order": 0,
+            "command": {
+              "type": "optima",
+              "index": 2
+            }
+          }
+        ],
+        "endTick": 720
+      },
+      "finalStateHash": "8b74c79b13024cfd51399e535e75d9523466242db6f31692676b512d9953f2e5",
+      "replayVerified": true
+    },
+    {
+      "fixture": "hp10000-chain300",
+      "enemyHp": 10000,
+      "initialChain": 300,
+      "initialStateHash": "8d72cf014efc52c2d080b1821310ae95846275013f18939292e233b9ce4f7a75",
+      "policy": "keep-abb",
+      "damage": 3681,
+      "chainPeak": 500,
+      "killSeconds": null,
+      "observedSeconds": 12.000000000000176,
+      "switchIssuedSeconds": null,
+      "switchCompletedSeconds": null,
+      "offensiveHits": 12,
+      "recording": {
+        "version": "orchestra-15",
+        "initial": {
+          "version": "orchestra-15",
+          "controlMode": "ai",
+          "phase": "battle",
+          "paused": false,
+          "tick": 0,
+          "time": 0,
+          "realTime": 0,
+          "focus": 100,
+          "timeMode": "normal",
+          "rng": 1307,
+          "config": {
+            "bonusMode": "strong",
+            "enemyHpScale": 1,
+            "atbMax": 4,
+            "seed": 1307,
+            "atbRate": 0.85,
+            "atbMode": "idle",
+            "chainActions": true,
+            "moveTime": 0.85,
+            "shiftTime": 0.65,
+            "slowDrain": 4,
+            "enemyPower": 1,
+            "uiMode": "separate",
+            "encounter": 1
+          },
+          "encounter": 1,
+          "selected": 0,
+          "pendingSelect": null,
+          "handoffSlow": 0,
+          "allies": [
+            {
+              "id": 0,
+              "name": "アルト",
+              "initial": "A",
+              "color": "#ddaa63",
+              "hp": 1300,
+              "maxHp": 1300,
+              "atb": 1,
+              "row": "front",
+              "weapons": [
+                "sword",
+                "shield"
+              ],
+              "slot": 0,
+              "nextSlot": null,
+              "nextRow": null,
+              "shift": 0,
+              "move": 0,
+              "action": null,
+              "queued": null,
+              "draft": [],
+              "sequences": [],
+              "shield": 0,
+              "executionHeld": false
+            },
+            {
+              "id": 1,
+              "name": "リネ",
+              "initial": "L",
+              "color": "#77bdc2",
+              "hp": 1100,
+              "maxHp": 1100,
+              "atb": 1,
+              "row": "front",
+              "weapons": [
+                "staff",
+                "bow"
+              ],
+              "slot": 0,
+              "nextSlot": null,
+              "nextRow": null,
+              "shift": 0,
+              "move": 0,
+              "action": null,
+              "queued": null,
+              "draft": [],
+              "sequences": [],
+              "shield": 0,
+              "executionHeld": false
+            },
+            {
+              "id": 2,
+              "name": "セナ",
+              "initial": "S",
+              "color": "#bea4dc",
+              "hp": 1150,
+              "maxHp": 1150,
+              "atb": 1,
+              "row": "front",
+              "weapons": [
+                "bell",
+                "hook"
+              ],
+              "slot": 1,
+              "nextSlot": null,
+              "nextRow": null,
+              "shift": 0,
+              "move": 0,
+              "action": null,
+              "queued": null,
+              "draft": [],
+              "sequences": [],
+              "shield": 0,
+              "executionHeld": false
+            }
+          ],
+          "enemies": [
+            {
+              "id": 0,
+              "name": "鐘楼の衛兵",
+              "glyph": "♜",
+              "kind": "guard",
+              "hp": 10000,
+              "maxHp": 10000,
+              "row": "front",
+              "chain": 300,
+              "hold": 0,
+              "broken": 12,
+              "nextAttack": 999,
+              "steadfast": 0,
+              "attackCount": 0,
+              "cast": null
+            }
+          ],
+          "presets": [
+            {
+              "name": "均衡の調べ",
+              "slots": [
+                0,
+                0,
+                0
+              ],
+              "rows": [
+                "front",
+                "back",
+                "back"
+              ]
+            },
+            {
+              "name": "崩しの連奏",
+              "slots": [
+                0,
+                0,
+                1
+              ],
+              "rows": [
+                "front",
+                "front",
+                "back"
+              ]
+            },
+            {
+              "name": "終幕の一撃",
+              "slots": [
+                0,
+                1,
+                1
+              ],
+              "rows": [
+                "front",
+                "back",
+                "back"
+              ]
+            },
+            {
+              "name": "崩し・防護・支援",
+              "slots": [
+                1,
+                0,
+                0
+              ],
+              "rows": [
+                "back",
+                "back",
+                "back"
+              ]
+            }
+          ],
+          "formations": [
+            {
+              "name": "全員後列",
+              "rows": [
+                "back",
+                "back",
+                "back"
+              ]
+            },
+            {
+              "name": "前衛1・後衛2",
+              "rows": [
+                "front",
+                "back",
+                "back"
+              ]
+            },
+            {
+              "name": "全員前列",
+              "rows": [
+                "front",
+                "front",
+                "front"
+              ]
+            }
+          ],
+          "activePreset": 1,
+          "inventory": [
+            "sword",
+            "shield",
+            "staff",
+            "bow",
+            "bell",
+            "hook"
+          ],
+          "potions": 3,
+          "events": [],
+          "eventSeq": 0,
+          "metrics": {
+            "damage": 0,
+            "taken": 0,
+            "healed": 0,
+            "breaks": 0,
+            "inputs": 0,
+            "focusUsed": 0
+          }
+        },
+        "inputs": [],
+        "endTick": 720
+      },
+      "finalStateHash": "1c1ee02d80fc0d76ef9f9ae1f849a4e0818d9bc098c2c18796302afa2c8a6ada",
+      "replayVerified": true
+    },
+    {
+      "fixture": "hp10000-chain300",
+      "enemyHp": 10000,
+      "initialChain": 300,
+      "initialStateHash": "8d72cf014efc52c2d080b1821310ae95846275013f18939292e233b9ce4f7a75",
+      "policy": "aab-now",
+      "damage": 5284,
+      "chainPeak": 430,
+      "killSeconds": null,
+      "observedSeconds": 12.000000000000176,
+      "switchIssuedSeconds": 0,
+      "switchCompletedSeconds": 0.6500000000000004,
+      "offensiveHits": 12,
+      "recording": {
+        "version": "orchestra-15",
+        "initial": {
+          "version": "orchestra-15",
+          "controlMode": "ai",
+          "phase": "battle",
+          "paused": false,
+          "tick": 0,
+          "time": 0,
+          "realTime": 0,
+          "focus": 100,
+          "timeMode": "normal",
+          "rng": 1307,
+          "config": {
+            "bonusMode": "strong",
+            "enemyHpScale": 1,
+            "atbMax": 4,
+            "seed": 1307,
+            "atbRate": 0.85,
+            "atbMode": "idle",
+            "chainActions": true,
+            "moveTime": 0.85,
+            "shiftTime": 0.65,
+            "slowDrain": 4,
+            "enemyPower": 1,
+            "uiMode": "separate",
+            "encounter": 1
+          },
+          "encounter": 1,
+          "selected": 0,
+          "pendingSelect": null,
+          "handoffSlow": 0,
+          "allies": [
+            {
+              "id": 0,
+              "name": "アルト",
+              "initial": "A",
+              "color": "#ddaa63",
+              "hp": 1300,
+              "maxHp": 1300,
+              "atb": 1,
+              "row": "front",
+              "weapons": [
+                "sword",
+                "shield"
+              ],
+              "slot": 0,
+              "nextSlot": null,
+              "nextRow": null,
+              "shift": 0,
+              "move": 0,
+              "action": null,
+              "queued": null,
+              "draft": [],
+              "sequences": [],
+              "shield": 0,
+              "executionHeld": false
+            },
+            {
+              "id": 1,
+              "name": "リネ",
+              "initial": "L",
+              "color": "#77bdc2",
+              "hp": 1100,
+              "maxHp": 1100,
+              "atb": 1,
+              "row": "front",
+              "weapons": [
+                "staff",
+                "bow"
+              ],
+              "slot": 0,
+              "nextSlot": null,
+              "nextRow": null,
+              "shift": 0,
+              "move": 0,
+              "action": null,
+              "queued": null,
+              "draft": [],
+              "sequences": [],
+              "shield": 0,
+              "executionHeld": false
+            },
+            {
+              "id": 2,
+              "name": "セナ",
+              "initial": "S",
+              "color": "#bea4dc",
+              "hp": 1150,
+              "maxHp": 1150,
+              "atb": 1,
+              "row": "front",
+              "weapons": [
+                "bell",
+                "hook"
+              ],
+              "slot": 1,
+              "nextSlot": null,
+              "nextRow": null,
+              "shift": 0,
+              "move": 0,
+              "action": null,
+              "queued": null,
+              "draft": [],
+              "sequences": [],
+              "shield": 0,
+              "executionHeld": false
+            }
+          ],
+          "enemies": [
+            {
+              "id": 0,
+              "name": "鐘楼の衛兵",
+              "glyph": "♜",
+              "kind": "guard",
+              "hp": 10000,
+              "maxHp": 10000,
+              "row": "front",
+              "chain": 300,
+              "hold": 0,
+              "broken": 12,
+              "nextAttack": 999,
+              "steadfast": 0,
+              "attackCount": 0,
+              "cast": null
+            }
+          ],
+          "presets": [
+            {
+              "name": "均衡の調べ",
+              "slots": [
+                0,
+                0,
+                0
+              ],
+              "rows": [
+                "front",
+                "back",
+                "back"
+              ]
+            },
+            {
+              "name": "崩しの連奏",
+              "slots": [
+                0,
+                0,
+                1
+              ],
+              "rows": [
+                "front",
+                "front",
+                "back"
+              ]
+            },
+            {
+              "name": "終幕の一撃",
+              "slots": [
+                0,
+                1,
+                1
+              ],
+              "rows": [
+                "front",
+                "back",
+                "back"
+              ]
+            },
+            {
+              "name": "崩し・防護・支援",
+              "slots": [
+                1,
+                0,
+                0
+              ],
+              "rows": [
+                "back",
+                "back",
+                "back"
+              ]
+            }
+          ],
+          "formations": [
+            {
+              "name": "全員後列",
+              "rows": [
+                "back",
+                "back",
+                "back"
+              ]
+            },
+            {
+              "name": "前衛1・後衛2",
+              "rows": [
+                "front",
+                "back",
+                "back"
+              ]
+            },
+            {
+              "name": "全員前列",
+              "rows": [
+                "front",
+                "front",
+                "front"
+              ]
+            }
+          ],
+          "activePreset": 1,
+          "inventory": [
+            "sword",
+            "shield",
+            "staff",
+            "bow",
+            "bell",
+            "hook"
+          ],
+          "potions": 3,
+          "events": [],
+          "eventSeq": 0,
+          "metrics": {
+            "damage": 0,
+            "taken": 0,
+            "healed": 0,
+            "breaks": 0,
+            "inputs": 0,
+            "focusUsed": 0
+          }
+        },
+        "inputs": [
+          {
+            "tick": 0,
+            "order": 0,
+            "command": {
+              "type": "optima",
+              "index": 2
+            }
+          }
+        ],
+        "endTick": 720
+      },
+      "finalStateHash": "0fe04c7a891a719edc8bd6dc941737076eef11f9f5f9b62e33e573174904b86e",
+      "replayVerified": true
+    },
+    {
+      "fixture": "hp10000-chain300",
+      "enemyHp": 10000,
+      "initialChain": 300,
+      "initialStateHash": "8d72cf014efc52c2d080b1821310ae95846275013f18939292e233b9ce4f7a75",
+      "policy": "aab-after-4s",
+      "damage": 4887,
+      "chainPeak": 493,
+      "killSeconds": null,
+      "observedSeconds": 12.000000000000176,
+      "switchIssuedSeconds": 3.9999999999999907,
+      "switchCompletedSeconds": 4.933333333333321,
+      "offensiveHits": 12,
+      "recording": {
+        "version": "orchestra-15",
+        "initial": {
+          "version": "orchestra-15",
+          "controlMode": "ai",
+          "phase": "battle",
+          "paused": false,
+          "tick": 0,
+          "time": 0,
+          "realTime": 0,
+          "focus": 100,
+          "timeMode": "normal",
+          "rng": 1307,
+          "config": {
+            "bonusMode": "strong",
+            "enemyHpScale": 1,
+            "atbMax": 4,
+            "seed": 1307,
+            "atbRate": 0.85,
+            "atbMode": "idle",
+            "chainActions": true,
+            "moveTime": 0.85,
+            "shiftTime": 0.65,
+            "slowDrain": 4,
+            "enemyPower": 1,
+            "uiMode": "separate",
+            "encounter": 1
+          },
+          "encounter": 1,
+          "selected": 0,
+          "pendingSelect": null,
+          "handoffSlow": 0,
+          "allies": [
+            {
+              "id": 0,
+              "name": "アルト",
+              "initial": "A",
+              "color": "#ddaa63",
+              "hp": 1300,
+              "maxHp": 1300,
+              "atb": 1,
+              "row": "front",
+              "weapons": [
+                "sword",
+                "shield"
+              ],
+              "slot": 0,
+              "nextSlot": null,
+              "nextRow": null,
+              "shift": 0,
+              "move": 0,
+              "action": null,
+              "queued": null,
+              "draft": [],
+              "sequences": [],
+              "shield": 0,
+              "executionHeld": false
+            },
+            {
+              "id": 1,
+              "name": "リネ",
+              "initial": "L",
+              "color": "#77bdc2",
+              "hp": 1100,
+              "maxHp": 1100,
+              "atb": 1,
+              "row": "front",
+              "weapons": [
+                "staff",
+                "bow"
+              ],
+              "slot": 0,
+              "nextSlot": null,
+              "nextRow": null,
+              "shift": 0,
+              "move": 0,
+              "action": null,
+              "queued": null,
+              "draft": [],
+              "sequences": [],
+              "shield": 0,
+              "executionHeld": false
+            },
+            {
+              "id": 2,
+              "name": "セナ",
+              "initial": "S",
+              "color": "#bea4dc",
+              "hp": 1150,
+              "maxHp": 1150,
+              "atb": 1,
+              "row": "front",
+              "weapons": [
+                "bell",
+                "hook"
+              ],
+              "slot": 1,
+              "nextSlot": null,
+              "nextRow": null,
+              "shift": 0,
+              "move": 0,
+              "action": null,
+              "queued": null,
+              "draft": [],
+              "sequences": [],
+              "shield": 0,
+              "executionHeld": false
+            }
+          ],
+          "enemies": [
+            {
+              "id": 0,
+              "name": "鐘楼の衛兵",
+              "glyph": "♜",
+              "kind": "guard",
+              "hp": 10000,
+              "maxHp": 10000,
+              "row": "front",
+              "chain": 300,
+              "hold": 0,
+              "broken": 12,
+              "nextAttack": 999,
+              "steadfast": 0,
+              "attackCount": 0,
+              "cast": null
+            }
+          ],
+          "presets": [
+            {
+              "name": "均衡の調べ",
+              "slots": [
+                0,
+                0,
+                0
+              ],
+              "rows": [
+                "front",
+                "back",
+                "back"
+              ]
+            },
+            {
+              "name": "崩しの連奏",
+              "slots": [
+                0,
+                0,
+                1
+              ],
+              "rows": [
+                "front",
+                "front",
+                "back"
+              ]
+            },
+            {
+              "name": "終幕の一撃",
+              "slots": [
+                0,
+                1,
+                1
+              ],
+              "rows": [
+                "front",
+                "back",
+                "back"
+              ]
+            },
+            {
+              "name": "崩し・防護・支援",
+              "slots": [
+                1,
+                0,
+                0
+              ],
+              "rows": [
+                "back",
+                "back",
+                "back"
+              ]
+            }
+          ],
+          "formations": [
+            {
+              "name": "全員後列",
+              "rows": [
+                "back",
+                "back",
+                "back"
+              ]
+            },
+            {
+              "name": "前衛1・後衛2",
+              "rows": [
+                "front",
+                "back",
+                "back"
+              ]
+            },
+            {
+              "name": "全員前列",
+              "rows": [
+                "front",
+                "front",
+                "front"
+              ]
+            }
+          ],
+          "activePreset": 1,
+          "inventory": [
+            "sword",
+            "shield",
+            "staff",
+            "bow",
+            "bell",
+            "hook"
+          ],
+          "potions": 3,
+          "events": [],
+          "eventSeq": 0,
+          "metrics": {
+            "damage": 0,
+            "taken": 0,
+            "healed": 0,
+            "breaks": 0,
+            "inputs": 0,
+            "focusUsed": 0
+          }
+        },
+        "inputs": [
+          {
+            "tick": 240,
+            "order": 0,
+            "command": {
+              "type": "optima",
+              "index": 2
+            }
+          }
+        ],
+        "endTick": 720
+      },
+      "finalStateHash": "e9398144515541d6c0ca32a70f77ac4064089c9ef624da18da863ca8fc4740fb",
+      "replayVerified": true
+    },
+    {
+      "fixture": "hp10000-chain300",
+      "enemyHp": 10000,
+      "initialChain": 300,
+      "initialStateHash": "8d72cf014efc52c2d080b1821310ae95846275013f18939292e233b9ce4f7a75",
+      "policy": "aab-after-8s",
+      "damage": 3681,
+      "chainPeak": 500,
+      "killSeconds": null,
+      "observedSeconds": 12.000000000000176,
+      "switchIssuedSeconds": 7.999999999999977,
+      "switchCompletedSeconds": 10.383333333333429,
+      "offensiveHits": 12,
+      "recording": {
+        "version": "orchestra-15",
+        "initial": {
+          "version": "orchestra-15",
+          "controlMode": "ai",
+          "phase": "battle",
+          "paused": false,
+          "tick": 0,
+          "time": 0,
+          "realTime": 0,
+          "focus": 100,
+          "timeMode": "normal",
+          "rng": 1307,
+          "config": {
+            "bonusMode": "strong",
+            "enemyHpScale": 1,
+            "atbMax": 4,
+            "seed": 1307,
+            "atbRate": 0.85,
+            "atbMode": "idle",
+            "chainActions": true,
+            "moveTime": 0.85,
+            "shiftTime": 0.65,
+            "slowDrain": 4,
+            "enemyPower": 1,
+            "uiMode": "separate",
+            "encounter": 1
+          },
+          "encounter": 1,
+          "selected": 0,
+          "pendingSelect": null,
+          "handoffSlow": 0,
+          "allies": [
+            {
+              "id": 0,
+              "name": "アルト",
+              "initial": "A",
+              "color": "#ddaa63",
+              "hp": 1300,
+              "maxHp": 1300,
+              "atb": 1,
+              "row": "front",
+              "weapons": [
+                "sword",
+                "shield"
+              ],
+              "slot": 0,
+              "nextSlot": null,
+              "nextRow": null,
+              "shift": 0,
+              "move": 0,
+              "action": null,
+              "queued": null,
+              "draft": [],
+              "sequences": [],
+              "shield": 0,
+              "executionHeld": false
+            },
+            {
+              "id": 1,
+              "name": "リネ",
+              "initial": "L",
+              "color": "#77bdc2",
+              "hp": 1100,
+              "maxHp": 1100,
+              "atb": 1,
+              "row": "front",
+              "weapons": [
+                "staff",
+                "bow"
+              ],
+              "slot": 0,
+              "nextSlot": null,
+              "nextRow": null,
+              "shift": 0,
+              "move": 0,
+              "action": null,
+              "queued": null,
+              "draft": [],
+              "sequences": [],
+              "shield": 0,
+              "executionHeld": false
+            },
+            {
+              "id": 2,
+              "name": "セナ",
+              "initial": "S",
+              "color": "#bea4dc",
+              "hp": 1150,
+              "maxHp": 1150,
+              "atb": 1,
+              "row": "front",
+              "weapons": [
+                "bell",
+                "hook"
+              ],
+              "slot": 1,
+              "nextSlot": null,
+              "nextRow": null,
+              "shift": 0,
+              "move": 0,
+              "action": null,
+              "queued": null,
+              "draft": [],
+              "sequences": [],
+              "shield": 0,
+              "executionHeld": false
+            }
+          ],
+          "enemies": [
+            {
+              "id": 0,
+              "name": "鐘楼の衛兵",
+              "glyph": "♜",
+              "kind": "guard",
+              "hp": 10000,
+              "maxHp": 10000,
+              "row": "front",
+              "chain": 300,
+              "hold": 0,
+              "broken": 12,
+              "nextAttack": 999,
+              "steadfast": 0,
+              "attackCount": 0,
+              "cast": null
+            }
+          ],
+          "presets": [
+            {
+              "name": "均衡の調べ",
+              "slots": [
+                0,
+                0,
+                0
+              ],
+              "rows": [
+                "front",
+                "back",
+                "back"
+              ]
+            },
+            {
+              "name": "崩しの連奏",
+              "slots": [
+                0,
+                0,
+                1
+              ],
+              "rows": [
+                "front",
+                "front",
+                "back"
+              ]
+            },
+            {
+              "name": "終幕の一撃",
+              "slots": [
+                0,
+                1,
+                1
+              ],
+              "rows": [
+                "front",
+                "back",
+                "back"
+              ]
+            },
+            {
+              "name": "崩し・防護・支援",
+              "slots": [
+                1,
+                0,
+                0
+              ],
+              "rows": [
+                "back",
+                "back",
+                "back"
+              ]
+            }
+          ],
+          "formations": [
+            {
+              "name": "全員後列",
+              "rows": [
+                "back",
+                "back",
+                "back"
+              ]
+            },
+            {
+              "name": "前衛1・後衛2",
+              "rows": [
+                "front",
+                "back",
+                "back"
+              ]
+            },
+            {
+              "name": "全員前列",
+              "rows": [
+                "front",
+                "front",
+                "front"
+              ]
+            }
+          ],
+          "activePreset": 1,
+          "inventory": [
+            "sword",
+            "shield",
+            "staff",
+            "bow",
+            "bell",
+            "hook"
+          ],
+          "potions": 3,
+          "events": [],
+          "eventSeq": 0,
+          "metrics": {
+            "damage": 0,
+            "taken": 0,
+            "healed": 0,
+            "breaks": 0,
+            "inputs": 0,
+            "focusUsed": 0
+          }
+        },
+        "inputs": [
+          {
+            "tick": 480,
+            "order": 0,
+            "command": {
+              "type": "optima",
+              "index": 2
+            }
+          }
+        ],
+        "endTick": 720
+      },
+      "finalStateHash": "3e7771e47b6bd70d92f13307f1fae2edc625fa6651fb2b0a5b6bb4d38e06b13e",
+      "replayVerified": true
+    }
+  ]
+}

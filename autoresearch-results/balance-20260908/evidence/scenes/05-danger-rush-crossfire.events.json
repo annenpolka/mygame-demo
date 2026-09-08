@@ -1,0 +1,2522 @@
+[
+  {
+    "id": 1,
+    "time": 0,
+    "type": "system",
+    "text": "戦闘開始。全員をAIが操作します。",
+    "encounter": 1
+  },
+  {
+    "id": 2,
+    "time": 0,
+    "type": "system",
+    "text": "隊列指示：全員前列",
+    "encounter": 1
+  },
+  {
+    "id": 3,
+    "time": 0,
+    "type": "shift",
+    "text": "オプティマ：崩しの連奏",
+    "encounter": 1
+  },
+  {
+    "id": 4,
+    "time": 0.6500000000000004,
+    "type": "shift",
+    "text": "セナ → 鉤槍使い",
+    "target": "a2",
+    "encounter": 1
+  },
+  {
+    "id": 5,
+    "time": 0.850000000000001,
+    "type": "move",
+    "text": "リネ → 前列",
+    "target": "a1",
+    "visual": {
+      "fromRow": "back",
+      "toRow": "front"
+    },
+    "encounter": 1
+  },
+  {
+    "id": 6,
+    "time": 0.850000000000001,
+    "type": "move",
+    "text": "セナ → 前列",
+    "target": "a2",
+    "visual": {
+      "fromRow": "back",
+      "toRow": "front"
+    },
+    "encounter": 1
+  },
+  {
+    "id": 7,
+    "time": 0.9166666666666679,
+    "type": "action",
+    "text": "アルト → 斬撃",
+    "source": "a0",
+    "visual": {
+      "skillId": "slash",
+      "actionName": "斬撃",
+      "comboIndex": 1
+    },
+    "encounter": 1
+  },
+  {
+    "id": 8,
+    "time": 1.816666666666665,
+    "type": "damage",
+    "text": "アルト → 砲列の衛兵 129",
+    "source": "a0",
+    "target": "e0",
+    "value": 129,
+    "visual": {
+      "skillId": "slash",
+      "actionName": "斬撃",
+      "comboIndex": 1,
+      "shielded": false
+    },
+    "encounter": 1
+  },
+  {
+    "id": 9,
+    "time": 1.866666666666665,
+    "type": "action",
+    "text": "リネ → 砕光",
+    "source": "a1",
+    "visual": {
+      "skillId": "spark",
+      "actionName": "砕光",
+      "comboIndex": 1
+    },
+    "encounter": 1
+  },
+  {
+    "id": 10,
+    "time": 1.866666666666665,
+    "type": "action",
+    "text": "セナ → 砕突",
+    "source": "a2",
+    "visual": {
+      "skillId": "jab",
+      "actionName": "砕突",
+      "comboIndex": 1
+    },
+    "encounter": 1
+  },
+  {
+    "id": 11,
+    "time": 2.0166666666666644,
+    "type": "action",
+    "text": "アルト → 斬撃",
+    "source": "a0",
+    "visual": {
+      "skillId": "slash",
+      "actionName": "斬撃",
+      "comboIndex": 2
+    },
+    "encounter": 1
+  },
+  {
+    "id": 12,
+    "time": 2.7666666666666617,
+    "type": "damage",
+    "text": "セナ → 砲列の衛兵 51",
+    "source": "a2",
+    "target": "e0",
+    "value": 51,
+    "visual": {
+      "skillId": "jab",
+      "actionName": "砕突",
+      "comboIndex": 1,
+      "shielded": false
+    },
+    "encounter": 1
+  },
+  {
+    "id": 13,
+    "time": 2.8666666666666614,
+    "type": "damage",
+    "text": "リネ → 砲列の衛兵 60",
+    "source": "a1",
+    "target": "e0",
+    "value": 60,
+    "visual": {
+      "skillId": "spark",
+      "actionName": "砕光",
+      "comboIndex": 1,
+      "shielded": false
+    },
+    "encounter": 1
+  },
+  {
+    "id": 14,
+    "time": 2.916666666666661,
+    "type": "damage",
+    "text": "アルト → 砲列の衛兵 230",
+    "source": "a0",
+    "target": "e0",
+    "value": 230,
+    "visual": {
+      "skillId": "slash",
+      "actionName": "斬撃",
+      "comboIndex": 2,
+      "shielded": false
+    },
+    "encounter": 1
+  },
+  {
+    "id": 15,
+    "time": 2.966666666666661,
+    "type": "action",
+    "text": "セナ → 砕突",
+    "source": "a2",
+    "visual": {
+      "skillId": "jab",
+      "actionName": "砕突",
+      "comboIndex": 2
+    },
+    "encounter": 1
+  },
+  {
+    "id": 16,
+    "time": 3.0666666666666607,
+    "type": "action",
+    "text": "リネ → 砕光",
+    "source": "a1",
+    "visual": {
+      "skillId": "spark",
+      "actionName": "砕光",
+      "comboIndex": 2
+    },
+    "encounter": 1
+  },
+  {
+    "id": 17,
+    "time": 3.866666666666658,
+    "type": "damage",
+    "text": "セナ → 砲列の衛兵 89",
+    "source": "a2",
+    "target": "e0",
+    "value": 89,
+    "visual": {
+      "skillId": "jab",
+      "actionName": "砕突",
+      "comboIndex": 2,
+      "shielded": false
+    },
+    "encounter": 1
+  },
+  {
+    "id": 18,
+    "time": 3.9166666666666576,
+    "type": "warning",
+    "text": "砲列の衛兵：前列薙ぎ払い",
+    "source": "e0",
+    "visual": {
+      "actionName": "前列薙ぎ払い"
+    },
+    "encounter": 1
+  },
+  {
+    "id": 19,
+    "time": 4.0666666666666575,
+    "type": "damage",
+    "text": "リネ → 砲列の衛兵 86",
+    "source": "a1",
+    "target": "e0",
+    "value": 86,
+    "visual": {
+      "skillId": "spark",
+      "actionName": "砕光",
+      "comboIndex": 2,
+      "shielded": false
+    },
+    "encounter": 1
+  },
+  {
+    "id": 20,
+    "time": 4.0666666666666575,
+    "type": "break",
+    "text": "砲列の衛兵 BREAK — 12秒間の好機",
+    "target": "e0",
+    "source": "a1",
+    "visual": {
+      "skillId": "spark",
+      "actionName": "砕光",
+      "comboIndex": 2
+    },
+    "encounter": 1
+  },
+  {
+    "id": 21,
+    "time": 4.216666666666657,
+    "type": "warning",
+    "text": "後列狙いの砲手：後列への交差砲撃",
+    "source": "e1",
+    "visual": {
+      "actionName": "後列への交差砲撃"
+    },
+    "encounter": 1
+  },
+  {
+    "id": 22,
+    "time": 4.216666666666657,
+    "type": "warning",
+    "text": "前列狙いの砲手：前列への交差砲撃",
+    "source": "e2",
+    "visual": {
+      "actionName": "前列への交差砲撃"
+    },
+    "encounter": 1
+  },
+  {
+    "id": 23,
+    "time": 4.24999999999999,
+    "type": "shift",
+    "text": "オプティマ：終幕の一撃",
+    "encounter": 1
+  },
+  {
+    "id": 24,
+    "time": 5.616666666666652,
+    "type": "shift",
+    "text": "リネ → 射手",
+    "target": "a1",
+    "encounter": 1
+  },
+  {
+    "id": 25,
+    "time": 5.916666666666651,
+    "type": "action",
+    "text": "アルト → 斬撃",
+    "source": "a0",
+    "visual": {
+      "skillId": "slash",
+      "actionName": "斬撃",
+      "comboIndex": 1
+    },
+    "encounter": 1
+  },
+  {
+    "id": 26,
+    "time": 6.816666666666648,
+    "type": "damage",
+    "text": "アルト → 砲列の衛兵 342",
+    "source": "a0",
+    "target": "e0",
+    "value": 342,
+    "visual": {
+      "skillId": "slash",
+      "actionName": "斬撃",
+      "comboIndex": 1,
+      "shielded": false
+    },
+    "encounter": 1
+  },
+  {
+    "id": 27,
+    "time": 6.866666666666648,
+    "type": "action",
+    "text": "セナ → 砕突",
+    "source": "a2",
+    "visual": {
+      "skillId": "jab",
+      "actionName": "砕突",
+      "comboIndex": 1
+    },
+    "encounter": 1
+  },
+  {
+    "id": 28,
+    "time": 7.016666666666647,
+    "type": "action",
+    "text": "アルト → 斬撃",
+    "source": "a0",
+    "visual": {
+      "skillId": "slash",
+      "actionName": "斬撃",
+      "comboIndex": 2
+    },
+    "encounter": 1
+  },
+  {
+    "id": 29,
+    "time": 7.583333333333312,
+    "type": "system",
+    "text": "後列狙いの砲手：後列への交差砲撃は誰にも当たらなかった",
+    "source": "e1",
+    "target": "e1",
+    "visual": {
+      "actionName": "後列への交差砲撃",
+      "outcome": "miss"
+    },
+    "encounter": 1
+  },
+  {
+    "id": 30,
+    "time": 7.583333333333312,
+    "type": "damage",
+    "text": "前列狙いの砲手 → アルト 347",
+    "source": "e2",
+    "target": "a0",
+    "value": 347,
+    "visual": {
+      "actionName": "前列への交差砲撃",
+      "shielded": false
+    },
+    "encounter": 1
+  },
+  {
+    "id": 31,
+    "time": 7.583333333333312,
+    "type": "damage",
+    "text": "前列狙いの砲手 → リネ 347",
+    "source": "e2",
+    "target": "a1",
+    "value": 347,
+    "visual": {
+      "actionName": "前列への交差砲撃",
+      "shielded": false
+    },
+    "encounter": 1
+  },
+  {
+    "id": 32,
+    "time": 7.583333333333312,
+    "type": "damage",
+    "text": "前列狙いの砲手 → セナ 347",
+    "source": "e2",
+    "target": "a2",
+    "value": 347,
+    "visual": {
+      "actionName": "前列への交差砲撃",
+      "shielded": false
+    },
+    "encounter": 1
+  },
+  {
+    "id": 33,
+    "time": 7.616666666666645,
+    "type": "action",
+    "text": "リネ → 射撃",
+    "source": "a1",
+    "visual": {
+      "skillId": "shot",
+      "actionName": "射撃",
+      "comboIndex": 1
+    },
+    "encounter": 1
+  },
+  {
+    "id": 34,
+    "time": 7.766666666666644,
+    "type": "damage",
+    "text": "セナ → 後列狙いの砲手 63",
+    "source": "a2",
+    "target": "e1",
+    "value": 63,
+    "visual": {
+      "skillId": "jab",
+      "actionName": "砕突",
+      "comboIndex": 1,
+      "shielded": false
+    },
+    "encounter": 1
+  },
+  {
+    "id": 35,
+    "time": 7.916666666666644,
+    "type": "damage",
+    "text": "アルト → 砲列の衛兵 390",
+    "source": "a0",
+    "target": "e0",
+    "value": 390,
+    "visual": {
+      "skillId": "slash",
+      "actionName": "斬撃",
+      "comboIndex": 2,
+      "shielded": false
+    },
+    "encounter": 1
+  },
+  {
+    "id": 36,
+    "time": 7.966666666666644,
+    "type": "action",
+    "text": "セナ → 砕突",
+    "source": "a2",
+    "visual": {
+      "skillId": "jab",
+      "actionName": "砕突",
+      "comboIndex": 2
+    },
+    "encounter": 1
+  },
+  {
+    "id": 37,
+    "time": 8.616666666666674,
+    "type": "damage",
+    "text": "リネ → 砲列の衛兵 336",
+    "source": "a1",
+    "target": "e0",
+    "value": 336,
+    "visual": {
+      "skillId": "shot",
+      "actionName": "射撃",
+      "comboIndex": 1,
+      "shielded": false
+    },
+    "encounter": 1
+  },
+  {
+    "id": 38,
+    "time": 8.816666666666684,
+    "type": "action",
+    "text": "リネ → 射撃",
+    "source": "a1",
+    "visual": {
+      "skillId": "shot",
+      "actionName": "射撃",
+      "comboIndex": 2
+    },
+    "encounter": 1
+  },
+  {
+    "id": 39,
+    "time": 8.866666666666687,
+    "type": "damage",
+    "text": "セナ → 後列狙いの砲手 74",
+    "source": "a2",
+    "target": "e1",
+    "value": 74,
+    "visual": {
+      "skillId": "jab",
+      "actionName": "砕突",
+      "comboIndex": 2,
+      "shielded": false
+    },
+    "encounter": 1
+  },
+  {
+    "id": 40,
+    "time": 9.816666666666734,
+    "type": "damage",
+    "text": "リネ → 砲列の衛兵 55",
+    "source": "a1",
+    "target": "e0",
+    "value": 55,
+    "visual": {
+      "skillId": "shot",
+      "actionName": "射撃",
+      "comboIndex": 2,
+      "shielded": false
+    },
+    "encounter": 1
+  },
+  {
+    "id": 41,
+    "time": 9.816666666666734,
+    "type": "system",
+    "text": "砲列の衛兵を倒した",
+    "source": "a1",
+    "target": "e0",
+    "visual": {
+      "skillId": "shot",
+      "actionName": "射撃",
+      "comboIndex": 2,
+      "outcome": "defeat"
+    },
+    "encounter": 1
+  },
+  {
+    "id": 42,
+    "time": 10.000000000000076,
+    "type": "shift",
+    "text": "オプティマ：崩しの連奏",
+    "encounter": 1
+  },
+  {
+    "id": 43,
+    "time": 10.916666666666789,
+    "type": "action",
+    "text": "アルト → 斬撃",
+    "source": "a0",
+    "visual": {
+      "skillId": "slash",
+      "actionName": "斬撃",
+      "comboIndex": 1
+    },
+    "encounter": 1
+  },
+  {
+    "id": 44,
+    "time": 11.366666666666811,
+    "type": "shift",
+    "text": "リネ → 魔術師",
+    "target": "a1",
+    "encounter": 1
+  },
+  {
+    "id": 45,
+    "time": 11.816666666666833,
+    "type": "damage",
+    "text": "アルト → 後列狙いの砲手 216",
+    "source": "a0",
+    "target": "e1",
+    "value": 216,
+    "visual": {
+      "skillId": "slash",
+      "actionName": "斬撃",
+      "comboIndex": 1,
+      "shielded": false
+    },
+    "encounter": 1
+  },
+  {
+    "id": 46,
+    "time": 11.866666666666836,
+    "type": "action",
+    "text": "セナ → 砕突",
+    "source": "a2",
+    "visual": {
+      "skillId": "jab",
+      "actionName": "砕突",
+      "comboIndex": 1
+    },
+    "encounter": 1
+  },
+  {
+    "id": 47,
+    "time": 12.016666666666843,
+    "type": "action",
+    "text": "アルト → 斬撃",
+    "source": "a0",
+    "visual": {
+      "skillId": "slash",
+      "actionName": "斬撃",
+      "comboIndex": 2
+    },
+    "encounter": 1
+  },
+  {
+    "id": 48,
+    "time": 12.70000000000021,
+    "type": "warning",
+    "text": "後列狙いの砲手：後列への交差砲撃",
+    "source": "e1",
+    "visual": {
+      "actionName": "後列への交差砲撃"
+    },
+    "encounter": 1
+  },
+  {
+    "id": 49,
+    "time": 12.70000000000021,
+    "type": "warning",
+    "text": "前列狙いの砲手：前列への交差砲撃",
+    "source": "e2",
+    "visual": {
+      "actionName": "前列への交差砲撃"
+    },
+    "encounter": 1
+  },
+  {
+    "id": 50,
+    "time": 12.76666666666688,
+    "type": "damage",
+    "text": "セナ → 後列狙いの砲手 64",
+    "source": "a2",
+    "target": "e1",
+    "value": 64,
+    "visual": {
+      "skillId": "jab",
+      "actionName": "砕突",
+      "comboIndex": 1,
+      "shielded": false
+    },
+    "encounter": 1
+  },
+  {
+    "id": 51,
+    "time": 12.916666666666888,
+    "type": "damage",
+    "text": "アルト → 後列狙いの砲手 208",
+    "source": "a0",
+    "target": "e1",
+    "value": 208,
+    "visual": {
+      "skillId": "slash",
+      "actionName": "斬撃",
+      "comboIndex": 2,
+      "shielded": false
+    },
+    "encounter": 1
+  },
+  {
+    "id": 52,
+    "time": 12.96666666666689,
+    "type": "action",
+    "text": "セナ → 砕突",
+    "source": "a2",
+    "visual": {
+      "skillId": "jab",
+      "actionName": "砕突",
+      "comboIndex": 2
+    },
+    "encounter": 1
+  },
+  {
+    "id": 53,
+    "time": 13.36666666666691,
+    "type": "action",
+    "text": "リネ → 砕光",
+    "source": "a1",
+    "visual": {
+      "skillId": "spark",
+      "actionName": "砕光",
+      "comboIndex": 1
+    },
+    "encounter": 1
+  },
+  {
+    "id": 54,
+    "time": 13.866666666666935,
+    "type": "damage",
+    "text": "セナ → 後列狙いの砲手 80",
+    "source": "a2",
+    "target": "e1",
+    "value": 80,
+    "visual": {
+      "skillId": "jab",
+      "actionName": "砕突",
+      "comboIndex": 2,
+      "shielded": false
+    },
+    "encounter": 1
+  },
+  {
+    "id": 55,
+    "time": 14.36666666666696,
+    "type": "damage",
+    "text": "リネ → 後列狙いの砲手 86",
+    "source": "a1",
+    "target": "e1",
+    "value": 86,
+    "visual": {
+      "skillId": "spark",
+      "actionName": "砕光",
+      "comboIndex": 1,
+      "shielded": false
+    },
+    "encounter": 1
+  },
+  {
+    "id": 56,
+    "time": 14.36666666666696,
+    "type": "break",
+    "text": "後列狙いの砲手 BREAK — 12秒間の好機",
+    "target": "e1",
+    "source": "a1",
+    "visual": {
+      "skillId": "spark",
+      "actionName": "砕光",
+      "comboIndex": 1
+    },
+    "encounter": 1
+  },
+  {
+    "id": 57,
+    "time": 14.5000000000003,
+    "type": "system",
+    "text": "リネ：武器変更のため「砕光」の予約を解除",
+    "encounter": 1
+  },
+  {
+    "id": 58,
+    "time": 14.5000000000003,
+    "type": "shift",
+    "text": "オプティマ：終幕の一撃",
+    "encounter": 1
+  },
+  {
+    "id": 59,
+    "time": 15.916666666667037,
+    "type": "action",
+    "text": "アルト → 斬撃",
+    "source": "a0",
+    "visual": {
+      "skillId": "slash",
+      "actionName": "斬撃",
+      "comboIndex": 1
+    },
+    "encounter": 1
+  },
+  {
+    "id": 60,
+    "time": 15.916666666667037,
+    "type": "shift",
+    "text": "リネ → 射手",
+    "target": "a1",
+    "encounter": 1
+  },
+  {
+    "id": 61,
+    "time": 16.066666666667036,
+    "type": "damage",
+    "text": "前列狙いの砲手 → アルト 347",
+    "source": "e2",
+    "target": "a0",
+    "value": 347,
+    "visual": {
+      "actionName": "前列への交差砲撃",
+      "shielded": false
+    },
+    "encounter": 1
+  },
+  {
+    "id": 62,
+    "time": 16.066666666667036,
+    "type": "damage",
+    "text": "前列狙いの砲手 → リネ 347",
+    "source": "e2",
+    "target": "a1",
+    "value": 347,
+    "visual": {
+      "actionName": "前列への交差砲撃",
+      "shielded": false
+    },
+    "encounter": 1
+  },
+  {
+    "id": 63,
+    "time": 16.066666666667036,
+    "type": "damage",
+    "text": "前列狙いの砲手 → セナ 347",
+    "source": "e2",
+    "target": "a2",
+    "value": 347,
+    "visual": {
+      "actionName": "前列への交差砲撃",
+      "shielded": false
+    },
+    "encounter": 1
+  },
+  {
+    "id": 64,
+    "time": 16.816666666666993,
+    "type": "damage",
+    "text": "アルト → 後列狙いの砲手 308",
+    "source": "a0",
+    "target": "e1",
+    "value": 308,
+    "visual": {
+      "skillId": "slash",
+      "actionName": "斬撃",
+      "comboIndex": 1,
+      "shielded": false
+    },
+    "encounter": 1
+  },
+  {
+    "id": 65,
+    "time": 16.86666666666699,
+    "type": "action",
+    "text": "セナ → 砕突",
+    "source": "a2",
+    "visual": {
+      "skillId": "jab",
+      "actionName": "砕突",
+      "comboIndex": 1
+    },
+    "encounter": 1
+  },
+  {
+    "id": 66,
+    "time": 16.916666666666988,
+    "type": "action",
+    "text": "リネ → 射撃",
+    "source": "a1",
+    "visual": {
+      "skillId": "shot",
+      "actionName": "射撃",
+      "comboIndex": 1
+    },
+    "encounter": 1
+  },
+  {
+    "id": 67,
+    "time": 17.016666666666982,
+    "type": "action",
+    "text": "アルト → 斬撃",
+    "source": "a0",
+    "visual": {
+      "skillId": "slash",
+      "actionName": "斬撃",
+      "comboIndex": 2
+    },
+    "encounter": 1
+  },
+  {
+    "id": 68,
+    "time": 17.76666666666694,
+    "type": "damage",
+    "text": "セナ → 前列狙いの砲手 62",
+    "source": "a2",
+    "target": "e2",
+    "value": 62,
+    "visual": {
+      "skillId": "jab",
+      "actionName": "砕突",
+      "comboIndex": 1,
+      "shielded": false
+    },
+    "encounter": 1
+  },
+  {
+    "id": 69,
+    "time": 17.91666666666693,
+    "type": "damage",
+    "text": "アルト → 後列狙いの砲手 282",
+    "source": "a0",
+    "target": "e1",
+    "value": 282,
+    "visual": {
+      "skillId": "slash",
+      "actionName": "斬撃",
+      "comboIndex": 2,
+      "shielded": false
+    },
+    "encounter": 1
+  },
+  {
+    "id": 70,
+    "time": 17.91666666666693,
+    "type": "system",
+    "text": "後列狙いの砲手を倒した",
+    "source": "a0",
+    "target": "e1",
+    "visual": {
+      "skillId": "slash",
+      "actionName": "斬撃",
+      "comboIndex": 2,
+      "outcome": "defeat"
+    },
+    "encounter": 1
+  },
+  {
+    "id": 71,
+    "time": 17.91666666666693,
+    "type": "damage",
+    "text": "リネ → 前列狙いの砲手 173",
+    "source": "a1",
+    "target": "e2",
+    "value": 173,
+    "visual": {
+      "skillId": "shot",
+      "actionName": "射撃",
+      "comboIndex": 1,
+      "shielded": false
+    },
+    "encounter": 1
+  },
+  {
+    "id": 72,
+    "time": 17.966666666666928,
+    "type": "action",
+    "text": "セナ → 砕突",
+    "source": "a2",
+    "visual": {
+      "skillId": "jab",
+      "actionName": "砕突",
+      "comboIndex": 2
+    },
+    "encounter": 1
+  },
+  {
+    "id": 73,
+    "time": 18.00000000000026,
+    "type": "system",
+    "text": "リネ：武器変更のため「射撃」の予約を解除",
+    "encounter": 1
+  },
+  {
+    "id": 74,
+    "time": 18.00000000000026,
+    "type": "shift",
+    "text": "オプティマ：崩しの連奏",
+    "encounter": 1
+  },
+  {
+    "id": 75,
+    "time": 18.866666666666877,
+    "type": "damage",
+    "text": "セナ → 前列狙いの砲手 80",
+    "source": "a2",
+    "target": "e2",
+    "value": 80,
+    "visual": {
+      "skillId": "jab",
+      "actionName": "砕突",
+      "comboIndex": 2,
+      "shielded": false
+    },
+    "encounter": 1
+  },
+  {
+    "id": 76,
+    "time": 19.466666666666843,
+    "type": "shift",
+    "text": "リネ → 魔術師",
+    "target": "a1",
+    "encounter": 1
+  },
+  {
+    "id": 77,
+    "time": 20.466666666666786,
+    "type": "action",
+    "text": "リネ → 砕光",
+    "source": "a1",
+    "visual": {
+      "skillId": "spark",
+      "actionName": "砕光",
+      "comboIndex": 1
+    },
+    "encounter": 1
+  },
+  {
+    "id": 78,
+    "time": 20.91666666666676,
+    "type": "action",
+    "text": "アルト → 斬撃",
+    "source": "a0",
+    "visual": {
+      "skillId": "slash",
+      "actionName": "斬撃",
+      "comboIndex": 1
+    },
+    "encounter": 1
+  },
+  {
+    "id": 79,
+    "time": 21.18333333333341,
+    "type": "warning",
+    "text": "前列狙いの砲手：前列への交差砲撃",
+    "source": "e2",
+    "visual": {
+      "actionName": "前列への交差砲撃"
+    },
+    "encounter": 1
+  },
+  {
+    "id": 80,
+    "time": 21.46666666666673,
+    "type": "damage",
+    "text": "リネ → 前列狙いの砲手 69",
+    "source": "a1",
+    "target": "e2",
+    "value": 69,
+    "visual": {
+      "skillId": "spark",
+      "actionName": "砕光",
+      "comboIndex": 1,
+      "shielded": false
+    },
+    "encounter": 1
+  },
+  {
+    "id": 81,
+    "time": 21.666666666666718,
+    "type": "action",
+    "text": "リネ → 砕光",
+    "source": "a1",
+    "visual": {
+      "skillId": "spark",
+      "actionName": "砕光",
+      "comboIndex": 2
+    },
+    "encounter": 1
+  },
+  {
+    "id": 82,
+    "time": 21.81666666666671,
+    "type": "damage",
+    "text": "アルト → 前列狙いの砲手 247",
+    "source": "a0",
+    "target": "e2",
+    "value": 247,
+    "visual": {
+      "skillId": "slash",
+      "actionName": "斬撃",
+      "comboIndex": 1,
+      "shielded": false
+    },
+    "encounter": 1
+  },
+  {
+    "id": 83,
+    "time": 21.866666666666706,
+    "type": "action",
+    "text": "セナ → 砕突",
+    "source": "a2",
+    "visual": {
+      "skillId": "jab",
+      "actionName": "砕突",
+      "comboIndex": 1
+    },
+    "encounter": 1
+  },
+  {
+    "id": 84,
+    "time": 22.016666666666698,
+    "type": "action",
+    "text": "アルト → 斬撃",
+    "source": "a0",
+    "visual": {
+      "skillId": "slash",
+      "actionName": "斬撃",
+      "comboIndex": 2
+    },
+    "encounter": 1
+  },
+  {
+    "id": 85,
+    "time": 22.66666666666666,
+    "type": "damage",
+    "text": "リネ → 前列狙いの砲手 84",
+    "source": "a1",
+    "target": "e2",
+    "value": 84,
+    "visual": {
+      "skillId": "spark",
+      "actionName": "砕光",
+      "comboIndex": 2,
+      "shielded": false
+    },
+    "encounter": 1
+  },
+  {
+    "id": 86,
+    "time": 22.66666666666666,
+    "type": "break",
+    "text": "前列狙いの砲手 BREAK — 12秒間の好機",
+    "target": "e2",
+    "source": "a1",
+    "visual": {
+      "skillId": "spark",
+      "actionName": "砕光",
+      "comboIndex": 2
+    },
+    "encounter": 1
+  },
+  {
+    "id": 87,
+    "time": 22.74999999999999,
+    "type": "shift",
+    "text": "オプティマ：終幕の一撃",
+    "encounter": 1
+  },
+  {
+    "id": 88,
+    "time": 22.766666666666655,
+    "type": "damage",
+    "text": "セナ → 前列狙いの砲手 108",
+    "source": "a2",
+    "target": "e2",
+    "value": 108,
+    "visual": {
+      "skillId": "jab",
+      "actionName": "砕突",
+      "comboIndex": 1,
+      "shielded": false
+    },
+    "encounter": 1
+  },
+  {
+    "id": 89,
+    "time": 22.916666666666647,
+    "type": "damage",
+    "text": "アルト → 前列狙いの砲手 342",
+    "source": "a0",
+    "target": "e2",
+    "value": 342,
+    "visual": {
+      "skillId": "slash",
+      "actionName": "斬撃",
+      "comboIndex": 2,
+      "shielded": false
+    },
+    "encounter": 1
+  },
+  {
+    "id": 90,
+    "time": 22.966666666666644,
+    "type": "action",
+    "text": "セナ → 砕突",
+    "source": "a2",
+    "visual": {
+      "skillId": "jab",
+      "actionName": "砕突",
+      "comboIndex": 2
+    },
+    "encounter": 1
+  },
+  {
+    "id": 91,
+    "time": 23.866666666666593,
+    "type": "damage",
+    "text": "セナ → 前列狙いの砲手 127",
+    "source": "a2",
+    "target": "e2",
+    "value": 127,
+    "visual": {
+      "skillId": "jab",
+      "actionName": "砕突",
+      "comboIndex": 2,
+      "shielded": false
+    },
+    "encounter": 1
+  },
+  {
+    "id": 92,
+    "time": 24.216666666666573,
+    "type": "shift",
+    "text": "リネ → 射手",
+    "target": "a1",
+    "encounter": 1
+  },
+  {
+    "id": 93,
+    "time": 25.916666666666476,
+    "type": "action",
+    "text": "アルト → 斬撃",
+    "source": "a0",
+    "visual": {
+      "skillId": "slash",
+      "actionName": "斬撃",
+      "comboIndex": 1
+    },
+    "encounter": 1
+  },
+  {
+    "id": 94,
+    "time": 26.21666666666646,
+    "type": "action",
+    "text": "リネ → 射撃",
+    "source": "a1",
+    "visual": {
+      "skillId": "shot",
+      "actionName": "射撃",
+      "comboIndex": 1
+    },
+    "encounter": 1
+  },
+  {
+    "id": 95,
+    "time": 26.816666666666425,
+    "type": "damage",
+    "text": "アルト → 前列狙いの砲手 89",
+    "source": "a0",
+    "target": "e2",
+    "value": 89,
+    "visual": {
+      "skillId": "slash",
+      "actionName": "斬撃",
+      "comboIndex": 1,
+      "shielded": false
+    },
+    "encounter": 1
+  },
+  {
+    "id": 96,
+    "time": 26.816666666666425,
+    "type": "system",
+    "text": "前列狙いの砲手を倒した",
+    "source": "a0",
+    "target": "e2",
+    "visual": {
+      "skillId": "slash",
+      "actionName": "斬撃",
+      "comboIndex": 1,
+      "outcome": "defeat"
+    },
+    "encounter": 1
+  },
+  {
+    "id": 97,
+    "time": 26.816666666666425,
+    "type": "system",
+    "text": "勝利。轟砕の槌・流星の弓・帰還の軍旗を入手。",
+    "encounter": 1
+  },
+  {
+    "id": 98,
+    "time": 26.816666666666425,
+    "type": "system",
+    "text": "第二戦へ。HPと集中力が全回復しました。",
+    "encounter": 2
+  },
+  {
+    "id": 99,
+    "time": 26.816666666666425,
+    "type": "shift",
+    "text": "オプティマ：崩しの連奏",
+    "encounter": 2
+  },
+  {
+    "id": 100,
+    "time": 27.466666666666388,
+    "type": "shift",
+    "text": "リネ → 魔術師",
+    "target": "a1",
+    "encounter": 2
+  },
+  {
+    "id": 101,
+    "time": 27.833333333333034,
+    "type": "action",
+    "text": "アルト → 斬撃",
+    "source": "a0",
+    "visual": {
+      "skillId": "slash",
+      "actionName": "斬撃",
+      "comboIndex": 1
+    },
+    "encounter": 2
+  },
+  {
+    "id": 102,
+    "time": 27.833333333333034,
+    "type": "action",
+    "text": "セナ → 砕突",
+    "source": "a2",
+    "visual": {
+      "skillId": "jab",
+      "actionName": "砕突",
+      "comboIndex": 1
+    },
+    "encounter": 2
+  },
+  {
+    "id": 103,
+    "time": 28.483333333332997,
+    "type": "action",
+    "text": "リネ → 砕光",
+    "source": "a1",
+    "visual": {
+      "skillId": "spark",
+      "actionName": "砕光",
+      "comboIndex": 1
+    },
+    "encounter": 2
+  },
+  {
+    "id": 104,
+    "time": 28.733333333332983,
+    "type": "damage",
+    "text": "アルト → 砲列の重衛兵 136",
+    "source": "a0",
+    "target": "e0",
+    "value": 136,
+    "visual": {
+      "skillId": "slash",
+      "actionName": "斬撃",
+      "comboIndex": 1,
+      "shielded": false
+    },
+    "encounter": 2
+  },
+  {
+    "id": 105,
+    "time": 28.733333333332983,
+    "type": "damage",
+    "text": "セナ → 砲列の重衛兵 53",
+    "source": "a2",
+    "target": "e0",
+    "value": 53,
+    "visual": {
+      "skillId": "jab",
+      "actionName": "砕突",
+      "comboIndex": 1,
+      "shielded": false
+    },
+    "encounter": 2
+  },
+  {
+    "id": 106,
+    "time": 28.93333333333297,
+    "type": "action",
+    "text": "アルト → 斬撃",
+    "source": "a0",
+    "visual": {
+      "skillId": "slash",
+      "actionName": "斬撃",
+      "comboIndex": 2
+    },
+    "encounter": 2
+  },
+  {
+    "id": 107,
+    "time": 28.93333333333297,
+    "type": "action",
+    "text": "セナ → 砕突",
+    "source": "a2",
+    "visual": {
+      "skillId": "jab",
+      "actionName": "砕突",
+      "comboIndex": 2
+    },
+    "encounter": 2
+  },
+  {
+    "id": 108,
+    "time": 29.48333333333294,
+    "type": "damage",
+    "text": "リネ → 砲列の重衛兵 57",
+    "source": "a1",
+    "target": "e0",
+    "value": 57,
+    "visual": {
+      "skillId": "spark",
+      "actionName": "砕光",
+      "comboIndex": 1,
+      "shielded": false
+    },
+    "encounter": 2
+  },
+  {
+    "id": 109,
+    "time": 29.68333333333293,
+    "type": "action",
+    "text": "リネ → 砕光",
+    "source": "a1",
+    "visual": {
+      "skillId": "spark",
+      "actionName": "砕光",
+      "comboIndex": 2
+    },
+    "encounter": 2
+  },
+  {
+    "id": 110,
+    "time": 29.83333333333292,
+    "type": "damage",
+    "text": "アルト → 砲列の重衛兵 227",
+    "source": "a0",
+    "target": "e0",
+    "value": 227,
+    "visual": {
+      "skillId": "slash",
+      "actionName": "斬撃",
+      "comboIndex": 2,
+      "shielded": false
+    },
+    "encounter": 2
+  },
+  {
+    "id": 111,
+    "time": 29.83333333333292,
+    "type": "damage",
+    "text": "セナ → 砲列の重衛兵 87",
+    "source": "a2",
+    "target": "e0",
+    "value": 87,
+    "visual": {
+      "skillId": "jab",
+      "actionName": "砕突",
+      "comboIndex": 2,
+      "shielded": false
+    },
+    "encounter": 2
+  },
+  {
+    "id": 112,
+    "time": 30.433333333332886,
+    "type": "warning",
+    "text": "砲列の重衛兵：前列薙ぎ払い",
+    "source": "e0",
+    "visual": {
+      "actionName": "前列薙ぎ払い"
+    },
+    "encounter": 2
+  },
+  {
+    "id": 113,
+    "time": 30.68333333333287,
+    "type": "damage",
+    "text": "リネ → 砲列の重衛兵 82",
+    "source": "a1",
+    "target": "e0",
+    "value": 82,
+    "visual": {
+      "skillId": "spark",
+      "actionName": "砕光",
+      "comboIndex": 2,
+      "shielded": false
+    },
+    "encounter": 2
+  },
+  {
+    "id": 114,
+    "time": 30.68333333333287,
+    "type": "break",
+    "text": "砲列の重衛兵 BREAK — 12秒間の好機",
+    "target": "e0",
+    "source": "a1",
+    "visual": {
+      "skillId": "spark",
+      "actionName": "砕光",
+      "comboIndex": 2
+    },
+    "encounter": 2
+  },
+  {
+    "id": 115,
+    "time": 30.73333333333287,
+    "type": "warning",
+    "text": "後列狙いの重砲：後列への交差砲撃",
+    "source": "e1",
+    "visual": {
+      "actionName": "後列への交差砲撃"
+    },
+    "encounter": 2
+  },
+  {
+    "id": 116,
+    "time": 30.73333333333287,
+    "type": "warning",
+    "text": "前列狙いの重砲：前列への交差砲撃",
+    "source": "e2",
+    "visual": {
+      "actionName": "前列への交差砲撃"
+    },
+    "encounter": 2
+  },
+  {
+    "id": 117,
+    "time": 30.816666666666197,
+    "type": "shift",
+    "text": "オプティマ：終幕の一撃",
+    "encounter": 2
+  },
+  {
+    "id": 118,
+    "time": 32.23333333333279,
+    "type": "shift",
+    "text": "リネ → 射手",
+    "target": "a1",
+    "encounter": 2
+  },
+  {
+    "id": 119,
+    "time": 32.83333333333275,
+    "type": "action",
+    "text": "アルト → 斬撃",
+    "source": "a0",
+    "visual": {
+      "skillId": "slash",
+      "actionName": "斬撃",
+      "comboIndex": 1
+    },
+    "encounter": 2
+  },
+  {
+    "id": 120,
+    "time": 32.83333333333275,
+    "type": "action",
+    "text": "セナ → 砕突",
+    "source": "a2",
+    "visual": {
+      "skillId": "jab",
+      "actionName": "砕突",
+      "comboIndex": 1
+    },
+    "encounter": 2
+  },
+  {
+    "id": 121,
+    "time": 33.7333333333327,
+    "type": "damage",
+    "text": "アルト → 砲列の重衛兵 381",
+    "source": "a0",
+    "target": "e0",
+    "value": 381,
+    "visual": {
+      "skillId": "slash",
+      "actionName": "斬撃",
+      "comboIndex": 1,
+      "shielded": false
+    },
+    "encounter": 2
+  },
+  {
+    "id": 122,
+    "time": 33.7333333333327,
+    "type": "damage",
+    "text": "セナ → 後列狙いの重砲 62",
+    "source": "a2",
+    "target": "e1",
+    "value": 62,
+    "visual": {
+      "skillId": "jab",
+      "actionName": "砕突",
+      "comboIndex": 1,
+      "shielded": false
+    },
+    "encounter": 2
+  },
+  {
+    "id": 123,
+    "time": 33.93333333333269,
+    "type": "action",
+    "text": "アルト → 斬撃",
+    "source": "a0",
+    "visual": {
+      "skillId": "slash",
+      "actionName": "斬撃",
+      "comboIndex": 2
+    },
+    "encounter": 2
+  },
+  {
+    "id": 124,
+    "time": 33.93333333333269,
+    "type": "action",
+    "text": "セナ → 砕突",
+    "source": "a2",
+    "visual": {
+      "skillId": "jab",
+      "actionName": "砕突",
+      "comboIndex": 2
+    },
+    "encounter": 2
+  },
+  {
+    "id": 125,
+    "time": 33.93333333333269,
+    "type": "system",
+    "text": "後列狙いの重砲：後列への交差砲撃は誰にも当たらなかった",
+    "source": "e1",
+    "target": "e1",
+    "visual": {
+      "actionName": "後列への交差砲撃",
+      "outcome": "miss"
+    },
+    "encounter": 2
+  },
+  {
+    "id": 126,
+    "time": 33.93333333333269,
+    "type": "damage",
+    "text": "前列狙いの重砲 → アルト 347",
+    "source": "e2",
+    "target": "a0",
+    "value": 347,
+    "visual": {
+      "actionName": "前列への交差砲撃",
+      "shielded": false
+    },
+    "encounter": 2
+  },
+  {
+    "id": 127,
+    "time": 33.93333333333269,
+    "type": "damage",
+    "text": "前列狙いの重砲 → リネ 347",
+    "source": "e2",
+    "target": "a1",
+    "value": 347,
+    "visual": {
+      "actionName": "前列への交差砲撃",
+      "shielded": false
+    },
+    "encounter": 2
+  },
+  {
+    "id": 128,
+    "time": 33.93333333333269,
+    "type": "damage",
+    "text": "前列狙いの重砲 → セナ 347",
+    "source": "e2",
+    "target": "a2",
+    "value": 347,
+    "visual": {
+      "actionName": "前列への交差砲撃",
+      "shielded": false
+    },
+    "encounter": 2
+  },
+  {
+    "id": 129,
+    "time": 34.23333333333267,
+    "type": "action",
+    "text": "リネ → 射撃",
+    "source": "a1",
+    "visual": {
+      "skillId": "shot",
+      "actionName": "射撃",
+      "comboIndex": 1
+    },
+    "encounter": 2
+  },
+  {
+    "id": 130,
+    "time": 34.83333333333264,
+    "type": "damage",
+    "text": "アルト → 砲列の重衛兵 378",
+    "source": "a0",
+    "target": "e0",
+    "value": 378,
+    "visual": {
+      "skillId": "slash",
+      "actionName": "斬撃",
+      "comboIndex": 2,
+      "shielded": false
+    },
+    "encounter": 2
+  },
+  {
+    "id": 131,
+    "time": 34.83333333333264,
+    "type": "damage",
+    "text": "セナ → 後列狙いの重砲 71",
+    "source": "a2",
+    "target": "e1",
+    "value": 71,
+    "visual": {
+      "skillId": "jab",
+      "actionName": "砕突",
+      "comboIndex": 2,
+      "shielded": false
+    },
+    "encounter": 2
+  },
+  {
+    "id": 132,
+    "time": 35.23333333333262,
+    "type": "damage",
+    "text": "リネ → 砲列の重衛兵 320",
+    "source": "a1",
+    "target": "e0",
+    "value": 320,
+    "visual": {
+      "skillId": "shot",
+      "actionName": "射撃",
+      "comboIndex": 1,
+      "shielded": false
+    },
+    "encounter": 2
+  },
+  {
+    "id": 133,
+    "time": 35.433333333332605,
+    "type": "action",
+    "text": "リネ → 射撃",
+    "source": "a1",
+    "visual": {
+      "skillId": "shot",
+      "actionName": "射撃",
+      "comboIndex": 2
+    },
+    "encounter": 2
+  },
+  {
+    "id": 134,
+    "time": 36.43333333333255,
+    "type": "damage",
+    "text": "リネ → 砲列の重衛兵 323",
+    "source": "a1",
+    "target": "e0",
+    "value": 323,
+    "visual": {
+      "skillId": "shot",
+      "actionName": "射撃",
+      "comboIndex": 2,
+      "shielded": false
+    },
+    "encounter": 2
+  },
+  {
+    "id": 135,
+    "time": 36.43333333333255,
+    "type": "system",
+    "text": "砲列の重衛兵を倒した",
+    "source": "a1",
+    "target": "e0",
+    "visual": {
+      "skillId": "shot",
+      "actionName": "射撃",
+      "comboIndex": 2,
+      "outcome": "defeat"
+    },
+    "encounter": 2
+  },
+  {
+    "id": 136,
+    "time": 36.566666666665874,
+    "type": "shift",
+    "text": "オプティマ：崩しの連奏",
+    "encounter": 2
+  },
+  {
+    "id": 137,
+    "time": 37.83333333333247,
+    "type": "action",
+    "text": "アルト → 斬撃",
+    "source": "a0",
+    "visual": {
+      "skillId": "slash",
+      "actionName": "斬撃",
+      "comboIndex": 1
+    },
+    "encounter": 2
+  },
+  {
+    "id": 138,
+    "time": 37.83333333333247,
+    "type": "action",
+    "text": "セナ → 砕突",
+    "source": "a2",
+    "visual": {
+      "skillId": "jab",
+      "actionName": "砕突",
+      "comboIndex": 1
+    },
+    "encounter": 2
+  },
+  {
+    "id": 139,
+    "time": 37.98333333333246,
+    "type": "shift",
+    "text": "リネ → 魔術師",
+    "target": "a1",
+    "encounter": 2
+  },
+  {
+    "id": 140,
+    "time": 38.73333333333242,
+    "type": "damage",
+    "text": "アルト → 後列狙いの重砲 194",
+    "source": "a0",
+    "target": "e1",
+    "value": 194,
+    "visual": {
+      "skillId": "slash",
+      "actionName": "斬撃",
+      "comboIndex": 1,
+      "shielded": false
+    },
+    "encounter": 2
+  },
+  {
+    "id": 141,
+    "time": 38.73333333333242,
+    "type": "damage",
+    "text": "セナ → 後列狙いの重砲 78",
+    "source": "a2",
+    "target": "e1",
+    "value": 78,
+    "visual": {
+      "skillId": "jab",
+      "actionName": "砕突",
+      "comboIndex": 1,
+      "shielded": false
+    },
+    "encounter": 2
+  },
+  {
+    "id": 142,
+    "time": 38.74999999999908,
+    "type": "warning",
+    "text": "後列狙いの重砲：後列への交差砲撃",
+    "source": "e1",
+    "visual": {
+      "actionName": "後列への交差砲撃"
+    },
+    "encounter": 2
+  },
+  {
+    "id": 143,
+    "time": 38.74999999999908,
+    "type": "warning",
+    "text": "前列狙いの重砲：前列への交差砲撃",
+    "source": "e2",
+    "visual": {
+      "actionName": "前列への交差砲撃"
+    },
+    "encounter": 2
+  },
+  {
+    "id": 144,
+    "time": 38.933333333332406,
+    "type": "action",
+    "text": "アルト → 斬撃",
+    "source": "a0",
+    "visual": {
+      "skillId": "slash",
+      "actionName": "斬撃",
+      "comboIndex": 2
+    },
+    "encounter": 2
+  },
+  {
+    "id": 145,
+    "time": 38.933333333332406,
+    "type": "action",
+    "text": "セナ → 砕突",
+    "source": "a2",
+    "visual": {
+      "skillId": "jab",
+      "actionName": "砕突",
+      "comboIndex": 2
+    },
+    "encounter": 2
+  },
+  {
+    "id": 146,
+    "time": 39.833333333332355,
+    "type": "damage",
+    "text": "アルト → 後列狙いの重砲 212",
+    "source": "a0",
+    "target": "e1",
+    "value": 212,
+    "visual": {
+      "skillId": "slash",
+      "actionName": "斬撃",
+      "comboIndex": 2,
+      "shielded": false
+    },
+    "encounter": 2
+  },
+  {
+    "id": 147,
+    "time": 39.833333333332355,
+    "type": "damage",
+    "text": "セナ → 後列狙いの重砲 74",
+    "source": "a2",
+    "target": "e1",
+    "value": 74,
+    "visual": {
+      "skillId": "jab",
+      "actionName": "砕突",
+      "comboIndex": 2,
+      "shielded": false
+    },
+    "encounter": 2
+  },
+  {
+    "id": 148,
+    "time": 39.98333333333235,
+    "type": "action",
+    "text": "リネ → 砕光",
+    "source": "a1",
+    "visual": {
+      "skillId": "spark",
+      "actionName": "砕光",
+      "comboIndex": 1
+    },
+    "encounter": 2
+  },
+  {
+    "id": 149,
+    "time": 40.98333333333229,
+    "type": "damage",
+    "text": "リネ → 後列狙いの重砲 84",
+    "source": "a1",
+    "target": "e1",
+    "value": 84,
+    "visual": {
+      "skillId": "spark",
+      "actionName": "砕光",
+      "comboIndex": 1,
+      "shielded": false
+    },
+    "encounter": 2
+  },
+  {
+    "id": 150,
+    "time": 40.98333333333229,
+    "type": "break",
+    "text": "後列狙いの重砲 BREAK — 12秒間の好機",
+    "target": "e1",
+    "source": "a1",
+    "visual": {
+      "skillId": "spark",
+      "actionName": "砕光",
+      "comboIndex": 1
+    },
+    "encounter": 2
+  },
+  {
+    "id": 151,
+    "time": 41.06666666666562,
+    "type": "system",
+    "text": "リネ：武器変更のため「砕光」の予約を解除",
+    "encounter": 2
+  },
+  {
+    "id": 152,
+    "time": 41.06666666666562,
+    "type": "shift",
+    "text": "オプティマ：終幕の一撃",
+    "encounter": 2
+  },
+  {
+    "id": 153,
+    "time": 41.9499999999989,
+    "type": "damage",
+    "text": "前列狙いの重砲 → アルト 347",
+    "source": "e2",
+    "target": "a0",
+    "value": 347,
+    "visual": {
+      "actionName": "前列への交差砲撃",
+      "shielded": false
+    },
+    "encounter": 2
+  },
+  {
+    "id": 154,
+    "time": 41.9499999999989,
+    "type": "damage",
+    "text": "前列狙いの重砲 → リネ 347",
+    "source": "e2",
+    "target": "a1",
+    "value": 347,
+    "visual": {
+      "actionName": "前列への交差砲撃",
+      "shielded": false
+    },
+    "encounter": 2
+  },
+  {
+    "id": 155,
+    "time": 41.9499999999989,
+    "type": "damage",
+    "text": "前列狙いの重砲 → セナ 347",
+    "source": "e2",
+    "target": "a2",
+    "value": 347,
+    "visual": {
+      "actionName": "前列への交差砲撃",
+      "shielded": false
+    },
+    "encounter": 2
+  },
+  {
+    "id": 156,
+    "time": 42.5333333333322,
+    "type": "shift",
+    "text": "リネ → 射手",
+    "target": "a1",
+    "encounter": 2
+  },
+  {
+    "id": 157,
+    "time": 42.833333333332185,
+    "type": "action",
+    "text": "アルト → 斬撃",
+    "source": "a0",
+    "visual": {
+      "skillId": "slash",
+      "actionName": "斬撃",
+      "comboIndex": 1
+    },
+    "encounter": 2
+  },
+  {
+    "id": 158,
+    "time": 42.833333333332185,
+    "type": "action",
+    "text": "セナ → 砕突",
+    "source": "a2",
+    "visual": {
+      "skillId": "jab",
+      "actionName": "砕突",
+      "comboIndex": 1
+    },
+    "encounter": 2
+  },
+  {
+    "id": 159,
+    "time": 43.533333333332145,
+    "type": "action",
+    "text": "リネ → 射撃",
+    "source": "a1",
+    "visual": {
+      "skillId": "shot",
+      "actionName": "射撃",
+      "comboIndex": 1
+    },
+    "encounter": 2
+  },
+  {
+    "id": 160,
+    "time": 43.73333333333213,
+    "type": "damage",
+    "text": "アルト → 後列狙いの重砲 357",
+    "source": "a0",
+    "target": "e1",
+    "value": 357,
+    "visual": {
+      "skillId": "slash",
+      "actionName": "斬撃",
+      "comboIndex": 1,
+      "shielded": false
+    },
+    "encounter": 2
+  },
+  {
+    "id": 161,
+    "time": 43.73333333333213,
+    "type": "damage",
+    "text": "セナ → 前列狙いの重砲 61",
+    "source": "a2",
+    "target": "e2",
+    "value": 61,
+    "visual": {
+      "skillId": "jab",
+      "actionName": "砕突",
+      "comboIndex": 1,
+      "shielded": false
+    },
+    "encounter": 2
+  },
+  {
+    "id": 162,
+    "time": 43.93333333333212,
+    "type": "action",
+    "text": "アルト → 斬撃",
+    "source": "a0",
+    "visual": {
+      "skillId": "slash",
+      "actionName": "斬撃",
+      "comboIndex": 2
+    },
+    "encounter": 2
+  },
+  {
+    "id": 163,
+    "time": 43.93333333333212,
+    "type": "action",
+    "text": "セナ → 砕突",
+    "source": "a2",
+    "visual": {
+      "skillId": "jab",
+      "actionName": "砕突",
+      "comboIndex": 2
+    },
+    "encounter": 2
+  },
+  {
+    "id": 164,
+    "time": 44.53333333333209,
+    "type": "damage",
+    "text": "リネ → 後列狙いの重砲 315",
+    "source": "a1",
+    "target": "e1",
+    "value": 315,
+    "visual": {
+      "skillId": "shot",
+      "actionName": "射撃",
+      "comboIndex": 1,
+      "shielded": false
+    },
+    "encounter": 2
+  },
+  {
+    "id": 165,
+    "time": 44.73333333333208,
+    "type": "action",
+    "text": "リネ → 射撃",
+    "source": "a1",
+    "visual": {
+      "skillId": "shot",
+      "actionName": "射撃",
+      "comboIndex": 2
+    },
+    "encounter": 2
+  },
+  {
+    "id": 166,
+    "time": 44.83333333333207,
+    "type": "damage",
+    "text": "アルト → 後列狙いの重砲 211",
+    "source": "a0",
+    "target": "e1",
+    "value": 211,
+    "visual": {
+      "skillId": "slash",
+      "actionName": "斬撃",
+      "comboIndex": 2,
+      "shielded": false
+    },
+    "encounter": 2
+  },
+  {
+    "id": 167,
+    "time": 44.83333333333207,
+    "type": "system",
+    "text": "後列狙いの重砲を倒した",
+    "source": "a0",
+    "target": "e1",
+    "visual": {
+      "skillId": "slash",
+      "actionName": "斬撃",
+      "comboIndex": 2,
+      "outcome": "defeat"
+    },
+    "encounter": 2
+  },
+  {
+    "id": 168,
+    "time": 44.83333333333207,
+    "type": "damage",
+    "text": "セナ → 前列狙いの重砲 69",
+    "source": "a2",
+    "target": "e2",
+    "value": 69,
+    "visual": {
+      "skillId": "jab",
+      "actionName": "砕突",
+      "comboIndex": 2,
+      "shielded": false
+    },
+    "encounter": 2
+  },
+  {
+    "id": 169,
+    "time": 45.06666666666539,
+    "type": "shift",
+    "text": "オプティマ：崩しの連奏",
+    "encounter": 2
+  },
+  {
+    "id": 170,
+    "time": 45.73333333333202,
+    "type": "damage",
+    "text": "リネ → 前列狙いの重砲 194",
+    "source": "a1",
+    "target": "e2",
+    "value": 194,
+    "visual": {
+      "skillId": "shot",
+      "actionName": "射撃",
+      "comboIndex": 2,
+      "shielded": false
+    },
+    "encounter": 2
+  },
+  {
+    "id": 171,
+    "time": 46.766666666665294,
+    "type": "warning",
+    "text": "前列狙いの重砲：前列への交差砲撃",
+    "source": "e2",
+    "visual": {
+      "actionName": "前列への交差砲撃"
+    },
+    "encounter": 2
+  },
+  {
+    "id": 172,
+    "time": 47.28333333333193,
+    "type": "shift",
+    "text": "リネ → 魔術師",
+    "target": "a1",
+    "encounter": 2
+  },
+  {
+    "id": 173,
+    "time": 47.8333333333319,
+    "type": "action",
+    "text": "アルト → 斬撃",
+    "source": "a0",
+    "visual": {
+      "skillId": "slash",
+      "actionName": "斬撃",
+      "comboIndex": 1
+    },
+    "encounter": 2
+  },
+  {
+    "id": 174,
+    "time": 47.8333333333319,
+    "type": "action",
+    "text": "セナ → 砕突",
+    "source": "a2",
+    "visual": {
+      "skillId": "jab",
+      "actionName": "砕突",
+      "comboIndex": 1
+    },
+    "encounter": 2
+  },
+  {
+    "id": 175,
+    "time": 48.73333333333185,
+    "type": "damage",
+    "text": "アルト → 前列狙いの重砲 205",
+    "source": "a0",
+    "target": "e2",
+    "value": 205,
+    "visual": {
+      "skillId": "slash",
+      "actionName": "斬撃",
+      "comboIndex": 1,
+      "shielded": false
+    },
+    "encounter": 2
+  },
+  {
+    "id": 176,
+    "time": 48.73333333333185,
+    "type": "damage",
+    "text": "セナ → 前列狙いの重砲 77",
+    "source": "a2",
+    "target": "e2",
+    "value": 77,
+    "visual": {
+      "skillId": "jab",
+      "actionName": "砕突",
+      "comboIndex": 1,
+      "shielded": false
+    },
+    "encounter": 2
+  },
+  {
+    "id": 177,
+    "time": 48.93333333333184,
+    "type": "action",
+    "text": "アルト → 斬撃",
+    "source": "a0",
+    "visual": {
+      "skillId": "slash",
+      "actionName": "斬撃",
+      "comboIndex": 2
+    },
+    "encounter": 2
+  },
+  {
+    "id": 178,
+    "time": 48.93333333333184,
+    "type": "action",
+    "text": "セナ → 砕突",
+    "source": "a2",
+    "visual": {
+      "skillId": "jab",
+      "actionName": "砕突",
+      "comboIndex": 2
+    },
+    "encounter": 2
+  },
+  {
+    "id": 179,
+    "time": 49.28333333333182,
+    "type": "action",
+    "text": "リネ → 砕光",
+    "source": "a1",
+    "visual": {
+      "skillId": "spark",
+      "actionName": "砕光",
+      "comboIndex": 1
+    },
+    "encounter": 2
+  },
+  {
+    "id": 180,
+    "time": 49.83333333333179,
+    "type": "damage",
+    "text": "アルト → 前列狙いの重砲 241",
+    "source": "a0",
+    "target": "e2",
+    "value": 241,
+    "visual": {
+      "skillId": "slash",
+      "actionName": "斬撃",
+      "comboIndex": 2,
+      "shielded": false
+    },
+    "encounter": 2
+  },
+  {
+    "id": 181,
+    "time": 49.83333333333179,
+    "type": "damage",
+    "text": "セナ → 前列狙いの重砲 92",
+    "source": "a2",
+    "target": "e2",
+    "value": 92,
+    "visual": {
+      "skillId": "jab",
+      "actionName": "砕突",
+      "comboIndex": 2,
+      "shielded": false
+    },
+    "encounter": 2
+  },
+  {
+    "id": 182,
+    "time": 49.83333333333179,
+    "type": "break",
+    "text": "前列狙いの重砲 BREAK — 12秒間の好機",
+    "target": "e2",
+    "source": "a2",
+    "visual": {
+      "skillId": "jab",
+      "actionName": "砕突",
+      "comboIndex": 2
+    },
+    "encounter": 2
+  },
+  {
+    "id": 183,
+    "time": 50.06666666666511,
+    "type": "system",
+    "text": "リネ：武器変更のため「砕光」の予約を解除",
+    "encounter": 2
+  },
+  {
+    "id": 184,
+    "time": 50.06666666666511,
+    "type": "shift",
+    "text": "オプティマ：終幕の一撃",
+    "encounter": 2
+  },
+  {
+    "id": 185,
+    "time": 50.28333333333176,
+    "type": "damage",
+    "text": "リネ → 前列狙いの重砲 90",
+    "source": "a1",
+    "target": "e2",
+    "value": 90,
+    "visual": {
+      "skillId": "spark",
+      "actionName": "砕光",
+      "comboIndex": 1,
+      "shielded": false
+    },
+    "encounter": 2
+  },
+  {
+    "id": 186,
+    "time": 51.83333333333167,
+    "type": "shift",
+    "text": "リネ → 射手",
+    "target": "a1",
+    "encounter": 2
+  },
+  {
+    "id": 187,
+    "time": 52.833333333331616,
+    "type": "action",
+    "text": "アルト → 斬撃",
+    "source": "a0",
+    "visual": {
+      "skillId": "slash",
+      "actionName": "斬撃",
+      "comboIndex": 1
+    },
+    "encounter": 2
+  },
+  {
+    "id": 188,
+    "time": 52.833333333331616,
+    "type": "action",
+    "text": "リネ → 射撃",
+    "source": "a1",
+    "visual": {
+      "skillId": "shot",
+      "actionName": "射撃",
+      "comboIndex": 1
+    },
+    "encounter": 2
+  },
+  {
+    "id": 189,
+    "time": 52.833333333331616,
+    "type": "action",
+    "text": "セナ → 砕突",
+    "source": "a2",
+    "visual": {
+      "skillId": "jab",
+      "actionName": "砕突",
+      "comboIndex": 1
+    },
+    "encounter": 2
+  },
+  {
+    "id": 190,
+    "time": 53.733333333331565,
+    "type": "damage",
+    "text": "アルト → 前列狙いの重砲 412",
+    "source": "a0",
+    "target": "e2",
+    "value": 412,
+    "visual": {
+      "skillId": "slash",
+      "actionName": "斬撃",
+      "comboIndex": 1,
+      "shielded": false
+    },
+    "encounter": 2
+  },
+  {
+    "id": 191,
+    "time": 53.733333333331565,
+    "type": "damage",
+    "text": "セナ → 前列狙いの重砲 155",
+    "source": "a2",
+    "target": "e2",
+    "value": 155,
+    "visual": {
+      "skillId": "jab",
+      "actionName": "砕突",
+      "comboIndex": 1,
+      "shielded": false
+    },
+    "encounter": 2
+  },
+  {
+    "id": 192,
+    "time": 53.83333333333156,
+    "type": "damage",
+    "text": "リネ → 前列狙いの重砲 62",
+    "source": "a1",
+    "target": "e2",
+    "value": 62,
+    "visual": {
+      "skillId": "shot",
+      "actionName": "射撃",
+      "comboIndex": 1,
+      "shielded": false
+    },
+    "encounter": 2
+  },
+  {
+    "id": 193,
+    "time": 53.83333333333156,
+    "type": "system",
+    "text": "前列狙いの重砲を倒した",
+    "source": "a1",
+    "target": "e2",
+    "visual": {
+      "skillId": "shot",
+      "actionName": "射撃",
+      "comboIndex": 1,
+      "outcome": "defeat"
+    },
+    "encounter": 2
+  },
+  {
+    "id": 194,
+    "time": 53.83333333333156,
+    "type": "system",
+    "text": "二つの戦いを突破した。",
+    "encounter": 2
+  }
+]

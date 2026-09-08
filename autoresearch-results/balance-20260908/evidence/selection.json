@@ -1,0 +1,1619 @@
+{
+  "profiles": {
+    "fallbackIncludesNonfeasible": false,
+    "offense": "atb1.000-hp0.850-power0.800",
+    "resilience": "atb0.925-hp0.850-power0.800",
+    "intervention": "atb0.700-hp1.150-power0.800"
+  },
+  "selected": [
+    "atb0.850-hp1.000-power1.000",
+    "atb1.000-hp0.850-power0.800",
+    "atb0.925-hp0.850-power0.800",
+    "atb0.700-hp1.150-power0.800"
+  ],
+  "selectionData": "training only; frozen before validation",
+  "firstProfiles": {
+    "fallbackIncludesNonfeasible": false,
+    "offense": "atb1.000-hp0.850-power0.800",
+    "resilience": "atb1.000-hp1.000-power0.800",
+    "intervention": "atb0.700-hp1.150-power0.800"
+  },
+  "candidates": [
+    {
+      "id": "atb0.850-hp1.000-power1.000",
+      "parameters": {
+        "atbRate": 0.85,
+        "enemyHpScale": 1,
+        "enemyPower": 1
+      },
+      "aggregate": {
+        "runs": 18,
+        "wins": 18,
+        "winFraction": 1,
+        "timeouts": 0,
+        "meanWinSeconds": 63.96851851851617,
+        "meanWinEncounterSeconds": 31.984259259258085,
+        "meanTaken": 2428.777777777778,
+        "meanDeaths": 0,
+        "meanBreaks": 5.555555555555555,
+        "meanEnemyBrokenFraction": 0.21973369565170234,
+        "meanBreakDamageShare": 0.42856039444726596,
+        "meanWaitingFraction": 0.43581272839023644,
+        "meanAcceptedCommands": 21.555555555555557,
+        "meanCancellations": 1.4444444444444444,
+        "dangerEpisodes": 4,
+        "recoveredEpisodes": 0,
+        "dangerDeaths": 0,
+        "censoredEpisodes": 4,
+        "pairCount": 6,
+        "aiWinDelta": 0,
+        "pairedWinSecondsSaved": 34.24444444444251,
+        "zeroDamageWins": 2,
+        "replayVerified": true
+      }
+    },
+    {
+      "id": "atb0.700-hp0.850-power0.800",
+      "parameters": {
+        "atbRate": 0.7,
+        "enemyHpScale": 0.85,
+        "enemyPower": 0.8
+      },
+      "aggregate": {
+        "runs": 18,
+        "wins": 18,
+        "winFraction": 1,
+        "timeouts": 0,
+        "meanWinSeconds": 63.70370370370137,
+        "meanWinEncounterSeconds": 31.851851851850693,
+        "meanTaken": 2016.111111111111,
+        "meanDeaths": 0,
+        "meanBreaks": 4.833333333333333,
+        "meanEnemyBrokenFraction": 0.17695954626802976,
+        "meanBreakDamageShare": 0.35488646678650976,
+        "meanWaitingFraction": 0.4917981447908353,
+        "meanAcceptedCommands": 21.055555555555557,
+        "meanCancellations": 1.1111111111111112,
+        "dangerEpisodes": 0,
+        "recoveredEpisodes": 0,
+        "dangerDeaths": 0,
+        "censoredEpisodes": 0,
+        "pairCount": 6,
+        "aiWinDelta": 0,
+        "pairedWinSecondsSaved": 31.15833333333157,
+        "zeroDamageWins": 2,
+        "replayVerified": true
+      }
+    },
+    {
+      "id": "atb0.700-hp0.850-power1.000",
+      "parameters": {
+        "atbRate": 0.7,
+        "enemyHpScale": 0.85,
+        "enemyPower": 1
+      },
+      "aggregate": {
+        "runs": 18,
+        "wins": 18,
+        "winFraction": 1,
+        "timeouts": 0,
+        "meanWinSeconds": 63.70370370370137,
+        "meanWinEncounterSeconds": 31.851851851850693,
+        "meanTaken": 2521.1666666666665,
+        "meanDeaths": 0,
+        "meanBreaks": 4.833333333333333,
+        "meanEnemyBrokenFraction": 0.17695954626802976,
+        "meanBreakDamageShare": 0.35488646678650976,
+        "meanWaitingFraction": 0.47690114685714463,
+        "meanAcceptedCommands": 21.055555555555557,
+        "meanCancellations": 1.1111111111111112,
+        "dangerEpisodes": 4,
+        "recoveredEpisodes": 0,
+        "dangerDeaths": 0,
+        "censoredEpisodes": 4,
+        "pairCount": 6,
+        "aiWinDelta": 0,
+        "pairedWinSecondsSaved": 31.15833333333157,
+        "zeroDamageWins": 2,
+        "replayVerified": true
+      }
+    },
+    {
+      "id": "atb0.700-hp0.850-power1.200",
+      "parameters": {
+        "atbRate": 0.7,
+        "enemyHpScale": 0.85,
+        "enemyPower": 1.2
+      },
+      "aggregate": {
+        "runs": 18,
+        "wins": 18,
+        "winFraction": 1,
+        "timeouts": 0,
+        "meanWinSeconds": 63.72407407407175,
+        "meanWinEncounterSeconds": 31.86203703703588,
+        "meanTaken": 3020.3333333333335,
+        "meanDeaths": 0,
+        "meanBreaks": 4.777777777777778,
+        "meanEnemyBrokenFraction": 0.17728653389392665,
+        "meanBreakDamageShare": 0.3546017162717685,
+        "meanWaitingFraction": 0.47210484013312853,
+        "meanAcceptedCommands": 21,
+        "meanCancellations": 1.1111111111111112,
+        "dangerEpisodes": 6,
+        "recoveredEpisodes": 0,
+        "dangerDeaths": 0,
+        "censoredEpisodes": 6,
+        "pairCount": 6,
+        "aiWinDelta": 0,
+        "pairedWinSecondsSaved": 31.097222222220456,
+        "zeroDamageWins": 2,
+        "replayVerified": true
+      }
+    },
+    {
+      "id": "atb0.700-hp1.000-power0.800",
+      "parameters": {
+        "atbRate": 0.7,
+        "enemyHpScale": 1,
+        "enemyPower": 0.8
+      },
+      "aggregate": {
+        "runs": 18,
+        "wins": 18,
+        "winFraction": 1,
+        "timeouts": 0,
+        "meanWinSeconds": 71.22499999999722,
+        "meanWinEncounterSeconds": 35.61249999999862,
+        "meanTaken": 2254.6111111111113,
+        "meanDeaths": 0,
+        "meanBreaks": 5.555555555555555,
+        "meanEnemyBrokenFraction": 0.2272347940117746,
+        "meanBreakDamageShare": 0.43535295761552745,
+        "meanWaitingFraction": 0.49103195377791625,
+        "meanAcceptedCommands": 21.666666666666668,
+        "meanCancellations": 1.1666666666666667,
+        "dangerEpisodes": 0,
+        "recoveredEpisodes": 0,
+        "dangerDeaths": 0,
+        "censoredEpisodes": 0,
+        "pairCount": 6,
+        "aiWinDelta": 0,
+        "pairedWinSecondsSaved": 40.005555555553286,
+        "zeroDamageWins": 2,
+        "replayVerified": true
+      }
+    },
+    {
+      "id": "atb0.700-hp1.000-power1.000",
+      "parameters": {
+        "atbRate": 0.7,
+        "enemyHpScale": 1,
+        "enemyPower": 1
+      },
+      "aggregate": {
+        "runs": 18,
+        "wins": 18,
+        "winFraction": 1,
+        "timeouts": 0,
+        "meanWinSeconds": 71.25185185184907,
+        "meanWinEncounterSeconds": 35.62592592592454,
+        "meanTaken": 2819.277777777778,
+        "meanDeaths": 0,
+        "meanBreaks": 5.555555555555555,
+        "meanEnemyBrokenFraction": 0.22735856466791463,
+        "meanBreakDamageShare": 0.43535295761552745,
+        "meanWaitingFraction": 0.47761401264776615,
+        "meanAcceptedCommands": 21.666666666666668,
+        "meanCancellations": 1.1666666666666667,
+        "dangerEpisodes": 8,
+        "recoveredEpisodes": 0,
+        "dangerDeaths": 0,
+        "censoredEpisodes": 8,
+        "pairCount": 6,
+        "aiWinDelta": 0,
+        "pairedWinSecondsSaved": 39.92499999999774,
+        "zeroDamageWins": 2,
+        "replayVerified": true
+      }
+    },
+    {
+      "id": "atb0.700-hp1.000-power1.200",
+      "parameters": {
+        "atbRate": 0.7,
+        "enemyHpScale": 1,
+        "enemyPower": 1.2
+      },
+      "aggregate": {
+        "runs": 18,
+        "wins": 18,
+        "winFraction": 1,
+        "timeouts": 0,
+        "meanWinSeconds": 71.58425925925646,
+        "meanWinEncounterSeconds": 35.792129629628235,
+        "meanTaken": 3389.1111111111113,
+        "meanDeaths": 0,
+        "meanBreaks": 5.555555555555555,
+        "meanEnemyBrokenFraction": 0.22692621255527148,
+        "meanBreakDamageShare": 0.43463205814462796,
+        "meanWaitingFraction": 0.4715928308608872,
+        "meanAcceptedCommands": 21.833333333333332,
+        "meanCancellations": 1.1666666666666667,
+        "dangerEpisodes": 14,
+        "recoveredEpisodes": 0,
+        "dangerDeaths": 0,
+        "censoredEpisodes": 14,
+        "pairCount": 6,
+        "aiWinDelta": 0,
+        "pairedWinSecondsSaved": 38.92777777777557,
+        "zeroDamageWins": 2,
+        "replayVerified": true
+      }
+    },
+    {
+      "id": "atb0.700-hp1.150-power0.800",
+      "parameters": {
+        "atbRate": 0.7,
+        "enemyHpScale": 1.15,
+        "enemyPower": 0.8
+      },
+      "aggregate": {
+        "runs": 18,
+        "wins": 18,
+        "winFraction": 1,
+        "timeouts": 0,
+        "meanWinSeconds": 76.73240740740434,
+        "meanWinEncounterSeconds": 38.36620370370218,
+        "meanTaken": 2381,
+        "meanDeaths": 0,
+        "meanBreaks": 5.555555555555555,
+        "meanEnemyBrokenFraction": 0.24776947612198472,
+        "meanBreakDamageShare": 0.498673260791126,
+        "meanWaitingFraction": 0.4865959524937926,
+        "meanAcceptedCommands": 22.666666666666668,
+        "meanCancellations": 1.5,
+        "dangerEpisodes": 0,
+        "recoveredEpisodes": 0,
+        "dangerDeaths": 0,
+        "censoredEpisodes": 0,
+        "pairCount": 6,
+        "aiWinDelta": 0,
+        "pairedWinSecondsSaved": 43.96111111110863,
+        "zeroDamageWins": 2,
+        "replayVerified": true
+      }
+    },
+    {
+      "id": "atb0.700-hp1.150-power1.000",
+      "parameters": {
+        "atbRate": 0.7,
+        "enemyHpScale": 1.15,
+        "enemyPower": 1
+      },
+      "aggregate": {
+        "runs": 18,
+        "wins": 18,
+        "winFraction": 1,
+        "timeouts": 0,
+        "meanWinSeconds": 76.75185185184878,
+        "meanWinEncounterSeconds": 38.375925925924406,
+        "meanTaken": 2977.277777777778,
+        "meanDeaths": 0,
+        "meanBreaks": 5.555555555555555,
+        "meanEnemyBrokenFraction": 0.2480584053371278,
+        "meanBreakDamageShare": 0.498673260791126,
+        "meanWaitingFraction": 0.47408497924595366,
+        "meanAcceptedCommands": 22.555555555555557,
+        "meanCancellations": 1.5,
+        "dangerEpisodes": 8,
+        "recoveredEpisodes": 0,
+        "dangerDeaths": 0,
+        "censoredEpisodes": 8,
+        "pairCount": 6,
+        "aiWinDelta": 0,
+        "pairedWinSecondsSaved": 43.90277777777529,
+        "zeroDamageWins": 2,
+        "replayVerified": true
+      }
+    },
+    {
+      "id": "atb0.700-hp1.150-power1.200",
+      "parameters": {
+        "atbRate": 0.7,
+        "enemyHpScale": 1.15,
+        "enemyPower": 1.2
+      },
+      "aggregate": {
+        "runs": 18,
+        "wins": 18,
+        "winFraction": 1,
+        "timeouts": 0,
+        "meanWinSeconds": 77.3787037037006,
+        "meanWinEncounterSeconds": 38.68935185185031,
+        "meanTaken": 3572.722222222222,
+        "meanDeaths": 0,
+        "meanBreaks": 5.555555555555555,
+        "meanEnemyBrokenFraction": 0.2489925975847125,
+        "meanBreakDamageShare": 0.49640157917161826,
+        "meanWaitingFraction": 0.4679488575545387,
+        "meanAcceptedCommands": 22.944444444444443,
+        "meanCancellations": 1.4444444444444444,
+        "dangerEpisodes": 15,
+        "recoveredEpisodes": 0,
+        "dangerDeaths": 0,
+        "censoredEpisodes": 15,
+        "pairCount": 6,
+        "aiWinDelta": 0,
+        "pairedWinSecondsSaved": 42.02222222221983,
+        "zeroDamageWins": 2,
+        "replayVerified": true
+      }
+    },
+    {
+      "id": "atb0.850-hp0.850-power0.800",
+      "parameters": {
+        "atbRate": 0.85,
+        "enemyHpScale": 0.85,
+        "enemyPower": 0.8
+      },
+      "aggregate": {
+        "runs": 18,
+        "wins": 18,
+        "winFraction": 1,
+        "timeouts": 0,
+        "meanWinSeconds": 58.18703703703501,
+        "meanWinEncounterSeconds": 29.093518518517513,
+        "meanTaken": 1864.7777777777778,
+        "meanDeaths": 0,
+        "meanBreaks": 4.722222222222222,
+        "meanEnemyBrokenFraction": 0.17971337452241945,
+        "meanBreakDamageShare": 0.3476387293146926,
+        "meanWaitingFraction": 0.44921272063191875,
+        "meanAcceptedCommands": 21.22222222222222,
+        "meanCancellations": 1.4444444444444444,
+        "dangerEpisodes": 0,
+        "recoveredEpisodes": 0,
+        "dangerDeaths": 0,
+        "censoredEpisodes": 0,
+        "pairCount": 6,
+        "aiWinDelta": 0,
+        "pairedWinSecondsSaved": 29.12222222222057,
+        "zeroDamageWins": 2,
+        "replayVerified": true
+      }
+    },
+    {
+      "id": "atb0.850-hp0.850-power1.000",
+      "parameters": {
+        "atbRate": 0.85,
+        "enemyHpScale": 0.85,
+        "enemyPower": 1
+      },
+      "aggregate": {
+        "runs": 18,
+        "wins": 18,
+        "winFraction": 1,
+        "timeouts": 0,
+        "meanWinSeconds": 58.18703703703501,
+        "meanWinEncounterSeconds": 29.093518518517513,
+        "meanTaken": 2331.9444444444443,
+        "meanDeaths": 0,
+        "meanBreaks": 4.722222222222222,
+        "meanEnemyBrokenFraction": 0.17971337452241945,
+        "meanBreakDamageShare": 0.3476387293146926,
+        "meanWaitingFraction": 0.4342981449460875,
+        "meanAcceptedCommands": 21.22222222222222,
+        "meanCancellations": 1.4444444444444444,
+        "dangerEpisodes": 4,
+        "recoveredEpisodes": 0,
+        "dangerDeaths": 0,
+        "censoredEpisodes": 4,
+        "pairCount": 6,
+        "aiWinDelta": 0,
+        "pairedWinSecondsSaved": 29.12222222222057,
+        "zeroDamageWins": 2,
+        "replayVerified": true
+      }
+    },
+    {
+      "id": "atb0.850-hp0.850-power1.200",
+      "parameters": {
+        "atbRate": 0.85,
+        "enemyHpScale": 0.85,
+        "enemyPower": 1.2
+      },
+      "aggregate": {
+        "runs": 18,
+        "wins": 18,
+        "winFraction": 1,
+        "timeouts": 0,
+        "meanWinSeconds": 58.44259259259055,
+        "meanWinEncounterSeconds": 29.221296296295286,
+        "meanTaken": 2811.777777777778,
+        "meanDeaths": 0,
+        "meanBreaks": 4.777777777777778,
+        "meanEnemyBrokenFraction": 0.17951539772741415,
+        "meanBreakDamageShare": 0.3502232160379314,
+        "meanWaitingFraction": 0.43052689306282965,
+        "meanAcceptedCommands": 21.166666666666668,
+        "meanCancellations": 1.3888888888888888,
+        "dangerEpisodes": 7,
+        "recoveredEpisodes": 0,
+        "dangerDeaths": 0,
+        "censoredEpisodes": 7,
+        "pairCount": 6,
+        "aiWinDelta": 0,
+        "pairedWinSecondsSaved": 28.355555555553952,
+        "zeroDamageWins": 2,
+        "replayVerified": true
+      }
+    },
+    {
+      "id": "atb0.850-hp1.000-power0.800",
+      "parameters": {
+        "atbRate": 0.85,
+        "enemyHpScale": 1,
+        "enemyPower": 0.8
+      },
+      "aggregate": {
+        "runs": 18,
+        "wins": 18,
+        "winFraction": 1,
+        "timeouts": 0,
+        "meanWinSeconds": 63.96851851851617,
+        "meanWinEncounterSeconds": 31.984259259258085,
+        "meanTaken": 1942.2222222222222,
+        "meanDeaths": 0,
+        "meanBreaks": 5.555555555555555,
+        "meanEnemyBrokenFraction": 0.21973369565170234,
+        "meanBreakDamageShare": 0.42856039444726596,
+        "meanWaitingFraction": 0.45034918409006963,
+        "meanAcceptedCommands": 21.555555555555557,
+        "meanCancellations": 1.4444444444444444,
+        "dangerEpisodes": 0,
+        "recoveredEpisodes": 0,
+        "dangerDeaths": 0,
+        "censoredEpisodes": 0,
+        "pairCount": 6,
+        "aiWinDelta": 0,
+        "pairedWinSecondsSaved": 34.24444444444251,
+        "zeroDamageWins": 2,
+        "replayVerified": true
+      }
+    },
+    {
+      "id": "atb0.850-hp1.000-power1.200",
+      "parameters": {
+        "atbRate": 0.85,
+        "enemyHpScale": 1,
+        "enemyPower": 1.2
+      },
+      "aggregate": {
+        "runs": 18,
+        "wins": 18,
+        "winFraction": 1,
+        "timeouts": 0,
+        "meanWinSeconds": 63.96851851851617,
+        "meanWinEncounterSeconds": 31.984259259258085,
+        "meanTaken": 2914.277777777778,
+        "meanDeaths": 0,
+        "meanBreaks": 5.555555555555555,
+        "meanEnemyBrokenFraction": 0.21973369565170234,
+        "meanBreakDamageShare": 0.42856039444726596,
+        "meanWaitingFraction": 0.43243626762412707,
+        "meanAcceptedCommands": 21.555555555555557,
+        "meanCancellations": 1.4444444444444444,
+        "dangerEpisodes": 7,
+        "recoveredEpisodes": 0,
+        "dangerDeaths": 0,
+        "censoredEpisodes": 7,
+        "pairCount": 6,
+        "aiWinDelta": 0,
+        "pairedWinSecondsSaved": 34.24444444444251,
+        "zeroDamageWins": 2,
+        "replayVerified": true
+      }
+    },
+    {
+      "id": "atb0.850-hp1.150-power0.800",
+      "parameters": {
+        "atbRate": 0.85,
+        "enemyHpScale": 1.15,
+        "enemyPower": 0.8
+      },
+      "aggregate": {
+        "runs": 18,
+        "wins": 18,
+        "winFraction": 1,
+        "timeouts": 0,
+        "meanWinSeconds": 69.17037037036772,
+        "meanWinEncounterSeconds": 34.58518518518386,
+        "meanTaken": 2052.1111111111113,
+        "meanDeaths": 0,
+        "meanBreaks": 5.555555555555555,
+        "meanEnemyBrokenFraction": 0.25854191140327454,
+        "meanBreakDamageShare": 0.5093077081293095,
+        "meanWaitingFraction": 0.4510580807171272,
+        "meanAcceptedCommands": 22.11111111111111,
+        "meanCancellations": 1.6111111111111112,
+        "dangerEpisodes": 0,
+        "recoveredEpisodes": 0,
+        "dangerDeaths": 0,
+        "censoredEpisodes": 0,
+        "pairCount": 6,
+        "aiWinDelta": 0,
+        "pairedWinSecondsSaved": 39.48611111110887,
+        "zeroDamageWins": 2,
+        "replayVerified": true
+      }
+    },
+    {
+      "id": "atb0.850-hp1.150-power1.000",
+      "parameters": {
+        "atbRate": 0.85,
+        "enemyHpScale": 1.15,
+        "enemyPower": 1
+      },
+      "aggregate": {
+        "runs": 18,
+        "wins": 18,
+        "winFraction": 1,
+        "timeouts": 0,
+        "meanWinSeconds": 69.17037037036772,
+        "meanWinEncounterSeconds": 34.58518518518386,
+        "meanTaken": 2565.9444444444443,
+        "meanDeaths": 0,
+        "meanBreaks": 5.555555555555555,
+        "meanEnemyBrokenFraction": 0.25854191140327454,
+        "meanBreakDamageShare": 0.5093077081293095,
+        "meanWaitingFraction": 0.4372433809177185,
+        "meanAcceptedCommands": 22.11111111111111,
+        "meanCancellations": 1.6111111111111112,
+        "dangerEpisodes": 6,
+        "recoveredEpisodes": 0,
+        "dangerDeaths": 0,
+        "censoredEpisodes": 6,
+        "pairCount": 6,
+        "aiWinDelta": 0,
+        "pairedWinSecondsSaved": 39.48611111110887,
+        "zeroDamageWins": 2,
+        "replayVerified": true
+      }
+    },
+    {
+      "id": "atb0.850-hp1.150-power1.200",
+      "parameters": {
+        "atbRate": 0.85,
+        "enemyHpScale": 1.15,
+        "enemyPower": 1.2
+      },
+      "aggregate": {
+        "runs": 18,
+        "wins": 18,
+        "winFraction": 1,
+        "timeouts": 0,
+        "meanWinSeconds": 69.17037037036772,
+        "meanWinEncounterSeconds": 34.58518518518386,
+        "meanTaken": 3079,
+        "meanDeaths": 0,
+        "meanBreaks": 5.555555555555555,
+        "meanEnemyBrokenFraction": 0.25854191140327454,
+        "meanBreakDamageShare": 0.5093077081293095,
+        "meanWaitingFraction": 0.4327587834623174,
+        "meanAcceptedCommands": 22.11111111111111,
+        "meanCancellations": 1.6111111111111112,
+        "dangerEpisodes": 11,
+        "recoveredEpisodes": 0,
+        "dangerDeaths": 0,
+        "censoredEpisodes": 11,
+        "pairCount": 6,
+        "aiWinDelta": 0,
+        "pairedWinSecondsSaved": 39.48611111110887,
+        "zeroDamageWins": 2,
+        "replayVerified": true
+      }
+    },
+    {
+      "id": "atb1.000-hp0.850-power0.800",
+      "parameters": {
+        "atbRate": 1,
+        "enemyHpScale": 0.85,
+        "enemyPower": 0.8
+      },
+      "aggregate": {
+        "runs": 18,
+        "wins": 18,
+        "winFraction": 1,
+        "timeouts": 0,
+        "meanWinSeconds": 55.16481481481296,
+        "meanWinEncounterSeconds": 27.582407407406496,
+        "meanTaken": 1639.7777777777778,
+        "meanDeaths": 0,
+        "meanBreaks": 5,
+        "meanEnemyBrokenFraction": 0.19096701197992105,
+        "meanBreakDamageShare": 0.3516669968894976,
+        "meanWaitingFraction": 0.4181922138722396,
+        "meanAcceptedCommands": 21.38888888888889,
+        "meanCancellations": 1.6666666666666667,
+        "dangerEpisodes": 0,
+        "recoveredEpisodes": 0,
+        "dangerDeaths": 0,
+        "censoredEpisodes": 0,
+        "pairCount": 6,
+        "aiWinDelta": 0,
+        "pairedWinSecondsSaved": 28.57777777777616,
+        "zeroDamageWins": 2,
+        "replayVerified": true
+      }
+    },
+    {
+      "id": "atb1.000-hp0.850-power1.000",
+      "parameters": {
+        "atbRate": 1,
+        "enemyHpScale": 0.85,
+        "enemyPower": 1
+      },
+      "aggregate": {
+        "runs": 18,
+        "wins": 18,
+        "winFraction": 1,
+        "timeouts": 0,
+        "meanWinSeconds": 55.16481481481296,
+        "meanWinEncounterSeconds": 27.582407407406496,
+        "meanTaken": 2050.1666666666665,
+        "meanDeaths": 0,
+        "meanBreaks": 5,
+        "meanEnemyBrokenFraction": 0.19096701197992105,
+        "meanBreakDamageShare": 0.3516669968894976,
+        "meanWaitingFraction": 0.4031205443847127,
+        "meanAcceptedCommands": 21.38888888888889,
+        "meanCancellations": 1.6666666666666667,
+        "dangerEpisodes": 0,
+        "recoveredEpisodes": 0,
+        "dangerDeaths": 0,
+        "censoredEpisodes": 0,
+        "pairCount": 6,
+        "aiWinDelta": 0,
+        "pairedWinSecondsSaved": 28.57777777777616,
+        "zeroDamageWins": 2,
+        "replayVerified": true
+      }
+    },
+    {
+      "id": "atb1.000-hp0.850-power1.200",
+      "parameters": {
+        "atbRate": 1,
+        "enemyHpScale": 0.85,
+        "enemyPower": 1.2
+      },
+      "aggregate": {
+        "runs": 18,
+        "wins": 18,
+        "winFraction": 1,
+        "timeouts": 0,
+        "meanWinSeconds": 55.16481481481296,
+        "meanWinEncounterSeconds": 27.582407407406496,
+        "meanTaken": 2460.1666666666665,
+        "meanDeaths": 0,
+        "meanBreaks": 5,
+        "meanEnemyBrokenFraction": 0.19096701197992105,
+        "meanBreakDamageShare": 0.3516669968894976,
+        "meanWaitingFraction": 0.3985560352520228,
+        "meanAcceptedCommands": 21.38888888888889,
+        "meanCancellations": 1.6666666666666667,
+        "dangerEpisodes": 0,
+        "recoveredEpisodes": 0,
+        "dangerDeaths": 0,
+        "censoredEpisodes": 0,
+        "pairCount": 6,
+        "aiWinDelta": 0,
+        "pairedWinSecondsSaved": 28.57777777777616,
+        "zeroDamageWins": 2,
+        "replayVerified": true
+      }
+    },
+    {
+      "id": "atb1.000-hp1.000-power0.800",
+      "parameters": {
+        "atbRate": 1,
+        "enemyHpScale": 1,
+        "enemyPower": 0.8
+      },
+      "aggregate": {
+        "runs": 18,
+        "wins": 18,
+        "winFraction": 1,
+        "timeouts": 0,
+        "meanWinSeconds": 60.17499999999787,
+        "meanWinEncounterSeconds": 30.087499999998947,
+        "meanTaken": 1778.6666666666667,
+        "meanDeaths": 0,
+        "meanBreaks": 5.444444444444445,
+        "meanEnemyBrokenFraction": 0.22162172646860204,
+        "meanBreakDamageShare": 0.4300345971016362,
+        "meanWaitingFraction": 0.4169164687124953,
+        "meanAcceptedCommands": 21.72222222222222,
+        "meanCancellations": 1.7777777777777777,
+        "dangerEpisodes": 0,
+        "recoveredEpisodes": 0,
+        "dangerDeaths": 0,
+        "censoredEpisodes": 0,
+        "pairCount": 6,
+        "aiWinDelta": 0,
+        "pairedWinSecondsSaved": 34.349999999998055,
+        "zeroDamageWins": 2,
+        "replayVerified": true
+      }
+    },
+    {
+      "id": "atb1.000-hp1.000-power1.000",
+      "parameters": {
+        "atbRate": 1,
+        "enemyHpScale": 1,
+        "enemyPower": 1
+      },
+      "aggregate": {
+        "runs": 18,
+        "wins": 18,
+        "winFraction": 1,
+        "timeouts": 0,
+        "meanWinSeconds": 60.21666666666454,
+        "meanWinEncounterSeconds": 30.108333333332276,
+        "meanTaken": 2224.277777777778,
+        "meanDeaths": 0,
+        "meanBreaks": 5.444444444444445,
+        "meanEnemyBrokenFraction": 0.22129258575536404,
+        "meanBreakDamageShare": 0.42666158122862036,
+        "meanWaitingFraction": 0.4016604391822578,
+        "meanAcceptedCommands": 21.72222222222222,
+        "meanCancellations": 1.7777777777777777,
+        "dangerEpisodes": 0,
+        "recoveredEpisodes": 0,
+        "dangerDeaths": 0,
+        "censoredEpisodes": 0,
+        "pairCount": 6,
+        "aiWinDelta": 0,
+        "pairedWinSecondsSaved": 34.224999999998055,
+        "zeroDamageWins": 2,
+        "replayVerified": true
+      }
+    },
+    {
+      "id": "atb1.000-hp1.000-power1.200",
+      "parameters": {
+        "atbRate": 1,
+        "enemyHpScale": 1,
+        "enemyPower": 1.2
+      },
+      "aggregate": {
+        "runs": 18,
+        "wins": 18,
+        "winFraction": 1,
+        "timeouts": 0,
+        "meanWinSeconds": 60.40925925925712,
+        "meanWinEncounterSeconds": 30.20462962962857,
+        "meanTaken": 2675,
+        "meanDeaths": 0,
+        "meanBreaks": 5.444444444444445,
+        "meanEnemyBrokenFraction": 0.22069772361272108,
+        "meanBreakDamageShare": 0.4256496764667156,
+        "meanWaitingFraction": 0.39813826766904875,
+        "meanAcceptedCommands": 21.72222222222222,
+        "meanCancellations": 1.7777777777777777,
+        "dangerEpisodes": 0,
+        "recoveredEpisodes": 0,
+        "dangerDeaths": 0,
+        "censoredEpisodes": 0,
+        "pairCount": 6,
+        "aiWinDelta": 0,
+        "pairedWinSecondsSaved": 33.647222222220314,
+        "zeroDamageWins": 2,
+        "replayVerified": true
+      }
+    },
+    {
+      "id": "atb1.000-hp1.150-power0.800",
+      "parameters": {
+        "atbRate": 1,
+        "enemyHpScale": 1.15,
+        "enemyPower": 0.8
+      },
+      "aggregate": {
+        "runs": 18,
+        "wins": 18,
+        "winFraction": 1,
+        "timeouts": 0,
+        "meanWinSeconds": 64.87499999999761,
+        "meanWinEncounterSeconds": 32.43749999999879,
+        "meanTaken": 1945.111111111111,
+        "meanDeaths": 0,
+        "meanBreaks": 5.5,
+        "meanEnemyBrokenFraction": 0.26212554577682,
+        "meanBreakDamageShare": 0.511607608469436,
+        "meanWaitingFraction": 0.4143622986558517,
+        "meanAcceptedCommands": 22.055555555555557,
+        "meanCancellations": 1.7777777777777777,
+        "dangerEpisodes": 0,
+        "recoveredEpisodes": 0,
+        "dangerDeaths": 0,
+        "censoredEpisodes": 0,
+        "pairCount": 6,
+        "aiWinDelta": 0,
+        "pairedWinSecondsSaved": 39.447222222219985,
+        "zeroDamageWins": 2,
+        "replayVerified": true
+      }
+    },
+    {
+      "id": "atb1.000-hp1.150-power1.000",
+      "parameters": {
+        "atbRate": 1,
+        "enemyHpScale": 1.15,
+        "enemyPower": 1
+      },
+      "aggregate": {
+        "runs": 18,
+        "wins": 18,
+        "winFraction": 1,
+        "timeouts": 0,
+        "meanWinSeconds": 64.87499999999761,
+        "meanWinEncounterSeconds": 32.43749999999879,
+        "meanTaken": 2432.0555555555557,
+        "meanDeaths": 0,
+        "meanBreaks": 5.5,
+        "meanEnemyBrokenFraction": 0.26212554577682,
+        "meanBreakDamageShare": 0.511607608469436,
+        "meanWaitingFraction": 0.4002239402785987,
+        "meanAcceptedCommands": 22.055555555555557,
+        "meanCancellations": 1.7777777777777777,
+        "dangerEpisodes": 4,
+        "recoveredEpisodes": 0,
+        "dangerDeaths": 0,
+        "censoredEpisodes": 4,
+        "pairCount": 6,
+        "aiWinDelta": 0,
+        "pairedWinSecondsSaved": 39.447222222219985,
+        "zeroDamageWins": 2,
+        "replayVerified": true
+      }
+    },
+    {
+      "id": "atb1.000-hp1.150-power1.200",
+      "parameters": {
+        "atbRate": 1,
+        "enemyHpScale": 1.15,
+        "enemyPower": 1.2
+      },
+      "aggregate": {
+        "runs": 18,
+        "wins": 18,
+        "winFraction": 1,
+        "timeouts": 0,
+        "meanWinSeconds": 64.87499999999761,
+        "meanWinEncounterSeconds": 32.43749999999879,
+        "meanTaken": 2918.4444444444443,
+        "meanDeaths": 0,
+        "meanBreaks": 5.5,
+        "meanEnemyBrokenFraction": 0.26212554577682,
+        "meanBreakDamageShare": 0.511607608469436,
+        "meanWaitingFraction": 0.39543585105684187,
+        "meanAcceptedCommands": 22.055555555555557,
+        "meanCancellations": 1.7777777777777777,
+        "dangerEpisodes": 6,
+        "recoveredEpisodes": 0,
+        "dangerDeaths": 0,
+        "censoredEpisodes": 6,
+        "pairCount": 6,
+        "aiWinDelta": 0,
+        "pairedWinSecondsSaved": 39.447222222219985,
+        "zeroDamageWins": 2,
+        "replayVerified": true
+      }
+    },
+    {
+      "id": "atb0.925-hp0.850-power0.800",
+      "parameters": {
+        "atbRate": 0.925,
+        "enemyHpScale": 0.85,
+        "enemyPower": 0.8
+      },
+      "aggregate": {
+        "runs": 18,
+        "wins": 18,
+        "winFraction": 1,
+        "timeouts": 0,
+        "meanWinSeconds": 57.30185185184988,
+        "meanWinEncounterSeconds": 28.65092592592495,
+        "meanTaken": 1677.5555555555557,
+        "meanDeaths": 0,
+        "meanBreaks": 5.111111111111111,
+        "meanEnemyBrokenFraction": 0.19389594629988186,
+        "meanBreakDamageShare": 0.34908124148403163,
+        "meanWaitingFraction": 0.4365908118837687,
+        "meanAcceptedCommands": 20.77777777777778,
+        "meanCancellations": 1.2777777777777777,
+        "dangerEpisodes": 0,
+        "recoveredEpisodes": 0,
+        "dangerDeaths": 0,
+        "censoredEpisodes": 0,
+        "pairCount": 6,
+        "aiWinDelta": 0,
+        "pairedWinSecondsSaved": 28.177777777776182,
+        "zeroDamageWins": 2,
+        "replayVerified": true
+      }
+    },
+    {
+      "id": "atb1.000-hp0.925-power0.800",
+      "parameters": {
+        "atbRate": 1,
+        "enemyHpScale": 0.925,
+        "enemyPower": 0.8
+      },
+      "aggregate": {
+        "runs": 18,
+        "wins": 18,
+        "winFraction": 1,
+        "timeouts": 0,
+        "meanWinSeconds": 57.97777777777578,
+        "meanWinEncounterSeconds": 28.988888888887896,
+        "meanTaken": 1717.5555555555557,
+        "meanDeaths": 0,
+        "meanBreaks": 5.444444444444445,
+        "meanEnemyBrokenFraction": 0.2086490790362539,
+        "meanBreakDamageShare": 0.3952190384640247,
+        "meanWaitingFraction": 0.4179307563219392,
+        "meanAcceptedCommands": 21.055555555555557,
+        "meanCancellations": 1.5,
+        "dangerEpisodes": 0,
+        "recoveredEpisodes": 0,
+        "dangerDeaths": 0,
+        "censoredEpisodes": 0,
+        "pairCount": 6,
+        "aiWinDelta": 0,
+        "pairedWinSecondsSaved": 31.477777777775998,
+        "zeroDamageWins": 2,
+        "replayVerified": true
+      }
+    },
+    {
+      "id": "atb0.925-hp1.000-power0.800",
+      "parameters": {
+        "atbRate": 0.925,
+        "enemyHpScale": 1,
+        "enemyPower": 0.8
+      },
+      "aggregate": {
+        "runs": 18,
+        "wins": 18,
+        "winFraction": 1,
+        "timeouts": 0,
+        "meanWinSeconds": 62.37129629629404,
+        "meanWinEncounterSeconds": 31.18564814814702,
+        "meanTaken": 1881.7777777777778,
+        "meanDeaths": 0,
+        "meanBreaks": 5.444444444444445,
+        "meanEnemyBrokenFraction": 0.21950146842474683,
+        "meanBreakDamageShare": 0.4286365383013428,
+        "meanWaitingFraction": 0.43598589314685054,
+        "meanAcceptedCommands": 21.38888888888889,
+        "meanCancellations": 1.5,
+        "dangerEpisodes": 0,
+        "recoveredEpisodes": 0,
+        "dangerDeaths": 0,
+        "censoredEpisodes": 0,
+        "pairCount": 6,
+        "aiWinDelta": 0,
+        "pairedWinSecondsSaved": 34.21666666666473,
+        "zeroDamageWins": 2,
+        "replayVerified": true
+      }
+    },
+    {
+      "id": "atb1.000-hp1.075-power0.800",
+      "parameters": {
+        "atbRate": 1,
+        "enemyHpScale": 1.075,
+        "enemyPower": 0.8
+      },
+      "aggregate": {
+        "runs": 18,
+        "wins": 18,
+        "winFraction": 1,
+        "timeouts": 0,
+        "meanWinSeconds": 63.021296296294004,
+        "meanWinEncounterSeconds": 31.510648148147002,
+        "meanTaken": 1906.2222222222222,
+        "meanDeaths": 0,
+        "meanBreaks": 5.555555555555555,
+        "meanEnemyBrokenFraction": 0.24503934254189527,
+        "meanBreakDamageShare": 0.4736604352564947,
+        "meanWaitingFraction": 0.41351405902825084,
+        "meanAcceptedCommands": 22,
+        "meanCancellations": 1.8333333333333333,
+        "dangerEpisodes": 0,
+        "recoveredEpisodes": 0,
+        "dangerDeaths": 0,
+        "censoredEpisodes": 0,
+        "pairCount": 6,
+        "aiWinDelta": 0,
+        "pairedWinSecondsSaved": 37.933333333331184,
+        "zeroDamageWins": 2,
+        "replayVerified": true
+      }
+    },
+    {
+      "id": "atb0.775-hp1.150-power0.800",
+      "parameters": {
+        "atbRate": 0.775,
+        "enemyHpScale": 1.15,
+        "enemyPower": 0.8
+      },
+      "aggregate": {
+        "runs": 18,
+        "wins": 18,
+        "winFraction": 1,
+        "timeouts": 0,
+        "meanWinSeconds": 72.18333333333051,
+        "meanWinEncounterSeconds": 36.09166666666526,
+        "meanTaken": 2168.6666666666665,
+        "meanDeaths": 0,
+        "meanBreaks": 5.555555555555555,
+        "meanEnemyBrokenFraction": 0.2539893309313104,
+        "meanBreakDamageShare": 0.5104688999349039,
+        "meanWaitingFraction": 0.4689544424211171,
+        "meanAcceptedCommands": 21.666666666666668,
+        "meanCancellations": 1.3888888888888888,
+        "dangerEpisodes": 0,
+        "recoveredEpisodes": 0,
+        "dangerDeaths": 0,
+        "censoredEpisodes": 0,
+        "pairCount": 6,
+        "aiWinDelta": 0,
+        "pairedWinSecondsSaved": 41.02222222221989,
+        "zeroDamageWins": 2,
+        "replayVerified": true
+      }
+    },
+    {
+      "id": "atb0.700-hp1.075-power0.800",
+      "parameters": {
+        "atbRate": 0.7,
+        "enemyHpScale": 1.075,
+        "enemyPower": 0.8
+      },
+      "aggregate": {
+        "runs": 18,
+        "wins": 18,
+        "winFraction": 1,
+        "timeouts": 0,
+        "meanWinSeconds": 74.20370370370077,
+        "meanWinEncounterSeconds": 37.10185185185039,
+        "meanTaken": 2328.777777777778,
+        "meanDeaths": 0,
+        "meanBreaks": 5.444444444444445,
+        "meanEnemyBrokenFraction": 0.24133967891151611,
+        "meanBreakDamageShare": 0.4728654315399947,
+        "meanWaitingFraction": 0.4876529030535677,
+        "meanAcceptedCommands": 22.22222222222222,
+        "meanCancellations": 1.3333333333333333,
+        "dangerEpisodes": 0,
+        "recoveredEpisodes": 0,
+        "dangerDeaths": 0,
+        "censoredEpisodes": 0,
+        "pairCount": 6,
+        "aiWinDelta": 0,
+        "pairedWinSecondsSaved": 43.444444444441984,
+        "zeroDamageWins": 2,
+        "replayVerified": true
+      }
+    }
+  ],
+  "paretoProxyFront": [
+    "atb1.000-hp0.850-power0.800",
+    "atb1.000-hp0.850-power1.000",
+    "atb1.000-hp0.850-power1.200",
+    "atb0.925-hp0.850-power0.800"
+  ],
+  "archive": {
+    "1:1": "atb0.850-hp1.000-power1.000",
+    "1:0": "atb0.700-hp0.850-power0.800"
+  },
+  "packets": [
+    {
+      "iteration": 0,
+      "id": "atb0.850-hp1.000-power1.000",
+      "parameters": {
+        "atbRate": 0.85,
+        "enemyHpScale": 1,
+        "enemyPower": 1
+      },
+      "metric": 1,
+      "delta": 1,
+      "status": "baseline",
+      "feasible": true,
+      "cell": "1:1",
+      "description": "Baseline before all candidate changes"
+    },
+    {
+      "iteration": 1,
+      "id": "atb0.700-hp0.850-power0.800",
+      "parameters": {
+        "atbRate": 0.7,
+        "enemyHpScale": 0.85,
+        "enemyPower": 0.8
+      },
+      "metric": 2,
+      "delta": 1,
+      "status": "keep",
+      "feasible": true,
+      "cell": "1:0",
+      "description": "Frozen full factorial grid"
+    },
+    {
+      "iteration": 2,
+      "id": "atb0.700-hp0.850-power1.000",
+      "parameters": {
+        "atbRate": 0.7,
+        "enemyHpScale": 0.85,
+        "enemyPower": 1
+      },
+      "metric": 2,
+      "delta": 0,
+      "status": "discard",
+      "feasible": true,
+      "cell": "1:0",
+      "description": "Frozen full factorial grid"
+    },
+    {
+      "iteration": 3,
+      "id": "atb0.700-hp0.850-power1.200",
+      "parameters": {
+        "atbRate": 0.7,
+        "enemyHpScale": 0.85,
+        "enemyPower": 1.2
+      },
+      "metric": 2,
+      "delta": 0,
+      "status": "discard",
+      "feasible": true,
+      "cell": "1:0",
+      "description": "Frozen full factorial grid"
+    },
+    {
+      "iteration": 4,
+      "id": "atb0.700-hp1.000-power0.800",
+      "parameters": {
+        "atbRate": 0.7,
+        "enemyHpScale": 1,
+        "enemyPower": 0.8
+      },
+      "metric": 2,
+      "delta": 0,
+      "status": "discard",
+      "feasible": true,
+      "cell": "1:1",
+      "description": "Frozen full factorial grid"
+    },
+    {
+      "iteration": 5,
+      "id": "atb0.700-hp1.000-power1.000",
+      "parameters": {
+        "atbRate": 0.7,
+        "enemyHpScale": 1,
+        "enemyPower": 1
+      },
+      "metric": 2,
+      "delta": 0,
+      "status": "discard",
+      "feasible": true,
+      "cell": "1:1",
+      "description": "Frozen full factorial grid"
+    },
+    {
+      "iteration": 6,
+      "id": "atb0.700-hp1.000-power1.200",
+      "parameters": {
+        "atbRate": 0.7,
+        "enemyHpScale": 1,
+        "enemyPower": 1.2
+      },
+      "metric": 2,
+      "delta": 0,
+      "status": "discard",
+      "feasible": true,
+      "cell": "1:1",
+      "description": "Frozen full factorial grid"
+    },
+    {
+      "iteration": 7,
+      "id": "atb0.700-hp1.150-power0.800",
+      "parameters": {
+        "atbRate": 0.7,
+        "enemyHpScale": 1.15,
+        "enemyPower": 0.8
+      },
+      "metric": 2,
+      "delta": 0,
+      "status": "discard",
+      "feasible": true,
+      "cell": "1:1",
+      "description": "Frozen full factorial grid"
+    },
+    {
+      "iteration": 8,
+      "id": "atb0.700-hp1.150-power1.000",
+      "parameters": {
+        "atbRate": 0.7,
+        "enemyHpScale": 1.15,
+        "enemyPower": 1
+      },
+      "metric": 2,
+      "delta": 0,
+      "status": "discard",
+      "feasible": true,
+      "cell": "1:1",
+      "description": "Frozen full factorial grid"
+    },
+    {
+      "iteration": 9,
+      "id": "atb0.700-hp1.150-power1.200",
+      "parameters": {
+        "atbRate": 0.7,
+        "enemyHpScale": 1.15,
+        "enemyPower": 1.2
+      },
+      "metric": 2,
+      "delta": 0,
+      "status": "discard",
+      "feasible": true,
+      "cell": "1:1",
+      "description": "Frozen full factorial grid"
+    },
+    {
+      "iteration": 10,
+      "id": "atb0.850-hp0.850-power0.800",
+      "parameters": {
+        "atbRate": 0.85,
+        "enemyHpScale": 0.85,
+        "enemyPower": 0.8
+      },
+      "metric": 2,
+      "delta": 0,
+      "status": "discard",
+      "feasible": true,
+      "cell": "1:0",
+      "description": "Frozen full factorial grid"
+    },
+    {
+      "iteration": 11,
+      "id": "atb0.850-hp0.850-power1.000",
+      "parameters": {
+        "atbRate": 0.85,
+        "enemyHpScale": 0.85,
+        "enemyPower": 1
+      },
+      "metric": 2,
+      "delta": 0,
+      "status": "discard",
+      "feasible": true,
+      "cell": "1:0",
+      "description": "Frozen full factorial grid"
+    },
+    {
+      "iteration": 12,
+      "id": "atb0.850-hp0.850-power1.200",
+      "parameters": {
+        "atbRate": 0.85,
+        "enemyHpScale": 0.85,
+        "enemyPower": 1.2
+      },
+      "metric": 2,
+      "delta": 0,
+      "status": "discard",
+      "feasible": true,
+      "cell": "1:0",
+      "description": "Frozen full factorial grid"
+    },
+    {
+      "iteration": 13,
+      "id": "atb0.850-hp1.000-power0.800",
+      "parameters": {
+        "atbRate": 0.85,
+        "enemyHpScale": 1,
+        "enemyPower": 0.8
+      },
+      "metric": 2,
+      "delta": 0,
+      "status": "discard",
+      "feasible": true,
+      "cell": "1:1",
+      "description": "Frozen full factorial grid"
+    },
+    {
+      "iteration": 14,
+      "id": "atb0.850-hp1.000-power1.200",
+      "parameters": {
+        "atbRate": 0.85,
+        "enemyHpScale": 1,
+        "enemyPower": 1.2
+      },
+      "metric": 2,
+      "delta": 0,
+      "status": "discard",
+      "feasible": true,
+      "cell": "1:1",
+      "description": "Frozen full factorial grid"
+    },
+    {
+      "iteration": 15,
+      "id": "atb0.850-hp1.150-power0.800",
+      "parameters": {
+        "atbRate": 0.85,
+        "enemyHpScale": 1.15,
+        "enemyPower": 0.8
+      },
+      "metric": 2,
+      "delta": 0,
+      "status": "discard",
+      "feasible": true,
+      "cell": "1:1",
+      "description": "Frozen full factorial grid"
+    },
+    {
+      "iteration": 16,
+      "id": "atb0.850-hp1.150-power1.000",
+      "parameters": {
+        "atbRate": 0.85,
+        "enemyHpScale": 1.15,
+        "enemyPower": 1
+      },
+      "metric": 2,
+      "delta": 0,
+      "status": "discard",
+      "feasible": true,
+      "cell": "1:1",
+      "description": "Frozen full factorial grid"
+    },
+    {
+      "iteration": 17,
+      "id": "atb0.850-hp1.150-power1.200",
+      "parameters": {
+        "atbRate": 0.85,
+        "enemyHpScale": 1.15,
+        "enemyPower": 1.2
+      },
+      "metric": 2,
+      "delta": 0,
+      "status": "discard",
+      "feasible": true,
+      "cell": "1:1",
+      "description": "Frozen full factorial grid"
+    },
+    {
+      "iteration": 18,
+      "id": "atb1.000-hp0.850-power0.800",
+      "parameters": {
+        "atbRate": 1,
+        "enemyHpScale": 0.85,
+        "enemyPower": 0.8
+      },
+      "metric": 2,
+      "delta": 0,
+      "status": "discard",
+      "feasible": true,
+      "cell": "1:0",
+      "description": "Frozen full factorial grid"
+    },
+    {
+      "iteration": 19,
+      "id": "atb1.000-hp0.850-power1.000",
+      "parameters": {
+        "atbRate": 1,
+        "enemyHpScale": 0.85,
+        "enemyPower": 1
+      },
+      "metric": 2,
+      "delta": 0,
+      "status": "discard",
+      "feasible": true,
+      "cell": "1:0",
+      "description": "Frozen full factorial grid"
+    },
+    {
+      "iteration": 20,
+      "id": "atb1.000-hp0.850-power1.200",
+      "parameters": {
+        "atbRate": 1,
+        "enemyHpScale": 0.85,
+        "enemyPower": 1.2
+      },
+      "metric": 2,
+      "delta": 0,
+      "status": "discard",
+      "feasible": true,
+      "cell": "1:0",
+      "description": "Frozen full factorial grid"
+    },
+    {
+      "iteration": 21,
+      "id": "atb1.000-hp1.000-power0.800",
+      "parameters": {
+        "atbRate": 1,
+        "enemyHpScale": 1,
+        "enemyPower": 0.8
+      },
+      "metric": 2,
+      "delta": 0,
+      "status": "discard",
+      "feasible": true,
+      "cell": "1:1",
+      "description": "Frozen full factorial grid"
+    },
+    {
+      "iteration": 22,
+      "id": "atb1.000-hp1.000-power1.000",
+      "parameters": {
+        "atbRate": 1,
+        "enemyHpScale": 1,
+        "enemyPower": 1
+      },
+      "metric": 2,
+      "delta": 0,
+      "status": "discard",
+      "feasible": true,
+      "cell": "1:1",
+      "description": "Frozen full factorial grid"
+    },
+    {
+      "iteration": 23,
+      "id": "atb1.000-hp1.000-power1.200",
+      "parameters": {
+        "atbRate": 1,
+        "enemyHpScale": 1,
+        "enemyPower": 1.2
+      },
+      "metric": 2,
+      "delta": 0,
+      "status": "discard",
+      "feasible": true,
+      "cell": "1:1",
+      "description": "Frozen full factorial grid"
+    },
+    {
+      "iteration": 24,
+      "id": "atb1.000-hp1.150-power0.800",
+      "parameters": {
+        "atbRate": 1,
+        "enemyHpScale": 1.15,
+        "enemyPower": 0.8
+      },
+      "metric": 2,
+      "delta": 0,
+      "status": "discard",
+      "feasible": true,
+      "cell": "1:1",
+      "description": "Frozen full factorial grid"
+    },
+    {
+      "iteration": 25,
+      "id": "atb1.000-hp1.150-power1.000",
+      "parameters": {
+        "atbRate": 1,
+        "enemyHpScale": 1.15,
+        "enemyPower": 1
+      },
+      "metric": 2,
+      "delta": 0,
+      "status": "discard",
+      "feasible": true,
+      "cell": "1:1",
+      "description": "Frozen full factorial grid"
+    },
+    {
+      "iteration": 26,
+      "id": "atb1.000-hp1.150-power1.200",
+      "parameters": {
+        "atbRate": 1,
+        "enemyHpScale": 1.15,
+        "enemyPower": 1.2
+      },
+      "metric": 2,
+      "delta": 0,
+      "status": "discard",
+      "feasible": true,
+      "cell": "1:1",
+      "description": "Frozen full factorial grid"
+    },
+    {
+      "iteration": 27,
+      "id": "atb0.925-hp0.850-power0.800",
+      "parameters": {
+        "atbRate": 0.925,
+        "enemyHpScale": 0.85,
+        "enemyPower": 0.8
+      },
+      "metric": 2,
+      "delta": 0,
+      "status": "discard",
+      "feasible": true,
+      "cell": "1:0",
+      "description": "offense: one-axis half-step neighbor of atb1.000-hp0.850-power0.800"
+    },
+    {
+      "iteration": 28,
+      "id": "atb1.000-hp0.925-power0.800",
+      "parameters": {
+        "atbRate": 1,
+        "enemyHpScale": 0.925,
+        "enemyPower": 0.8
+      },
+      "metric": 2,
+      "delta": 0,
+      "status": "discard",
+      "feasible": true,
+      "cell": "1:1",
+      "description": "offense: one-axis half-step neighbor of atb1.000-hp0.850-power0.800"
+    },
+    {
+      "iteration": 29,
+      "id": "atb0.925-hp1.000-power0.800",
+      "parameters": {
+        "atbRate": 0.925,
+        "enemyHpScale": 1,
+        "enemyPower": 0.8
+      },
+      "metric": 2,
+      "delta": 0,
+      "status": "discard",
+      "feasible": true,
+      "cell": "1:1",
+      "description": "resilience: one-axis half-step neighbor of atb1.000-hp1.000-power0.800"
+    },
+    {
+      "iteration": 30,
+      "id": "atb1.000-hp1.075-power0.800",
+      "parameters": {
+        "atbRate": 1,
+        "enemyHpScale": 1.075,
+        "enemyPower": 0.8
+      },
+      "metric": 2,
+      "delta": 0,
+      "status": "discard",
+      "feasible": true,
+      "cell": "1:1",
+      "description": "resilience: one-axis half-step neighbor of atb1.000-hp1.000-power0.800"
+    },
+    {
+      "iteration": 31,
+      "id": "atb0.775-hp1.150-power0.800",
+      "parameters": {
+        "atbRate": 0.775,
+        "enemyHpScale": 1.15,
+        "enemyPower": 0.8
+      },
+      "metric": 2,
+      "delta": 0,
+      "status": "discard",
+      "feasible": true,
+      "cell": "1:1",
+      "description": "intervention: one-axis half-step neighbor of atb0.700-hp1.150-power0.800"
+    },
+    {
+      "iteration": 32,
+      "id": "atb0.700-hp1.075-power0.800",
+      "parameters": {
+        "atbRate": 0.7,
+        "enemyHpScale": 1.075,
+        "enemyPower": 0.8
+      },
+      "metric": 2,
+      "delta": 0,
+      "status": "discard",
+      "feasible": true,
+      "cell": "1:1",
+      "description": "intervention: one-axis half-step neighbor of atb0.700-hp1.150-power0.800"
+    }
+  ]
+}

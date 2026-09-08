@@ -1,0 +1,34 @@
+iteration	commit	metric	delta	status	description
+0	bdf513cb169ceaa71b9ef8b47aadff298c70322c	1	1	baseline	atb0.850-hp1.000-power1.000: Baseline before all candidate changes
+1	bdf513cb169ceaa71b9ef8b47aadff298c70322c	2	1	keep	atb0.700-hp0.850-power0.800: Frozen full factorial grid
+2	bdf513cb169ceaa71b9ef8b47aadff298c70322c	2	0	discard	atb0.700-hp0.850-power1.000: Frozen full factorial grid
+3	bdf513cb169ceaa71b9ef8b47aadff298c70322c	2	0	discard	atb0.700-hp0.850-power1.200: Frozen full factorial grid
+4	bdf513cb169ceaa71b9ef8b47aadff298c70322c	2	0	discard	atb0.700-hp1.000-power0.800: Frozen full factorial grid
+5	bdf513cb169ceaa71b9ef8b47aadff298c70322c	2	0	discard	atb0.700-hp1.000-power1.000: Frozen full factorial grid
+6	bdf513cb169ceaa71b9ef8b47aadff298c70322c	2	0	discard	atb0.700-hp1.000-power1.200: Frozen full factorial grid
+7	bdf513cb169ceaa71b9ef8b47aadff298c70322c	2	0	discard	atb0.700-hp1.150-power0.800: Frozen full factorial grid
+8	bdf513cb169ceaa71b9ef8b47aadff298c70322c	2	0	discard	atb0.700-hp1.150-power1.000: Frozen full factorial grid
+9	bdf513cb169ceaa71b9ef8b47aadff298c70322c	2	0	discard	atb0.700-hp1.150-power1.200: Frozen full factorial grid
+10	bdf513cb169ceaa71b9ef8b47aadff298c70322c	2	0	discard	atb0.850-hp0.850-power0.800: Frozen full factorial grid
+11	bdf513cb169ceaa71b9ef8b47aadff298c70322c	2	0	discard	atb0.850-hp0.850-power1.000: Frozen full factorial grid
+12	bdf513cb169ceaa71b9ef8b47aadff298c70322c	2	0	discard	atb0.850-hp0.850-power1.200: Frozen full factorial grid
+13	bdf513cb169ceaa71b9ef8b47aadff298c70322c	2	0	discard	atb0.850-hp1.000-power0.800: Frozen full factorial grid
+14	bdf513cb169ceaa71b9ef8b47aadff298c70322c	2	0	discard	atb0.850-hp1.000-power1.200: Frozen full factorial grid
+15	bdf513cb169ceaa71b9ef8b47aadff298c70322c	2	0	discard	atb0.850-hp1.150-power0.800: Frozen full factorial grid
+16	bdf513cb169ceaa71b9ef8b47aadff298c70322c	2	0	discard	atb0.850-hp1.150-power1.000: Frozen full factorial grid
+17	bdf513cb169ceaa71b9ef8b47aadff298c70322c	2	0	discard	atb0.850-hp1.150-power1.200: Frozen full factorial grid
+18	bdf513cb169ceaa71b9ef8b47aadff298c70322c	2	0	discard	atb1.000-hp0.850-power0.800: Frozen full factorial grid
+19	bdf513cb169ceaa71b9ef8b47aadff298c70322c	2	0	discard	atb1.000-hp0.850-power1.000: Frozen full factorial grid
+20	bdf513cb169ceaa71b9ef8b47aadff298c70322c	2	0	discard	atb1.000-hp0.850-power1.200: Frozen full factorial grid
+21	bdf513cb169ceaa71b9ef8b47aadff298c70322c	2	0	discard	atb1.000-hp1.000-power0.800: Frozen full factorial grid
+22	bdf513cb169ceaa71b9ef8b47aadff298c70322c	2	0	discard	atb1.000-hp1.000-power1.000: Frozen full factorial grid
+23	bdf513cb169ceaa71b9ef8b47aadff298c70322c	2	0	discard	atb1.000-hp1.000-power1.200: Frozen full factorial grid
+24	bdf513cb169ceaa71b9ef8b47aadff298c70322c	2	0	discard	atb1.000-hp1.150-power0.800: Frozen full factorial grid
+25	bdf513cb169ceaa71b9ef8b47aadff298c70322c	2	0	discard	atb1.000-hp1.150-power1.000: Frozen full factorial grid
+26	bdf513cb169ceaa71b9ef8b47aadff298c70322c	2	0	discard	atb1.000-hp1.150-power1.200: Frozen full factorial grid
+27	bdf513cb169ceaa71b9ef8b47aadff298c70322c	2	0	discard	atb0.925-hp0.850-power0.800: offense: one-axis half-step neighbor of atb1.000-hp0.850-power0.800
+28	bdf513cb169ceaa71b9ef8b47aadff298c70322c	2	0	discard	atb1.000-hp0.925-power0.800: offense: one-axis half-step neighbor of atb1.000-hp0.850-power0.800
+29	bdf513cb169ceaa71b9ef8b47aadff298c70322c	2	0	discard	atb0.925-hp1.000-power0.800: resilience: one-axis half-step neighbor of atb1.000-hp1.000-power0.800
+30	bdf513cb169ceaa71b9ef8b47aadff298c70322c	2	0	discard	atb1.000-hp1.075-power0.800: resilience: one-axis half-step neighbor of atb1.000-hp1.000-power0.800
+31	bdf513cb169ceaa71b9ef8b47aadff298c70322c	2	0	discard	atb0.775-hp1.150-power0.800: intervention: one-axis half-step neighbor of atb0.700-hp1.150-power0.800
+32	bdf513cb169ceaa71b9ef8b47aadff298c70322c	2	0	discard	atb0.700-hp1.075-power0.800: intervention: one-axis half-step neighbor of atb0.700-hp1.150-power0.800

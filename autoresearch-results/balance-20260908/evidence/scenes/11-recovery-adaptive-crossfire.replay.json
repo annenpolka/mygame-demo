@@ -1,0 +1,6335 @@
+{
+  "version": "orchestra-15",
+  "initial": {
+    "version": "orchestra-15",
+    "controlMode": "ai",
+    "phase": "ready",
+    "paused": false,
+    "tick": 0,
+    "time": 0,
+    "realTime": 0,
+    "focus": 100,
+    "timeMode": "normal",
+    "rng": 2603,
+    "config": {
+      "bonusMode": "strong",
+      "enemyHpScale": 1.15,
+      "atbMax": 4,
+      "encounterSet": "crossfire",
+      "encounterLevel": 2,
+      "seed": 2603,
+      "atbRate": 0.7,
+      "atbMode": "idle",
+      "chainActions": true,
+      "moveTime": 0.85,
+      "shiftTime": 0.65,
+      "slowDrain": 4,
+      "enemyPower": 0.8,
+      "uiMode": "separate",
+      "encounter": 1
+    },
+    "encounter": 1,
+    "selected": 0,
+    "pendingSelect": null,
+    "handoffSlow": 0,
+    "allies": [
+      {
+        "id": 0,
+        "name": "アルト",
+        "initial": "A",
+        "color": "#ddaa63",
+        "hp": 1300,
+        "maxHp": 1300,
+        "atb": 1,
+        "row": "front",
+        "weapons": [
+          "sword",
+          "shield"
+        ],
+        "slot": 0,
+        "nextSlot": null,
+        "nextRow": null,
+        "shift": 0,
+        "move": 0,
+        "action": null,
+        "queued": null,
+        "draft": [],
+        "sequences": [],
+        "shield": 0,
+        "executionHeld": false
+      },
+      {
+        "id": 1,
+        "name": "リネ",
+        "initial": "L",
+        "color": "#77bdc2",
+        "hp": 1100,
+        "maxHp": 1100,
+        "atb": 1,
+        "row": "back",
+        "weapons": [
+          "staff",
+          "bow"
+        ],
+        "slot": 0,
+        "nextSlot": null,
+        "nextRow": null,
+        "shift": 0,
+        "move": 0,
+        "action": null,
+        "queued": null,
+        "draft": [],
+        "sequences": [],
+        "shield": 0,
+        "executionHeld": false
+      },
+      {
+        "id": 2,
+        "name": "セナ",
+        "initial": "S",
+        "color": "#bea4dc",
+        "hp": 1150,
+        "maxHp": 1150,
+        "atb": 1,
+        "row": "back",
+        "weapons": [
+          "bell",
+          "hook"
+        ],
+        "slot": 0,
+        "nextSlot": null,
+        "nextRow": null,
+        "shift": 0,
+        "move": 0,
+        "action": null,
+        "queued": null,
+        "draft": [],
+        "sequences": [],
+        "shield": 0,
+        "executionHeld": false
+      }
+    ],
+    "enemies": [
+      {
+        "id": 0,
+        "name": "砲列の衛兵",
+        "glyph": "♜",
+        "kind": "guard",
+        "hp": 2392,
+        "maxHp": 2392,
+        "row": "front",
+        "chain": 100,
+        "hold": 0,
+        "broken": 0,
+        "nextAttack": 3.9000000000000004,
+        "steadfast": 0,
+        "attackCount": 0,
+        "cast": null
+      },
+      {
+        "id": 1,
+        "name": "後列狙いの砲手",
+        "glyph": "♝",
+        "kind": "cannon",
+        "hp": 1869,
+        "maxHp": 1869,
+        "row": "back",
+        "chain": 100,
+        "hold": 0,
+        "broken": 0,
+        "nextAttack": 4.199999999999999,
+        "steadfast": 0,
+        "attackCount": 0,
+        "cast": null
+      },
+      {
+        "id": 2,
+        "name": "前列狙いの砲手",
+        "glyph": "♝",
+        "kind": "cannon",
+        "hp": 1869,
+        "maxHp": 1869,
+        "row": "back",
+        "chain": 100,
+        "hold": 0,
+        "broken": 0,
+        "nextAttack": 4.199999999999999,
+        "steadfast": 0,
+        "attackCount": 0,
+        "cast": null
+      }
+    ],
+    "presets": [
+      {
+        "name": "均衡の調べ",
+        "slots": [
+          0,
+          0,
+          0
+        ],
+        "rows": [
+          "front",
+          "back",
+          "back"
+        ]
+      },
+      {
+        "name": "崩しの連奏",
+        "slots": [
+          0,
+          0,
+          1
+        ],
+        "rows": [
+          "front",
+          "front",
+          "back"
+        ]
+      },
+      {
+        "name": "終幕の一撃",
+        "slots": [
+          0,
+          1,
+          1
+        ],
+        "rows": [
+          "front",
+          "back",
+          "back"
+        ]
+      },
+      {
+        "name": "崩し・防護・支援",
+        "slots": [
+          1,
+          0,
+          0
+        ],
+        "rows": [
+          "back",
+          "back",
+          "back"
+        ]
+      }
+    ],
+    "formations": [
+      {
+        "name": "全員後列",
+        "rows": [
+          "back",
+          "back",
+          "back"
+        ]
+      },
+      {
+        "name": "前衛1・後衛2",
+        "rows": [
+          "front",
+          "back",
+          "back"
+        ]
+      },
+      {
+        "name": "全員前列",
+        "rows": [
+          "front",
+          "front",
+          "front"
+        ]
+      }
+    ],
+    "activePreset": 0,
+    "inventory": [
+      "sword",
+      "shield",
+      "staff",
+      "bow",
+      "bell",
+      "hook"
+    ],
+    "potions": 3,
+    "events": [],
+    "eventSeq": 0,
+    "metrics": {
+      "damage": 0,
+      "taken": 0,
+      "healed": 0,
+      "breaks": 0,
+      "inputs": 0,
+      "focusUsed": 0
+    }
+  },
+  "inputs": [
+    {
+      "tick": 0,
+      "order": 0,
+      "command": {
+        "type": "start"
+      }
+    },
+    {
+      "tick": 0,
+      "order": 1,
+      "command": {
+        "type": "optima",
+        "index": 1
+      }
+    },
+    {
+      "tick": 15,
+      "order": 2,
+      "command": {
+        "type": "enqueue",
+        "id": 0,
+        "step": {
+          "kind": "skill",
+          "skillId": "slash",
+          "target": {
+            "kind": "enemy",
+            "id": 0
+          }
+        }
+      }
+    },
+    {
+      "tick": 15,
+      "order": 3,
+      "command": {
+        "type": "enqueue",
+        "id": 1,
+        "step": {
+          "kind": "skill",
+          "skillId": "rain",
+          "target": {
+            "kind": "row",
+            "row": "back"
+          }
+        }
+      }
+    },
+    {
+      "tick": 30,
+      "order": 4,
+      "command": {
+        "type": "enqueue",
+        "id": 0,
+        "step": {
+          "kind": "skill",
+          "skillId": "sweep",
+          "target": {
+            "kind": "row",
+            "row": "back"
+          }
+        }
+      }
+    },
+    {
+      "tick": 30,
+      "order": 5,
+      "command": {
+        "type": "enqueue",
+        "id": 1,
+        "step": {
+          "kind": "skill",
+          "skillId": "rain",
+          "target": {
+            "kind": "row",
+            "row": "back"
+          }
+        }
+      }
+    },
+    {
+      "tick": 45,
+      "order": 6,
+      "command": {
+        "type": "enqueue",
+        "id": 0,
+        "step": {
+          "kind": "skill",
+          "skillId": "sweep",
+          "target": {
+            "kind": "row",
+            "row": "back"
+          }
+        }
+      }
+    },
+    {
+      "tick": 45,
+      "order": 7,
+      "command": {
+        "type": "enqueue",
+        "id": 2,
+        "step": {
+          "kind": "skill",
+          "skillId": "pull",
+          "target": {
+            "kind": "enemy",
+            "id": 1
+          }
+        }
+      }
+    },
+    {
+      "tick": 90,
+      "order": 8,
+      "command": {
+        "type": "enqueue",
+        "id": 1,
+        "step": {
+          "kind": "skill",
+          "skillId": "rain",
+          "target": {
+            "kind": "row",
+            "row": "back"
+          }
+        }
+      }
+    },
+    {
+      "tick": 135,
+      "order": 9,
+      "command": {
+        "type": "enqueue",
+        "id": 2,
+        "step": {
+          "kind": "skill",
+          "skillId": "pull",
+          "target": {
+            "kind": "enemy",
+            "id": 1
+          }
+        }
+      }
+    },
+    {
+      "tick": 285,
+      "order": 10,
+      "command": {
+        "type": "enqueue",
+        "id": 0,
+        "step": {
+          "kind": "skill",
+          "skillId": "sweep",
+          "target": {
+            "kind": "row",
+            "row": "front"
+          }
+        }
+      }
+    },
+    {
+      "tick": 285,
+      "order": 11,
+      "command": {
+        "type": "removePlan",
+        "id": 1,
+        "key": 4
+      }
+    },
+    {
+      "tick": 285,
+      "order": 12,
+      "command": {
+        "type": "removePlan",
+        "id": 1,
+        "key": 7
+      }
+    },
+    {
+      "tick": 285,
+      "order": 13,
+      "command": {
+        "type": "enqueue",
+        "id": 1,
+        "step": {
+          "kind": "skill",
+          "skillId": "guard",
+          "target": {
+            "kind": "ally",
+            "id": 1
+          }
+        }
+      }
+    },
+    {
+      "tick": 285,
+      "order": 14,
+      "command": {
+        "type": "removePlan",
+        "id": 2,
+        "key": 8
+      }
+    },
+    {
+      "tick": 285,
+      "order": 15,
+      "command": {
+        "type": "enqueue",
+        "id": 2,
+        "step": {
+          "kind": "skill",
+          "skillId": "guard",
+          "target": {
+            "kind": "ally",
+            "id": 2
+          }
+        }
+      }
+    },
+    {
+      "tick": 345,
+      "order": 16,
+      "command": {
+        "type": "enqueue",
+        "id": 2,
+        "step": {
+          "kind": "skill",
+          "skillId": "jab",
+          "target": {
+            "kind": "enemy",
+            "id": 2
+          }
+        }
+      }
+    },
+    {
+      "tick": 360,
+      "order": 17,
+      "command": {
+        "type": "enqueue",
+        "id": 1,
+        "step": {
+          "kind": "skill",
+          "skillId": "rain",
+          "target": {
+            "kind": "row",
+            "row": "front"
+          }
+        }
+      }
+    },
+    {
+      "tick": 360,
+      "order": 18,
+      "command": {
+        "type": "enqueue",
+        "id": 2,
+        "step": {
+          "kind": "skill",
+          "skillId": "jab",
+          "target": {
+            "kind": "enemy",
+            "id": 2
+          }
+        }
+      }
+    },
+    {
+      "tick": 375,
+      "order": 19,
+      "command": {
+        "type": "removePlan",
+        "id": 0,
+        "key": 5
+      }
+    },
+    {
+      "tick": 375,
+      "order": 20,
+      "command": {
+        "type": "removePlan",
+        "id": 0,
+        "key": 9
+      }
+    },
+    {
+      "tick": 375,
+      "order": 21,
+      "command": {
+        "type": "enqueue",
+        "id": 0,
+        "step": {
+          "kind": "weapon",
+          "slot": 1
+        }
+      }
+    },
+    {
+      "tick": 390,
+      "order": 22,
+      "command": {
+        "type": "enqueue",
+        "id": 1,
+        "step": {
+          "kind": "skill",
+          "skillId": "rain",
+          "target": {
+            "kind": "row",
+            "row": "front"
+          }
+        }
+      }
+    },
+    {
+      "tick": 390,
+      "order": 23,
+      "command": {
+        "type": "enqueue",
+        "id": 2,
+        "step": {
+          "kind": "skill",
+          "skillId": "jab",
+          "target": {
+            "kind": "enemy",
+            "id": 2
+          }
+        }
+      }
+    },
+    {
+      "tick": 510,
+      "order": 24,
+      "command": {
+        "type": "enqueue",
+        "id": 0,
+        "step": {
+          "kind": "skill",
+          "skillId": "ward",
+          "target": {
+            "kind": "ally",
+            "id": 0
+          }
+        }
+      }
+    },
+    {
+      "tick": 525,
+      "order": 25,
+      "command": {
+        "type": "enqueue",
+        "id": 2,
+        "step": {
+          "kind": "skill",
+          "skillId": "pull",
+          "target": {
+            "kind": "enemy",
+            "id": 2
+          }
+        }
+      }
+    },
+    {
+      "tick": 600,
+      "order": 26,
+      "command": {
+        "type": "enqueue",
+        "id": 0,
+        "step": {
+          "kind": "skill",
+          "skillId": "ward",
+          "target": {
+            "kind": "ally",
+            "id": 0
+          }
+        }
+      }
+    },
+    {
+      "tick": 615,
+      "order": 27,
+      "command": {
+        "type": "removePlan",
+        "id": 0,
+        "key": 20
+      }
+    },
+    {
+      "tick": 615,
+      "order": 28,
+      "command": {
+        "type": "removePlan",
+        "id": 2,
+        "key": 14
+      }
+    },
+    {
+      "tick": 615,
+      "order": 29,
+      "command": {
+        "type": "removePlan",
+        "id": 2,
+        "key": 17
+      }
+    },
+    {
+      "tick": 615,
+      "order": 30,
+      "command": {
+        "type": "removePlan",
+        "id": 2,
+        "key": 19
+      }
+    },
+    {
+      "tick": 615,
+      "order": 31,
+      "command": {
+        "type": "optima",
+        "index": 0
+      }
+    },
+    {
+      "tick": 630,
+      "order": 32,
+      "command": {
+        "type": "enqueue",
+        "id": 1,
+        "step": {
+          "kind": "skill",
+          "skillId": "rain",
+          "target": {
+            "kind": "row",
+            "row": "front"
+          }
+        }
+      }
+    },
+    {
+      "tick": 675,
+      "order": 33,
+      "command": {
+        "type": "enqueue",
+        "id": 2,
+        "step": {
+          "kind": "skill",
+          "skillId": "heal",
+          "target": {
+            "kind": "ally",
+            "id": 0
+          }
+        }
+      }
+    },
+    {
+      "tick": 735,
+      "order": 34,
+      "command": {
+        "type": "enqueue",
+        "id": 0,
+        "step": {
+          "kind": "skill",
+          "skillId": "sweep",
+          "target": {
+            "kind": "row",
+            "row": "front"
+          }
+        }
+      }
+    },
+    {
+      "tick": 750,
+      "order": 35,
+      "command": {
+        "type": "enqueue",
+        "id": 0,
+        "step": {
+          "kind": "skill",
+          "skillId": "sweep",
+          "target": {
+            "kind": "row",
+            "row": "front"
+          }
+        }
+      }
+    },
+    {
+      "tick": 750,
+      "order": 36,
+      "command": {
+        "type": "enqueue",
+        "id": 2,
+        "step": {
+          "kind": "skill",
+          "skillId": "heal",
+          "target": {
+            "kind": "ally",
+            "id": 0
+          }
+        }
+      }
+    },
+    {
+      "tick": 810,
+      "order": 37,
+      "command": {
+        "type": "removePlan",
+        "id": 1,
+        "key": 16
+      }
+    },
+    {
+      "tick": 810,
+      "order": 38,
+      "command": {
+        "type": "removePlan",
+        "id": 1,
+        "key": 21
+      }
+    },
+    {
+      "tick": 810,
+      "order": 39,
+      "command": {
+        "type": "enqueue",
+        "id": 1,
+        "step": {
+          "kind": "skill",
+          "skillId": "guard",
+          "target": {
+            "kind": "ally",
+            "id": 1
+          }
+        }
+      }
+    },
+    {
+      "tick": 885,
+      "order": 40,
+      "command": {
+        "type": "enqueue",
+        "id": 0,
+        "step": {
+          "kind": "skill",
+          "skillId": "sweep",
+          "target": {
+            "kind": "row",
+            "row": "front"
+          }
+        }
+      }
+    },
+    {
+      "tick": 885,
+      "order": 41,
+      "command": {
+        "type": "enqueue",
+        "id": 1,
+        "step": {
+          "kind": "skill",
+          "skillId": "rain",
+          "target": {
+            "kind": "row",
+            "row": "front"
+          }
+        }
+      }
+    },
+    {
+      "tick": 900,
+      "order": 42,
+      "command": {
+        "type": "removePlan",
+        "id": 0,
+        "key": 24
+      }
+    },
+    {
+      "tick": 900,
+      "order": 43,
+      "command": {
+        "type": "removePlan",
+        "id": 0,
+        "key": 27
+      }
+    },
+    {
+      "tick": 900,
+      "order": 44,
+      "command": {
+        "type": "optima",
+        "index": 3
+      }
+    },
+    {
+      "tick": 915,
+      "order": 45,
+      "command": {
+        "type": "enqueue",
+        "id": 1,
+        "step": {
+          "kind": "skill",
+          "skillId": "rain",
+          "target": {
+            "kind": "row",
+            "row": "front"
+          }
+        }
+      }
+    },
+    {
+      "tick": 945,
+      "order": 46,
+      "command": {
+        "type": "enqueue",
+        "id": 2,
+        "step": {
+          "kind": "skill",
+          "skillId": "heal",
+          "target": {
+            "kind": "ally",
+            "id": 0
+          }
+        }
+      }
+    },
+    {
+      "tick": 1095,
+      "order": 47,
+      "command": {
+        "type": "enqueue",
+        "id": 0,
+        "step": {
+          "kind": "skill",
+          "skillId": "ward",
+          "target": {
+            "kind": "ally",
+            "id": 2
+          }
+        }
+      }
+    },
+    {
+      "tick": 1125,
+      "order": 48,
+      "command": {
+        "type": "enqueue",
+        "id": 1,
+        "step": {
+          "kind": "skill",
+          "skillId": "rain",
+          "target": {
+            "kind": "row",
+            "row": "front"
+          }
+        }
+      }
+    },
+    {
+      "tick": 1155,
+      "order": 49,
+      "command": {
+        "type": "removePlan",
+        "id": 0,
+        "key": 31
+      }
+    },
+    {
+      "tick": 1155,
+      "order": 50,
+      "command": {
+        "type": "optima",
+        "index": 0
+      }
+    },
+    {
+      "tick": 1170,
+      "order": 51,
+      "command": {
+        "type": "enqueue",
+        "id": 2,
+        "step": {
+          "kind": "skill",
+          "skillId": "heal",
+          "target": {
+            "kind": "ally",
+            "id": 0
+          }
+        }
+      }
+    },
+    {
+      "tick": 1200,
+      "order": 52,
+      "command": {
+        "type": "enqueue",
+        "id": 0,
+        "step": {
+          "kind": "skill",
+          "skillId": "sweep",
+          "target": {
+            "kind": "row",
+            "row": "front"
+          }
+        }
+      }
+    },
+    {
+      "tick": 1215,
+      "order": 53,
+      "command": {
+        "type": "enqueue",
+        "id": 0,
+        "step": {
+          "kind": "skill",
+          "skillId": "sweep",
+          "target": {
+            "kind": "row",
+            "row": "front"
+          }
+        }
+      }
+    },
+    {
+      "tick": 1335,
+      "order": 54,
+      "command": {
+        "type": "enqueue",
+        "id": 0,
+        "step": {
+          "kind": "skill",
+          "skillId": "sweep",
+          "target": {
+            "kind": "row",
+            "row": "front"
+          }
+        }
+      }
+    },
+    {
+      "tick": 1335,
+      "order": 55,
+      "command": {
+        "type": "removePlan",
+        "id": 1,
+        "key": 29
+      }
+    },
+    {
+      "tick": 1335,
+      "order": 56,
+      "command": {
+        "type": "removePlan",
+        "id": 1,
+        "key": 32
+      }
+    },
+    {
+      "tick": 1335,
+      "order": 57,
+      "command": {
+        "type": "enqueue",
+        "id": 1,
+        "step": {
+          "kind": "skill",
+          "skillId": "guard",
+          "target": {
+            "kind": "ally",
+            "id": 1
+          }
+        }
+      }
+    },
+    {
+      "tick": 1335,
+      "order": 58,
+      "command": {
+        "type": "removePlan",
+        "id": 2,
+        "key": 33
+      }
+    },
+    {
+      "tick": 1335,
+      "order": 59,
+      "command": {
+        "type": "enqueue",
+        "id": 2,
+        "step": {
+          "kind": "skill",
+          "skillId": "guard",
+          "target": {
+            "kind": "ally",
+            "id": 2
+          }
+        }
+      }
+    },
+    {
+      "tick": 1350,
+      "order": 60,
+      "command": {
+        "type": "enqueue",
+        "id": 2,
+        "step": {
+          "kind": "skill",
+          "skillId": "heal",
+          "target": {
+            "kind": "ally",
+            "id": 2
+          }
+        }
+      }
+    },
+    {
+      "tick": 1380,
+      "order": 61,
+      "command": {
+        "type": "enqueue",
+        "id": 1,
+        "step": {
+          "kind": "skill",
+          "skillId": "rain",
+          "target": {
+            "kind": "row",
+            "row": "front"
+          }
+        }
+      }
+    },
+    {
+      "tick": 1395,
+      "order": 62,
+      "command": {
+        "type": "enqueue",
+        "id": 1,
+        "step": {
+          "kind": "skill",
+          "skillId": "rain",
+          "target": {
+            "kind": "row",
+            "row": "front"
+          }
+        }
+      }
+    },
+    {
+      "tick": 1440,
+      "order": 63,
+      "command": {
+        "type": "removePlan",
+        "id": 0,
+        "key": 35
+      }
+    },
+    {
+      "tick": 1440,
+      "order": 64,
+      "command": {
+        "type": "removePlan",
+        "id": 0,
+        "key": 36
+      }
+    },
+    {
+      "tick": 1440,
+      "order": 65,
+      "command": {
+        "type": "optima",
+        "index": 3
+      }
+    },
+    {
+      "tick": 1500,
+      "order": 66,
+      "command": {
+        "type": "enqueue",
+        "id": 0,
+        "step": {
+          "kind": "skill",
+          "skillId": "ward",
+          "target": {
+            "kind": "ally",
+            "id": 0
+          }
+        }
+      }
+    },
+    {
+      "tick": 1500,
+      "order": 67,
+      "command": {
+        "type": "enqueue",
+        "id": 2,
+        "step": {
+          "kind": "skill",
+          "skillId": "heal",
+          "target": {
+            "kind": "ally",
+            "id": 2
+          }
+        }
+      }
+    },
+    {
+      "tick": 1575,
+      "order": 68,
+      "command": {
+        "type": "enqueue",
+        "id": 0,
+        "step": {
+          "kind": "skill",
+          "skillId": "ward",
+          "target": {
+            "kind": "ally",
+            "id": 0
+          }
+        }
+      }
+    },
+    {
+      "tick": 1620,
+      "order": 69,
+      "command": {
+        "type": "enqueue",
+        "id": 1,
+        "step": {
+          "kind": "skill",
+          "skillId": "rain",
+          "target": {
+            "kind": "row",
+            "row": "front"
+          }
+        }
+      }
+    },
+    {
+      "tick": 1695,
+      "order": 70,
+      "command": {
+        "type": "removePlan",
+        "id": 0,
+        "key": 44
+      }
+    },
+    {
+      "tick": 1695,
+      "order": 71,
+      "command": {
+        "type": "optima",
+        "index": 0
+      }
+    },
+    {
+      "tick": 1710,
+      "order": 72,
+      "command": {
+        "type": "enqueue",
+        "id": 2,
+        "step": {
+          "kind": "skill",
+          "skillId": "heal",
+          "target": {
+            "kind": "ally",
+            "id": 0
+          }
+        }
+      }
+    },
+    {
+      "tick": 1740,
+      "order": 73,
+      "command": {
+        "type": "enqueue",
+        "id": 0,
+        "step": {
+          "kind": "skill",
+          "skillId": "sweep",
+          "target": {
+            "kind": "row",
+            "row": "front"
+          }
+        }
+      }
+    },
+    {
+      "tick": 1755,
+      "order": 74,
+      "command": {
+        "type": "enqueue",
+        "id": 0,
+        "step": {
+          "kind": "skill",
+          "skillId": "sweep",
+          "target": {
+            "kind": "row",
+            "row": "front"
+          }
+        }
+      }
+    },
+    {
+      "tick": 1815,
+      "order": 75,
+      "command": {
+        "type": "removePlan",
+        "id": 1,
+        "key": 41
+      }
+    },
+    {
+      "tick": 1815,
+      "order": 76,
+      "command": {
+        "type": "removePlan",
+        "id": 1,
+        "key": 45
+      }
+    },
+    {
+      "tick": 1815,
+      "order": 77,
+      "command": {
+        "type": "enqueue",
+        "id": 1,
+        "step": {
+          "kind": "skill",
+          "skillId": "guard",
+          "target": {
+            "kind": "ally",
+            "id": 1
+          }
+        }
+      }
+    },
+    {
+      "tick": 1815,
+      "order": 78,
+      "command": {
+        "type": "removePlan",
+        "id": 2,
+        "key": 46
+      }
+    },
+    {
+      "tick": 1815,
+      "order": 79,
+      "command": {
+        "type": "enqueue",
+        "id": 2,
+        "step": {
+          "kind": "skill",
+          "skillId": "guard",
+          "target": {
+            "kind": "ally",
+            "id": 2
+          }
+        }
+      }
+    },
+    {
+      "tick": 1875,
+      "order": 80,
+      "command": {
+        "type": "enqueue",
+        "id": 0,
+        "step": {
+          "kind": "skill",
+          "skillId": "sweep",
+          "target": {
+            "kind": "row",
+            "row": "front"
+          }
+        }
+      }
+    },
+    {
+      "tick": 1890,
+      "order": 81,
+      "command": {
+        "type": "enqueue",
+        "id": 1,
+        "step": {
+          "kind": "skill",
+          "skillId": "rain",
+          "target": {
+            "kind": "row",
+            "row": "front"
+          }
+        }
+      }
+    },
+    {
+      "tick": 1905,
+      "order": 82,
+      "command": {
+        "type": "enqueue",
+        "id": 1,
+        "step": {
+          "kind": "skill",
+          "skillId": "rain",
+          "target": {
+            "kind": "row",
+            "row": "front"
+          }
+        }
+      }
+    },
+    {
+      "tick": 1905,
+      "order": 83,
+      "command": {
+        "type": "enqueue",
+        "id": 2,
+        "step": {
+          "kind": "skill",
+          "skillId": "heal",
+          "target": {
+            "kind": "ally",
+            "id": 0
+          }
+        }
+      }
+    },
+    {
+      "tick": 1950,
+      "order": 84,
+      "command": {
+        "type": "removePlan",
+        "id": 0,
+        "key": 48
+      }
+    },
+    {
+      "tick": 1950,
+      "order": 85,
+      "command": {
+        "type": "removePlan",
+        "id": 0,
+        "key": 51
+      }
+    },
+    {
+      "tick": 1950,
+      "order": 86,
+      "command": {
+        "type": "optima",
+        "index": 3
+      }
+    },
+    {
+      "tick": 2040,
+      "order": 87,
+      "command": {
+        "type": "enqueue",
+        "id": 1,
+        "step": {
+          "kind": "skill",
+          "skillId": "potion",
+          "target": {
+            "kind": "ally",
+            "id": 0
+          }
+        }
+      }
+    },
+    {
+      "tick": 2040,
+      "order": 88,
+      "command": {
+        "type": "enqueue",
+        "id": 2,
+        "step": {
+          "kind": "skill",
+          "skillId": "potion",
+          "target": {
+            "kind": "ally",
+            "id": 0
+          }
+        }
+      }
+    },
+    {
+      "tick": 2085,
+      "order": 89,
+      "command": {
+        "type": "enqueue",
+        "id": 0,
+        "step": {
+          "kind": "skill",
+          "skillId": "potion",
+          "target": {
+            "kind": "ally",
+            "id": 0
+          }
+        }
+      }
+    },
+    {
+      "tick": 2085,
+      "order": 90,
+      "command": {
+        "type": "enqueue",
+        "id": 2,
+        "step": {
+          "kind": "skill",
+          "skillId": "heal",
+          "target": {
+            "kind": "ally",
+            "id": 0
+          }
+        }
+      }
+    },
+    {
+      "tick": 2115,
+      "order": 91,
+      "command": {
+        "type": "enqueue",
+        "id": 1,
+        "step": {
+          "kind": "skill",
+          "skillId": "rain",
+          "target": {
+            "kind": "row",
+            "row": "front"
+          }
+        }
+      }
+    },
+    {
+      "tick": 2130,
+      "order": 92,
+      "command": {
+        "type": "enqueue",
+        "id": 0,
+        "step": {
+          "kind": "skill",
+          "skillId": "ward",
+          "target": {
+            "kind": "ally",
+            "id": 0
+          }
+        }
+      }
+    },
+    {
+      "tick": 2205,
+      "order": 93,
+      "command": {
+        "type": "removePlan",
+        "id": 0,
+        "key": 60
+      }
+    },
+    {
+      "tick": 2205,
+      "order": 94,
+      "command": {
+        "type": "optima",
+        "index": 0
+      }
+    },
+    {
+      "tick": 2250,
+      "order": 95,
+      "command": {
+        "type": "enqueue",
+        "id": 0,
+        "step": {
+          "kind": "skill",
+          "skillId": "sweep",
+          "target": {
+            "kind": "row",
+            "row": "front"
+          }
+        }
+      }
+    },
+    {
+      "tick": 2265,
+      "order": 96,
+      "command": {
+        "type": "enqueue",
+        "id": 0,
+        "step": {
+          "kind": "skill",
+          "skillId": "sweep",
+          "target": {
+            "kind": "row",
+            "row": "front"
+          }
+        }
+      }
+    },
+    {
+      "tick": 2325,
+      "order": 97,
+      "command": {
+        "type": "removePlan",
+        "id": 0,
+        "key": 61
+      }
+    },
+    {
+      "tick": 2325,
+      "order": 98,
+      "command": {
+        "type": "removePlan",
+        "id": 0,
+        "key": 62
+      }
+    },
+    {
+      "tick": 2325,
+      "order": 99,
+      "command": {
+        "type": "enqueue",
+        "id": 0,
+        "step": {
+          "kind": "skill",
+          "skillId": "guard",
+          "target": {
+            "kind": "ally",
+            "id": 0
+          }
+        }
+      }
+    },
+    {
+      "tick": 2325,
+      "order": 100,
+      "command": {
+        "type": "removePlan",
+        "id": 1,
+        "key": 53
+      }
+    },
+    {
+      "tick": 2325,
+      "order": 101,
+      "command": {
+        "type": "removePlan",
+        "id": 1,
+        "key": 55
+      }
+    },
+    {
+      "tick": 2325,
+      "order": 102,
+      "command": {
+        "type": "removePlan",
+        "id": 1,
+        "key": 59
+      }
+    },
+    {
+      "tick": 2325,
+      "order": 103,
+      "command": {
+        "type": "enqueue",
+        "id": 1,
+        "step": {
+          "kind": "skill",
+          "skillId": "guard",
+          "target": {
+            "kind": "ally",
+            "id": 1
+          }
+        }
+      }
+    },
+    {
+      "tick": 2325,
+      "order": 104,
+      "command": {
+        "type": "removePlan",
+        "id": 2,
+        "key": 58
+      }
+    },
+    {
+      "tick": 2325,
+      "order": 105,
+      "command": {
+        "type": "enqueue",
+        "id": 2,
+        "step": {
+          "kind": "skill",
+          "skillId": "guard",
+          "target": {
+            "kind": "ally",
+            "id": 2
+          }
+        }
+      }
+    },
+    {
+      "tick": 2355,
+      "order": 106,
+      "command": {
+        "type": "enqueue",
+        "id": 0,
+        "step": {
+          "kind": "skill",
+          "skillId": "sweep",
+          "target": {
+            "kind": "row",
+            "row": "front"
+          }
+        }
+      }
+    },
+    {
+      "tick": 2370,
+      "order": 107,
+      "command": {
+        "type": "enqueue",
+        "id": 0,
+        "step": {
+          "kind": "skill",
+          "skillId": "sweep",
+          "target": {
+            "kind": "row",
+            "row": "front"
+          }
+        }
+      }
+    },
+    {
+      "tick": 2370,
+      "order": 108,
+      "command": {
+        "type": "enqueue",
+        "id": 2,
+        "step": {
+          "kind": "skill",
+          "skillId": "heal",
+          "target": {
+            "kind": "ally",
+            "id": 1
+          }
+        }
+      }
+    },
+    {
+      "tick": 2415,
+      "order": 109,
+      "command": {
+        "type": "enqueue",
+        "id": 1,
+        "step": {
+          "kind": "skill",
+          "skillId": "rain",
+          "target": {
+            "kind": "row",
+            "row": "front"
+          }
+        }
+      }
+    },
+    {
+      "tick": 2430,
+      "order": 110,
+      "command": {
+        "type": "enqueue",
+        "id": 1,
+        "step": {
+          "kind": "skill",
+          "skillId": "rain",
+          "target": {
+            "kind": "row",
+            "row": "front"
+          }
+        }
+      }
+    },
+    {
+      "tick": 2460,
+      "order": 111,
+      "command": {
+        "type": "removePlan",
+        "id": 0,
+        "key": 66
+      }
+    },
+    {
+      "tick": 2460,
+      "order": 112,
+      "command": {
+        "type": "removePlan",
+        "id": 0,
+        "key": 67
+      }
+    },
+    {
+      "tick": 2460,
+      "order": 113,
+      "command": {
+        "type": "optima",
+        "index": 3
+      }
+    },
+    {
+      "tick": 2505,
+      "order": 114,
+      "command": {
+        "type": "move",
+        "id": 0,
+        "row": "back"
+      }
+    },
+    {
+      "tick": 2520,
+      "order": 115,
+      "command": {
+        "type": "enqueue",
+        "id": 2,
+        "step": {
+          "kind": "skill",
+          "skillId": "heal",
+          "target": {
+            "kind": "ally",
+            "id": 1
+          }
+        }
+      }
+    },
+    {
+      "tick": 2625,
+      "order": 116,
+      "command": {
+        "type": "enqueue",
+        "id": 1,
+        "step": {
+          "kind": "skill",
+          "skillId": "rain",
+          "target": {
+            "kind": "row",
+            "row": "front"
+          }
+        }
+      }
+    },
+    {
+      "tick": 2685,
+      "order": 117,
+      "command": {
+        "type": "enqueue",
+        "id": 0,
+        "step": {
+          "kind": "skill",
+          "skillId": "ward",
+          "target": {
+            "kind": "ally",
+            "id": 0
+          }
+        }
+      }
+    },
+    {
+      "tick": 2715,
+      "order": 118,
+      "command": {
+        "type": "removePlan",
+        "id": 0,
+        "key": 73
+      }
+    },
+    {
+      "tick": 2715,
+      "order": 119,
+      "command": {
+        "type": "optima",
+        "index": 0
+      }
+    },
+    {
+      "tick": 2730,
+      "order": 120,
+      "command": {
+        "type": "enqueue",
+        "id": 2,
+        "step": {
+          "kind": "skill",
+          "skillId": "heal",
+          "target": {
+            "kind": "ally",
+            "id": 2
+          }
+        }
+      }
+    },
+    {
+      "tick": 2835,
+      "order": 121,
+      "command": {
+        "type": "enqueue",
+        "id": 0,
+        "step": {
+          "kind": "skill",
+          "skillId": "sweep",
+          "target": {
+            "kind": "row",
+            "row": "front"
+          }
+        }
+      }
+    },
+    {
+      "tick": 2835,
+      "order": 122,
+      "command": {
+        "type": "removePlan",
+        "id": 1,
+        "key": 70
+      }
+    },
+    {
+      "tick": 2835,
+      "order": 123,
+      "command": {
+        "type": "removePlan",
+        "id": 1,
+        "key": 72
+      }
+    },
+    {
+      "tick": 2835,
+      "order": 124,
+      "command": {
+        "type": "enqueue",
+        "id": 1,
+        "step": {
+          "kind": "skill",
+          "skillId": "guard",
+          "target": {
+            "kind": "ally",
+            "id": 1
+          }
+        }
+      }
+    },
+    {
+      "tick": 2835,
+      "order": 125,
+      "command": {
+        "type": "removePlan",
+        "id": 2,
+        "key": 74
+      }
+    },
+    {
+      "tick": 2835,
+      "order": 126,
+      "command": {
+        "type": "enqueue",
+        "id": 2,
+        "step": {
+          "kind": "skill",
+          "skillId": "guard",
+          "target": {
+            "kind": "ally",
+            "id": 2
+          }
+        }
+      }
+    },
+    {
+      "tick": 2880,
+      "order": 127,
+      "command": {
+        "type": "enqueue",
+        "id": 1,
+        "step": {
+          "kind": "skill",
+          "skillId": "rain",
+          "target": {
+            "kind": "row",
+            "row": "front"
+          }
+        }
+      }
+    },
+    {
+      "tick": 2895,
+      "order": 128,
+      "command": {
+        "type": "enqueue",
+        "id": 0,
+        "step": {
+          "kind": "skill",
+          "skillId": "sweep",
+          "target": {
+            "kind": "row",
+            "row": "front"
+          }
+        }
+      }
+    },
+    {
+      "tick": 2895,
+      "order": 129,
+      "command": {
+        "type": "enqueue",
+        "id": 1,
+        "step": {
+          "kind": "skill",
+          "skillId": "rain",
+          "target": {
+            "kind": "row",
+            "row": "front"
+          }
+        }
+      }
+    },
+    {
+      "tick": 2940,
+      "order": 130,
+      "command": {
+        "type": "enqueue",
+        "id": 2,
+        "step": {
+          "kind": "skill",
+          "skillId": "heal",
+          "target": {
+            "kind": "ally",
+            "id": 2
+          }
+        }
+      }
+    },
+    {
+      "tick": 2970,
+      "order": 131,
+      "command": {
+        "type": "removePlan",
+        "id": 0,
+        "key": 76
+      }
+    },
+    {
+      "tick": 2970,
+      "order": 132,
+      "command": {
+        "type": "removePlan",
+        "id": 0,
+        "key": 80
+      }
+    },
+    {
+      "tick": 2970,
+      "order": 133,
+      "command": {
+        "type": "optima",
+        "index": 3
+      }
+    },
+    {
+      "tick": 3075,
+      "order": 134,
+      "command": {
+        "type": "enqueue",
+        "id": 2,
+        "step": {
+          "kind": "skill",
+          "skillId": "heal",
+          "target": {
+            "kind": "ally",
+            "id": 2
+          }
+        }
+      }
+    },
+    {
+      "tick": 3120,
+      "order": 135,
+      "command": {
+        "type": "enqueue",
+        "id": 1,
+        "step": {
+          "kind": "skill",
+          "skillId": "rain",
+          "target": {
+            "kind": "row",
+            "row": "front"
+          }
+        }
+      }
+    },
+    {
+      "tick": 3225,
+      "order": 136,
+      "command": {
+        "type": "optima",
+        "index": 0
+      }
+    },
+    {
+      "tick": 3270,
+      "order": 137,
+      "command": {
+        "type": "enqueue",
+        "id": 0,
+        "step": {
+          "kind": "skill",
+          "skillId": "sweep",
+          "target": {
+            "kind": "row",
+            "row": "front"
+          }
+        }
+      }
+    },
+    {
+      "tick": 3285,
+      "order": 138,
+      "command": {
+        "type": "enqueue",
+        "id": 2,
+        "step": {
+          "kind": "skill",
+          "skillId": "heal",
+          "target": {
+            "kind": "ally",
+            "id": 2
+          }
+        }
+      }
+    },
+    {
+      "tick": 3345,
+      "order": 139,
+      "command": {
+        "type": "enqueue",
+        "id": 0,
+        "step": {
+          "kind": "skill",
+          "skillId": "sweep",
+          "target": {
+            "kind": "row",
+            "row": "front"
+          }
+        }
+      }
+    },
+    {
+      "tick": 3465,
+      "order": 140,
+      "command": {
+        "type": "enqueue",
+        "id": 1,
+        "step": {
+          "kind": "skill",
+          "skillId": "spark",
+          "target": {
+            "kind": "enemy",
+            "id": 2
+          }
+        }
+      }
+    },
+    {
+      "tick": 3480,
+      "order": 141,
+      "command": {
+        "type": "removePlan",
+        "id": 1,
+        "key": 84
+      }
+    },
+    {
+      "tick": 3480,
+      "order": 142,
+      "command": {
+        "type": "removePlan",
+        "id": 1,
+        "key": 89
+      }
+    },
+    {
+      "tick": 3480,
+      "order": 143,
+      "command": {
+        "type": "enqueue",
+        "id": 1,
+        "step": {
+          "kind": "weapon",
+          "slot": 1
+        }
+      }
+    },
+    {
+      "tick": 3495,
+      "order": 144,
+      "command": {
+        "type": "enqueue",
+        "id": 2,
+        "step": {
+          "kind": "skill",
+          "skillId": "heal",
+          "target": {
+            "kind": "ally",
+            "id": 1
+          }
+        }
+      }
+    },
+    {
+      "tick": 3555,
+      "order": 145,
+      "command": {
+        "type": "enqueue",
+        "id": 0,
+        "step": {
+          "kind": "skill",
+          "skillId": "sweep",
+          "target": {
+            "kind": "row",
+            "row": "front"
+          }
+        }
+      }
+    },
+    {
+      "tick": 3690,
+      "order": 146,
+      "command": {
+        "type": "enqueue",
+        "id": 1,
+        "step": {
+          "kind": "skill",
+          "skillId": "shot",
+          "target": {
+            "kind": "enemy",
+            "id": 0
+          }
+        }
+      }
+    },
+    {
+      "tick": 3690,
+      "order": 147,
+      "command": {
+        "type": "enqueue",
+        "id": 2,
+        "step": {
+          "kind": "skill",
+          "skillId": "heal",
+          "target": {
+            "kind": "ally",
+            "id": 1
+          }
+        }
+      }
+    },
+    {
+      "tick": 3705,
+      "order": 148,
+      "command": {
+        "type": "enqueue",
+        "id": 1,
+        "step": {
+          "kind": "skill",
+          "skillId": "shot",
+          "target": {
+            "kind": "enemy",
+            "id": 0
+          }
+        }
+      }
+    },
+    {
+      "tick": 3720,
+      "order": 149,
+      "command": {
+        "type": "enqueue",
+        "id": 1,
+        "step": {
+          "kind": "skill",
+          "skillId": "shot",
+          "target": {
+            "kind": "enemy",
+            "id": 0
+          }
+        }
+      }
+    },
+    {
+      "tick": 3765,
+      "order": 150,
+      "command": {
+        "type": "enqueue",
+        "id": 1,
+        "step": {
+          "kind": "skill",
+          "skillId": "shot",
+          "target": {
+            "kind": "enemy",
+            "id": 0
+          }
+        }
+      }
+    },
+    {
+      "tick": 3885,
+      "order": 151,
+      "command": {
+        "type": "enqueue",
+        "id": 0,
+        "step": {
+          "kind": "skill",
+          "skillId": "slash",
+          "target": {
+            "kind": "enemy",
+            "id": 0
+          }
+        }
+      }
+    },
+    {
+      "tick": 3885,
+      "order": 152,
+      "command": {
+        "type": "enqueue",
+        "id": 2,
+        "step": {
+          "kind": "skill",
+          "skillId": "heal",
+          "target": {
+            "kind": "ally",
+            "id": 0
+          }
+        }
+      }
+    },
+    {
+      "tick": 3900,
+      "order": 153,
+      "command": {
+        "type": "enqueue",
+        "id": 0,
+        "step": {
+          "kind": "skill",
+          "skillId": "slash",
+          "target": {
+            "kind": "enemy",
+            "id": 0
+          }
+        }
+      }
+    },
+    {
+      "tick": 3960,
+      "order": 154,
+      "command": {
+        "type": "removePlan",
+        "id": 1,
+        "key": 96
+      }
+    },
+    {
+      "tick": 3960,
+      "order": 155,
+      "command": {
+        "type": "removePlan",
+        "id": 1,
+        "key": 97
+      }
+    },
+    {
+      "tick": 3960,
+      "order": 156,
+      "command": {
+        "type": "removePlan",
+        "id": 2,
+        "key": 99
+      }
+    },
+    {
+      "tick": 3960,
+      "order": 157,
+      "command": {
+        "type": "optima",
+        "index": 1
+      }
+    },
+    {
+      "tick": 4050,
+      "order": 158,
+      "command": {
+        "type": "enqueue",
+        "id": 2,
+        "step": {
+          "kind": "skill",
+          "skillId": "pull",
+          "target": {
+            "kind": "enemy",
+            "id": 2
+          }
+        }
+      }
+    },
+    {
+      "tick": 4110,
+      "order": 159,
+      "command": {
+        "type": "enqueue",
+        "id": 1,
+        "step": {
+          "kind": "skill",
+          "skillId": "spark",
+          "target": {
+            "kind": "enemy",
+            "id": 2
+          }
+        }
+      }
+    },
+    {
+      "tick": 4125,
+      "order": 160,
+      "command": {
+        "type": "enqueue",
+        "id": 1,
+        "step": {
+          "kind": "skill",
+          "skillId": "spark",
+          "target": {
+            "kind": "enemy",
+            "id": 2
+          }
+        }
+      }
+    },
+    {
+      "tick": 4140,
+      "order": 161,
+      "command": {
+        "type": "enqueue",
+        "id": 1,
+        "step": {
+          "kind": "skill",
+          "skillId": "spark",
+          "target": {
+            "kind": "enemy",
+            "id": 2
+          }
+        }
+      }
+    },
+    {
+      "tick": 4200,
+      "order": 162,
+      "command": {
+        "type": "enqueue",
+        "id": 1,
+        "step": {
+          "kind": "skill",
+          "skillId": "spark",
+          "target": {
+            "kind": "enemy",
+            "id": 2
+          }
+        }
+      }
+    },
+    {
+      "tick": 4215,
+      "order": 163,
+      "command": {
+        "type": "enqueue",
+        "id": 2,
+        "step": {
+          "kind": "skill",
+          "skillId": "pull",
+          "target": {
+            "kind": "enemy",
+            "id": 2
+          }
+        }
+      }
+    },
+    {
+      "tick": 4245,
+      "order": 164,
+      "command": {
+        "type": "enqueue",
+        "id": 0,
+        "step": {
+          "kind": "skill",
+          "skillId": "slash",
+          "target": {
+            "kind": "enemy",
+            "id": 2
+          }
+        }
+      }
+    },
+    {
+      "tick": 4290,
+      "order": 165,
+      "command": {
+        "type": "enqueue",
+        "id": 2,
+        "step": {
+          "kind": "skill",
+          "skillId": "jab",
+          "target": {
+            "kind": "enemy",
+            "id": 2
+          }
+        }
+      }
+    },
+    {
+      "tick": 4305,
+      "order": 166,
+      "command": {
+        "type": "enqueue",
+        "id": 2,
+        "step": {
+          "kind": "skill",
+          "skillId": "jab",
+          "target": {
+            "kind": "enemy",
+            "id": 2
+          }
+        }
+      }
+    },
+    {
+      "tick": 4395,
+      "order": 167,
+      "command": {
+        "type": "enqueue",
+        "id": 1,
+        "step": {
+          "kind": "skill",
+          "skillId": "spark",
+          "target": {
+            "kind": "enemy",
+            "id": 2
+          }
+        }
+      }
+    },
+    {
+      "tick": 4515,
+      "order": 168,
+      "command": {
+        "type": "enqueue",
+        "id": 0,
+        "step": {
+          "kind": "skill",
+          "skillId": "slash",
+          "target": {
+            "kind": "enemy",
+            "id": 2
+          }
+        }
+      }
+    },
+    {
+      "tick": 4530,
+      "order": 169,
+      "command": {
+        "type": "enqueue",
+        "id": 2,
+        "step": {
+          "kind": "skill",
+          "skillId": "jab",
+          "target": {
+            "kind": "enemy",
+            "id": 2
+          }
+        }
+      }
+    },
+    {
+      "tick": 4590,
+      "order": 170,
+      "command": {
+        "type": "removePlan",
+        "id": 1,
+        "key": 105
+      }
+    },
+    {
+      "tick": 4590,
+      "order": 171,
+      "command": {
+        "type": "removePlan",
+        "id": 1,
+        "key": 110
+      }
+    },
+    {
+      "tick": 4590,
+      "order": 172,
+      "command": {
+        "type": "optima",
+        "index": 2
+      }
+    },
+    {
+      "tick": 4710,
+      "order": 173,
+      "command": {
+        "type": "enqueue",
+        "id": 0,
+        "step": {
+          "kind": "skill",
+          "skillId": "slash",
+          "target": {
+            "kind": "enemy",
+            "id": 2
+          }
+        }
+      }
+    },
+    {
+      "tick": 4740,
+      "order": 174,
+      "command": {
+        "type": "enqueue",
+        "id": 1,
+        "step": {
+          "kind": "skill",
+          "skillId": "shot",
+          "target": {
+            "kind": "enemy",
+            "id": 2
+          }
+        }
+      }
+    },
+    {
+      "tick": 4740,
+      "order": 175,
+      "command": {
+        "type": "enqueue",
+        "id": 2,
+        "step": {
+          "kind": "skill",
+          "skillId": "jab",
+          "target": {
+            "kind": "enemy",
+            "id": 2
+          }
+        }
+      }
+    },
+    {
+      "tick": 4755,
+      "order": 176,
+      "command": {
+        "type": "enqueue",
+        "id": 1,
+        "step": {
+          "kind": "skill",
+          "skillId": "shot",
+          "target": {
+            "kind": "enemy",
+            "id": 2
+          }
+        }
+      }
+    },
+    {
+      "tick": 4770,
+      "order": 177,
+      "command": {
+        "type": "enqueue",
+        "id": 1,
+        "step": {
+          "kind": "skill",
+          "skillId": "shot",
+          "target": {
+            "kind": "enemy",
+            "id": 2
+          }
+        }
+      }
+    },
+    {
+      "tick": 4830,
+      "order": 178,
+      "command": {
+        "type": "enqueue",
+        "id": 1,
+        "step": {
+          "kind": "skill",
+          "skillId": "shot",
+          "target": {
+            "kind": "enemy",
+            "id": 2
+          }
+        }
+      }
+    },
+    {
+      "tick": 4905,
+      "order": 179,
+      "command": {
+        "type": "enqueue",
+        "id": 0,
+        "step": {
+          "kind": "skill",
+          "skillId": "slash",
+          "target": {
+            "kind": "enemy",
+            "id": 2
+          }
+        }
+      }
+    },
+    {
+      "tick": 4935,
+      "order": 180,
+      "command": {
+        "type": "enqueue",
+        "id": 2,
+        "step": {
+          "kind": "skill",
+          "skillId": "jab",
+          "target": {
+            "kind": "enemy",
+            "id": 2
+          }
+        }
+      }
+    },
+    {
+      "tick": 4988,
+      "order": 181,
+      "command": {
+        "type": "next"
+      }
+    },
+    {
+      "tick": 4988,
+      "order": 182,
+      "command": {
+        "type": "optima",
+        "index": 1
+      }
+    },
+    {
+      "tick": 5003,
+      "order": 183,
+      "command": {
+        "type": "enqueue",
+        "id": 0,
+        "step": {
+          "kind": "skill",
+          "skillId": "slash",
+          "target": {
+            "kind": "enemy",
+            "id": 0
+          }
+        }
+      }
+    },
+    {
+      "tick": 5003,
+      "order": 184,
+      "command": {
+        "type": "enqueue",
+        "id": 2,
+        "step": {
+          "kind": "skill",
+          "skillId": "pull",
+          "target": {
+            "kind": "enemy",
+            "id": 1
+          }
+        }
+      }
+    },
+    {
+      "tick": 5018,
+      "order": 185,
+      "command": {
+        "type": "enqueue",
+        "id": 0,
+        "step": {
+          "kind": "skill",
+          "skillId": "sweep",
+          "target": {
+            "kind": "row",
+            "row": "back"
+          }
+        }
+      }
+    },
+    {
+      "tick": 5033,
+      "order": 186,
+      "command": {
+        "type": "enqueue",
+        "id": 0,
+        "step": {
+          "kind": "skill",
+          "skillId": "sweep",
+          "target": {
+            "kind": "row",
+            "row": "back"
+          }
+        }
+      }
+    },
+    {
+      "tick": 5033,
+      "order": 187,
+      "command": {
+        "type": "enqueue",
+        "id": 1,
+        "step": {
+          "kind": "skill",
+          "skillId": "rain",
+          "target": {
+            "kind": "row",
+            "row": "back"
+          }
+        }
+      }
+    },
+    {
+      "tick": 5048,
+      "order": 188,
+      "command": {
+        "type": "enqueue",
+        "id": 1,
+        "step": {
+          "kind": "skill",
+          "skillId": "rain",
+          "target": {
+            "kind": "row",
+            "row": "back"
+          }
+        }
+      }
+    },
+    {
+      "tick": 5078,
+      "order": 189,
+      "command": {
+        "type": "enqueue",
+        "id": 2,
+        "step": {
+          "kind": "skill",
+          "skillId": "pull",
+          "target": {
+            "kind": "enemy",
+            "id": 1
+          }
+        }
+      }
+    },
+    {
+      "tick": 5123,
+      "order": 190,
+      "command": {
+        "type": "enqueue",
+        "id": 1,
+        "step": {
+          "kind": "skill",
+          "skillId": "rain",
+          "target": {
+            "kind": "row",
+            "row": "back"
+          }
+        }
+      }
+    },
+    {
+      "tick": 5258,
+      "order": 191,
+      "command": {
+        "type": "removePlan",
+        "id": 0,
+        "key": 123
+      }
+    },
+    {
+      "tick": 5258,
+      "order": 192,
+      "command": {
+        "type": "removePlan",
+        "id": 0,
+        "key": 124
+      }
+    },
+    {
+      "tick": 5258,
+      "order": 193,
+      "command": {
+        "type": "enqueue",
+        "id": 0,
+        "step": {
+          "kind": "skill",
+          "skillId": "guard",
+          "target": {
+            "kind": "ally",
+            "id": 0
+          }
+        }
+      }
+    },
+    {
+      "tick": 5258,
+      "order": 194,
+      "command": {
+        "type": "removePlan",
+        "id": 2,
+        "key": 127
+      }
+    },
+    {
+      "tick": 5258,
+      "order": 195,
+      "command": {
+        "type": "enqueue",
+        "id": 2,
+        "step": {
+          "kind": "skill",
+          "skillId": "guard",
+          "target": {
+            "kind": "ally",
+            "id": 2
+          }
+        }
+      }
+    },
+    {
+      "tick": 5288,
+      "order": 196,
+      "command": {
+        "type": "enqueue",
+        "id": 0,
+        "step": {
+          "kind": "skill",
+          "skillId": "slash",
+          "target": {
+            "kind": "enemy",
+            "id": 2
+          }
+        }
+      }
+    },
+    {
+      "tick": 5303,
+      "order": 197,
+      "command": {
+        "type": "enqueue",
+        "id": 0,
+        "step": {
+          "kind": "skill",
+          "skillId": "slash",
+          "target": {
+            "kind": "enemy",
+            "id": 2
+          }
+        }
+      }
+    },
+    {
+      "tick": 5303,
+      "order": 198,
+      "command": {
+        "type": "enqueue",
+        "id": 2,
+        "step": {
+          "kind": "skill",
+          "skillId": "jab",
+          "target": {
+            "kind": "enemy",
+            "id": 2
+          }
+        }
+      }
+    },
+    {
+      "tick": 5318,
+      "order": 199,
+      "command": {
+        "type": "removePlan",
+        "id": 0,
+        "key": 131
+      }
+    },
+    {
+      "tick": 5318,
+      "order": 200,
+      "command": {
+        "type": "removePlan",
+        "id": 0,
+        "key": 132
+      }
+    },
+    {
+      "tick": 5318,
+      "order": 201,
+      "command": {
+        "type": "enqueue",
+        "id": 0,
+        "step": {
+          "kind": "weapon",
+          "slot": 1
+        }
+      }
+    },
+    {
+      "tick": 5333,
+      "order": 202,
+      "command": {
+        "type": "enqueue",
+        "id": 2,
+        "step": {
+          "kind": "skill",
+          "skillId": "jab",
+          "target": {
+            "kind": "enemy",
+            "id": 2
+          }
+        }
+      }
+    },
+    {
+      "tick": 5348,
+      "order": 203,
+      "command": {
+        "type": "enqueue",
+        "id": 2,
+        "step": {
+          "kind": "skill",
+          "skillId": "jab",
+          "target": {
+            "kind": "enemy",
+            "id": 2
+          }
+        }
+      }
+    },
+    {
+      "tick": 5393,
+      "order": 204,
+      "command": {
+        "type": "enqueue",
+        "id": 0,
+        "step": {
+          "kind": "skill",
+          "skillId": "ward",
+          "target": {
+            "kind": "ally",
+            "id": 1
+          }
+        }
+      }
+    },
+    {
+      "tick": 5408,
+      "order": 205,
+      "command": {
+        "type": "enqueue",
+        "id": 0,
+        "step": {
+          "kind": "skill",
+          "skillId": "ward",
+          "target": {
+            "kind": "ally",
+            "id": 1
+          }
+        }
+      }
+    },
+    {
+      "tick": 5468,
+      "order": 206,
+      "command": {
+        "type": "enqueue",
+        "id": 2,
+        "step": {
+          "kind": "skill",
+          "skillId": "pull",
+          "target": {
+            "kind": "enemy",
+            "id": 2
+          }
+        }
+      }
+    },
+    {
+      "tick": 5483,
+      "order": 207,
+      "command": {
+        "type": "enqueue",
+        "id": 1,
+        "step": {
+          "kind": "skill",
+          "skillId": "rain",
+          "target": {
+            "kind": "row",
+            "row": "front"
+          }
+        }
+      }
+    },
+    {
+      "tick": 5573,
+      "order": 208,
+      "command": {
+        "type": "removePlan",
+        "id": 0,
+        "key": 138
+      }
+    },
+    {
+      "tick": 5573,
+      "order": 209,
+      "command": {
+        "type": "optima",
+        "index": 1
+      }
+    },
+    {
+      "tick": 5618,
+      "order": 210,
+      "command": {
+        "type": "enqueue",
+        "id": 0,
+        "step": {
+          "kind": "skill",
+          "skillId": "slash",
+          "target": {
+            "kind": "enemy",
+            "id": 2
+          }
+        }
+      }
+    },
+    {
+      "tick": 5633,
+      "order": 211,
+      "command": {
+        "type": "enqueue",
+        "id": 0,
+        "step": {
+          "kind": "skill",
+          "skillId": "slash",
+          "target": {
+            "kind": "enemy",
+            "id": 2
+          }
+        }
+      }
+    },
+    {
+      "tick": 5648,
+      "order": 212,
+      "command": {
+        "type": "enqueue",
+        "id": 0,
+        "step": {
+          "kind": "skill",
+          "skillId": "slash",
+          "target": {
+            "kind": "enemy",
+            "id": 2
+          }
+        }
+      }
+    },
+    {
+      "tick": 5663,
+      "order": 213,
+      "command": {
+        "type": "enqueue",
+        "id": 0,
+        "step": {
+          "kind": "skill",
+          "skillId": "slash",
+          "target": {
+            "kind": "enemy",
+            "id": 2
+          }
+        }
+      }
+    },
+    {
+      "tick": 5738,
+      "order": 214,
+      "command": {
+        "type": "removePlan",
+        "id": 0,
+        "key": 142
+      }
+    },
+    {
+      "tick": 5738,
+      "order": 215,
+      "command": {
+        "type": "removePlan",
+        "id": 0,
+        "key": 143
+      }
+    },
+    {
+      "tick": 5738,
+      "order": 216,
+      "command": {
+        "type": "removePlan",
+        "id": 0,
+        "key": 144
+      }
+    },
+    {
+      "tick": 5738,
+      "order": 217,
+      "command": {
+        "type": "enqueue",
+        "id": 0,
+        "step": {
+          "kind": "skill",
+          "skillId": "guard",
+          "target": {
+            "kind": "ally",
+            "id": 0
+          }
+        }
+      }
+    },
+    {
+      "tick": 5738,
+      "order": 218,
+      "command": {
+        "type": "removePlan",
+        "id": 2,
+        "key": 136
+      }
+    },
+    {
+      "tick": 5738,
+      "order": 219,
+      "command": {
+        "type": "removePlan",
+        "id": 2,
+        "key": 139
+      }
+    },
+    {
+      "tick": 5738,
+      "order": 220,
+      "command": {
+        "type": "enqueue",
+        "id": 2,
+        "step": {
+          "kind": "skill",
+          "skillId": "guard",
+          "target": {
+            "kind": "ally",
+            "id": 2
+          }
+        }
+      }
+    },
+    {
+      "tick": 5828,
+      "order": 221,
+      "command": {
+        "type": "enqueue",
+        "id": 0,
+        "step": {
+          "kind": "weapon",
+          "slot": 1
+        }
+      }
+    },
+    {
+      "tick": 5843,
+      "order": 222,
+      "command": {
+        "type": "enqueue",
+        "id": 1,
+        "step": {
+          "kind": "skill",
+          "skillId": "rain",
+          "target": {
+            "kind": "row",
+            "row": "front"
+          }
+        }
+      }
+    },
+    {
+      "tick": 5873,
+      "order": 223,
+      "command": {
+        "type": "enqueue",
+        "id": 2,
+        "step": {
+          "kind": "skill",
+          "skillId": "jab",
+          "target": {
+            "kind": "enemy",
+            "id": 2
+          }
+        }
+      }
+    },
+    {
+      "tick": 5888,
+      "order": 224,
+      "command": {
+        "type": "enqueue",
+        "id": 2,
+        "step": {
+          "kind": "skill",
+          "skillId": "jab",
+          "target": {
+            "kind": "enemy",
+            "id": 2
+          }
+        }
+      }
+    },
+    {
+      "tick": 5903,
+      "order": 225,
+      "command": {
+        "type": "enqueue",
+        "id": 2,
+        "step": {
+          "kind": "skill",
+          "skillId": "pull",
+          "target": {
+            "kind": "enemy",
+            "id": 2
+          }
+        }
+      }
+    },
+    {
+      "tick": 5963,
+      "order": 226,
+      "command": {
+        "type": "enqueue",
+        "id": 0,
+        "step": {
+          "kind": "skill",
+          "skillId": "ward",
+          "target": {
+            "kind": "ally",
+            "id": 1
+          }
+        }
+      }
+    },
+    {
+      "tick": 6038,
+      "order": 227,
+      "command": {
+        "type": "enqueue",
+        "id": 0,
+        "step": {
+          "kind": "skill",
+          "skillId": "ward",
+          "target": {
+            "kind": "ally",
+            "id": 1
+          }
+        }
+      }
+    },
+    {
+      "tick": 6083,
+      "order": 228,
+      "command": {
+        "type": "removePlan",
+        "id": 0,
+        "key": 153
+      }
+    },
+    {
+      "tick": 6083,
+      "order": 229,
+      "command": {
+        "type": "removePlan",
+        "id": 1,
+        "key": 140
+      }
+    },
+    {
+      "tick": 6083,
+      "order": 230,
+      "command": {
+        "type": "removePlan",
+        "id": 1,
+        "key": 148
+      }
+    },
+    {
+      "tick": 6083,
+      "order": 231,
+      "command": {
+        "type": "optima",
+        "index": 2
+      }
+    },
+    {
+      "tick": 6128,
+      "order": 232,
+      "command": {
+        "type": "enqueue",
+        "id": 1,
+        "step": {
+          "kind": "skill",
+          "skillId": "shot",
+          "target": {
+            "kind": "enemy",
+            "id": 2
+          }
+        }
+      }
+    },
+    {
+      "tick": 6143,
+      "order": 233,
+      "command": {
+        "type": "enqueue",
+        "id": 1,
+        "step": {
+          "kind": "skill",
+          "skillId": "shot",
+          "target": {
+            "kind": "enemy",
+            "id": 2
+          }
+        }
+      }
+    },
+    {
+      "tick": 6158,
+      "order": 234,
+      "command": {
+        "type": "enqueue",
+        "id": 1,
+        "step": {
+          "kind": "skill",
+          "skillId": "shot",
+          "target": {
+            "kind": "enemy",
+            "id": 2
+          }
+        }
+      }
+    },
+    {
+      "tick": 6173,
+      "order": 235,
+      "command": {
+        "type": "enqueue",
+        "id": 0,
+        "step": {
+          "kind": "skill",
+          "skillId": "slash",
+          "target": {
+            "kind": "enemy",
+            "id": 2
+          }
+        }
+      }
+    },
+    {
+      "tick": 6173,
+      "order": 236,
+      "command": {
+        "type": "enqueue",
+        "id": 1,
+        "step": {
+          "kind": "skill",
+          "skillId": "shot",
+          "target": {
+            "kind": "enemy",
+            "id": 2
+          }
+        }
+      }
+    },
+    {
+      "tick": 6218,
+      "order": 237,
+      "command": {
+        "type": "removePlan",
+        "id": 0,
+        "key": 157
+      }
+    },
+    {
+      "tick": 6218,
+      "order": 238,
+      "command": {
+        "type": "move",
+        "id": 0,
+        "row": "front"
+      }
+    },
+    {
+      "tick": 6218,
+      "order": 239,
+      "command": {
+        "type": "removePlan",
+        "id": 1,
+        "key": 155
+      }
+    },
+    {
+      "tick": 6218,
+      "order": 240,
+      "command": {
+        "type": "removePlan",
+        "id": 1,
+        "key": 156
+      }
+    },
+    {
+      "tick": 6218,
+      "order": 241,
+      "command": {
+        "type": "removePlan",
+        "id": 1,
+        "key": 158
+      }
+    },
+    {
+      "tick": 6218,
+      "order": 242,
+      "command": {
+        "type": "move",
+        "id": 1,
+        "row": "front"
+      }
+    },
+    {
+      "tick": 6218,
+      "order": 243,
+      "command": {
+        "type": "removePlan",
+        "id": 2,
+        "key": 150
+      }
+    },
+    {
+      "tick": 6218,
+      "order": 244,
+      "command": {
+        "type": "removePlan",
+        "id": 2,
+        "key": 151
+      }
+    },
+    {
+      "tick": 6218,
+      "order": 245,
+      "command": {
+        "type": "move",
+        "id": 2,
+        "row": "front"
+      }
+    },
+    {
+      "tick": 6308,
+      "order": 246,
+      "command": {
+        "type": "enqueue",
+        "id": 0,
+        "step": {
+          "kind": "skill",
+          "skillId": "slash",
+          "target": {
+            "kind": "enemy",
+            "id": 2
+          }
+        }
+      }
+    },
+    {
+      "tick": 6308,
+      "order": 247,
+      "command": {
+        "type": "enqueue",
+        "id": 1,
+        "step": {
+          "kind": "skill",
+          "skillId": "shot",
+          "target": {
+            "kind": "enemy",
+            "id": 2
+          }
+        }
+      }
+    },
+    {
+      "tick": 6308,
+      "order": 248,
+      "command": {
+        "type": "enqueue",
+        "id": 2,
+        "step": {
+          "kind": "skill",
+          "skillId": "pull",
+          "target": {
+            "kind": "enemy",
+            "id": 0
+          }
+        }
+      }
+    },
+    {
+      "tick": 6323,
+      "order": 249,
+      "command": {
+        "type": "enqueue",
+        "id": 0,
+        "step": {
+          "kind": "skill",
+          "skillId": "slash",
+          "target": {
+            "kind": "enemy",
+            "id": 2
+          }
+        }
+      }
+    },
+    {
+      "tick": 6323,
+      "order": 250,
+      "command": {
+        "type": "enqueue",
+        "id": 1,
+        "step": {
+          "kind": "skill",
+          "skillId": "shot",
+          "target": {
+            "kind": "enemy",
+            "id": 2
+          }
+        }
+      }
+    },
+    {
+      "tick": 6338,
+      "order": 251,
+      "command": {
+        "type": "enqueue",
+        "id": 0,
+        "step": {
+          "kind": "skill",
+          "skillId": "slash",
+          "target": {
+            "kind": "enemy",
+            "id": 2
+          }
+        }
+      }
+    },
+    {
+      "tick": 6338,
+      "order": 252,
+      "command": {
+        "type": "enqueue",
+        "id": 1,
+        "step": {
+          "kind": "skill",
+          "skillId": "shot",
+          "target": {
+            "kind": "enemy",
+            "id": 2
+          }
+        }
+      }
+    },
+    {
+      "tick": 6353,
+      "order": 253,
+      "command": {
+        "type": "enqueue",
+        "id": 0,
+        "step": {
+          "kind": "skill",
+          "skillId": "slash",
+          "target": {
+            "kind": "enemy",
+            "id": 2
+          }
+        }
+      }
+    },
+    {
+      "tick": 6368,
+      "order": 254,
+      "command": {
+        "type": "enqueue",
+        "id": 1,
+        "step": {
+          "kind": "skill",
+          "skillId": "shot",
+          "target": {
+            "kind": "enemy",
+            "id": 2
+          }
+        }
+      }
+    },
+    {
+      "tick": 6368,
+      "order": 255,
+      "command": {
+        "type": "enqueue",
+        "id": 2,
+        "step": {
+          "kind": "skill",
+          "skillId": "pull",
+          "target": {
+            "kind": "enemy",
+            "id": 0
+          }
+        }
+      }
+    },
+    {
+      "tick": 6473,
+      "order": 256,
+      "command": {
+        "type": "removePlan",
+        "id": 2,
+        "key": 168
+      }
+    },
+    {
+      "tick": 6473,
+      "order": 257,
+      "command": {
+        "type": "enqueue",
+        "id": 2,
+        "step": {
+          "kind": "weapon",
+          "slot": 0
+        }
+      }
+    },
+    {
+      "tick": 6503,
+      "order": 258,
+      "command": {
+        "type": "enqueue",
+        "id": 0,
+        "step": {
+          "kind": "skill",
+          "skillId": "slash",
+          "target": {
+            "kind": "enemy",
+            "id": 2
+          }
+        }
+      }
+    },
+    {
+      "tick": 6548,
+      "order": 259,
+      "command": {
+        "type": "enqueue",
+        "id": 2,
+        "step": {
+          "kind": "skill",
+          "skillId": "heal",
+          "target": {
+            "kind": "ally",
+            "id": 1
+          }
+        }
+      }
+    },
+    {
+      "tick": 6563,
+      "order": 260,
+      "command": {
+        "type": "enqueue",
+        "id": 1,
+        "step": {
+          "kind": "skill",
+          "skillId": "shot",
+          "target": {
+            "kind": "enemy",
+            "id": 2
+          }
+        }
+      }
+    },
+    {
+      "tick": 6623,
+      "order": 261,
+      "command": {
+        "type": "enqueue",
+        "id": 2,
+        "step": {
+          "kind": "skill",
+          "skillId": "heal",
+          "target": {
+            "kind": "ally",
+            "id": 1
+          }
+        }
+      }
+    },
+    {
+      "tick": 6698,
+      "order": 262,
+      "command": {
+        "type": "enqueue",
+        "id": 0,
+        "step": {
+          "kind": "skill",
+          "skillId": "sweep",
+          "target": {
+            "kind": "row",
+            "row": "front"
+          }
+        }
+      }
+    },
+    {
+      "tick": 6728,
+      "order": 263,
+      "command": {
+        "type": "removePlan",
+        "id": 1,
+        "key": 165
+      }
+    },
+    {
+      "tick": 6728,
+      "order": 264,
+      "command": {
+        "type": "removePlan",
+        "id": 1,
+        "key": 167
+      }
+    },
+    {
+      "tick": 6728,
+      "order": 265,
+      "command": {
+        "type": "removePlan",
+        "id": 1,
+        "key": 172
+      }
+    },
+    {
+      "tick": 6728,
+      "order": 266,
+      "command": {
+        "type": "removePlan",
+        "id": 2,
+        "key": 173
+      }
+    },
+    {
+      "tick": 6728,
+      "order": 267,
+      "command": {
+        "type": "optima",
+        "index": 1
+      }
+    },
+    {
+      "tick": 6773,
+      "order": 268,
+      "command": {
+        "type": "enqueue",
+        "id": 1,
+        "step": {
+          "kind": "skill",
+          "skillId": "rain",
+          "target": {
+            "kind": "row",
+            "row": "front"
+          }
+        }
+      }
+    },
+    {
+      "tick": 6788,
+      "order": 269,
+      "command": {
+        "type": "enqueue",
+        "id": 1,
+        "step": {
+          "kind": "skill",
+          "skillId": "rain",
+          "target": {
+            "kind": "row",
+            "row": "front"
+          }
+        }
+      }
+    },
+    {
+      "tick": 6788,
+      "order": 270,
+      "command": {
+        "type": "enqueue",
+        "id": 2,
+        "step": {
+          "kind": "skill",
+          "skillId": "pull",
+          "target": {
+            "kind": "enemy",
+            "id": 2
+          }
+        }
+      }
+    },
+    {
+      "tick": 6848,
+      "order": 271,
+      "command": {
+        "type": "removePlan",
+        "id": 0,
+        "key": 166
+      }
+    },
+    {
+      "tick": 6848,
+      "order": 272,
+      "command": {
+        "type": "removePlan",
+        "id": 0,
+        "key": 170
+      }
+    },
+    {
+      "tick": 6848,
+      "order": 273,
+      "command": {
+        "type": "removePlan",
+        "id": 0,
+        "key": 174
+      }
+    },
+    {
+      "tick": 6848,
+      "order": 274,
+      "command": {
+        "type": "enqueue",
+        "id": 0,
+        "step": {
+          "kind": "skill",
+          "skillId": "guard",
+          "target": {
+            "kind": "ally",
+            "id": 0
+          }
+        }
+      }
+    },
+    {
+      "tick": 6848,
+      "order": 275,
+      "command": {
+        "type": "removePlan",
+        "id": 1,
+        "key": 175
+      }
+    },
+    {
+      "tick": 6848,
+      "order": 276,
+      "command": {
+        "type": "removePlan",
+        "id": 1,
+        "key": 176
+      }
+    },
+    {
+      "tick": 6848,
+      "order": 277,
+      "command": {
+        "type": "enqueue",
+        "id": 1,
+        "step": {
+          "kind": "skill",
+          "skillId": "guard",
+          "target": {
+            "kind": "ally",
+            "id": 1
+          }
+        }
+      }
+    },
+    {
+      "tick": 6848,
+      "order": 278,
+      "command": {
+        "type": "removePlan",
+        "id": 2,
+        "key": 177
+      }
+    },
+    {
+      "tick": 6848,
+      "order": 279,
+      "command": {
+        "type": "enqueue",
+        "id": 2,
+        "step": {
+          "kind": "skill",
+          "skillId": "guard",
+          "target": {
+            "kind": "ally",
+            "id": 2
+          }
+        }
+      }
+    },
+    {
+      "tick": 6893,
+      "order": 280,
+      "command": {
+        "type": "enqueue",
+        "id": 0,
+        "step": {
+          "kind": "skill",
+          "skillId": "sweep",
+          "target": {
+            "kind": "row",
+            "row": "front"
+          }
+        }
+      }
+    },
+    {
+      "tick": 6893,
+      "order": 281,
+      "command": {
+        "type": "move",
+        "id": 1,
+        "row": "back"
+      }
+    },
+    {
+      "tick": 6893,
+      "order": 282,
+      "command": {
+        "type": "move",
+        "id": 2,
+        "row": "back"
+      }
+    },
+    {
+      "tick": 6908,
+      "order": 283,
+      "command": {
+        "type": "enqueue",
+        "id": 0,
+        "step": {
+          "kind": "skill",
+          "skillId": "sweep",
+          "target": {
+            "kind": "row",
+            "row": "front"
+          }
+        }
+      }
+    },
+    {
+      "tick": 6953,
+      "order": 284,
+      "command": {
+        "type": "enqueue",
+        "id": 1,
+        "step": {
+          "kind": "skill",
+          "skillId": "rain",
+          "target": {
+            "kind": "row",
+            "row": "front"
+          }
+        }
+      }
+    },
+    {
+      "tick": 6953,
+      "order": 285,
+      "command": {
+        "type": "enqueue",
+        "id": 2,
+        "step": {
+          "kind": "skill",
+          "skillId": "jab",
+          "target": {
+            "kind": "enemy",
+            "id": 0
+          }
+        }
+      }
+    },
+    {
+      "tick": 6968,
+      "order": 286,
+      "command": {
+        "type": "enqueue",
+        "id": 1,
+        "step": {
+          "kind": "skill",
+          "skillId": "rain",
+          "target": {
+            "kind": "row",
+            "row": "front"
+          }
+        }
+      }
+    },
+    {
+      "tick": 6968,
+      "order": 287,
+      "command": {
+        "type": "enqueue",
+        "id": 2,
+        "step": {
+          "kind": "skill",
+          "skillId": "jab",
+          "target": {
+            "kind": "enemy",
+            "id": 0
+          }
+        }
+      }
+    },
+    {
+      "tick": 6983,
+      "order": 288,
+      "command": {
+        "type": "enqueue",
+        "id": 2,
+        "step": {
+          "kind": "skill",
+          "skillId": "jab",
+          "target": {
+            "kind": "enemy",
+            "id": 0
+          }
+        }
+      }
+    },
+    {
+      "tick": 6998,
+      "order": 289,
+      "command": {
+        "type": "removePlan",
+        "id": 0,
+        "key": 181
+      }
+    },
+    {
+      "tick": 6998,
+      "order": 290,
+      "command": {
+        "type": "removePlan",
+        "id": 0,
+        "key": 182
+      }
+    },
+    {
+      "tick": 6998,
+      "order": 291,
+      "command": {
+        "type": "enqueue",
+        "id": 0,
+        "step": {
+          "kind": "weapon",
+          "slot": 1
+        }
+      }
+    },
+    {
+      "tick": 7043,
+      "order": 292,
+      "command": {
+        "type": "enqueue",
+        "id": 2,
+        "step": {
+          "kind": "skill",
+          "skillId": "jab",
+          "target": {
+            "kind": "enemy",
+            "id": 2
+          }
+        }
+      }
+    },
+    {
+      "tick": 7058,
+      "order": 293,
+      "command": {
+        "type": "enqueue",
+        "id": 1,
+        "step": {
+          "kind": "skill",
+          "skillId": "rain",
+          "target": {
+            "kind": "row",
+            "row": "front"
+          }
+        }
+      }
+    },
+    {
+      "tick": 7178,
+      "order": 294,
+      "command": {
+        "type": "removePlan",
+        "id": 1,
+        "key": 185
+      }
+    },
+    {
+      "tick": 7178,
+      "order": 295,
+      "command": {
+        "type": "removePlan",
+        "id": 1,
+        "key": 190
+      }
+    },
+    {
+      "tick": 7178,
+      "order": 296,
+      "command": {
+        "type": "move",
+        "id": 1,
+        "row": "front"
+      }
+    },
+    {
+      "tick": 7178,
+      "order": 297,
+      "command": {
+        "type": "removePlan",
+        "id": 2,
+        "key": 186
+      }
+    },
+    {
+      "tick": 7178,
+      "order": 298,
+      "command": {
+        "type": "removePlan",
+        "id": 2,
+        "key": 187
+      }
+    },
+    {
+      "tick": 7178,
+      "order": 299,
+      "command": {
+        "type": "removePlan",
+        "id": 2,
+        "key": 189
+      }
+    },
+    {
+      "tick": 7178,
+      "order": 300,
+      "command": {
+        "type": "move",
+        "id": 2,
+        "row": "front"
+      }
+    },
+    {
+      "tick": 7208,
+      "order": 301,
+      "command": {
+        "type": "enqueue",
+        "id": 0,
+        "step": {
+          "kind": "skill",
+          "skillId": "ward",
+          "target": {
+            "kind": "ally",
+            "id": 1
+          }
+        }
+      }
+    },
+    {
+      "tick": 7238,
+      "order": 302,
+      "command": {
+        "type": "enqueue",
+        "id": 1,
+        "step": {
+          "kind": "skill",
+          "skillId": "rain",
+          "target": {
+            "kind": "row",
+            "row": "front"
+          }
+        }
+      }
+    },
+    {
+      "tick": 7238,
+      "order": 303,
+      "command": {
+        "type": "enqueue",
+        "id": 2,
+        "step": {
+          "kind": "skill",
+          "skillId": "pull",
+          "target": {
+            "kind": "enemy",
+            "id": 2
+          }
+        }
+      }
+    },
+    {
+      "tick": 7253,
+      "order": 304,
+      "command": {
+        "type": "removePlan",
+        "id": 0,
+        "key": 191
+      }
+    },
+    {
+      "tick": 7253,
+      "order": 305,
+      "command": {
+        "type": "removePlan",
+        "id": 2,
+        "key": 193
+      }
+    },
+    {
+      "tick": 7253,
+      "order": 306,
+      "command": {
+        "type": "optima",
+        "index": 0
+      }
+    },
+    {
+      "tick": 7268,
+      "order": 307,
+      "command": {
+        "type": "enqueue",
+        "id": 1,
+        "step": {
+          "kind": "skill",
+          "skillId": "rain",
+          "target": {
+            "kind": "row",
+            "row": "front"
+          }
+        }
+      }
+    },
+    {
+      "tick": 7298,
+      "order": 308,
+      "command": {
+        "type": "enqueue",
+        "id": 2,
+        "step": {
+          "kind": "skill",
+          "skillId": "heal",
+          "target": {
+            "kind": "ally",
+            "id": 0
+          }
+        }
+      }
+    },
+    {
+      "tick": 7328,
+      "order": 309,
+      "command": {
+        "type": "enqueue",
+        "id": 2,
+        "step": {
+          "kind": "skill",
+          "skillId": "heal",
+          "target": {
+            "kind": "ally",
+            "id": 0
+          }
+        }
+      }
+    },
+    {
+      "tick": 7388,
+      "order": 310,
+      "command": {
+        "type": "move",
+        "id": 0,
+        "row": "back"
+      }
+    },
+    {
+      "tick": 7388,
+      "order": 311,
+      "command": {
+        "type": "removePlan",
+        "id": 1,
+        "key": 192
+      }
+    },
+    {
+      "tick": 7388,
+      "order": 312,
+      "command": {
+        "type": "removePlan",
+        "id": 1,
+        "key": 194
+      }
+    },
+    {
+      "tick": 7388,
+      "order": 313,
+      "command": {
+        "type": "move",
+        "id": 1,
+        "row": "back"
+      }
+    },
+    {
+      "tick": 7388,
+      "order": 314,
+      "command": {
+        "type": "removePlan",
+        "id": 2,
+        "key": 196
+      }
+    },
+    {
+      "tick": 7388,
+      "order": 315,
+      "command": {
+        "type": "move",
+        "id": 2,
+        "row": "back"
+      }
+    },
+    {
+      "tick": 7448,
+      "order": 316,
+      "command": {
+        "type": "enqueue",
+        "id": 0,
+        "step": {
+          "kind": "skill",
+          "skillId": "sweep",
+          "target": {
+            "kind": "row",
+            "row": "front"
+          }
+        }
+      }
+    },
+    {
+      "tick": 7448,
+      "order": 317,
+      "command": {
+        "type": "enqueue",
+        "id": 1,
+        "step": {
+          "kind": "skill",
+          "skillId": "rain",
+          "target": {
+            "kind": "row",
+            "row": "front"
+          }
+        }
+      }
+    },
+    {
+      "tick": 7448,
+      "order": 318,
+      "command": {
+        "type": "enqueue",
+        "id": 2,
+        "step": {
+          "kind": "skill",
+          "skillId": "heal",
+          "target": {
+            "kind": "ally",
+            "id": 1
+          }
+        }
+      }
+    },
+    {
+      "tick": 7508,
+      "order": 319,
+      "command": {
+        "type": "removePlan",
+        "id": 0,
+        "key": 197
+      }
+    },
+    {
+      "tick": 7508,
+      "order": 320,
+      "command": {
+        "type": "removePlan",
+        "id": 0,
+        "key": 199
+      }
+    },
+    {
+      "tick": 7508,
+      "order": 321,
+      "command": {
+        "type": "removePlan",
+        "id": 2,
+        "key": 201
+      }
+    },
+    {
+      "tick": 7508,
+      "order": 322,
+      "command": {
+        "type": "enqueue",
+        "id": 0,
+        "step": {
+          "kind": "weapon",
+          "slot": 1
+        }
+      }
+    },
+    {
+      "tick": 7508,
+      "order": 323,
+      "command": {
+        "type": "enqueue",
+        "id": 2,
+        "step": {
+          "kind": "weapon",
+          "slot": 1
+        }
+      }
+    },
+    {
+      "tick": 7523,
+      "order": 324,
+      "command": {
+        "type": "enqueue",
+        "id": 1,
+        "step": {
+          "kind": "skill",
+          "skillId": "rain",
+          "target": {
+            "kind": "row",
+            "row": "front"
+          }
+        }
+      }
+    },
+    {
+      "tick": 7553,
+      "order": 325,
+      "command": {
+        "type": "enqueue",
+        "id": 2,
+        "step": {
+          "kind": "skill",
+          "skillId": "pull",
+          "target": {
+            "kind": "enemy",
+            "id": 2
+          }
+        }
+      }
+    },
+    {
+      "tick": 7613,
+      "order": 326,
+      "command": {
+        "type": "enqueue",
+        "id": 0,
+        "step": {
+          "kind": "skill",
+          "skillId": "ward",
+          "target": {
+            "kind": "ally",
+            "id": 0
+          }
+        }
+      }
+    },
+    {
+      "tick": 7658,
+      "order": 327,
+      "command": {
+        "type": "removePlan",
+        "id": 0,
+        "key": 206
+      }
+    },
+    {
+      "tick": 7658,
+      "order": 328,
+      "command": {
+        "type": "move",
+        "id": 0,
+        "row": "front"
+      }
+    },
+    {
+      "tick": 7658,
+      "order": 329,
+      "command": {
+        "type": "removePlan",
+        "id": 1,
+        "key": 200
+      }
+    },
+    {
+      "tick": 7658,
+      "order": 330,
+      "command": {
+        "type": "removePlan",
+        "id": 1,
+        "key": 204
+      }
+    },
+    {
+      "tick": 7658,
+      "order": 331,
+      "command": {
+        "type": "move",
+        "id": 1,
+        "row": "front"
+      }
+    },
+    {
+      "tick": 7658,
+      "order": 332,
+      "command": {
+        "type": "enqueue",
+        "id": 2,
+        "step": {
+          "kind": "skill",
+          "skillId": "pull",
+          "target": {
+            "kind": "enemy",
+            "id": 2
+          }
+        }
+      }
+    },
+    {
+      "tick": 7718,
+      "order": 333,
+      "command": {
+        "type": "enqueue",
+        "id": 0,
+        "step": {
+          "kind": "skill",
+          "skillId": "ward",
+          "target": {
+            "kind": "ally",
+            "id": 2
+          }
+        }
+      }
+    },
+    {
+      "tick": 7718,
+      "order": 334,
+      "command": {
+        "type": "enqueue",
+        "id": 1,
+        "step": {
+          "kind": "skill",
+          "skillId": "rain",
+          "target": {
+            "kind": "row",
+            "row": "front"
+          }
+        }
+      }
+    },
+    {
+      "tick": 7718,
+      "order": 335,
+      "command": {
+        "type": "enqueue",
+        "id": 2,
+        "step": {
+          "kind": "skill",
+          "skillId": "jab",
+          "target": {
+            "kind": "enemy",
+            "id": 0
+          }
+        }
+      }
+    },
+    {
+      "tick": 7733,
+      "order": 336,
+      "command": {
+        "type": "enqueue",
+        "id": 1,
+        "step": {
+          "kind": "skill",
+          "skillId": "rain",
+          "target": {
+            "kind": "row",
+            "row": "front"
+          }
+        }
+      }
+    },
+    {
+      "tick": 7733,
+      "order": 337,
+      "command": {
+        "type": "enqueue",
+        "id": 2,
+        "step": {
+          "kind": "skill",
+          "skillId": "jab",
+          "target": {
+            "kind": "enemy",
+            "id": 0
+          }
+        }
+      }
+    },
+    {
+      "tick": 7793,
+      "order": 338,
+      "command": {
+        "type": "enqueue",
+        "id": 0,
+        "step": {
+          "kind": "skill",
+          "skillId": "ward",
+          "target": {
+            "kind": "ally",
+            "id": 1
+          }
+        }
+      }
+    },
+    {
+      "tick": 7853,
+      "order": 339,
+      "command": {
+        "type": "removePlan",
+        "id": 0,
+        "key": 213
+      }
+    },
+    {
+      "tick": 7853,
+      "order": 340,
+      "command": {
+        "type": "removePlan",
+        "id": 2,
+        "key": 207
+      }
+    },
+    {
+      "tick": 7853,
+      "order": 341,
+      "command": {
+        "type": "removePlan",
+        "id": 2,
+        "key": 210
+      }
+    },
+    {
+      "tick": 7853,
+      "order": 342,
+      "command": {
+        "type": "removePlan",
+        "id": 2,
+        "key": 212
+      }
+    },
+    {
+      "tick": 7853,
+      "order": 343,
+      "command": {
+        "type": "optima",
+        "index": 0
+      }
+    },
+    {
+      "tick": 7868,
+      "order": 344,
+      "command": {
+        "type": "enqueue",
+        "id": 1,
+        "step": {
+          "kind": "skill",
+          "skillId": "rain",
+          "target": {
+            "kind": "row",
+            "row": "front"
+          }
+        }
+      }
+    },
+    {
+      "tick": 7913,
+      "order": 345,
+      "command": {
+        "type": "enqueue",
+        "id": 2,
+        "step": {
+          "kind": "skill",
+          "skillId": "heal",
+          "target": {
+            "kind": "ally",
+            "id": 2
+          }
+        }
+      }
+    },
+    {
+      "tick": 7928,
+      "order": 346,
+      "command": {
+        "type": "move",
+        "id": 0,
+        "row": "back"
+      }
+    },
+    {
+      "tick": 7988,
+      "order": 347,
+      "command": {
+        "type": "enqueue",
+        "id": 0,
+        "step": {
+          "kind": "skill",
+          "skillId": "sweep",
+          "target": {
+            "kind": "row",
+            "row": "front"
+          }
+        }
+      }
+    },
+    {
+      "tick": 8003,
+      "order": 348,
+      "command": {
+        "type": "enqueue",
+        "id": 0,
+        "step": {
+          "kind": "skill",
+          "skillId": "sweep",
+          "target": {
+            "kind": "row",
+            "row": "front"
+          }
+        }
+      }
+    },
+    {
+      "tick": 8078,
+      "order": 349,
+      "command": {
+        "type": "enqueue",
+        "id": 0,
+        "step": {
+          "kind": "skill",
+          "skillId": "potion",
+          "target": {
+            "kind": "ally",
+            "id": 1
+          }
+        }
+      }
+    },
+    {
+      "tick": 8108,
+      "order": 350,
+      "command": {
+        "type": "enqueue",
+        "id": 2,
+        "step": {
+          "kind": "skill",
+          "skillId": "heal",
+          "target": {
+            "kind": "ally",
+            "id": 1
+          }
+        }
+      }
+    },
+    {
+      "tick": 8153,
+      "order": 351,
+      "command": {
+        "type": "enqueue",
+        "id": 0,
+        "step": {
+          "kind": "skill",
+          "skillId": "sweep",
+          "target": {
+            "kind": "row",
+            "row": "front"
+          }
+        }
+      }
+    },
+    {
+      "tick": 8153,
+      "order": 352,
+      "command": {
+        "type": "removePlan",
+        "id": 2,
+        "key": 219
+      }
+    },
+    {
+      "tick": 8153,
+      "order": 353,
+      "command": {
+        "type": "move",
+        "id": 2,
+        "row": "front"
+      }
+    },
+    {
+      "tick": 8198,
+      "order": 354,
+      "command": {
+        "type": "enqueue",
+        "id": 1,
+        "step": {
+          "kind": "skill",
+          "skillId": "rain",
+          "target": {
+            "kind": "row",
+            "row": "front"
+          }
+        }
+      }
+    },
+    {
+      "tick": 8213,
+      "order": 355,
+      "command": {
+        "type": "enqueue",
+        "id": 2,
+        "step": {
+          "kind": "skill",
+          "skillId": "heal",
+          "target": {
+            "kind": "ally",
+            "id": 1
+          }
+        }
+      }
+    },
+    {
+      "tick": 8273,
+      "order": 356,
+      "command": {
+        "type": "removePlan",
+        "id": 0,
+        "key": 217
+      }
+    },
+    {
+      "tick": 8273,
+      "order": 357,
+      "command": {
+        "type": "removePlan",
+        "id": 0,
+        "key": 218
+      }
+    },
+    {
+      "tick": 8273,
+      "order": 358,
+      "command": {
+        "type": "removePlan",
+        "id": 0,
+        "key": 220
+      }
+    },
+    {
+      "tick": 8273,
+      "order": 359,
+      "command": {
+        "type": "optima",
+        "index": 3
+      }
+    },
+    {
+      "tick": 8288,
+      "order": 360,
+      "command": {
+        "type": "enqueue",
+        "id": 1,
+        "step": {
+          "kind": "skill",
+          "skillId": "potion",
+          "target": {
+            "kind": "ally",
+            "id": 1
+          }
+        }
+      }
+    },
+    {
+      "tick": 8333,
+      "order": 361,
+      "command": {
+        "type": "removePlan",
+        "id": 1,
+        "key": 214
+      }
+    },
+    {
+      "tick": 8333,
+      "order": 362,
+      "command": {
+        "type": "removePlan",
+        "id": 1,
+        "key": 221
+      }
+    },
+    {
+      "tick": 8333,
+      "order": 363,
+      "command": {
+        "type": "removePlan",
+        "id": 1,
+        "key": 223
+      }
+    },
+    {
+      "tick": 8333,
+      "order": 364,
+      "command": {
+        "type": "move",
+        "id": 1,
+        "row": "back"
+      }
+    },
+    {
+      "tick": 8333,
+      "order": 365,
+      "command": {
+        "type": "move",
+        "id": 2,
+        "row": "back"
+      }
+    },
+    {
+      "tick": 8348,
+      "order": 366,
+      "command": {
+        "type": "enqueue",
+        "id": 0,
+        "step": {
+          "kind": "skill",
+          "skillId": "potion",
+          "target": {
+            "kind": "ally",
+            "id": 1
+          }
+        }
+      }
+    },
+    {
+      "tick": 8363,
+      "order": 367,
+      "command": {
+        "type": "enqueue",
+        "id": 0,
+        "step": {
+          "kind": "skill",
+          "skillId": "ward",
+          "target": {
+            "kind": "ally",
+            "id": 1
+          }
+        }
+      }
+    },
+    {
+      "tick": 8393,
+      "order": 368,
+      "command": {
+        "type": "enqueue",
+        "id": 1,
+        "step": {
+          "kind": "skill",
+          "skillId": "rain",
+          "target": {
+            "kind": "row",
+            "row": "front"
+          }
+        }
+      }
+    },
+    {
+      "tick": 8393,
+      "order": 369,
+      "command": {
+        "type": "enqueue",
+        "id": 2,
+        "step": {
+          "kind": "skill",
+          "skillId": "heal",
+          "target": {
+            "kind": "ally",
+            "id": 0
+          }
+        }
+      }
+    },
+    {
+      "tick": 8408,
+      "order": 370,
+      "command": {
+        "type": "enqueue",
+        "id": 1,
+        "step": {
+          "kind": "skill",
+          "skillId": "rain",
+          "target": {
+            "kind": "row",
+            "row": "front"
+          }
+        }
+      }
+    },
+    {
+      "tick": 8513,
+      "order": 371,
+      "command": {
+        "type": "removePlan",
+        "id": 0,
+        "key": 225
+      }
+    },
+    {
+      "tick": 8513,
+      "order": 372,
+      "command": {
+        "type": "removePlan",
+        "id": 1,
+        "key": 226
+      }
+    },
+    {
+      "tick": 8513,
+      "order": 373,
+      "command": {
+        "type": "removePlan",
+        "id": 1,
+        "key": 228
+      }
+    },
+    {
+      "tick": 8513,
+      "order": 374,
+      "command": {
+        "type": "enqueue",
+        "id": 0,
+        "step": {
+          "kind": "weapon",
+          "slot": 0
+        }
+      }
+    },
+    {
+      "tick": 8513,
+      "order": 375,
+      "command": {
+        "type": "enqueue",
+        "id": 1,
+        "step": {
+          "kind": "weapon",
+          "slot": 1
+        }
+      }
+    },
+    {
+      "tick": 8528,
+      "order": 376,
+      "command": {
+        "type": "enqueue",
+        "id": 2,
+        "step": {
+          "kind": "skill",
+          "skillId": "heal",
+          "target": {
+            "kind": "ally",
+            "id": 0
+          }
+        }
+      }
+    },
+    {
+      "tick": 8558,
+      "order": 377,
+      "command": {
+        "type": "enqueue",
+        "id": 0,
+        "step": {
+          "kind": "skill",
+          "skillId": "sweep",
+          "target": {
+            "kind": "row",
+            "row": "front"
+          }
+        }
+      }
+    },
+    {
+      "tick": 8558,
+      "order": 378,
+      "command": {
+        "type": "enqueue",
+        "id": 1,
+        "step": {
+          "kind": "skill",
+          "skillId": "volley",
+          "target": {
+            "kind": "row",
+            "row": "front"
+          }
+        }
+      }
+    },
+    {
+      "tick": 8573,
+      "order": 379,
+      "command": {
+        "type": "enqueue",
+        "id": 0,
+        "step": {
+          "kind": "skill",
+          "skillId": "sweep",
+          "target": {
+            "kind": "row",
+            "row": "front"
+          }
+        }
+      }
+    },
+    {
+      "tick": 8573,
+      "order": 380,
+      "command": {
+        "type": "enqueue",
+        "id": 1,
+        "step": {
+          "kind": "skill",
+          "skillId": "volley",
+          "target": {
+            "kind": "row",
+            "row": "front"
+          }
+        }
+      }
+    },
+    {
+      "tick": 8588,
+      "order": 381,
+      "command": {
+        "type": "enqueue",
+        "id": 1,
+        "step": {
+          "kind": "skill",
+          "skillId": "volley",
+          "target": {
+            "kind": "row",
+            "row": "front"
+          }
+        }
+      }
+    },
+    {
+      "tick": 8633,
+      "order": 382,
+      "command": {
+        "type": "enqueue",
+        "id": 0,
+        "step": {
+          "kind": "skill",
+          "skillId": "sweep",
+          "target": {
+            "kind": "row",
+            "row": "front"
+          }
+        }
+      }
+    },
+    {
+      "tick": 8633,
+      "order": 383,
+      "command": {
+        "type": "removePlan",
+        "id": 2,
+        "key": 231
+      }
+    },
+    {
+      "tick": 8633,
+      "order": 384,
+      "command": {
+        "type": "move",
+        "id": 2,
+        "row": "front"
+      }
+    },
+    {
+      "tick": 8693,
+      "order": 385,
+      "command": {
+        "type": "enqueue",
+        "id": 2,
+        "step": {
+          "kind": "skill",
+          "skillId": "heal",
+          "target": {
+            "kind": "ally",
+            "id": 0
+          }
+        }
+      }
+    },
+    {
+      "tick": 8768,
+      "order": 386,
+      "command": {
+        "type": "enqueue",
+        "id": 2,
+        "step": {
+          "kind": "skill",
+          "skillId": "heal",
+          "target": {
+            "kind": "ally",
+            "id": 0
+          }
+        }
+      }
+    },
+    {
+      "tick": 8918,
+      "order": 387,
+      "command": {
+        "type": "enqueue",
+        "id": 1,
+        "step": {
+          "kind": "skill",
+          "skillId": "volley",
+          "target": {
+            "kind": "row",
+            "row": "front"
+          }
+        }
+      }
+    },
+    {
+      "tick": 8963,
+      "order": 388,
+      "command": {
+        "type": "enqueue",
+        "id": 0,
+        "step": {
+          "kind": "skill",
+          "skillId": "sweep",
+          "target": {
+            "kind": "row",
+            "row": "front"
+          }
+        }
+      }
+    },
+    {
+      "tick": 8963,
+      "order": 389,
+      "command": {
+        "type": "enqueue",
+        "id": 2,
+        "step": {
+          "kind": "skill",
+          "skillId": "heal",
+          "target": {
+            "kind": "ally",
+            "id": 1
+          }
+        }
+      }
+    },
+    {
+      "tick": 9113,
+      "order": 390,
+      "command": {
+        "type": "removePlan",
+        "id": 0,
+        "key": 237
+      }
+    },
+    {
+      "tick": 9113,
+      "order": 391,
+      "command": {
+        "type": "removePlan",
+        "id": 0,
+        "key": 241
+      }
+    },
+    {
+      "tick": 9113,
+      "order": 392,
+      "command": {
+        "type": "move",
+        "id": 0,
+        "row": "front"
+      }
+    },
+    {
+      "tick": 9113,
+      "order": 393,
+      "command": {
+        "type": "removePlan",
+        "id": 1,
+        "key": 236
+      }
+    },
+    {
+      "tick": 9113,
+      "order": 394,
+      "command": {
+        "type": "removePlan",
+        "id": 1,
+        "key": 240
+      }
+    },
+    {
+      "tick": 9113,
+      "order": 395,
+      "command": {
+        "type": "move",
+        "id": 1,
+        "row": "front"
+      }
+    },
+    {
+      "tick": 9158,
+      "order": 396,
+      "command": {
+        "type": "enqueue",
+        "id": 2,
+        "step": {
+          "kind": "skill",
+          "skillId": "heal",
+          "target": {
+            "kind": "ally",
+            "id": 1
+          }
+        }
+      }
+    },
+    {
+      "tick": 9173,
+      "order": 397,
+      "command": {
+        "type": "enqueue",
+        "id": 0,
+        "step": {
+          "kind": "skill",
+          "skillId": "sweep",
+          "target": {
+            "kind": "row",
+            "row": "front"
+          }
+        }
+      }
+    },
+    {
+      "tick": 9173,
+      "order": 398,
+      "command": {
+        "type": "enqueue",
+        "id": 1,
+        "step": {
+          "kind": "skill",
+          "skillId": "volley",
+          "target": {
+            "kind": "row",
+            "row": "front"
+          }
+        }
+      }
+    },
+    {
+      "tick": 9188,
+      "order": 399,
+      "command": {
+        "type": "enqueue",
+        "id": 0,
+        "step": {
+          "kind": "skill",
+          "skillId": "sweep",
+          "target": {
+            "kind": "row",
+            "row": "front"
+          }
+        }
+      }
+    },
+    {
+      "tick": 9188,
+      "order": 400,
+      "command": {
+        "type": "enqueue",
+        "id": 1,
+        "step": {
+          "kind": "skill",
+          "skillId": "volley",
+          "target": {
+            "kind": "row",
+            "row": "front"
+          }
+        }
+      }
+    },
+    {
+      "tick": 9248,
+      "order": 401,
+      "command": {
+        "type": "removePlan",
+        "id": 0,
+        "key": 244
+      }
+    },
+    {
+      "tick": 9248,
+      "order": 402,
+      "command": {
+        "type": "removePlan",
+        "id": 0,
+        "key": 246
+      }
+    },
+    {
+      "tick": 9248,
+      "order": 403,
+      "command": {
+        "type": "enqueue",
+        "id": 0,
+        "step": {
+          "kind": "skill",
+          "skillId": "guard",
+          "target": {
+            "kind": "ally",
+            "id": 0
+          }
+        }
+      }
+    },
+    {
+      "tick": 9248,
+      "order": 404,
+      "command": {
+        "type": "removePlan",
+        "id": 1,
+        "key": 245
+      }
+    },
+    {
+      "tick": 9248,
+      "order": 405,
+      "command": {
+        "type": "removePlan",
+        "id": 1,
+        "key": 247
+      }
+    },
+    {
+      "tick": 9248,
+      "order": 406,
+      "command": {
+        "type": "enqueue",
+        "id": 1,
+        "step": {
+          "kind": "skill",
+          "skillId": "guard",
+          "target": {
+            "kind": "ally",
+            "id": 1
+          }
+        }
+      }
+    },
+    {
+      "tick": 9248,
+      "order": 407,
+      "command": {
+        "type": "removePlan",
+        "id": 2,
+        "key": 243
+      }
+    },
+    {
+      "tick": 9248,
+      "order": 408,
+      "command": {
+        "type": "enqueue",
+        "id": 2,
+        "step": {
+          "kind": "skill",
+          "skillId": "guard",
+          "target": {
+            "kind": "ally",
+            "id": 2
+          }
+        }
+      }
+    },
+    {
+      "tick": 9263,
+      "order": 409,
+      "command": {
+        "type": "move",
+        "id": 0,
+        "row": "back"
+      }
+    },
+    {
+      "tick": 9263,
+      "order": 410,
+      "command": {
+        "type": "move",
+        "id": 1,
+        "row": "back"
+      }
+    },
+    {
+      "tick": 9263,
+      "order": 411,
+      "command": {
+        "type": "removePlan",
+        "id": 2,
+        "key": 250
+      }
+    },
+    {
+      "tick": 9263,
+      "order": 412,
+      "command": {
+        "type": "move",
+        "id": 2,
+        "row": "back"
+      }
+    },
+    {
+      "tick": 9323,
+      "order": 413,
+      "command": {
+        "type": "enqueue",
+        "id": 0,
+        "step": {
+          "kind": "skill",
+          "skillId": "sweep",
+          "target": {
+            "kind": "row",
+            "row": "front"
+          }
+        }
+      }
+    },
+    {
+      "tick": 9323,
+      "order": 414,
+      "command": {
+        "type": "enqueue",
+        "id": 1,
+        "step": {
+          "kind": "skill",
+          "skillId": "volley",
+          "target": {
+            "kind": "row",
+            "row": "front"
+          }
+        }
+      }
+    },
+    {
+      "tick": 9323,
+      "order": 415,
+      "command": {
+        "type": "enqueue",
+        "id": 2,
+        "step": {
+          "kind": "skill",
+          "skillId": "heal",
+          "target": {
+            "kind": "ally",
+            "id": 1
+          }
+        }
+      }
+    },
+    {
+      "tick": 9338,
+      "order": 416,
+      "command": {
+        "type": "enqueue",
+        "id": 0,
+        "step": {
+          "kind": "skill",
+          "skillId": "sweep",
+          "target": {
+            "kind": "row",
+            "row": "front"
+          }
+        }
+      }
+    },
+    {
+      "tick": 9338,
+      "order": 417,
+      "command": {
+        "type": "enqueue",
+        "id": 1,
+        "step": {
+          "kind": "skill",
+          "skillId": "volley",
+          "target": {
+            "kind": "row",
+            "row": "front"
+          }
+        }
+      }
+    },
+    {
+      "tick": 9398,
+      "order": 418,
+      "command": {
+        "type": "enqueue",
+        "id": 2,
+        "step": {
+          "kind": "skill",
+          "skillId": "heal",
+          "target": {
+            "kind": "ally",
+            "id": 1
+          }
+        }
+      }
+    },
+    {
+      "tick": 9458,
+      "order": 419,
+      "command": {
+        "type": "enqueue",
+        "id": 1,
+        "step": {
+          "kind": "skill",
+          "skillId": "volley",
+          "target": {
+            "kind": "row",
+            "row": "front"
+          }
+        }
+      }
+    },
+    {
+      "tick": 9473,
+      "order": 420,
+      "command": {
+        "type": "removePlan",
+        "id": 1,
+        "key": 255
+      }
+    },
+    {
+      "tick": 9473,
+      "order": 421,
+      "command": {
+        "type": "removePlan",
+        "id": 1,
+        "key": 257
+      }
+    },
+    {
+      "tick": 9473,
+      "order": 422,
+      "command": {
+        "type": "removePlan",
+        "id": 2,
+        "key": 256
+      }
+    },
+    {
+      "tick": 9473,
+      "order": 423,
+      "command": {
+        "type": "optima",
+        "index": 1
+      }
+    },
+    {
+      "tick": 9488,
+      "order": 424,
+      "command": {
+        "type": "enqueue",
+        "id": 0,
+        "step": {
+          "kind": "skill",
+          "skillId": "sweep",
+          "target": {
+            "kind": "row",
+            "row": "front"
+          }
+        }
+      }
+    },
+    {
+      "tick": 9593,
+      "order": 425,
+      "command": {
+        "type": "removePlan",
+        "id": 0,
+        "key": 254
+      }
+    },
+    {
+      "tick": 9593,
+      "order": 426,
+      "command": {
+        "type": "removePlan",
+        "id": 0,
+        "key": 258
+      }
+    },
+    {
+      "tick": 9593,
+      "order": 427,
+      "command": {
+        "type": "move",
+        "id": 0,
+        "row": "front"
+      }
+    },
+    {
+      "tick": 9593,
+      "order": 428,
+      "command": {
+        "type": "move",
+        "id": 2,
+        "row": "front"
+      }
+    },
+    {
+      "tick": 9653,
+      "order": 429,
+      "command": {
+        "type": "enqueue",
+        "id": 0,
+        "step": {
+          "kind": "skill",
+          "skillId": "sweep",
+          "target": {
+            "kind": "row",
+            "row": "front"
+          }
+        }
+      }
+    },
+    {
+      "tick": 9653,
+      "order": 430,
+      "command": {
+        "type": "enqueue",
+        "id": 2,
+        "step": {
+          "kind": "skill",
+          "skillId": "jab",
+          "target": {
+            "kind": "enemy",
+            "id": 1
+          }
+        }
+      }
+    },
+    {
+      "tick": 9668,
+      "order": 431,
+      "command": {
+        "type": "enqueue",
+        "id": 0,
+        "step": {
+          "kind": "skill",
+          "skillId": "sweep",
+          "target": {
+            "kind": "row",
+            "row": "front"
+          }
+        }
+      }
+    },
+    {
+      "tick": 9668,
+      "order": 432,
+      "command": {
+        "type": "enqueue",
+        "id": 2,
+        "step": {
+          "kind": "skill",
+          "skillId": "jab",
+          "target": {
+            "kind": "enemy",
+            "id": 1
+          }
+        }
+      }
+    },
+    {
+      "tick": 9683,
+      "order": 433,
+      "command": {
+        "type": "move",
+        "id": 1,
+        "row": "front"
+      }
+    },
+    {
+      "tick": 9683,
+      "order": 434,
+      "command": {
+        "type": "enqueue",
+        "id": 2,
+        "step": {
+          "kind": "skill",
+          "skillId": "jab",
+          "target": {
+            "kind": "enemy",
+            "id": 1
+          }
+        }
+      }
+    },
+    {
+      "tick": 9698,
+      "order": 435,
+      "command": {
+        "type": "enqueue",
+        "id": 2,
+        "step": {
+          "kind": "skill",
+          "skillId": "jab",
+          "target": {
+            "kind": "enemy",
+            "id": 1
+          }
+        }
+      }
+    },
+    {
+      "tick": 9743,
+      "order": 436,
+      "command": {
+        "type": "removePlan",
+        "id": 0,
+        "key": 259
+      }
+    },
+    {
+      "tick": 9743,
+      "order": 437,
+      "command": {
+        "type": "removePlan",
+        "id": 0,
+        "key": 261
+      }
+    },
+    {
+      "tick": 9743,
+      "order": 438,
+      "command": {
+        "type": "enqueue",
+        "id": 0,
+        "step": {
+          "kind": "weapon",
+          "slot": 1
+        }
+      }
+    },
+    {
+      "tick": 9788,
+      "order": 439,
+      "command": {
+        "type": "move",
+        "id": 0,
+        "row": "back"
+      }
+    },
+    {
+      "tick": 9788,
+      "order": 440,
+      "command": {
+        "type": "move",
+        "id": 1,
+        "row": "back"
+      }
+    },
+    {
+      "tick": 9788,
+      "order": 441,
+      "command": {
+        "type": "removePlan",
+        "id": 2,
+        "key": 262
+      }
+    },
+    {
+      "tick": 9788,
+      "order": 442,
+      "command": {
+        "type": "removePlan",
+        "id": 2,
+        "key": 263
+      }
+    },
+    {
+      "tick": 9788,
+      "order": 443,
+      "command": {
+        "type": "removePlan",
+        "id": 2,
+        "key": 264
+      }
+    },
+    {
+      "tick": 9788,
+      "order": 444,
+      "command": {
+        "type": "move",
+        "id": 2,
+        "row": "back"
+      }
+    },
+    {
+      "tick": 9848,
+      "order": 445,
+      "command": {
+        "type": "enqueue",
+        "id": 0,
+        "step": {
+          "kind": "skill",
+          "skillId": "ward",
+          "target": {
+            "kind": "ally",
+            "id": 1
+          }
+        }
+      }
+    },
+    {
+      "tick": 9848,
+      "order": 446,
+      "command": {
+        "type": "enqueue",
+        "id": 1,
+        "step": {
+          "kind": "skill",
+          "skillId": "rain",
+          "target": {
+            "kind": "row",
+            "row": "front"
+          }
+        }
+      }
+    },
+    {
+      "tick": 9848,
+      "order": 447,
+      "command": {
+        "type": "enqueue",
+        "id": 2,
+        "step": {
+          "kind": "skill",
+          "skillId": "jab",
+          "target": {
+            "kind": "enemy",
+            "id": 1
+          }
+        }
+      }
+    },
+    {
+      "tick": 9863,
+      "order": 448,
+      "command": {
+        "type": "enqueue",
+        "id": 1,
+        "step": {
+          "kind": "skill",
+          "skillId": "rain",
+          "target": {
+            "kind": "row",
+            "row": "front"
+          }
+        }
+      }
+    },
+    {
+      "tick": 9863,
+      "order": 449,
+      "command": {
+        "type": "enqueue",
+        "id": 2,
+        "step": {
+          "kind": "skill",
+          "skillId": "jab",
+          "target": {
+            "kind": "enemy",
+            "id": 1
+          }
+        }
+      }
+    },
+    {
+      "tick": 9878,
+      "order": 450,
+      "command": {
+        "type": "enqueue",
+        "id": 2,
+        "step": {
+          "kind": "skill",
+          "skillId": "jab",
+          "target": {
+            "kind": "enemy",
+            "id": 1
+          }
+        }
+      }
+    },
+    {
+      "tick": 9938,
+      "order": 451,
+      "command": {
+        "type": "enqueue",
+        "id": 2,
+        "step": {
+          "kind": "skill",
+          "skillId": "jab",
+          "target": {
+            "kind": "enemy",
+            "id": 1
+          }
+        }
+      }
+    },
+    {
+      "tick": 9968,
+      "order": 452,
+      "command": {
+        "type": "enqueue",
+        "id": 0,
+        "step": {
+          "kind": "skill",
+          "skillId": "ward",
+          "target": {
+            "kind": "ally",
+            "id": 1
+          }
+        }
+      }
+    },
+    {
+      "tick": 9968,
+      "order": 453,
+      "command": {
+        "type": "enqueue",
+        "id": 1,
+        "step": {
+          "kind": "skill",
+          "skillId": "rain",
+          "target": {
+            "kind": "row",
+            "row": "front"
+          }
+        }
+      }
+    },
+    {
+      "tick": 9983,
+      "order": 454,
+      "command": {
+        "type": "removePlan",
+        "id": 0,
+        "key": 273
+      }
+    },
+    {
+      "tick": 9983,
+      "order": 455,
+      "command": {
+        "type": "removePlan",
+        "id": 1,
+        "key": 269
+      }
+    },
+    {
+      "tick": 9983,
+      "order": 456,
+      "command": {
+        "type": "removePlan",
+        "id": 1,
+        "key": 274
+      }
+    },
+    {
+      "tick": 9983,
+      "order": 457,
+      "command": {
+        "type": "optima",
+        "index": 2
+      }
+    },
+    {
+      "tick": 10103,
+      "order": 458,
+      "command": {
+        "type": "enqueue",
+        "id": 0,
+        "step": {
+          "kind": "skill",
+          "skillId": "slash",
+          "target": {
+            "kind": "enemy",
+            "id": 0
+          }
+        }
+      }
+    },
+    {
+      "tick": 10118,
+      "order": 459,
+      "command": {
+        "type": "enqueue",
+        "id": 0,
+        "step": {
+          "kind": "skill",
+          "skillId": "slash",
+          "target": {
+            "kind": "enemy",
+            "id": 0
+          }
+        }
+      }
+    },
+    {
+      "tick": 10133,
+      "order": 460,
+      "command": {
+        "type": "enqueue",
+        "id": 0,
+        "step": {
+          "kind": "skill",
+          "skillId": "slash",
+          "target": {
+            "kind": "enemy",
+            "id": 0
+          }
+        }
+      }
+    },
+    {
+      "tick": 10133,
+      "order": 461,
+      "command": {
+        "type": "enqueue",
+        "id": 2,
+        "step": {
+          "kind": "skill",
+          "skillId": "jab",
+          "target": {
+            "kind": "enemy",
+            "id": 0
+          }
+        }
+      }
+    },
+    {
+      "tick": 10193,
+      "order": 462,
+      "command": {
+        "type": "enqueue",
+        "id": 0,
+        "step": {
+          "kind": "skill",
+          "skillId": "slash",
+          "target": {
+            "kind": "enemy",
+            "id": 0
+          }
+        }
+      }
+    },
+    {
+      "tick": 10193,
+      "order": 463,
+      "command": {
+        "type": "enqueue",
+        "id": 1,
+        "step": {
+          "kind": "skill",
+          "skillId": "shot",
+          "target": {
+            "kind": "enemy",
+            "id": 0
+          }
+        }
+      }
+    },
+    {
+      "tick": 10208,
+      "order": 464,
+      "command": {
+        "type": "enqueue",
+        "id": 1,
+        "step": {
+          "kind": "skill",
+          "skillId": "shot",
+          "target": {
+            "kind": "enemy",
+            "id": 0
+          }
+        }
+      }
+    },
+    {
+      "tick": 10223,
+      "order": 465,
+      "command": {
+        "type": "enqueue",
+        "id": 1,
+        "step": {
+          "kind": "skill",
+          "skillId": "shot",
+          "target": {
+            "kind": "enemy",
+            "id": 0
+          }
+        }
+      }
+    }
+  ],
+  "endTick": 10234
+}

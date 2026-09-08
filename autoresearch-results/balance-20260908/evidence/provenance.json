@@ -1,0 +1,409 @@
+{
+  "version": "orchestra-15",
+  "experimentVersion": "orchestra-15/policies-4/queue-policy-4/runner-5",
+  "gitHead": "bdf513cb169ceaa71b9ef8b47aadff298c70322c",
+  "createdAt": "2026-09-08T01:24:43.645Z",
+  "sourceHashes": {
+    "autoresearch-results/balance-20260908/contract.json": "31fdfe2fc9ca8a7638760d1a0f883af356a805384f2084a90fcb3cf971021e5e",
+    "scripts/balance-study.ts": "34f38a80a36b36f49f16fc2608603ca3d543b373fa7852b39213eb94398225d3",
+    "scripts/balance/break-probes.ts": "78f7b16530fd518c74c7df738270cc18fa698a20cce336ae27070a7ed469952a",
+    "scripts/balance/manual-probes.ts": "68523372cca1b465b8d8b96695e41900ba475ba61a778838ef08ca48f23bdf91",
+    "scripts/balance/search.ts": "739d65988c28e054db36af7ac1be9cc08eacbfda613b7ff484badb64c3e7901a",
+    "scripts/balance/telemetry.ts": "5545a1c7c9558abe57ba246e4c56f61b90e86b186e1a06d73c2731f8c86b64a7",
+    "src/ai/adaptive-policy.ts": "14b0980d525dd7b3bf11110b58ec223c4eb1bf48a69310c4b4b5a8796fbf845d",
+    "src/ai/composition.ts": "5fe07924426ba9981428c963030dfb16902a8bad984586d8703baa92db851da2",
+    "src/ai/observation.ts": "882568d07cdca5d4455f6ea16507415076678b6e5f32fbd6cc0fd7ed343b73f5",
+    "src/ai/policies.ts": "556c54d707fbcb6b5be26ad30a3ccb4a2e5075c3077389aeb8e4c4645c767906",
+    "src/ai/queue-policy.ts": "d2974df0426d92f1601030391568a18b04682332be28dc7338fa4bcaef4e3d57",
+    "src/ai/report.ts": "de56fca40f70304f0d1b9e0fd06b70fcc73ef408995f46e0513d51dcd975d5e0",
+    "src/ai/runner.ts": "237b4838232a4e7e476cc39c1ba95fc057a066c45314c3c114ca3853e97c3162",
+    "src/ai/watch-player.ts": "f621d6499e1ef620f4fdb5eaef20cffa010ec7f229c1fa2ba8b3f4ce2e7bc376",
+    "src/client/App.tsx": "fc3d817f69e00dd822e8eb4fe9b8ca01b834f398599176181bf01bffb65334a9",
+    "src/client/AtbTimeline.tsx": "2a6690504d4ff02fd902f124c167abf8bcd18ef37adffa95c5290fdfd8959b98",
+    "src/client/BattleTimeline.tsx": "44f9b4f5597172e102c061ef988a8ff029af52b4fab41ec4c85ad45994ba42dd",
+    "src/client/Battlefield.tsx": "36879905708f36cfa7239002222c51bb1f8664bd37d1db09df8b9d88ccf0f906",
+    "src/client/CombatLog.tsx": "5089d02e6427b7e56d4eea0f41f104d48ecbcda437f2f2876839c3d52c48d1d4",
+    "src/client/HandoffStatus.tsx": "31cb5d92bbd491d3fbe476349d006ee6df0dc746c5938a35117576e9cb393d56",
+    "src/client/Loadout.tsx": "459e4c647030b0e0c125104d94f46cfc50ac1f493284ddecf54b5dcc3363ef1c",
+    "src/client/PadBattleConsole.tsx": "ea056f7be2fd273db11057d557d6bb7f6de5c581813a9ee485e067802996711b",
+    "src/client/PadSettings.tsx": "5aeab9b04c497f4a4ac9eadeb3cadd253ecf9664378cda36b541871fa7bd8e57",
+    "src/client/PlaytestNotes.tsx": "1567c9dff061fe72dd3937f0a89c47e36c13e142003f1710379014ab93fc6f6e",
+    "src/client/TargetVisuals.tsx": "e72749691669f47efce0132efe7a44748b4a8fa5f7b94f91c91166b65a014b76",
+    "src/client/WatchConsole.tsx": "49aa21edeb394ff0055104d0dd5f11dbe9d4d9988791ebda196acc1d013d3c4e",
+    "src/client/audio/sound.ts": "0cc102d132872b48b8f0fcd21c5666973c123661e86ba3ed8375b62814da2265",
+    "src/client/console.css": "cedff21e48466b51f1f7a052ac0522df9ef5da90f799ac7fbc1c63a738db0bea",
+    "src/client/effects/BattleEffects.tsx": "fa9ea25943ea0be6a65ef20f3a6b5471ef61ceb84e55f01b6f2385f48a59d237",
+    "src/client/effects/Particles.tsx": "1bbcfde26c4726e20bc3d57ec498d7013d6596b0d229bcc35b58e2def8a815e3",
+    "src/client/effects/UnitEmblem.tsx": "b352d073c71fa163eafea6104f6a68b0aa57112f70f0853393704a3c735e3a47",
+    "src/client/effects/effects.css": "b8c7b6bc92db50f0efb02ef1acac0cdb54312ce069fa7e455d0b13e7ff4dcbd7",
+    "src/client/effects/events.ts": "14a5926b95c81f8fc9487832a927070254996ae4645347b5dd6d69ce534dd3e4",
+    "src/client/effects/geometry.ts": "0cc71caf1b7aad76433d14f9c5c0c78f3e255b2f001ea7363308d70e1b2d4640",
+    "src/client/formation-ui.css": "53d588456410e4a6a2fb61d836b169e636ba983e65f959c1a14b31b7f99040a8",
+    "src/client/main.tsx": "aea5e7351c74666256b1294d83a7de9a08ee5b00ae0b6dcbe3ab6eb87214996f",
+    "src/client/pad-battle.css": "3eca3b3f15a1ba603e12a68af5bd688b0d7ed891a32741c2339ed3afdaa7388b",
+    "src/client/playtest.css": "713efafb760d663b1d0adbb1af0d9e842af8c9859ba51e145b1b75ad0c40a7f5",
+    "src/client/style.css": "3951f9511e7659a9a68c6a4dd2553a5889d81a94412c32fad5b8b029d2d1c377",
+    "src/client/timeline.css": "88505dd38b3222ab859f249ea8c9c3a768980229d8ad0c3b2c4594140e816d54",
+    "src/client/timing.ts": "cda2f3ee7c5f97fe0cb0769092ea9ed8cd28de64ca67cdd11dc9dbba679357f3",
+    "src/client/useGamepad.ts": "c09c9bf592013cb364f63d3e22acf3959ee69ccaaa741b654b580eff267ea06e",
+    "src/client/watch.css": "b532830e263e3b2bf08461d1cf91f96172ff328e35f48dfae4d787dd15502bb7",
+    "src/content/data.ts": "cbb5cd092d81546e6cf02c34c863d57f7271033cc2ce083614975492791ae69c",
+    "src/content/encounters.ts": "f3cbd21f14a302433ec5f447517f1d93eea763d46c50184ed4a0d0f91bda0f21",
+    "src/content/rules.ts": "63f0d0810adf96d7ca8ee6a8528eac47e3ca710ddf3018536b6d65b756bee837",
+    "src/input/battle-pad.ts": "ca3d9a828a0b1d4a95896e1ab2e24c8e37e1b7c72cbdab052eaaa10fcbde1421",
+    "src/input/field-navigation.ts": "6df2d177bcebd8545eb5e9eb221a762da033560f81c6f73ef9b31c598c67c304",
+    "src/input/gamepad.ts": "31b7ccd41a84ad77d51558fda64943b00e8627a6efe2b830931cb3bd82ca4816",
+    "src/input/navigation.ts": "9b688ed7a677fe8266febb785af9072da50bb83c16b5f7b50a2faa999364ecd8",
+    "src/lab/playtest.ts": "a4536dc91681abb38a89fc49276ed1994cec961c7d322dc9f50ee4c4b1a2607b",
+    "src/lab/session.ts": "d7131b2b7de03efe13d0c44ddbb75ddc9fce4aae978a2d566885044f48f05998",
+    "src/lab/timeline.ts": "dc2bb1de768d06cf6e44a9cf70675e06e32fe0e345caa4a83b31e2f30593b569",
+    "src/lab/validation.ts": "9dbe09746e92185369b8f0f11cd94a6ecb32a1c321c3f10fd2ad5f61a74fa196",
+    "src/sim/bonuses.ts": "15ecf72709e266fe76c3c70072f40b7c5ea2e8af205038c773bb218aa5d0c63f",
+    "src/sim/engine.ts": "ecc8e4c8b4e8e2de10b9f3761cad360abf5f12c579d5f7773c24abeac1a58e2c",
+    "src/sim/execution.ts": "c5871034e8584320451a18780d6331f60b46eb25b04efd00167a042d1e5bd9f1",
+    "src/sim/plan.ts": "81f13f195a2e0f76d1e8686090275129c2eb91cf25d2f4eedc859e8085007c92",
+    "src/sim/tactics.ts": "1cdc78f16858fa4e8614094edbf13c7ecdc2c5e8f894c952e1607f93a90a6957",
+    "src/sim/targeting.ts": "123c9b0456ec05a83bdd3ec6dd396fc61f22237c642f035d2da1d1c272b6b213",
+    "src/sim/types.ts": "9274ed0486439c3e08eb7cb837ee7db088d5d3d2fb2c7b437b014b3affbac66a"
+  },
+  "rules": {
+    "bonuses": {
+      "modest": {
+        "A": 0.1,
+        "B": 0.15,
+        "D": 0.1,
+        "S": 0.075
+      },
+      "none": {
+        "A": 0,
+        "B": 0,
+        "D": 0,
+        "S": 0
+      },
+      "strong": {
+        "A": 0.25,
+        "B": 0.3,
+        "D": 0.2,
+        "S": 0.15
+      }
+    },
+    "rules": {
+      "breakThreshold": 200,
+      "chainMax": 500,
+      "focusActivation": 4,
+      "frontChain": 1.25,
+      "frontDamage": 1.25,
+      "rearMeleeDamage": 0.85,
+      "rearTaken": 0.72,
+      "shieldTaken": 0.5,
+      "slowScale": 0.25,
+      "weaponBreakDamage": 1.35,
+      "weaponFrontChain": 1.2
+    },
+    "skills": [
+      {
+        "cast": 0.9,
+        "chain": 3,
+        "cost": 1,
+        "effect": "damage",
+        "hold": 6.08,
+        "id": "slash",
+        "link": 0.2,
+        "power": 85,
+        "recovery": 1,
+        "target": "enemy"
+      },
+      {
+        "cast": 1.8,
+        "chain": 4,
+        "cost": 2,
+        "effect": "damage",
+        "hold": 6.4,
+        "id": "sweep",
+        "power": 130,
+        "recovery": 1.2,
+        "target": "enemyRow"
+      },
+      {
+        "cast": 1,
+        "chain": 3,
+        "cost": 1,
+        "effect": "damage",
+        "hold": 6.08,
+        "id": "shot",
+        "link": 0.2,
+        "power": 76,
+        "recovery": 0.9,
+        "target": "enemy"
+      },
+      {
+        "cast": 1.9,
+        "chain": 4,
+        "cost": 2,
+        "effect": "damage",
+        "hold": 6.08,
+        "id": "volley",
+        "power": 118,
+        "recovery": 1.2,
+        "target": "enemyRow"
+      },
+      {
+        "cast": 1,
+        "chain": 15,
+        "cost": 1,
+        "effect": "damage",
+        "hold": 0.96,
+        "id": "spark",
+        "link": 0.2,
+        "power": 28,
+        "recovery": 0.9,
+        "target": "enemy"
+      },
+      {
+        "cast": 2,
+        "chain": 22,
+        "cost": 2,
+        "effect": "damage",
+        "hold": 1.28,
+        "id": "rain",
+        "power": 40,
+        "recovery": 1.2,
+        "target": "enemyRow"
+      },
+      {
+        "cast": 0.9,
+        "chain": 14,
+        "cost": 1,
+        "effect": "damage",
+        "hold": 0.96,
+        "id": "jab",
+        "link": 0.2,
+        "power": 32,
+        "recovery": 1,
+        "target": "enemy"
+      },
+      {
+        "cast": 1.1,
+        "chain": 19,
+        "cost": 2,
+        "effect": "pull",
+        "hold": 1.12,
+        "id": "pull",
+        "power": 38,
+        "recovery": 1.1,
+        "target": "enemy"
+      },
+      {
+        "cast": 1.15,
+        "chain": 16,
+        "cost": 1,
+        "effect": "damage",
+        "hold": 0.96,
+        "id": "smash",
+        "link": 0.2,
+        "power": 42,
+        "recovery": 1.05,
+        "target": "enemy"
+      },
+      {
+        "cast": 1.8,
+        "chain": 25,
+        "cost": 2,
+        "effect": "push",
+        "hold": 1.28,
+        "id": "push",
+        "power": 68,
+        "recovery": 1.2,
+        "target": "enemy"
+      },
+      {
+        "cast": 1.2,
+        "chain": 0,
+        "cost": 1,
+        "effect": "heal",
+        "hold": 0,
+        "id": "heal",
+        "link": 0.2,
+        "power": 190,
+        "recovery": 0.9,
+        "target": "ally"
+      },
+      {
+        "cast": 1.9,
+        "chain": 0,
+        "cost": 2,
+        "effect": "heal",
+        "hold": 0,
+        "id": "greatHeal",
+        "power": 460,
+        "recovery": 1.2,
+        "target": "ally"
+      },
+      {
+        "cast": 0.7,
+        "chain": 0,
+        "cost": 1,
+        "effect": "shield",
+        "hold": 0,
+        "id": "ward",
+        "power": 0,
+        "recovery": 0.9,
+        "target": "ally"
+      },
+      {
+        "cast": 1.2,
+        "chain": 0,
+        "cost": 2,
+        "effect": "shield",
+        "hold": 0,
+        "id": "rampart",
+        "power": 0,
+        "recovery": 1.1,
+        "target": "allyRow"
+      },
+      {
+        "cast": 0.45,
+        "chain": 0,
+        "cost": 2,
+        "effect": "evacuate",
+        "hold": 0,
+        "id": "evacuate",
+        "power": 0,
+        "recovery": 1.15,
+        "target": "allyRow"
+      },
+      {
+        "cast": 0.4,
+        "chain": 0,
+        "cost": 1,
+        "effect": "guard",
+        "hold": 0,
+        "id": "guard",
+        "power": 0,
+        "recovery": 1,
+        "target": "self"
+      },
+      {
+        "cast": 0.6,
+        "chain": 0,
+        "cost": 0,
+        "effect": "potion",
+        "hold": 0,
+        "id": "potion",
+        "power": 400,
+        "recovery": 1,
+        "target": "ally"
+      },
+      {
+        "cast": 0.6,
+        "chain": 0,
+        "cost": 1,
+        "effect": "handoff",
+        "hold": 0,
+        "id": "handoff",
+        "power": 0,
+        "recovery": 0,
+        "target": "ally"
+      }
+    ],
+    "timing": {
+      "breakDuration": 12,
+      "chainDecay": 7,
+      "enemyIntervalScale": 1.5,
+      "enemyWindupScale": 1.6,
+      "guardDuration": 6,
+      "handoffSlow": 0.8,
+      "shieldDuration": 9,
+      "steadfastDuration": 3
+    },
+    "version": "orchestra-15",
+    "weapons": [
+      {
+        "id": "sword",
+        "melee": true,
+        "role": "A",
+        "skills": [
+          "slash",
+          "sweep"
+        ]
+      },
+      {
+        "id": "shield",
+        "melee": true,
+        "role": "D",
+        "skills": [
+          "ward",
+          "rampart"
+        ]
+      },
+      {
+        "id": "staff",
+        "melee": false,
+        "role": "B",
+        "skills": [
+          "spark",
+          "rain"
+        ]
+      },
+      {
+        "id": "bow",
+        "melee": false,
+        "role": "A",
+        "skills": [
+          "shot",
+          "volley"
+        ]
+      },
+      {
+        "id": "bell",
+        "melee": false,
+        "role": "S",
+        "skills": [
+          "heal",
+          "greatHeal"
+        ]
+      },
+      {
+        "id": "hook",
+        "melee": true,
+        "role": "B",
+        "skills": [
+          "jab",
+          "pull"
+        ]
+      },
+      {
+        "bonus": "frontChain",
+        "id": "hammer",
+        "melee": true,
+        "role": "B",
+        "skills": [
+          "smash",
+          "push"
+        ]
+      },
+      {
+        "bonus": "breakDamage",
+        "id": "starbow",
+        "melee": false,
+        "role": "A",
+        "skills": [
+          "shot",
+          "volley"
+        ]
+      },
+      {
+        "id": "banner",
+        "melee": false,
+        "role": "S",
+        "skills": [
+          "ward",
+          "evacuate"
+        ]
+      }
+    ]
+  },
+  "reproduction": "npm run sim:balance -- <new-output-directory>",
+  "node": "v26.0.0",
+  "scope": "Only existing Config values vary. No product constants are modified."
+}

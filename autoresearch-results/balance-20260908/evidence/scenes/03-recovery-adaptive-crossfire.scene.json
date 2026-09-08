@@ -1,0 +1,774 @@
+{
+  "version": "orchestra-15",
+  "initial": {
+    "version": "orchestra-15",
+    "controlMode": "ai",
+    "phase": "ready",
+    "paused": false,
+    "tick": 0,
+    "time": 0,
+    "realTime": 0,
+    "focus": 100,
+    "timeMode": "normal",
+    "rng": 2602,
+    "config": {
+      "bonusMode": "strong",
+      "enemyHpScale": 1,
+      "atbMax": 4,
+      "encounterSet": "crossfire",
+      "encounterLevel": 2,
+      "seed": 2602,
+      "atbRate": 0.85,
+      "atbMode": "idle",
+      "chainActions": true,
+      "moveTime": 0.85,
+      "shiftTime": 0.65,
+      "slowDrain": 4,
+      "enemyPower": 1,
+      "uiMode": "separate",
+      "encounter": 1
+    },
+    "encounter": 1,
+    "selected": 0,
+    "pendingSelect": null,
+    "handoffSlow": 0,
+    "allies": [
+      {
+        "id": 0,
+        "name": "アルト",
+        "initial": "A",
+        "color": "#ddaa63",
+        "hp": 1300,
+        "maxHp": 1300,
+        "atb": 1,
+        "row": "front",
+        "weapons": [
+          "sword",
+          "shield"
+        ],
+        "slot": 0,
+        "nextSlot": null,
+        "nextRow": null,
+        "shift": 0,
+        "move": 0,
+        "action": null,
+        "queued": null,
+        "draft": [],
+        "sequences": [],
+        "shield": 0,
+        "executionHeld": false
+      },
+      {
+        "id": 1,
+        "name": "リネ",
+        "initial": "L",
+        "color": "#77bdc2",
+        "hp": 1100,
+        "maxHp": 1100,
+        "atb": 1,
+        "row": "back",
+        "weapons": [
+          "staff",
+          "bow"
+        ],
+        "slot": 0,
+        "nextSlot": null,
+        "nextRow": null,
+        "shift": 0,
+        "move": 0,
+        "action": null,
+        "queued": null,
+        "draft": [],
+        "sequences": [],
+        "shield": 0,
+        "executionHeld": false
+      },
+      {
+        "id": 2,
+        "name": "セナ",
+        "initial": "S",
+        "color": "#bea4dc",
+        "hp": 1150,
+        "maxHp": 1150,
+        "atb": 1,
+        "row": "back",
+        "weapons": [
+          "bell",
+          "hook"
+        ],
+        "slot": 0,
+        "nextSlot": null,
+        "nextRow": null,
+        "shift": 0,
+        "move": 0,
+        "action": null,
+        "queued": null,
+        "draft": [],
+        "sequences": [],
+        "shield": 0,
+        "executionHeld": false
+      }
+    ],
+    "enemies": [
+      {
+        "id": 0,
+        "name": "砲列の衛兵",
+        "glyph": "♜",
+        "kind": "guard",
+        "hp": 2080,
+        "maxHp": 2080,
+        "row": "front",
+        "chain": 100,
+        "hold": 0,
+        "broken": 0,
+        "nextAttack": 3.9000000000000004,
+        "steadfast": 0,
+        "attackCount": 0,
+        "cast": null
+      },
+      {
+        "id": 1,
+        "name": "後列狙いの砲手",
+        "glyph": "♝",
+        "kind": "cannon",
+        "hp": 1625,
+        "maxHp": 1625,
+        "row": "back",
+        "chain": 100,
+        "hold": 0,
+        "broken": 0,
+        "nextAttack": 4.199999999999999,
+        "steadfast": 0,
+        "attackCount": 0,
+        "cast": null
+      },
+      {
+        "id": 2,
+        "name": "前列狙いの砲手",
+        "glyph": "♝",
+        "kind": "cannon",
+        "hp": 1625,
+        "maxHp": 1625,
+        "row": "back",
+        "chain": 100,
+        "hold": 0,
+        "broken": 0,
+        "nextAttack": 4.199999999999999,
+        "steadfast": 0,
+        "attackCount": 0,
+        "cast": null
+      }
+    ],
+    "presets": [
+      {
+        "name": "均衡の調べ",
+        "slots": [
+          0,
+          0,
+          0
+        ],
+        "rows": [
+          "front",
+          "back",
+          "back"
+        ]
+      },
+      {
+        "name": "崩しの連奏",
+        "slots": [
+          0,
+          0,
+          1
+        ],
+        "rows": [
+          "front",
+          "front",
+          "back"
+        ]
+      },
+      {
+        "name": "終幕の一撃",
+        "slots": [
+          0,
+          1,
+          1
+        ],
+        "rows": [
+          "front",
+          "back",
+          "back"
+        ]
+      },
+      {
+        "name": "崩し・防護・支援",
+        "slots": [
+          1,
+          0,
+          0
+        ],
+        "rows": [
+          "back",
+          "back",
+          "back"
+        ]
+      }
+    ],
+    "formations": [
+      {
+        "name": "全員後列",
+        "rows": [
+          "back",
+          "back",
+          "back"
+        ]
+      },
+      {
+        "name": "前衛1・後衛2",
+        "rows": [
+          "front",
+          "back",
+          "back"
+        ]
+      },
+      {
+        "name": "全員前列",
+        "rows": [
+          "front",
+          "front",
+          "front"
+        ]
+      }
+    ],
+    "activePreset": 0,
+    "inventory": [
+      "sword",
+      "shield",
+      "staff",
+      "bow",
+      "bell",
+      "hook"
+    ],
+    "potions": 3,
+    "events": [],
+    "eventSeq": 0,
+    "metrics": {
+      "damage": 0,
+      "taken": 0,
+      "healed": 0,
+      "breaks": 0,
+      "inputs": 0,
+      "focusUsed": 0
+    }
+  },
+  "inputs": [
+    {
+      "tick": 0,
+      "order": 0,
+      "command": {
+        "type": "start"
+      }
+    },
+    {
+      "tick": 0,
+      "order": 1,
+      "command": {
+        "type": "optima",
+        "index": 1
+      }
+    },
+    {
+      "tick": 15,
+      "order": 2,
+      "command": {
+        "type": "enqueue",
+        "id": 0,
+        "step": {
+          "kind": "skill",
+          "skillId": "slash",
+          "target": {
+            "kind": "enemy",
+            "id": 0
+          }
+        }
+      }
+    },
+    {
+      "tick": 15,
+      "order": 3,
+      "command": {
+        "type": "enqueue",
+        "id": 1,
+        "step": {
+          "kind": "skill",
+          "skillId": "rain",
+          "target": {
+            "kind": "row",
+            "row": "back"
+          }
+        }
+      }
+    },
+    {
+      "tick": 30,
+      "order": 4,
+      "command": {
+        "type": "enqueue",
+        "id": 0,
+        "step": {
+          "kind": "skill",
+          "skillId": "sweep",
+          "target": {
+            "kind": "row",
+            "row": "back"
+          }
+        }
+      }
+    },
+    {
+      "tick": 30,
+      "order": 5,
+      "command": {
+        "type": "enqueue",
+        "id": 1,
+        "step": {
+          "kind": "skill",
+          "skillId": "rain",
+          "target": {
+            "kind": "row",
+            "row": "back"
+          }
+        }
+      }
+    },
+    {
+      "tick": 45,
+      "order": 6,
+      "command": {
+        "type": "enqueue",
+        "id": 0,
+        "step": {
+          "kind": "skill",
+          "skillId": "sweep",
+          "target": {
+            "kind": "row",
+            "row": "back"
+          }
+        }
+      }
+    },
+    {
+      "tick": 45,
+      "order": 7,
+      "command": {
+        "type": "enqueue",
+        "id": 2,
+        "step": {
+          "kind": "skill",
+          "skillId": "pull",
+          "target": {
+            "kind": "enemy",
+            "id": 1
+          }
+        }
+      }
+    },
+    {
+      "tick": 75,
+      "order": 8,
+      "command": {
+        "type": "enqueue",
+        "id": 1,
+        "step": {
+          "kind": "skill",
+          "skillId": "rain",
+          "target": {
+            "kind": "row",
+            "row": "back"
+          }
+        }
+      }
+    },
+    {
+      "tick": 120,
+      "order": 9,
+      "command": {
+        "type": "enqueue",
+        "id": 2,
+        "step": {
+          "kind": "skill",
+          "skillId": "pull",
+          "target": {
+            "kind": "enemy",
+            "id": 1
+          }
+        }
+      }
+    },
+    {
+      "tick": 285,
+      "order": 10,
+      "command": {
+        "type": "enqueue",
+        "id": 0,
+        "step": {
+          "kind": "skill",
+          "skillId": "sweep",
+          "target": {
+            "kind": "row",
+            "row": "front"
+          }
+        }
+      }
+    },
+    {
+      "tick": 285,
+      "order": 11,
+      "command": {
+        "type": "removePlan",
+        "id": 1,
+        "key": 4
+      }
+    },
+    {
+      "tick": 285,
+      "order": 12,
+      "command": {
+        "type": "removePlan",
+        "id": 1,
+        "key": 7
+      }
+    },
+    {
+      "tick": 285,
+      "order": 13,
+      "command": {
+        "type": "enqueue",
+        "id": 1,
+        "step": {
+          "kind": "skill",
+          "skillId": "guard",
+          "target": {
+            "kind": "ally",
+            "id": 1
+          }
+        }
+      }
+    },
+    {
+      "tick": 285,
+      "order": 14,
+      "command": {
+        "type": "removePlan",
+        "id": 2,
+        "key": 8
+      }
+    },
+    {
+      "tick": 285,
+      "order": 15,
+      "command": {
+        "type": "enqueue",
+        "id": 2,
+        "step": {
+          "kind": "skill",
+          "skillId": "guard",
+          "target": {
+            "kind": "ally",
+            "id": 2
+          }
+        }
+      }
+    },
+    {
+      "tick": 315,
+      "order": 16,
+      "command": {
+        "type": "enqueue",
+        "id": 2,
+        "step": {
+          "kind": "skill",
+          "skillId": "jab",
+          "target": {
+            "kind": "enemy",
+            "id": 2
+          }
+        }
+      }
+    },
+    {
+      "tick": 330,
+      "order": 17,
+      "command": {
+        "type": "enqueue",
+        "id": 1,
+        "step": {
+          "kind": "skill",
+          "skillId": "rain",
+          "target": {
+            "kind": "row",
+            "row": "front"
+          }
+        }
+      }
+    },
+    {
+      "tick": 330,
+      "order": 18,
+      "command": {
+        "type": "enqueue",
+        "id": 2,
+        "step": {
+          "kind": "skill",
+          "skillId": "jab",
+          "target": {
+            "kind": "enemy",
+            "id": 2
+          }
+        }
+      }
+    },
+    {
+      "tick": 345,
+      "order": 19,
+      "command": {
+        "type": "enqueue",
+        "id": 1,
+        "step": {
+          "kind": "skill",
+          "skillId": "rain",
+          "target": {
+            "kind": "row",
+            "row": "front"
+          }
+        }
+      }
+    },
+    {
+      "tick": 345,
+      "order": 20,
+      "command": {
+        "type": "enqueue",
+        "id": 2,
+        "step": {
+          "kind": "skill",
+          "skillId": "jab",
+          "target": {
+            "kind": "enemy",
+            "id": 2
+          }
+        }
+      }
+    },
+    {
+      "tick": 360,
+      "order": 21,
+      "command": {
+        "type": "removePlan",
+        "id": 0,
+        "key": 5
+      }
+    },
+    {
+      "tick": 360,
+      "order": 22,
+      "command": {
+        "type": "removePlan",
+        "id": 0,
+        "key": 9
+      }
+    },
+    {
+      "tick": 360,
+      "order": 23,
+      "command": {
+        "type": "enqueue",
+        "id": 0,
+        "step": {
+          "kind": "weapon",
+          "slot": 1
+        }
+      }
+    },
+    {
+      "tick": 480,
+      "order": 24,
+      "command": {
+        "type": "enqueue",
+        "id": 0,
+        "step": {
+          "kind": "skill",
+          "skillId": "ward",
+          "target": {
+            "kind": "ally",
+            "id": 0
+          }
+        }
+      }
+    },
+    {
+      "tick": 480,
+      "order": 25,
+      "command": {
+        "type": "enqueue",
+        "id": 2,
+        "step": {
+          "kind": "skill",
+          "skillId": "pull",
+          "target": {
+            "kind": "enemy",
+            "id": 2
+          }
+        }
+      }
+    },
+    {
+      "tick": 555,
+      "order": 26,
+      "command": {
+        "type": "enqueue",
+        "id": 0,
+        "step": {
+          "kind": "skill",
+          "skillId": "ward",
+          "target": {
+            "kind": "ally",
+            "id": 0
+          }
+        }
+      }
+    },
+    {
+      "tick": 555,
+      "order": 27,
+      "command": {
+        "type": "enqueue",
+        "id": 1,
+        "step": {
+          "kind": "skill",
+          "skillId": "rain",
+          "target": {
+            "kind": "row",
+            "row": "front"
+          }
+        }
+      }
+    },
+    {
+      "tick": 600,
+      "order": 28,
+      "command": {
+        "type": "removePlan",
+        "id": 0,
+        "key": 20
+      }
+    },
+    {
+      "tick": 600,
+      "order": 29,
+      "command": {
+        "type": "removePlan",
+        "id": 2,
+        "key": 14
+      }
+    },
+    {
+      "tick": 600,
+      "order": 30,
+      "command": {
+        "type": "removePlan",
+        "id": 2,
+        "key": 16
+      }
+    },
+    {
+      "tick": 600,
+      "order": 31,
+      "command": {
+        "type": "removePlan",
+        "id": 2,
+        "key": 19
+      }
+    },
+    {
+      "tick": 600,
+      "order": 32,
+      "command": {
+        "type": "optima",
+        "index": 0
+      }
+    },
+    {
+      "tick": 645,
+      "order": 33,
+      "command": {
+        "type": "enqueue",
+        "id": 2,
+        "step": {
+          "kind": "skill",
+          "skillId": "heal",
+          "target": {
+            "kind": "ally",
+            "id": 0
+          }
+        }
+      }
+    },
+    {
+      "tick": 690,
+      "order": 34,
+      "command": {
+        "type": "enqueue",
+        "id": 0,
+        "step": {
+          "kind": "skill",
+          "skillId": "sweep",
+          "target": {
+            "kind": "row",
+            "row": "front"
+          }
+        }
+      }
+    },
+    {
+      "tick": 690,
+      "order": 35,
+      "command": {
+        "type": "enqueue",
+        "id": 2,
+        "step": {
+          "kind": "skill",
+          "skillId": "heal",
+          "target": {
+            "kind": "ally",
+            "id": 0
+          }
+        }
+      }
+    },
+    {
+      "tick": 705,
+      "order": 36,
+      "command": {
+        "type": "enqueue",
+        "id": 0,
+        "step": {
+          "kind": "skill",
+          "skillId": "sweep",
+          "target": {
+            "kind": "row",
+            "row": "front"
+          }
+        }
+      }
+    },
+    {
+      "tick": 785,
+      "order": 37,
+      "command": {
+        "type": "pause",
+        "value": true
+      }
+    }
+  ],
+  "endTick": 785
+}

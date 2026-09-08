@@ -1,0 +1,376 @@
+{
+  "version": "orchestra-15",
+  "initial": {
+    "version": "orchestra-15",
+    "controlMode": "ai",
+    "phase": "ready",
+    "paused": false,
+    "tick": 0,
+    "time": 0,
+    "realTime": 0,
+    "focus": 100,
+    "timeMode": "normal",
+    "rng": 2601,
+    "config": {
+      "bonusMode": "strong",
+      "enemyHpScale": 1.15,
+      "atbMax": 4,
+      "encounterSet": "crossfire",
+      "encounterLevel": 2,
+      "seed": 2601,
+      "atbRate": 0.7,
+      "atbMode": "idle",
+      "chainActions": true,
+      "moveTime": 0.85,
+      "shiftTime": 0.65,
+      "slowDrain": 4,
+      "enemyPower": 0.8,
+      "uiMode": "separate",
+      "encounter": 1
+    },
+    "encounter": 1,
+    "selected": 0,
+    "pendingSelect": null,
+    "handoffSlow": 0,
+    "allies": [
+      {
+        "id": 0,
+        "name": "アルト",
+        "initial": "A",
+        "color": "#ddaa63",
+        "hp": 1300,
+        "maxHp": 1300,
+        "atb": 1,
+        "row": "front",
+        "weapons": [
+          "sword",
+          "shield"
+        ],
+        "slot": 0,
+        "nextSlot": null,
+        "nextRow": null,
+        "shift": 0,
+        "move": 0,
+        "action": null,
+        "queued": null,
+        "draft": [],
+        "sequences": [],
+        "shield": 0,
+        "executionHeld": false
+      },
+      {
+        "id": 1,
+        "name": "リネ",
+        "initial": "L",
+        "color": "#77bdc2",
+        "hp": 1100,
+        "maxHp": 1100,
+        "atb": 1,
+        "row": "back",
+        "weapons": [
+          "staff",
+          "bow"
+        ],
+        "slot": 0,
+        "nextSlot": null,
+        "nextRow": null,
+        "shift": 0,
+        "move": 0,
+        "action": null,
+        "queued": null,
+        "draft": [],
+        "sequences": [],
+        "shield": 0,
+        "executionHeld": false
+      },
+      {
+        "id": 2,
+        "name": "セナ",
+        "initial": "S",
+        "color": "#bea4dc",
+        "hp": 1150,
+        "maxHp": 1150,
+        "atb": 1,
+        "row": "back",
+        "weapons": [
+          "bell",
+          "hook"
+        ],
+        "slot": 0,
+        "nextSlot": null,
+        "nextRow": null,
+        "shift": 0,
+        "move": 0,
+        "action": null,
+        "queued": null,
+        "draft": [],
+        "sequences": [],
+        "shield": 0,
+        "executionHeld": false
+      }
+    ],
+    "enemies": [
+      {
+        "id": 0,
+        "name": "砲列の衛兵",
+        "glyph": "♜",
+        "kind": "guard",
+        "hp": 2392,
+        "maxHp": 2392,
+        "row": "front",
+        "chain": 100,
+        "hold": 0,
+        "broken": 0,
+        "nextAttack": 3.9000000000000004,
+        "steadfast": 0,
+        "attackCount": 0,
+        "cast": null
+      },
+      {
+        "id": 1,
+        "name": "後列狙いの砲手",
+        "glyph": "♝",
+        "kind": "cannon",
+        "hp": 1869,
+        "maxHp": 1869,
+        "row": "back",
+        "chain": 100,
+        "hold": 0,
+        "broken": 0,
+        "nextAttack": 4.199999999999999,
+        "steadfast": 0,
+        "attackCount": 0,
+        "cast": null
+      },
+      {
+        "id": 2,
+        "name": "前列狙いの砲手",
+        "glyph": "♝",
+        "kind": "cannon",
+        "hp": 1869,
+        "maxHp": 1869,
+        "row": "back",
+        "chain": 100,
+        "hold": 0,
+        "broken": 0,
+        "nextAttack": 4.199999999999999,
+        "steadfast": 0,
+        "attackCount": 0,
+        "cast": null
+      }
+    ],
+    "presets": [
+      {
+        "name": "均衡の調べ",
+        "slots": [
+          0,
+          0,
+          0
+        ],
+        "rows": [
+          "front",
+          "back",
+          "back"
+        ]
+      },
+      {
+        "name": "崩しの連奏",
+        "slots": [
+          0,
+          0,
+          1
+        ],
+        "rows": [
+          "front",
+          "front",
+          "back"
+        ]
+      },
+      {
+        "name": "終幕の一撃",
+        "slots": [
+          0,
+          1,
+          1
+        ],
+        "rows": [
+          "front",
+          "back",
+          "back"
+        ]
+      },
+      {
+        "name": "崩し・防護・支援",
+        "slots": [
+          1,
+          0,
+          0
+        ],
+        "rows": [
+          "back",
+          "back",
+          "back"
+        ]
+      }
+    ],
+    "formations": [
+      {
+        "name": "全員後列",
+        "rows": [
+          "back",
+          "back",
+          "back"
+        ]
+      },
+      {
+        "name": "前衛1・後衛2",
+        "rows": [
+          "front",
+          "back",
+          "back"
+        ]
+      },
+      {
+        "name": "全員前列",
+        "rows": [
+          "front",
+          "front",
+          "front"
+        ]
+      }
+    ],
+    "activePreset": 0,
+    "inventory": [
+      "sword",
+      "shield",
+      "staff",
+      "bow",
+      "bell",
+      "hook"
+    ],
+    "potions": 3,
+    "events": [],
+    "eventSeq": 0,
+    "metrics": {
+      "damage": 0,
+      "taken": 0,
+      "healed": 0,
+      "breaks": 0,
+      "inputs": 0,
+      "focusUsed": 0
+    }
+  },
+  "inputs": [
+    {
+      "tick": 0,
+      "order": 0,
+      "command": {
+        "type": "start"
+      }
+    },
+    {
+      "tick": 0,
+      "order": 1,
+      "command": {
+        "type": "formation",
+        "index": 2
+      }
+    },
+    {
+      "tick": 0,
+      "order": 2,
+      "command": {
+        "type": "optima",
+        "index": 1
+      }
+    },
+    {
+      "tick": 270,
+      "order": 3,
+      "command": {
+        "type": "optima",
+        "index": 2
+      }
+    },
+    {
+      "tick": 840,
+      "order": 4,
+      "command": {
+        "type": "optima",
+        "index": 1
+      }
+    },
+    {
+      "tick": 990,
+      "order": 5,
+      "command": {
+        "type": "optima",
+        "index": 2
+      }
+    },
+    {
+      "tick": 1545,
+      "order": 6,
+      "command": {
+        "type": "optima",
+        "index": 1
+      }
+    },
+    {
+      "tick": 1830,
+      "order": 7,
+      "command": {
+        "type": "optima",
+        "index": 2
+      }
+    },
+    {
+      "tick": 2064,
+      "order": 8,
+      "command": {
+        "type": "next"
+      }
+    },
+    {
+      "tick": 2064,
+      "order": 9,
+      "command": {
+        "type": "optima",
+        "index": 1
+      }
+    },
+    {
+      "tick": 2334,
+      "order": 10,
+      "command": {
+        "type": "optima",
+        "index": 2
+      }
+    },
+    {
+      "tick": 2979,
+      "order": 11,
+      "command": {
+        "type": "optima",
+        "index": 1
+      }
+    },
+    {
+      "tick": 3264,
+      "order": 12,
+      "command": {
+        "type": "optima",
+        "index": 2
+      }
+    },
+    {
+      "tick": 3684,
+      "order": 13,
+      "command": {
+        "type": "optima",
+        "index": 1
+      }
+    }
+  ],
+  "endTick": 4415
+}

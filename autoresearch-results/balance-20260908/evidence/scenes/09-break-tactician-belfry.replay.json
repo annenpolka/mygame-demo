@@ -1,0 +1,710 @@
+{
+  "version": "orchestra-15",
+  "initial": {
+    "version": "orchestra-15",
+    "controlMode": "ai",
+    "phase": "ready",
+    "paused": false,
+    "tick": 0,
+    "time": 0,
+    "realTime": 0,
+    "focus": 100,
+    "timeMode": "normal",
+    "rng": 2602,
+    "config": {
+      "bonusMode": "strong",
+      "enemyHpScale": 1.15,
+      "atbMax": 4,
+      "encounterSet": "belfry",
+      "encounterLevel": 1,
+      "seed": 2602,
+      "atbRate": 0.7,
+      "atbMode": "idle",
+      "chainActions": true,
+      "moveTime": 0.85,
+      "shiftTime": 0.65,
+      "slowDrain": 4,
+      "enemyPower": 0.8,
+      "uiMode": "separate",
+      "encounter": 1
+    },
+    "encounter": 1,
+    "selected": 0,
+    "pendingSelect": null,
+    "handoffSlow": 0,
+    "allies": [
+      {
+        "id": 0,
+        "name": "アルト",
+        "initial": "A",
+        "color": "#ddaa63",
+        "hp": 1300,
+        "maxHp": 1300,
+        "atb": 1,
+        "row": "front",
+        "weapons": [
+          "sword",
+          "shield"
+        ],
+        "slot": 0,
+        "nextSlot": null,
+        "nextRow": null,
+        "shift": 0,
+        "move": 0,
+        "action": null,
+        "queued": null,
+        "draft": [],
+        "sequences": [],
+        "shield": 0,
+        "executionHeld": false
+      },
+      {
+        "id": 1,
+        "name": "リネ",
+        "initial": "L",
+        "color": "#77bdc2",
+        "hp": 1100,
+        "maxHp": 1100,
+        "atb": 1,
+        "row": "back",
+        "weapons": [
+          "staff",
+          "bow"
+        ],
+        "slot": 0,
+        "nextSlot": null,
+        "nextRow": null,
+        "shift": 0,
+        "move": 0,
+        "action": null,
+        "queued": null,
+        "draft": [],
+        "sequences": [],
+        "shield": 0,
+        "executionHeld": false
+      },
+      {
+        "id": 2,
+        "name": "セナ",
+        "initial": "S",
+        "color": "#bea4dc",
+        "hp": 1150,
+        "maxHp": 1150,
+        "atb": 1,
+        "row": "back",
+        "weapons": [
+          "bell",
+          "hook"
+        ],
+        "slot": 0,
+        "nextSlot": null,
+        "nextRow": null,
+        "shift": 0,
+        "move": 0,
+        "action": null,
+        "queued": null,
+        "draft": [],
+        "sequences": [],
+        "shield": 0,
+        "executionHeld": false
+      }
+    ],
+    "enemies": [
+      {
+        "id": 0,
+        "name": "鐘楼の衛兵",
+        "glyph": "♜",
+        "kind": "guard",
+        "hp": 1725,
+        "maxHp": 1725,
+        "row": "front",
+        "chain": 100,
+        "hold": 0,
+        "broken": 0,
+        "nextAttack": 4.5,
+        "steadfast": 0,
+        "attackCount": 0,
+        "cast": null
+      },
+      {
+        "id": 1,
+        "name": "灰の砲術師",
+        "glyph": "♝",
+        "kind": "cannon",
+        "hp": 1438,
+        "maxHp": 1438,
+        "row": "back",
+        "chain": 100,
+        "hold": 0,
+        "broken": 0,
+        "nextAttack": 9,
+        "steadfast": 0,
+        "attackCount": 0,
+        "cast": null
+      }
+    ],
+    "presets": [
+      {
+        "name": "均衡の調べ",
+        "slots": [
+          0,
+          0,
+          0
+        ],
+        "rows": [
+          "front",
+          "back",
+          "back"
+        ]
+      },
+      {
+        "name": "崩しの連奏",
+        "slots": [
+          0,
+          0,
+          1
+        ],
+        "rows": [
+          "front",
+          "front",
+          "back"
+        ]
+      },
+      {
+        "name": "終幕の一撃",
+        "slots": [
+          0,
+          1,
+          1
+        ],
+        "rows": [
+          "front",
+          "back",
+          "back"
+        ]
+      },
+      {
+        "name": "崩し・防護・支援",
+        "slots": [
+          1,
+          0,
+          0
+        ],
+        "rows": [
+          "back",
+          "back",
+          "back"
+        ]
+      }
+    ],
+    "formations": [
+      {
+        "name": "全員後列",
+        "rows": [
+          "back",
+          "back",
+          "back"
+        ]
+      },
+      {
+        "name": "前衛1・後衛2",
+        "rows": [
+          "front",
+          "back",
+          "back"
+        ]
+      },
+      {
+        "name": "全員前列",
+        "rows": [
+          "front",
+          "front",
+          "front"
+        ]
+      }
+    ],
+    "activePreset": 0,
+    "inventory": [
+      "sword",
+      "shield",
+      "staff",
+      "bow",
+      "bell",
+      "hook"
+    ],
+    "potions": 3,
+    "events": [],
+    "eventSeq": 0,
+    "metrics": {
+      "damage": 0,
+      "taken": 0,
+      "healed": 0,
+      "breaks": 0,
+      "inputs": 0,
+      "focusUsed": 0
+    }
+  },
+  "inputs": [
+    {
+      "tick": 0,
+      "order": 0,
+      "command": {
+        "type": "start"
+      }
+    },
+    {
+      "tick": 0,
+      "order": 1,
+      "command": {
+        "type": "optima",
+        "index": 1
+      }
+    },
+    {
+      "tick": 45,
+      "order": 2,
+      "command": {
+        "type": "enqueue",
+        "id": 2,
+        "step": {
+          "kind": "skill",
+          "skillId": "pull",
+          "target": {
+            "kind": "enemy",
+            "id": 1
+          }
+        }
+      }
+    },
+    {
+      "tick": 315,
+      "order": 3,
+      "command": {
+        "type": "move",
+        "id": 0,
+        "row": "back"
+      }
+    },
+    {
+      "tick": 360,
+      "order": 4,
+      "command": {
+        "type": "enqueue",
+        "id": 1,
+        "step": {
+          "kind": "skill",
+          "skillId": "rain",
+          "target": {
+            "kind": "row",
+            "row": "front"
+          }
+        }
+      }
+    },
+    {
+      "tick": 375,
+      "order": 5,
+      "command": {
+        "type": "enqueue",
+        "id": 1,
+        "step": {
+          "kind": "skill",
+          "skillId": "rain",
+          "target": {
+            "kind": "row",
+            "row": "front"
+          }
+        }
+      }
+    },
+    {
+      "tick": 405,
+      "order": 6,
+      "command": {
+        "type": "enqueue",
+        "id": 0,
+        "step": {
+          "kind": "skill",
+          "skillId": "sweep",
+          "target": {
+            "kind": "row",
+            "row": "front"
+          }
+        }
+      }
+    },
+    {
+      "tick": 420,
+      "order": 7,
+      "command": {
+        "type": "enqueue",
+        "id": 0,
+        "step": {
+          "kind": "skill",
+          "skillId": "sweep",
+          "target": {
+            "kind": "row",
+            "row": "front"
+          }
+        }
+      }
+    },
+    {
+      "tick": 495,
+      "order": 8,
+      "command": {
+        "type": "optima",
+        "index": 2
+      }
+    },
+    {
+      "tick": 750,
+      "order": 9,
+      "command": {
+        "type": "enqueue",
+        "id": 0,
+        "step": {
+          "kind": "skill",
+          "skillId": "sweep",
+          "target": {
+            "kind": "row",
+            "row": "front"
+          }
+        }
+      }
+    },
+    {
+      "tick": 765,
+      "order": 10,
+      "command": {
+        "type": "enqueue",
+        "id": 1,
+        "step": {
+          "kind": "skill",
+          "skillId": "volley",
+          "target": {
+            "kind": "row",
+            "row": "front"
+          }
+        }
+      }
+    },
+    {
+      "tick": 780,
+      "order": 11,
+      "command": {
+        "type": "enqueue",
+        "id": 1,
+        "step": {
+          "kind": "skill",
+          "skillId": "volley",
+          "target": {
+            "kind": "row",
+            "row": "front"
+          }
+        }
+      }
+    },
+    {
+      "tick": 1312,
+      "order": 12,
+      "command": {
+        "type": "next"
+      }
+    },
+    {
+      "tick": 1312,
+      "order": 13,
+      "command": {
+        "type": "optima",
+        "index": 1
+      }
+    },
+    {
+      "tick": 1312,
+      "order": 14,
+      "command": {
+        "type": "enqueue",
+        "id": 2,
+        "step": {
+          "kind": "skill",
+          "skillId": "pull",
+          "target": {
+            "kind": "enemy",
+            "id": 1
+          }
+        }
+      }
+    },
+    {
+      "tick": 1312,
+      "order": 15,
+      "command": {
+        "type": "enqueue",
+        "id": 0,
+        "step": {
+          "kind": "skill",
+          "skillId": "sweep",
+          "target": {
+            "kind": "row",
+            "row": "front"
+          }
+        }
+      }
+    },
+    {
+      "tick": 1327,
+      "order": 16,
+      "command": {
+        "type": "enqueue",
+        "id": 0,
+        "step": {
+          "kind": "skill",
+          "skillId": "sweep",
+          "target": {
+            "kind": "row",
+            "row": "front"
+          }
+        }
+      }
+    },
+    {
+      "tick": 1357,
+      "order": 17,
+      "command": {
+        "type": "enqueue",
+        "id": 1,
+        "step": {
+          "kind": "skill",
+          "skillId": "rain",
+          "target": {
+            "kind": "row",
+            "row": "front"
+          }
+        }
+      }
+    },
+    {
+      "tick": 1372,
+      "order": 18,
+      "command": {
+        "type": "enqueue",
+        "id": 1,
+        "step": {
+          "kind": "skill",
+          "skillId": "rain",
+          "target": {
+            "kind": "row",
+            "row": "front"
+          }
+        }
+      }
+    },
+    {
+      "tick": 1672,
+      "order": 19,
+      "command": {
+        "type": "enqueue",
+        "id": 0,
+        "step": {
+          "kind": "skill",
+          "skillId": "sweep",
+          "target": {
+            "kind": "row",
+            "row": "front"
+          }
+        }
+      }
+    },
+    {
+      "tick": 1717,
+      "order": 20,
+      "command": {
+        "type": "enqueue",
+        "id": 1,
+        "step": {
+          "kind": "skill",
+          "skillId": "rain",
+          "target": {
+            "kind": "row",
+            "row": "front"
+          }
+        }
+      }
+    },
+    {
+      "tick": 1807,
+      "order": 21,
+      "command": {
+        "type": "move",
+        "id": 0,
+        "row": "front"
+      }
+    },
+    {
+      "tick": 1807,
+      "order": 22,
+      "command": {
+        "type": "move",
+        "id": 2,
+        "row": "front"
+      }
+    },
+    {
+      "tick": 1822,
+      "order": 23,
+      "command": {
+        "type": "optima",
+        "index": 2
+      }
+    },
+    {
+      "tick": 1972,
+      "order": 24,
+      "command": {
+        "type": "removePlan",
+        "id": 0,
+        "key": 19
+      }
+    },
+    {
+      "tick": 1972,
+      "order": 25,
+      "command": {
+        "type": "enqueue",
+        "id": 0,
+        "step": {
+          "kind": "skill",
+          "skillId": "guard",
+          "target": {
+            "kind": "ally",
+            "id": 0
+          }
+        }
+      }
+    },
+    {
+      "tick": 2152,
+      "order": 26,
+      "command": {
+        "type": "move",
+        "id": 0,
+        "row": "back"
+      }
+    },
+    {
+      "tick": 2152,
+      "order": 27,
+      "command": {
+        "type": "move",
+        "id": 2,
+        "row": "back"
+      }
+    },
+    {
+      "tick": 2152,
+      "order": 28,
+      "command": {
+        "type": "enqueue",
+        "id": 1,
+        "step": {
+          "kind": "skill",
+          "skillId": "volley",
+          "target": {
+            "kind": "row",
+            "row": "front"
+          }
+        }
+      }
+    },
+    {
+      "tick": 2167,
+      "order": 29,
+      "command": {
+        "type": "enqueue",
+        "id": 1,
+        "step": {
+          "kind": "skill",
+          "skillId": "volley",
+          "target": {
+            "kind": "row",
+            "row": "front"
+          }
+        }
+      }
+    },
+    {
+      "tick": 2242,
+      "order": 30,
+      "command": {
+        "type": "enqueue",
+        "id": 0,
+        "step": {
+          "kind": "skill",
+          "skillId": "sweep",
+          "target": {
+            "kind": "row",
+            "row": "front"
+          }
+        }
+      }
+    },
+    {
+      "tick": 2257,
+      "order": 31,
+      "command": {
+        "type": "enqueue",
+        "id": 0,
+        "step": {
+          "kind": "skill",
+          "skillId": "sweep",
+          "target": {
+            "kind": "row",
+            "row": "front"
+          }
+        }
+      }
+    },
+    {
+      "tick": 2482,
+      "order": 32,
+      "command": {
+        "type": "enqueue",
+        "id": 1,
+        "step": {
+          "kind": "skill",
+          "skillId": "volley",
+          "target": {
+            "kind": "row",
+            "row": "front"
+          }
+        }
+      }
+    },
+    {
+      "tick": 2587,
+      "order": 33,
+      "command": {
+        "type": "enqueue",
+        "id": 0,
+        "step": {
+          "kind": "skill",
+          "skillId": "sweep",
+          "target": {
+            "kind": "row",
+            "row": "front"
+          }
+        }
+      }
+    },
+    {
+      "tick": 2902,
+      "order": 34,
+      "command": {
+        "type": "optima",
+        "index": 1
+      }
+    }
+  ],
+  "endTick": 3089
+}

@@ -1,0 +1,1647 @@
+[
+  {
+    "id": 1,
+    "time": 0,
+    "type": "system",
+    "text": "戦闘開始。全員をAIが操作します。",
+    "encounter": 1
+  },
+  {
+    "id": 2,
+    "time": 0,
+    "type": "shift",
+    "text": "オプティマ：崩しの連奏",
+    "encounter": 1
+  },
+  {
+    "id": 3,
+    "time": 0.6500000000000004,
+    "type": "shift",
+    "text": "セナ → 鉤槍使い",
+    "target": "a2",
+    "encounter": 1
+  },
+  {
+    "id": 4,
+    "time": 0.7500000000000007,
+    "type": "system",
+    "text": "セナ：確定予約1手目に「引き寄せ」を追加",
+    "source": "a2",
+    "encounter": 1
+  },
+  {
+    "id": 5,
+    "time": 1.0000000000000013,
+    "type": "action",
+    "text": "アルト → 斬撃",
+    "source": "a0",
+    "visual": {
+      "skillId": "slash",
+      "actionName": "斬撃",
+      "comboIndex": 1
+    },
+    "encounter": 1
+  },
+  {
+    "id": 6,
+    "time": 1.0000000000000013,
+    "type": "action",
+    "text": "リネ → 砕光",
+    "source": "a1",
+    "visual": {
+      "skillId": "spark",
+      "actionName": "砕光",
+      "comboIndex": 1
+    },
+    "encounter": 1
+  },
+  {
+    "id": 7,
+    "time": 1.733333333333332,
+    "type": "action",
+    "text": "セナ → 引き寄せ",
+    "source": "a2",
+    "visual": {
+      "skillId": "pull",
+      "actionName": "引き寄せ",
+      "comboIndex": 1
+    },
+    "encounter": 1
+  },
+  {
+    "id": 8,
+    "time": 1.8999999999999981,
+    "type": "damage",
+    "text": "アルト → 灰の砲術師 77",
+    "source": "a0",
+    "target": "e1",
+    "value": 77,
+    "visual": {
+      "skillId": "slash",
+      "actionName": "斬撃",
+      "comboIndex": 1,
+      "shielded": true
+    },
+    "encounter": 1
+  },
+  {
+    "id": 9,
+    "time": 1.9999999999999978,
+    "type": "damage",
+    "text": "リネ → 灰の砲術師 22",
+    "source": "a1",
+    "target": "e1",
+    "value": 22,
+    "visual": {
+      "skillId": "spark",
+      "actionName": "砕光",
+      "comboIndex": 1,
+      "shielded": true
+    },
+    "encounter": 1
+  },
+  {
+    "id": 10,
+    "time": 2.0999999999999974,
+    "type": "action",
+    "text": "アルト → 斬撃",
+    "source": "a0",
+    "visual": {
+      "skillId": "slash",
+      "actionName": "斬撃",
+      "comboIndex": 2
+    },
+    "encounter": 1
+  },
+  {
+    "id": 11,
+    "time": 2.199999999999997,
+    "type": "action",
+    "text": "リネ → 砕光",
+    "source": "a1",
+    "visual": {
+      "skillId": "spark",
+      "actionName": "砕光",
+      "comboIndex": 2
+    },
+    "encounter": 1
+  },
+  {
+    "id": 12,
+    "time": 2.833333333333328,
+    "type": "damage",
+    "text": "セナ → 灰の砲術師 31",
+    "source": "a2",
+    "target": "e1",
+    "value": 31,
+    "visual": {
+      "skillId": "pull",
+      "actionName": "引き寄せ",
+      "comboIndex": 1,
+      "shielded": true
+    },
+    "encounter": 1
+  },
+  {
+    "id": 13,
+    "time": 2.833333333333328,
+    "type": "move",
+    "text": "灰の砲術師 → 前列",
+    "source": "a2",
+    "target": "e1",
+    "visual": {
+      "fromRow": "back",
+      "toRow": "front"
+    },
+    "encounter": 1
+  },
+  {
+    "id": 14,
+    "time": 2.9999999999999942,
+    "type": "damage",
+    "text": "アルト → 灰の砲術師 225",
+    "source": "a0",
+    "target": "e1",
+    "value": 225,
+    "visual": {
+      "skillId": "slash",
+      "actionName": "斬撃",
+      "comboIndex": 2,
+      "shielded": false
+    },
+    "encounter": 1
+  },
+  {
+    "id": 15,
+    "time": 3.1999999999999935,
+    "type": "damage",
+    "text": "リネ → 灰の砲術師 58",
+    "source": "a1",
+    "target": "e1",
+    "value": 58,
+    "visual": {
+      "skillId": "spark",
+      "actionName": "砕光",
+      "comboIndex": 2,
+      "shielded": false
+    },
+    "encounter": 1
+  },
+  {
+    "id": 16,
+    "time": 4.516666666666656,
+    "type": "warning",
+    "text": "鐘楼の衛兵：前列薙ぎ払い",
+    "source": "e0",
+    "visual": {
+      "actionName": "前列薙ぎ払い"
+    },
+    "encounter": 1
+  },
+  {
+    "id": 17,
+    "time": 5.249999999999987,
+    "type": "system",
+    "text": "アルト：後列へ移動指示",
+    "encounter": 1
+  },
+  {
+    "id": 18,
+    "time": 5.249999999999987,
+    "type": "system",
+    "text": "リネ：確定予約1手目に「星の雨」を追加",
+    "source": "a1",
+    "encounter": 1
+  },
+  {
+    "id": 19,
+    "time": 5.499999999999986,
+    "type": "system",
+    "text": "リネ：確定予約2手目に「星の雨」を追加",
+    "source": "a1",
+    "encounter": 1
+  },
+  {
+    "id": 20,
+    "time": 6.099999999999984,
+    "type": "move",
+    "text": "アルト → 後列",
+    "target": "a0",
+    "visual": {
+      "fromRow": "front",
+      "toRow": "back"
+    },
+    "encounter": 1
+  },
+  {
+    "id": 21,
+    "time": 6.099999999999984,
+    "type": "action",
+    "text": "セナ → 砕突",
+    "source": "a2",
+    "visual": {
+      "skillId": "jab",
+      "actionName": "砕突",
+      "comboIndex": 1
+    },
+    "encounter": 1
+  },
+  {
+    "id": 22,
+    "time": 6.249999999999983,
+    "type": "action",
+    "text": "リネ → 星の雨",
+    "source": "a1",
+    "visual": {
+      "skillId": "rain",
+      "actionName": "星の雨",
+      "comboIndex": 1
+    },
+    "encounter": 1
+  },
+  {
+    "id": 23,
+    "time": 6.249999999999983,
+    "type": "system",
+    "text": "アルト：確定予約1手目に「円弧斬り」を追加",
+    "source": "a0",
+    "encounter": 1
+  },
+  {
+    "id": 24,
+    "time": 6.499999999999982,
+    "type": "system",
+    "text": "アルト：確定予約2手目に「円弧斬り」を追加",
+    "source": "a0",
+    "encounter": 1
+  },
+  {
+    "id": 25,
+    "time": 6.9999999999999805,
+    "type": "action",
+    "text": "アルト → 円弧斬り",
+    "source": "a0",
+    "visual": {
+      "skillId": "sweep",
+      "actionName": "円弧斬り",
+      "comboIndex": 1
+    },
+    "encounter": 1
+  },
+  {
+    "id": 26,
+    "time": 6.9999999999999805,
+    "type": "damage",
+    "text": "セナ → 灰の砲術師 68",
+    "source": "a2",
+    "target": "e1",
+    "value": 68,
+    "visual": {
+      "skillId": "jab",
+      "actionName": "砕突",
+      "comboIndex": 1,
+      "shielded": false
+    },
+    "encounter": 1
+  },
+  {
+    "id": 27,
+    "time": 6.9999999999999805,
+    "type": "break",
+    "text": "灰の砲術師 BREAK — 12秒間の好機",
+    "target": "e1",
+    "source": "a2",
+    "visual": {
+      "skillId": "jab",
+      "actionName": "砕突",
+      "comboIndex": 1
+    },
+    "encounter": 1
+  },
+  {
+    "id": 28,
+    "time": 6.9999999999999805,
+    "type": "system",
+    "text": "リネ：武器変更のため「星の雨」の予約を解除",
+    "encounter": 1
+  },
+  {
+    "id": 29,
+    "time": 6.9999999999999805,
+    "type": "shift",
+    "text": "オプティマ：終幕の一撃",
+    "encounter": 1
+  },
+  {
+    "id": 30,
+    "time": 7.19999999999998,
+    "type": "action",
+    "text": "セナ → 砕突",
+    "source": "a2",
+    "visual": {
+      "skillId": "jab",
+      "actionName": "砕突",
+      "comboIndex": 2
+    },
+    "encounter": 1
+  },
+  {
+    "id": 31,
+    "time": 7.716666666666645,
+    "type": "system",
+    "text": "鐘楼の衛兵：前列薙ぎ払いは誰にも当たらなかった",
+    "source": "e0",
+    "target": "e0",
+    "visual": {
+      "actionName": "前列薙ぎ払い",
+      "outcome": "miss"
+    },
+    "encounter": 1
+  },
+  {
+    "id": 32,
+    "time": 8.099999999999982,
+    "type": "damage",
+    "text": "セナ → 鐘楼の衛兵 34",
+    "source": "a2",
+    "target": "e0",
+    "value": 34,
+    "visual": {
+      "skillId": "jab",
+      "actionName": "砕突",
+      "comboIndex": 2,
+      "shielded": false
+    },
+    "encounter": 1
+  },
+  {
+    "id": 33,
+    "time": 8.24999999999999,
+    "type": "damage",
+    "text": "リネ → 鐘楼の衛兵 59",
+    "source": "a1",
+    "target": "e0",
+    "value": 59,
+    "visual": {
+      "skillId": "rain",
+      "actionName": "星の雨",
+      "comboIndex": 1,
+      "shielded": false
+    },
+    "encounter": 1
+  },
+  {
+    "id": 34,
+    "time": 8.24999999999999,
+    "type": "damage",
+    "text": "リネ → 灰の砲術師 101",
+    "source": "a1",
+    "target": "e1",
+    "value": 101,
+    "visual": {
+      "skillId": "rain",
+      "actionName": "星の雨",
+      "comboIndex": 1,
+      "shielded": false
+    },
+    "encounter": 1
+  },
+  {
+    "id": 35,
+    "time": 8.800000000000017,
+    "type": "damage",
+    "text": "アルト → 鐘楼の衛兵 215",
+    "source": "a0",
+    "target": "e0",
+    "value": 215,
+    "visual": {
+      "skillId": "sweep",
+      "actionName": "円弧斬り",
+      "comboIndex": 1,
+      "shielded": false
+    },
+    "encounter": 1
+  },
+  {
+    "id": 36,
+    "time": 8.800000000000017,
+    "type": "damage",
+    "text": "アルト → 灰の砲術師 347",
+    "source": "a0",
+    "target": "e1",
+    "value": 347,
+    "visual": {
+      "skillId": "sweep",
+      "actionName": "円弧斬り",
+      "comboIndex": 1,
+      "shielded": false
+    },
+    "encounter": 1
+  },
+  {
+    "id": 37,
+    "time": 10.100000000000081,
+    "type": "shift",
+    "text": "リネ → 射手",
+    "target": "a1",
+    "encounter": 1
+  },
+  {
+    "id": 38,
+    "time": 11.250000000000139,
+    "type": "system",
+    "text": "アルト：確定予約2手目に「円弧斬り」を追加",
+    "source": "a0",
+    "encounter": 1
+  },
+  {
+    "id": 39,
+    "time": 11.250000000000139,
+    "type": "system",
+    "text": "リネ：確定予約1手目に「一斉射」を追加",
+    "source": "a1",
+    "encounter": 1
+  },
+  {
+    "id": 40,
+    "time": 11.266666666666806,
+    "type": "action",
+    "text": "セナ → 砕突",
+    "source": "a2",
+    "visual": {
+      "skillId": "jab",
+      "actionName": "砕突",
+      "comboIndex": 1
+    },
+    "encounter": 1
+  },
+  {
+    "id": 41,
+    "time": 11.500000000000151,
+    "type": "system",
+    "text": "リネ：確定予約2手目に「一斉射」を追加",
+    "source": "a1",
+    "encounter": 1
+  },
+  {
+    "id": 42,
+    "time": 12.16666666666685,
+    "type": "action",
+    "text": "アルト → 円弧斬り",
+    "source": "a0",
+    "visual": {
+      "skillId": "sweep",
+      "actionName": "円弧斬り",
+      "comboIndex": 1
+    },
+    "encounter": 1
+  },
+  {
+    "id": 43,
+    "time": 12.16666666666685,
+    "type": "damage",
+    "text": "セナ → 鐘楼の衛兵 66",
+    "source": "a2",
+    "target": "e0",
+    "value": 66,
+    "visual": {
+      "skillId": "jab",
+      "actionName": "砕突",
+      "comboIndex": 1,
+      "shielded": false
+    },
+    "encounter": 1
+  },
+  {
+    "id": 44,
+    "time": 12.266666666666856,
+    "type": "action",
+    "text": "リネ → 一斉射",
+    "source": "a1",
+    "visual": {
+      "skillId": "volley",
+      "actionName": "一斉射",
+      "comboIndex": 1
+    },
+    "encounter": 1
+  },
+  {
+    "id": 45,
+    "time": 12.36666666666686,
+    "type": "action",
+    "text": "セナ → 砕突",
+    "source": "a2",
+    "visual": {
+      "skillId": "jab",
+      "actionName": "砕突",
+      "comboIndex": 2
+    },
+    "encounter": 1
+  },
+  {
+    "id": 46,
+    "time": 13.266666666666906,
+    "type": "damage",
+    "text": "セナ → 鐘楼の衛兵 74",
+    "source": "a2",
+    "target": "e0",
+    "value": 74,
+    "visual": {
+      "skillId": "jab",
+      "actionName": "砕突",
+      "comboIndex": 2,
+      "shielded": false
+    },
+    "encounter": 1
+  },
+  {
+    "id": 47,
+    "time": 13.266666666666906,
+    "type": "break",
+    "text": "鐘楼の衛兵 BREAK — 12秒間の好機",
+    "target": "e0",
+    "source": "a2",
+    "visual": {
+      "skillId": "jab",
+      "actionName": "砕突",
+      "comboIndex": 2
+    },
+    "encounter": 1
+  },
+  {
+    "id": 48,
+    "time": 13.96666666666694,
+    "type": "damage",
+    "text": "アルト → 鐘楼の衛兵 317",
+    "source": "a0",
+    "target": "e0",
+    "value": 317,
+    "visual": {
+      "skillId": "sweep",
+      "actionName": "円弧斬り",
+      "comboIndex": 1,
+      "shielded": false
+    },
+    "encounter": 1
+  },
+  {
+    "id": 49,
+    "time": 13.96666666666694,
+    "type": "damage",
+    "text": "アルト → 灰の砲術師 134",
+    "source": "a0",
+    "target": "e1",
+    "value": 134,
+    "visual": {
+      "skillId": "sweep",
+      "actionName": "円弧斬り",
+      "comboIndex": 1,
+      "shielded": false
+    },
+    "encounter": 1
+  },
+  {
+    "id": 50,
+    "time": 13.96666666666694,
+    "type": "system",
+    "text": "灰の砲術師を倒した",
+    "source": "a0",
+    "target": "e1",
+    "visual": {
+      "skillId": "sweep",
+      "actionName": "円弧斬り",
+      "comboIndex": 1,
+      "outcome": "defeat"
+    },
+    "encounter": 1
+  },
+  {
+    "id": 51,
+    "time": 14.16666666666695,
+    "type": "damage",
+    "text": "リネ → 鐘楼の衛兵 351",
+    "source": "a1",
+    "target": "e0",
+    "value": 351,
+    "visual": {
+      "skillId": "volley",
+      "actionName": "一斉射",
+      "comboIndex": 1,
+      "shielded": false
+    },
+    "encounter": 1
+  },
+  {
+    "id": 52,
+    "time": 16.43333333333368,
+    "type": "action",
+    "text": "セナ → 砕突",
+    "source": "a2",
+    "visual": {
+      "skillId": "jab",
+      "actionName": "砕突",
+      "comboIndex": 1
+    },
+    "encounter": 1
+  },
+  {
+    "id": 53,
+    "time": 17.33333333333363,
+    "type": "action",
+    "text": "アルト → 円弧斬り",
+    "source": "a0",
+    "visual": {
+      "skillId": "sweep",
+      "actionName": "円弧斬り",
+      "comboIndex": 1
+    },
+    "encounter": 1
+  },
+  {
+    "id": 54,
+    "time": 17.33333333333363,
+    "type": "damage",
+    "text": "セナ → 鐘楼の衛兵 90",
+    "source": "a2",
+    "target": "e0",
+    "value": 90,
+    "visual": {
+      "skillId": "jab",
+      "actionName": "砕突",
+      "comboIndex": 1,
+      "shielded": false
+    },
+    "encounter": 1
+  },
+  {
+    "id": 55,
+    "time": 17.53333333333362,
+    "type": "action",
+    "text": "リネ → 一斉射",
+    "source": "a1",
+    "visual": {
+      "skillId": "volley",
+      "actionName": "一斉射",
+      "comboIndex": 1
+    },
+    "encounter": 1
+  },
+  {
+    "id": 56,
+    "time": 17.53333333333362,
+    "type": "action",
+    "text": "セナ → 砕突",
+    "source": "a2",
+    "visual": {
+      "skillId": "jab",
+      "actionName": "砕突",
+      "comboIndex": 2
+    },
+    "encounter": 1
+  },
+  {
+    "id": 57,
+    "time": 18.433333333333568,
+    "type": "damage",
+    "text": "セナ → 鐘楼の衛兵 69",
+    "source": "a2",
+    "target": "e0",
+    "value": 69,
+    "visual": {
+      "skillId": "jab",
+      "actionName": "砕突",
+      "comboIndex": 2,
+      "shielded": false
+    },
+    "encounter": 1
+  },
+  {
+    "id": 58,
+    "time": 18.433333333333568,
+    "type": "system",
+    "text": "鐘楼の衛兵を倒した",
+    "source": "a2",
+    "target": "e0",
+    "visual": {
+      "skillId": "jab",
+      "actionName": "砕突",
+      "comboIndex": 2,
+      "outcome": "defeat"
+    },
+    "encounter": 1
+  },
+  {
+    "id": 59,
+    "time": 18.433333333333568,
+    "type": "system",
+    "text": "勝利。轟砕の槌・流星の弓・帰還の軍旗を入手。",
+    "encounter": 1
+  },
+  {
+    "id": 60,
+    "time": 18.433333333333568,
+    "type": "system",
+    "text": "第二戦へ。HPと集中力が全回復しました。",
+    "encounter": 2
+  },
+  {
+    "id": 61,
+    "time": 18.433333333333568,
+    "type": "shift",
+    "text": "オプティマ：崩しの連奏",
+    "encounter": 2
+  },
+  {
+    "id": 62,
+    "time": 18.433333333333568,
+    "type": "system",
+    "text": "セナ：確定予約1手目に「引き寄せ」を追加",
+    "source": "a2",
+    "encounter": 2
+  },
+  {
+    "id": 63,
+    "time": 18.433333333333568,
+    "type": "system",
+    "text": "アルト：確定予約1手目に「円弧斬り」を追加",
+    "source": "a0",
+    "encounter": 2
+  },
+  {
+    "id": 64,
+    "time": 18.683333333333554,
+    "type": "system",
+    "text": "アルト：確定予約2手目に「円弧斬り」を追加",
+    "source": "a0",
+    "encounter": 2
+  },
+  {
+    "id": 65,
+    "time": 19.08333333333353,
+    "type": "shift",
+    "text": "リネ → 魔術師",
+    "target": "a1",
+    "encounter": 2
+  },
+  {
+    "id": 66,
+    "time": 19.183333333333525,
+    "type": "system",
+    "text": "リネ：確定予約1手目に「星の雨」を追加",
+    "source": "a1",
+    "encounter": 2
+  },
+  {
+    "id": 67,
+    "time": 19.43333333333351,
+    "type": "system",
+    "text": "リネ：確定予約2手目に「星の雨」を追加",
+    "source": "a1",
+    "encounter": 2
+  },
+  {
+    "id": 68,
+    "time": 19.51666666666684,
+    "type": "action",
+    "text": "アルト → 円弧斬り",
+    "source": "a0",
+    "visual": {
+      "skillId": "sweep",
+      "actionName": "円弧斬り",
+      "comboIndex": 1
+    },
+    "encounter": 2
+  },
+  {
+    "id": 69,
+    "time": 19.51666666666684,
+    "type": "action",
+    "text": "セナ → 引き寄せ",
+    "source": "a2",
+    "visual": {
+      "skillId": "pull",
+      "actionName": "引き寄せ",
+      "comboIndex": 1
+    },
+    "encounter": 2
+  },
+  {
+    "id": 70,
+    "time": 20.166666666666803,
+    "type": "action",
+    "text": "リネ → 星の雨",
+    "source": "a1",
+    "visual": {
+      "skillId": "rain",
+      "actionName": "星の雨",
+      "comboIndex": 1
+    },
+    "encounter": 2
+  },
+  {
+    "id": 71,
+    "time": 20.616666666666777,
+    "type": "damage",
+    "text": "セナ → 夜渡りの砲術師 23",
+    "source": "a2",
+    "target": "e1",
+    "value": 23,
+    "visual": {
+      "skillId": "pull",
+      "actionName": "引き寄せ",
+      "comboIndex": 1,
+      "shielded": true
+    },
+    "encounter": 2
+  },
+  {
+    "id": 72,
+    "time": 20.616666666666777,
+    "type": "move",
+    "text": "夜渡りの砲術師 → 前列",
+    "source": "a2",
+    "target": "e1",
+    "visual": {
+      "fromRow": "back",
+      "toRow": "front"
+    },
+    "encounter": 2
+  },
+  {
+    "id": 73,
+    "time": 21.316666666666737,
+    "type": "damage",
+    "text": "アルト → 鉄殻の衛兵 142",
+    "source": "a0",
+    "target": "e0",
+    "value": 142,
+    "visual": {
+      "skillId": "sweep",
+      "actionName": "円弧斬り",
+      "comboIndex": 1,
+      "shielded": false
+    },
+    "encounter": 2
+  },
+  {
+    "id": 74,
+    "time": 21.316666666666737,
+    "type": "damage",
+    "text": "アルト → 夜渡りの砲術師 170",
+    "source": "a0",
+    "target": "e1",
+    "value": 170,
+    "visual": {
+      "skillId": "sweep",
+      "actionName": "円弧斬り",
+      "comboIndex": 1,
+      "shielded": false
+    },
+    "encounter": 2
+  },
+  {
+    "id": 75,
+    "time": 21.316666666666737,
+    "type": "damage",
+    "text": "アルト → 流浪の剣兵 136",
+    "source": "a0",
+    "target": "e2",
+    "value": 136,
+    "visual": {
+      "skillId": "sweep",
+      "actionName": "円弧斬り",
+      "comboIndex": 1,
+      "shielded": false
+    },
+    "encounter": 2
+  },
+  {
+    "id": 76,
+    "time": 22.16666666666669,
+    "type": "damage",
+    "text": "リネ → 鉄殻の衛兵 55",
+    "source": "a1",
+    "target": "e0",
+    "value": 55,
+    "visual": {
+      "skillId": "rain",
+      "actionName": "星の雨",
+      "comboIndex": 1,
+      "shielded": false
+    },
+    "encounter": 2
+  },
+  {
+    "id": 77,
+    "time": 22.16666666666669,
+    "type": "damage",
+    "text": "リネ → 夜渡りの砲術師 68",
+    "source": "a1",
+    "target": "e1",
+    "value": 68,
+    "visual": {
+      "skillId": "rain",
+      "actionName": "星の雨",
+      "comboIndex": 1,
+      "shielded": false
+    },
+    "encounter": 2
+  },
+  {
+    "id": 78,
+    "time": 22.16666666666669,
+    "type": "damage",
+    "text": "リネ → 流浪の剣兵 55",
+    "source": "a1",
+    "target": "e2",
+    "value": 55,
+    "visual": {
+      "skillId": "rain",
+      "actionName": "星の雨",
+      "comboIndex": 1,
+      "shielded": false
+    },
+    "encounter": 2
+  },
+  {
+    "id": 79,
+    "time": 22.949999999999978,
+    "type": "warning",
+    "text": "鉄殻の衛兵：前列薙ぎ払い",
+    "source": "e0",
+    "visual": {
+      "actionName": "前列薙ぎ払い"
+    },
+    "encounter": 2
+  },
+  {
+    "id": 80,
+    "time": 23.68333333333327,
+    "type": "system",
+    "text": "アルト：確定予約2手目に「円弧斬り」を追加",
+    "source": "a0",
+    "encounter": 2
+  },
+  {
+    "id": 81,
+    "time": 23.88333333333326,
+    "type": "action",
+    "text": "セナ → 砕突",
+    "source": "a2",
+    "visual": {
+      "skillId": "jab",
+      "actionName": "砕突",
+      "comboIndex": 1
+    },
+    "encounter": 2
+  },
+  {
+    "id": 82,
+    "time": 24.683333333333213,
+    "type": "action",
+    "text": "アルト → 円弧斬り",
+    "source": "a0",
+    "visual": {
+      "skillId": "sweep",
+      "actionName": "円弧斬り",
+      "comboIndex": 1
+    },
+    "encounter": 2
+  },
+  {
+    "id": 83,
+    "time": 24.683333333333213,
+    "type": "system",
+    "text": "リネ：確定予約2手目に「星の雨」を追加",
+    "source": "a1",
+    "encounter": 2
+  },
+  {
+    "id": 84,
+    "time": 24.783333333333207,
+    "type": "damage",
+    "text": "セナ → 夜渡りの砲術師 59",
+    "source": "a2",
+    "target": "e1",
+    "value": 59,
+    "visual": {
+      "skillId": "jab",
+      "actionName": "砕突",
+      "comboIndex": 1,
+      "shielded": false
+    },
+    "encounter": 2
+  },
+  {
+    "id": 85,
+    "time": 24.983333333333196,
+    "type": "action",
+    "text": "セナ → 砕突",
+    "source": "a2",
+    "visual": {
+      "skillId": "jab",
+      "actionName": "砕突",
+      "comboIndex": 2
+    },
+    "encounter": 2
+  },
+  {
+    "id": 86,
+    "time": 25.533333333333164,
+    "type": "action",
+    "text": "リネ → 星の雨",
+    "source": "a1",
+    "visual": {
+      "skillId": "rain",
+      "actionName": "星の雨",
+      "comboIndex": 1
+    },
+    "encounter": 2
+  },
+  {
+    "id": 87,
+    "time": 25.883333333333145,
+    "type": "damage",
+    "text": "セナ → 夜渡りの砲術師 68",
+    "source": "a2",
+    "target": "e1",
+    "value": 68,
+    "visual": {
+      "skillId": "jab",
+      "actionName": "砕突",
+      "comboIndex": 2,
+      "shielded": false
+    },
+    "encounter": 2
+  },
+  {
+    "id": 88,
+    "time": 25.883333333333145,
+    "type": "break",
+    "text": "夜渡りの砲術師 BREAK — 12秒間の好機",
+    "target": "e1",
+    "source": "a2",
+    "visual": {
+      "skillId": "jab",
+      "actionName": "砕突",
+      "comboIndex": 2
+    },
+    "encounter": 2
+  },
+  {
+    "id": 89,
+    "time": 25.93333333333314,
+    "type": "system",
+    "text": "リネ：武器変更のため「星の雨」の予約を解除",
+    "encounter": 2
+  },
+  {
+    "id": 90,
+    "time": 25.93333333333314,
+    "type": "shift",
+    "text": "オプティマ：終幕の一撃",
+    "encounter": 2
+  },
+  {
+    "id": 91,
+    "time": 26.149999999999796,
+    "type": "system",
+    "text": "鉄殻の衛兵：前列薙ぎ払いは誰にも当たらなかった",
+    "source": "e0",
+    "target": "e0",
+    "visual": {
+      "actionName": "前列薙ぎ払い",
+      "outcome": "miss"
+    },
+    "encounter": 2
+  },
+  {
+    "id": 92,
+    "time": 26.48333333333311,
+    "type": "damage",
+    "text": "アルト → 鉄殻の衛兵 193",
+    "source": "a0",
+    "target": "e0",
+    "value": 193,
+    "visual": {
+      "skillId": "sweep",
+      "actionName": "円弧斬り",
+      "comboIndex": 1,
+      "shielded": false
+    },
+    "encounter": 2
+  },
+  {
+    "id": 93,
+    "time": 26.48333333333311,
+    "type": "damage",
+    "text": "アルト → 夜渡りの砲術師 292",
+    "source": "a0",
+    "target": "e1",
+    "value": 292,
+    "visual": {
+      "skillId": "sweep",
+      "actionName": "円弧斬り",
+      "comboIndex": 1,
+      "shielded": false
+    },
+    "encounter": 2
+  },
+  {
+    "id": 94,
+    "time": 26.48333333333311,
+    "type": "damage",
+    "text": "アルト → 流浪の剣兵 199",
+    "source": "a0",
+    "target": "e2",
+    "value": 199,
+    "visual": {
+      "skillId": "sweep",
+      "actionName": "円弧斬り",
+      "comboIndex": 1,
+      "shielded": false
+    },
+    "encounter": 2
+  },
+  {
+    "id": 95,
+    "time": 27.53333333333305,
+    "type": "damage",
+    "text": "リネ → 鉄殻の衛兵 78",
+    "source": "a1",
+    "target": "e0",
+    "value": 78,
+    "visual": {
+      "skillId": "rain",
+      "actionName": "星の雨",
+      "comboIndex": 1,
+      "shielded": false
+    },
+    "encounter": 2
+  },
+  {
+    "id": 96,
+    "time": 27.53333333333305,
+    "type": "damage",
+    "text": "リネ → 夜渡りの砲術師 108",
+    "source": "a1",
+    "target": "e1",
+    "value": 108,
+    "visual": {
+      "skillId": "rain",
+      "actionName": "星の雨",
+      "comboIndex": 1,
+      "shielded": false
+    },
+    "encounter": 2
+  },
+  {
+    "id": 97,
+    "time": 27.53333333333305,
+    "type": "damage",
+    "text": "リネ → 流浪の剣兵 78",
+    "source": "a1",
+    "target": "e2",
+    "value": 78,
+    "visual": {
+      "skillId": "rain",
+      "actionName": "星の雨",
+      "comboIndex": 1,
+      "shielded": false
+    },
+    "encounter": 2
+  },
+  {
+    "id": 98,
+    "time": 28.93333333333297,
+    "type": "warning",
+    "text": "流浪の剣兵：押し込み斬り → リネ",
+    "source": "e2",
+    "visual": {
+      "actionName": "押し込み斬り"
+    },
+    "encounter": 2
+  },
+  {
+    "id": 99,
+    "time": 29.04999999999963,
+    "type": "action",
+    "text": "セナ → 砕突",
+    "source": "a2",
+    "visual": {
+      "skillId": "jab",
+      "actionName": "砕突",
+      "comboIndex": 1
+    },
+    "encounter": 2
+  },
+  {
+    "id": 100,
+    "time": 29.383333333332946,
+    "type": "shift",
+    "text": "リネ → 射手",
+    "target": "a1",
+    "encounter": 2
+  },
+  {
+    "id": 101,
+    "time": 29.433333333332943,
+    "type": "system",
+    "text": "リネ：確定予約1手目に「防御」を追加",
+    "source": "a1",
+    "encounter": 2
+  },
+  {
+    "id": 102,
+    "time": 29.433333333332943,
+    "type": "system",
+    "text": "アルト：確定予約2手目に「円弧斬り」を追加",
+    "source": "a0",
+    "encounter": 2
+  },
+  {
+    "id": 103,
+    "time": 29.849999999999586,
+    "type": "action",
+    "text": "アルト → 円弧斬り",
+    "source": "a0",
+    "visual": {
+      "skillId": "sweep",
+      "actionName": "円弧斬り",
+      "comboIndex": 1
+    },
+    "encounter": 2
+  },
+  {
+    "id": 104,
+    "time": 29.94999999999958,
+    "type": "damage",
+    "text": "セナ → 流浪の剣兵 62",
+    "source": "a2",
+    "target": "e2",
+    "value": 62,
+    "visual": {
+      "skillId": "jab",
+      "actionName": "砕突",
+      "comboIndex": 1,
+      "shielded": false
+    },
+    "encounter": 2
+  },
+  {
+    "id": 105,
+    "time": 29.94999999999958,
+    "type": "break",
+    "text": "流浪の剣兵 BREAK — 12秒間の好機",
+    "target": "e2",
+    "source": "a2",
+    "visual": {
+      "skillId": "jab",
+      "actionName": "砕突",
+      "comboIndex": 1
+    },
+    "encounter": 2
+  },
+  {
+    "id": 106,
+    "time": 30.14999999999957,
+    "type": "action",
+    "text": "セナ → 砕突",
+    "source": "a2",
+    "visual": {
+      "skillId": "jab",
+      "actionName": "砕突",
+      "comboIndex": 2
+    },
+    "encounter": 2
+  },
+  {
+    "id": 107,
+    "time": 30.466666666666217,
+    "type": "action",
+    "text": "リネ → 防御",
+    "source": "a1",
+    "visual": {
+      "skillId": "guard",
+      "actionName": "防御",
+      "comboIndex": 1
+    },
+    "encounter": 2
+  },
+  {
+    "id": 108,
+    "time": 30.866666666666195,
+    "type": "heal",
+    "text": "リネ：防護",
+    "source": "a1",
+    "target": "a1",
+    "visual": {
+      "skillId": "guard",
+      "actionName": "防御",
+      "comboIndex": 1
+    },
+    "encounter": 2
+  },
+  {
+    "id": 109,
+    "time": 31.049999999999518,
+    "type": "damage",
+    "text": "セナ → 鉄殻の衛兵 70",
+    "source": "a2",
+    "target": "e0",
+    "value": 70,
+    "visual": {
+      "skillId": "jab",
+      "actionName": "砕突",
+      "comboIndex": 2,
+      "shielded": false
+    },
+    "encounter": 2
+  },
+  {
+    "id": 110,
+    "time": 31.049999999999518,
+    "type": "break",
+    "text": "鉄殻の衛兵 BREAK — 12秒間の好機",
+    "target": "e0",
+    "source": "a2",
+    "visual": {
+      "skillId": "jab",
+      "actionName": "砕突",
+      "comboIndex": 2
+    },
+    "encounter": 2
+  },
+  {
+    "id": 111,
+    "time": 31.649999999999483,
+    "type": "damage",
+    "text": "アルト → 鉄殻の衛兵 343",
+    "source": "a0",
+    "target": "e0",
+    "value": 343,
+    "visual": {
+      "skillId": "sweep",
+      "actionName": "円弧斬り",
+      "comboIndex": 1,
+      "shielded": false
+    },
+    "encounter": 2
+  },
+  {
+    "id": 112,
+    "time": 31.649999999999483,
+    "type": "damage",
+    "text": "アルト → 夜渡りの砲術師 444",
+    "source": "a0",
+    "target": "e1",
+    "value": 444,
+    "visual": {
+      "skillId": "sweep",
+      "actionName": "円弧斬り",
+      "comboIndex": 1,
+      "shielded": false
+    },
+    "encounter": 2
+  },
+  {
+    "id": 113,
+    "time": 31.649999999999483,
+    "type": "damage",
+    "text": "アルト → 流浪の剣兵 328",
+    "source": "a0",
+    "target": "e2",
+    "value": 328,
+    "visual": {
+      "skillId": "sweep",
+      "actionName": "円弧斬り",
+      "comboIndex": 1,
+      "shielded": false
+    },
+    "encounter": 2
+  },
+  {
+    "id": 114,
+    "time": 33.18333333333273,
+    "type": "system",
+    "text": "リネ：確定予約1手目に「一斉射」を追加",
+    "source": "a1",
+    "encounter": 2
+  },
+  {
+    "id": 115,
+    "time": 33.43333333333272,
+    "type": "system",
+    "text": "リネ：確定予約2手目に「一斉射」を追加",
+    "source": "a1",
+    "encounter": 2
+  },
+  {
+    "id": 116,
+    "time": 33.93333333333269,
+    "type": "system",
+    "text": "アルト：確定予約2手目に「円弧斬り」を追加",
+    "source": "a0",
+    "encounter": 2
+  },
+  {
+    "id": 117,
+    "time": 34.033333333332685,
+    "type": "action",
+    "text": "リネ → 一斉射",
+    "source": "a1",
+    "visual": {
+      "skillId": "volley",
+      "actionName": "一斉射",
+      "comboIndex": 1
+    },
+    "encounter": 2
+  },
+  {
+    "id": 118,
+    "time": 34.21666666666601,
+    "type": "action",
+    "text": "セナ → 砕突",
+    "source": "a2",
+    "visual": {
+      "skillId": "jab",
+      "actionName": "砕突",
+      "comboIndex": 1
+    },
+    "encounter": 2
+  },
+  {
+    "id": 119,
+    "time": 35.01666666666596,
+    "type": "action",
+    "text": "アルト → 円弧斬り",
+    "source": "a0",
+    "visual": {
+      "skillId": "sweep",
+      "actionName": "円弧斬り",
+      "comboIndex": 1
+    },
+    "encounter": 2
+  },
+  {
+    "id": 120,
+    "time": 35.11666666666596,
+    "type": "damage",
+    "text": "セナ → 夜渡りの砲術師 113",
+    "source": "a2",
+    "target": "e1",
+    "value": 113,
+    "visual": {
+      "skillId": "jab",
+      "actionName": "砕突",
+      "comboIndex": 1,
+      "shielded": false
+    },
+    "encounter": 2
+  },
+  {
+    "id": 121,
+    "time": 35.316666666665945,
+    "type": "action",
+    "text": "セナ → 砕突",
+    "source": "a2",
+    "visual": {
+      "skillId": "jab",
+      "actionName": "砕突",
+      "comboIndex": 2
+    },
+    "encounter": 2
+  },
+  {
+    "id": 122,
+    "time": 35.93333333333258,
+    "type": "damage",
+    "text": "リネ → 鉄殻の衛兵 372",
+    "source": "a1",
+    "target": "e0",
+    "value": 372,
+    "visual": {
+      "skillId": "volley",
+      "actionName": "一斉射",
+      "comboIndex": 1,
+      "shielded": false
+    },
+    "encounter": 2
+  },
+  {
+    "id": 123,
+    "time": 35.93333333333258,
+    "type": "damage",
+    "text": "リネ → 夜渡りの砲術師 58",
+    "source": "a1",
+    "target": "e1",
+    "value": 58,
+    "visual": {
+      "skillId": "volley",
+      "actionName": "一斉射",
+      "comboIndex": 1,
+      "shielded": false
+    },
+    "encounter": 2
+  },
+  {
+    "id": 124,
+    "time": 35.93333333333258,
+    "type": "system",
+    "text": "夜渡りの砲術師を倒した",
+    "source": "a1",
+    "target": "e1",
+    "visual": {
+      "skillId": "volley",
+      "actionName": "一斉射",
+      "comboIndex": 1,
+      "outcome": "defeat"
+    },
+    "encounter": 2
+  },
+  {
+    "id": 125,
+    "time": 35.93333333333258,
+    "type": "damage",
+    "text": "リネ → 流浪の剣兵 247",
+    "source": "a1",
+    "target": "e2",
+    "value": 247,
+    "visual": {
+      "skillId": "volley",
+      "actionName": "一斉射",
+      "comboIndex": 1,
+      "shielded": false
+    },
+    "encounter": 2
+  },
+  {
+    "id": 126,
+    "time": 35.93333333333258,
+    "type": "system",
+    "text": "流浪の剣兵を倒した",
+    "source": "a1",
+    "target": "e2",
+    "visual": {
+      "skillId": "volley",
+      "actionName": "一斉射",
+      "comboIndex": 1,
+      "outcome": "defeat"
+    },
+    "encounter": 2
+  },
+  {
+    "id": 127,
+    "time": 36.216666666665894,
+    "type": "damage",
+    "text": "セナ → 鉄殻の衛兵 90",
+    "source": "a2",
+    "target": "e0",
+    "value": 90,
+    "visual": {
+      "skillId": "jab",
+      "actionName": "砕突",
+      "comboIndex": 2,
+      "shielded": false
+    },
+    "encounter": 2
+  },
+  {
+    "id": 128,
+    "time": 36.81666666666586,
+    "type": "damage",
+    "text": "アルト → 鉄殻の衛兵 357",
+    "source": "a0",
+    "target": "e0",
+    "value": 357,
+    "visual": {
+      "skillId": "sweep",
+      "actionName": "円弧斬り",
+      "comboIndex": 1,
+      "shielded": false
+    },
+    "encounter": 2
+  },
+  {
+    "id": 129,
+    "time": 36.81666666666586,
+    "type": "system",
+    "text": "鉄殻の衛兵を倒した",
+    "source": "a0",
+    "target": "e0",
+    "visual": {
+      "skillId": "sweep",
+      "actionName": "円弧斬り",
+      "comboIndex": 1,
+      "outcome": "defeat"
+    },
+    "encounter": 2
+  },
+  {
+    "id": 130,
+    "time": 36.81666666666586,
+    "type": "system",
+    "text": "二つの戦いを突破した。",
+    "encounter": 2
+  }
+]

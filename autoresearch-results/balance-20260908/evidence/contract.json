@@ -1,0 +1,142 @@
+{
+  "goal": "Discover contrasting combat profiles and suspicious extremes, not a single fun optimum.",
+  "version": "orchestra-15",
+  "metric": "occupied provisional behavior cells",
+  "direction": "higher",
+  "metricLimitation": "Archive coverage measures exploration only. It is not a score for balance or enjoyment. All discarded candidates remain as evidence.",
+  "userPriority": "Preserve ranges, directions and offense/recovery/intervention tradeoffs; no automatic product rebalance.",
+  "verify": "npm run sim:balance -- <new-output-directory>",
+  "guard": [
+    "npm test",
+    "npm run build",
+    "git diff --check",
+    "Each full run must replay to exactly the saved final State; frozen playRules and source hashes recorded."
+  ],
+  "scope": [
+    "scripts/balance/",
+    "scripts/balance-study.ts",
+    "tests/balance-*.test.ts",
+    "package.json",
+    "autoresearch-results/balance-20260908/",
+    "docs/balance-research.md"
+  ],
+  "readOnly": [
+    "src/",
+    "existing tests",
+    "existing experiment reports",
+    "credentials",
+    "deployment configuration"
+  ],
+  "parameters": {
+    "atbRate": [
+      0.7,
+      0.85,
+      1
+    ],
+    "enemyHpScale": [
+      0.85,
+      1,
+      1.15
+    ],
+    "enemyPower": [
+      0.8,
+      1,
+      1.2
+    ]
+  },
+  "baseline": {
+    "atbRate": 0.85,
+    "enemyHpScale": 1,
+    "enemyPower": 1
+  },
+  "fixed": {
+    "planning": "queue",
+    "loadout": "keep",
+    "bonusMode": "strong",
+    "initialAtb": 1,
+    "atbMode": "idle",
+    "chainActions": true,
+    "decisionInterval": 0.25,
+    "reactionSeconds": 0.35,
+    "maxSeconds": 180,
+    "fullInventory": false
+  },
+  "training": {
+    "sets": [
+      "belfry",
+      "crossfire",
+      "pursuit"
+    ],
+    "policies": [
+      "autopilot",
+      "rush",
+      "tactician"
+    ],
+    "seeds": [
+      1307,
+      1308
+    ],
+    "levels": [
+      1
+    ]
+  },
+  "validation": {
+    "sets": [
+      "belfry",
+      "bulwark",
+      "crossfire",
+      "pursuit",
+      "attrition"
+    ],
+    "policies": [
+      "autopilot",
+      "rush",
+      "tactician",
+      "adaptive"
+    ],
+    "seeds": [
+      2601,
+      2602,
+      2603
+    ],
+    "levels": [
+      1,
+      2
+    ]
+  },
+  "provisionalFeasibility": {
+    "allPolicyWinFractionAtLeast": 0.75,
+    "timeoutsAtMost": 0,
+    "meanVictoriousEncounterSeconds": [
+      15,
+      90
+    ]
+  },
+  "feasibilityNote": "Researcher working bands, not user-approved acceptance criteria. Nonfeasible candidates remain visible; skilled zero-damage runs are flagged, not rejected.",
+  "behaviorCell": {
+    "meanVictoriousEncounterSecondsCuts": [
+      25,
+      40
+    ],
+    "meanLivingEnemyBrokenFractionCuts": [
+      0.2,
+      0.4
+    ]
+  },
+  "selection": "Within feasible candidates (fallback all explicitly flagged), offense minimizes win encounter time; resilience (damage prevention, not demonstrated recovery) minimizes deaths then damage taken; intervention maximizes paired tactician-over-autopilot win delta then paired win-time savings. Select distinct candidates with id tie-break. AI intervention is not manual control payoff.",
+  "refinement": "After the grid, each selected profile proposes at most 2 new one-axis neighbors at half grid step, within initial bounds, for at most 6 serial packets. Re-select profiles using training only; freeze before validation.",
+  "stop": {
+    "gridCandidates": 27,
+    "refinementCandidatesAtMost": 6,
+    "validationCandidatesAtMost": 4,
+    "maxSecondsPerRun": 180
+  },
+  "followups": "Selected candidates: same-seed loadout keep/legacy/adaptive/assault comparisons and tactician no-pull/no-row/no-defense ablations, after freezing selection. Diagnostic only; no retuning from validation.",
+  "limitations": [
+    "AI issues commands to all allies directly; handoff/UI effort not modeled.",
+    "Same starting seed does not ensure aligned random events after trajectories diverge.",
+    "Duration of failed runs is censored and never reported as fast clear.",
+    "Observed break damage rates are confounded by target, skill and exposure.",
+    "Readability, jackpot excitement and actual human intervention value remain human judgments."
+  ]
+}

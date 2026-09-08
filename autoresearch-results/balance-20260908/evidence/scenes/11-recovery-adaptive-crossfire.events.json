@@ -1,0 +1,9808 @@
+[
+  {
+    "id": 1,
+    "time": 0,
+    "type": "system",
+    "text": "戦闘開始。全員をAIが操作します。",
+    "encounter": 1
+  },
+  {
+    "id": 2,
+    "time": 0,
+    "type": "shift",
+    "text": "オプティマ：崩しの連奏",
+    "encounter": 1
+  },
+  {
+    "id": 3,
+    "time": 0.24999999999999997,
+    "type": "system",
+    "text": "アルト：確定予約1手目に「斬撃」を追加",
+    "source": "a0",
+    "encounter": 1
+  },
+  {
+    "id": 4,
+    "time": 0.24999999999999997,
+    "type": "system",
+    "text": "リネ：確定予約1手目に「星の雨」を追加",
+    "source": "a1",
+    "encounter": 1
+  },
+  {
+    "id": 5,
+    "time": 0.26666666666666666,
+    "type": "action",
+    "text": "アルト → 斬撃",
+    "source": "a0",
+    "visual": {
+      "skillId": "slash",
+      "actionName": "斬撃",
+      "comboIndex": 1
+    },
+    "encounter": 1
+  },
+  {
+    "id": 6,
+    "time": 0.49999999999999994,
+    "type": "system",
+    "text": "アルト：確定予約1手目に「円弧斬り」を追加",
+    "source": "a0",
+    "encounter": 1
+  },
+  {
+    "id": 7,
+    "time": 0.49999999999999994,
+    "type": "system",
+    "text": "リネ：確定予約2手目に「星の雨」を追加",
+    "source": "a1",
+    "encounter": 1
+  },
+  {
+    "id": 8,
+    "time": 0.6500000000000004,
+    "type": "shift",
+    "text": "セナ → 鉤槍使い",
+    "target": "a2",
+    "encounter": 1
+  },
+  {
+    "id": 9,
+    "time": 0.7500000000000007,
+    "type": "system",
+    "text": "アルト：確定予約2手目に「円弧斬り」を追加",
+    "source": "a0",
+    "encounter": 1
+  },
+  {
+    "id": 10,
+    "time": 0.7500000000000007,
+    "type": "system",
+    "text": "セナ：確定予約1手目に「引き寄せ」を追加",
+    "source": "a2",
+    "encounter": 1
+  },
+  {
+    "id": 11,
+    "time": 1.1666666666666674,
+    "type": "damage",
+    "text": "アルト → 砲列の衛兵 129",
+    "source": "a0",
+    "target": "e0",
+    "value": 129,
+    "visual": {
+      "skillId": "slash",
+      "actionName": "斬撃",
+      "comboIndex": 1,
+      "shielded": false
+    },
+    "encounter": 1
+  },
+  {
+    "id": 12,
+    "time": 1.3333333333333335,
+    "type": "action",
+    "text": "リネ → 星の雨",
+    "source": "a1",
+    "visual": {
+      "skillId": "rain",
+      "actionName": "星の雨",
+      "comboIndex": 1
+    },
+    "encounter": 1
+  },
+  {
+    "id": 13,
+    "time": 1.4999999999999996,
+    "type": "system",
+    "text": "リネ：確定予約2手目に「星の雨」を追加",
+    "source": "a1",
+    "encounter": 1
+  },
+  {
+    "id": 14,
+    "time": 2.083333333333331,
+    "type": "action",
+    "text": "セナ → 引き寄せ",
+    "source": "a2",
+    "visual": {
+      "skillId": "pull",
+      "actionName": "引き寄せ",
+      "comboIndex": 1
+    },
+    "encounter": 1
+  },
+  {
+    "id": 15,
+    "time": 2.249999999999997,
+    "type": "system",
+    "text": "セナ：確定予約1手目に「引き寄せ」を追加",
+    "source": "a2",
+    "encounter": 1
+  },
+  {
+    "id": 16,
+    "time": 3.183333333333327,
+    "type": "damage",
+    "text": "セナ → 後列狙いの砲手 24",
+    "source": "a2",
+    "target": "e1",
+    "value": 24,
+    "visual": {
+      "skillId": "pull",
+      "actionName": "引き寄せ",
+      "comboIndex": 1,
+      "shielded": true
+    },
+    "encounter": 1
+  },
+  {
+    "id": 17,
+    "time": 3.183333333333327,
+    "type": "move",
+    "text": "後列狙いの砲手 → 前列",
+    "source": "a2",
+    "target": "e1",
+    "visual": {
+      "fromRow": "back",
+      "toRow": "front"
+    },
+    "encounter": 1
+  },
+  {
+    "id": 18,
+    "time": 3.3333333333333264,
+    "type": "damage",
+    "text": "リネ → 前列狙いの砲手 29",
+    "source": "a1",
+    "target": "e2",
+    "value": 29,
+    "visual": {
+      "skillId": "rain",
+      "actionName": "星の雨",
+      "comboIndex": 1,
+      "shielded": true
+    },
+    "encounter": 1
+  },
+  {
+    "id": 19,
+    "time": 3.9166666666666576,
+    "type": "warning",
+    "text": "砲列の衛兵：前列薙ぎ払い",
+    "source": "e0",
+    "visual": {
+      "actionName": "前列薙ぎ払い"
+    },
+    "encounter": 1
+  },
+  {
+    "id": 20,
+    "time": 4.216666666666657,
+    "type": "warning",
+    "text": "後列狙いの砲手：後列への交差砲撃",
+    "source": "e1",
+    "visual": {
+      "actionName": "後列への交差砲撃"
+    },
+    "encounter": 1
+  },
+  {
+    "id": 21,
+    "time": 4.216666666666657,
+    "type": "warning",
+    "text": "前列狙いの砲手：前列への交差砲撃",
+    "source": "e2",
+    "visual": {
+      "actionName": "前列への交差砲撃"
+    },
+    "encounter": 1
+  },
+  {
+    "id": 22,
+    "time": 4.733333333333322,
+    "type": "action",
+    "text": "アルト → 円弧斬り",
+    "source": "a0",
+    "visual": {
+      "skillId": "sweep",
+      "actionName": "円弧斬り",
+      "comboIndex": 1
+    },
+    "encounter": 1
+  },
+  {
+    "id": 23,
+    "time": 4.7499999999999885,
+    "type": "system",
+    "text": "アルト：確定予約2手目に「円弧斬り」を追加",
+    "source": "a0",
+    "encounter": 1
+  },
+  {
+    "id": 24,
+    "time": 4.7499999999999885,
+    "type": "system",
+    "text": "リネ：「星の雨」の予約を取消",
+    "encounter": 1
+  },
+  {
+    "id": 25,
+    "time": 4.7499999999999885,
+    "type": "system",
+    "text": "リネ：「星の雨」の予約を取消",
+    "encounter": 1
+  },
+  {
+    "id": 26,
+    "time": 4.7499999999999885,
+    "type": "system",
+    "text": "リネ：確定予約1手目に「防御」を追加",
+    "source": "a1",
+    "encounter": 1
+  },
+  {
+    "id": 27,
+    "time": 4.7499999999999885,
+    "type": "system",
+    "text": "セナ：「引き寄せ」の予約を取消",
+    "encounter": 1
+  },
+  {
+    "id": 28,
+    "time": 4.7499999999999885,
+    "type": "system",
+    "text": "セナ：確定予約1手目に「防御」を追加",
+    "source": "a2",
+    "encounter": 1
+  },
+  {
+    "id": 29,
+    "time": 5.716666666666652,
+    "type": "action",
+    "text": "セナ → 防御",
+    "source": "a2",
+    "visual": {
+      "skillId": "guard",
+      "actionName": "防御",
+      "comboIndex": 1
+    },
+    "encounter": 1
+  },
+  {
+    "id": 30,
+    "time": 5.749999999999985,
+    "type": "system",
+    "text": "セナ：確定予約1手目に「砕突」を追加",
+    "source": "a2",
+    "encounter": 1
+  },
+  {
+    "id": 31,
+    "time": 5.966666666666651,
+    "type": "action",
+    "text": "リネ → 防御",
+    "source": "a1",
+    "visual": {
+      "skillId": "guard",
+      "actionName": "防御",
+      "comboIndex": 1
+    },
+    "encounter": 1
+  },
+  {
+    "id": 32,
+    "time": 5.999999999999984,
+    "type": "system",
+    "text": "リネ：確定予約1手目に「星の雨」を追加",
+    "source": "a1",
+    "encounter": 1
+  },
+  {
+    "id": 33,
+    "time": 5.999999999999984,
+    "type": "system",
+    "text": "セナ：確定予約2手目に「砕突」を追加",
+    "source": "a2",
+    "encounter": 1
+  },
+  {
+    "id": 34,
+    "time": 6.11666666666665,
+    "type": "heal",
+    "text": "セナ：防護",
+    "source": "a2",
+    "target": "a2",
+    "visual": {
+      "skillId": "guard",
+      "actionName": "防御",
+      "comboIndex": 1
+    },
+    "encounter": 1
+  },
+  {
+    "id": 35,
+    "time": 6.249999999999983,
+    "type": "system",
+    "text": "アルト：「円弧斬り」の予約を取消",
+    "encounter": 1
+  },
+  {
+    "id": 36,
+    "time": 6.249999999999983,
+    "type": "system",
+    "text": "アルト：「円弧斬り」の予約を取消",
+    "encounter": 1
+  },
+  {
+    "id": 37,
+    "time": 6.249999999999983,
+    "type": "system",
+    "text": "アルト：確定予約1手目に「誓いの盾槍に変更」を追加",
+    "source": "a0",
+    "encounter": 1
+  },
+  {
+    "id": 38,
+    "time": 6.366666666666649,
+    "type": "heal",
+    "text": "リネ：防護",
+    "source": "a1",
+    "target": "a1",
+    "visual": {
+      "skillId": "guard",
+      "actionName": "防御",
+      "comboIndex": 1
+    },
+    "encounter": 1
+  },
+  {
+    "id": 39,
+    "time": 6.499999999999982,
+    "type": "system",
+    "text": "リネ：確定予約2手目に「星の雨」を追加",
+    "source": "a1",
+    "encounter": 1
+  },
+  {
+    "id": 40,
+    "time": 6.499999999999982,
+    "type": "system",
+    "text": "セナ：確定予約3手目に「砕突」を追加",
+    "source": "a2",
+    "encounter": 1
+  },
+  {
+    "id": 41,
+    "time": 6.5333333333333155,
+    "type": "damage",
+    "text": "アルト → 前列狙いの砲手 145",
+    "source": "a0",
+    "target": "e2",
+    "value": 145,
+    "visual": {
+      "skillId": "sweep",
+      "actionName": "円弧斬り",
+      "comboIndex": 1,
+      "shielded": true
+    },
+    "encounter": 1
+  },
+  {
+    "id": 42,
+    "time": 7.116666666666647,
+    "type": "damage",
+    "text": "砲列の衛兵 → アルト 280",
+    "source": "e0",
+    "target": "a0",
+    "value": 280,
+    "visual": {
+      "actionName": "前列薙ぎ払い",
+      "shielded": false
+    },
+    "encounter": 1
+  },
+  {
+    "id": 43,
+    "time": 7.583333333333312,
+    "type": "damage",
+    "text": "後列狙いの砲手 → リネ 125",
+    "source": "e1",
+    "target": "a1",
+    "value": 125,
+    "visual": {
+      "actionName": "後列への交差砲撃",
+      "shielded": true
+    },
+    "encounter": 1
+  },
+  {
+    "id": 44,
+    "time": 7.583333333333312,
+    "type": "damage",
+    "text": "後列狙いの砲手 → セナ 125",
+    "source": "e1",
+    "target": "a2",
+    "value": 125,
+    "visual": {
+      "actionName": "後列への交差砲撃",
+      "shielded": true
+    },
+    "encounter": 1
+  },
+  {
+    "id": 45,
+    "time": 7.583333333333312,
+    "type": "damage",
+    "text": "前列狙いの砲手 → アルト 347",
+    "source": "e2",
+    "target": "a0",
+    "value": 347,
+    "visual": {
+      "actionName": "前列への交差砲撃",
+      "shielded": false
+    },
+    "encounter": 1
+  },
+  {
+    "id": 46,
+    "time": 8.399999999999997,
+    "type": "shift",
+    "text": "アルト → 守護騎士",
+    "target": "a0",
+    "encounter": 1
+  },
+  {
+    "id": 47,
+    "time": 8.500000000000002,
+    "type": "system",
+    "text": "アルト：確定予約1手目に「護りの誓い」を追加",
+    "source": "a0",
+    "encounter": 1
+  },
+  {
+    "id": 48,
+    "time": 8.550000000000004,
+    "type": "action",
+    "text": "セナ → 砕突",
+    "source": "a2",
+    "visual": {
+      "skillId": "jab",
+      "actionName": "砕突",
+      "comboIndex": 1
+    },
+    "encounter": 1
+  },
+  {
+    "id": 49,
+    "time": 8.750000000000014,
+    "type": "system",
+    "text": "セナ：確定予約3手目に「引き寄せ」を追加",
+    "source": "a2",
+    "encounter": 1
+  },
+  {
+    "id": 50,
+    "time": 9.450000000000049,
+    "type": "damage",
+    "text": "セナ → 前列狙いの砲手 21",
+    "source": "a2",
+    "target": "e2",
+    "value": 21,
+    "visual": {
+      "skillId": "jab",
+      "actionName": "砕突",
+      "comboIndex": 1,
+      "shielded": true
+    },
+    "encounter": 1
+  },
+  {
+    "id": 51,
+    "time": 9.816666666666734,
+    "type": "action",
+    "text": "アルト → 護りの誓い",
+    "source": "a0",
+    "visual": {
+      "skillId": "ward",
+      "actionName": "護りの誓い",
+      "comboIndex": 1
+    },
+    "encounter": 1
+  },
+  {
+    "id": 52,
+    "time": 10.000000000000076,
+    "type": "system",
+    "text": "アルト：確定予約1手目に「護りの誓い」を追加",
+    "source": "a0",
+    "encounter": 1
+  },
+  {
+    "id": 53,
+    "time": 10.233333333333421,
+    "type": "action",
+    "text": "リネ → 星の雨",
+    "source": "a1",
+    "visual": {
+      "skillId": "rain",
+      "actionName": "星の雨",
+      "comboIndex": 1
+    },
+    "encounter": 1
+  },
+  {
+    "id": 54,
+    "time": 10.250000000000089,
+    "type": "system",
+    "text": "アルト：「護りの誓い」の予約を取消",
+    "encounter": 1
+  },
+  {
+    "id": 55,
+    "time": 10.250000000000089,
+    "type": "system",
+    "text": "セナ：「砕突」の予約を取消",
+    "encounter": 1
+  },
+  {
+    "id": 56,
+    "time": 10.250000000000089,
+    "type": "system",
+    "text": "セナ：「砕突」の予約を取消",
+    "encounter": 1
+  },
+  {
+    "id": 57,
+    "time": 10.250000000000089,
+    "type": "system",
+    "text": "セナ：「引き寄せ」の予約を取消",
+    "encounter": 1
+  },
+  {
+    "id": 58,
+    "time": 10.250000000000089,
+    "type": "shift",
+    "text": "オプティマ：均衡の調べ",
+    "encounter": 1
+  },
+  {
+    "id": 59,
+    "time": 10.500000000000101,
+    "type": "system",
+    "text": "リネ：確定予約2手目に「星の雨」を追加",
+    "source": "a1",
+    "encounter": 1
+  },
+  {
+    "id": 60,
+    "time": 10.516666666666769,
+    "type": "heal",
+    "text": "アルト：防護",
+    "source": "a0",
+    "target": "a0",
+    "visual": {
+      "skillId": "ward",
+      "actionName": "護りの誓い",
+      "comboIndex": 1
+    },
+    "encounter": 1
+  },
+  {
+    "id": 61,
+    "time": 11.100000000000131,
+    "type": "shift",
+    "text": "セナ → 祈祷師",
+    "target": "a2",
+    "encounter": 1
+  },
+  {
+    "id": 62,
+    "time": 11.250000000000139,
+    "type": "system",
+    "text": "セナ：確定予約1手目に「小さな祈り」を追加",
+    "source": "a2",
+    "encounter": 1
+  },
+  {
+    "id": 63,
+    "time": 12.066666666666846,
+    "type": "shift",
+    "text": "アルト → 剣士",
+    "target": "a0",
+    "encounter": 1
+  },
+  {
+    "id": 64,
+    "time": 12.23333333333352,
+    "type": "damage",
+    "text": "リネ → 砲列の衛兵 41",
+    "source": "a1",
+    "target": "e0",
+    "value": 41,
+    "visual": {
+      "skillId": "rain",
+      "actionName": "星の雨",
+      "comboIndex": 1,
+      "shielded": false
+    },
+    "encounter": 1
+  },
+  {
+    "id": 65,
+    "time": 12.23333333333352,
+    "type": "damage",
+    "text": "リネ → 後列狙いの砲手 38",
+    "source": "a1",
+    "target": "e1",
+    "value": 38,
+    "visual": {
+      "skillId": "rain",
+      "actionName": "星の雨",
+      "comboIndex": 1,
+      "shielded": false
+    },
+    "encounter": 1
+  },
+  {
+    "id": 66,
+    "time": 12.250000000000188,
+    "type": "system",
+    "text": "アルト：確定予約1手目に「円弧斬り」を追加",
+    "source": "a0",
+    "encounter": 1
+  },
+  {
+    "id": 67,
+    "time": 12.333333333333526,
+    "type": "action",
+    "text": "セナ → 小さな祈り",
+    "source": "a2",
+    "visual": {
+      "skillId": "heal",
+      "actionName": "小さな祈り",
+      "comboIndex": 1
+    },
+    "encounter": 1
+  },
+  {
+    "id": 68,
+    "time": 12.5000000000002,
+    "type": "system",
+    "text": "アルト：確定予約2手目に「円弧斬り」を追加",
+    "source": "a0",
+    "encounter": 1
+  },
+  {
+    "id": 69,
+    "time": 12.5000000000002,
+    "type": "system",
+    "text": "セナ：確定予約1手目に「小さな祈り」を追加",
+    "source": "a2",
+    "encounter": 1
+  },
+  {
+    "id": 70,
+    "time": 12.70000000000021,
+    "type": "warning",
+    "text": "後列狙いの砲手：後列への交差砲撃",
+    "source": "e1",
+    "visual": {
+      "actionName": "後列への交差砲撃"
+    },
+    "encounter": 1
+  },
+  {
+    "id": 71,
+    "time": 12.70000000000021,
+    "type": "warning",
+    "text": "前列狙いの砲手：前列への交差砲撃",
+    "source": "e2",
+    "visual": {
+      "actionName": "前列への交差砲撃"
+    },
+    "encounter": 1
+  },
+  {
+    "id": 72,
+    "time": 12.83333333333355,
+    "type": "warning",
+    "text": "砲列の衛兵：前列薙ぎ払い",
+    "source": "e0",
+    "visual": {
+      "actionName": "前列薙ぎ払い"
+    },
+    "encounter": 1
+  },
+  {
+    "id": 73,
+    "time": 13.50000000000025,
+    "type": "system",
+    "text": "リネ：「星の雨」の予約を取消",
+    "encounter": 1
+  },
+  {
+    "id": 74,
+    "time": 13.50000000000025,
+    "type": "system",
+    "text": "リネ：「星の雨」の予約を取消",
+    "encounter": 1
+  },
+  {
+    "id": 75,
+    "time": 13.50000000000025,
+    "type": "system",
+    "text": "リネ：確定予約1手目に「防御」を追加",
+    "source": "a1",
+    "encounter": 1
+  },
+  {
+    "id": 76,
+    "time": 13.533333333333585,
+    "type": "heal",
+    "text": "アルト +190",
+    "target": "a0",
+    "source": "a2",
+    "value": 190,
+    "visual": {
+      "skillId": "heal",
+      "actionName": "小さな祈り",
+      "comboIndex": 1
+    },
+    "encounter": 1
+  },
+  {
+    "id": 77,
+    "time": 14.550000000000303,
+    "type": "action",
+    "text": "アルト → 円弧斬り",
+    "source": "a0",
+    "visual": {
+      "skillId": "sweep",
+      "actionName": "円弧斬り",
+      "comboIndex": 1
+    },
+    "encounter": 1
+  },
+  {
+    "id": 78,
+    "time": 14.666666666666975,
+    "type": "action",
+    "text": "リネ → 防御",
+    "source": "a1",
+    "visual": {
+      "skillId": "guard",
+      "actionName": "防御",
+      "comboIndex": 1
+    },
+    "encounter": 1
+  },
+  {
+    "id": 79,
+    "time": 14.750000000000313,
+    "type": "system",
+    "text": "アルト：確定予約2手目に「円弧斬り」を追加",
+    "source": "a0",
+    "encounter": 1
+  },
+  {
+    "id": 80,
+    "time": 14.750000000000313,
+    "type": "system",
+    "text": "リネ：確定予約1手目に「星の雨」を追加",
+    "source": "a1",
+    "encounter": 1
+  },
+  {
+    "id": 81,
+    "time": 15.000000000000325,
+    "type": "system",
+    "text": "アルト：「円弧斬り」の予約を取消",
+    "encounter": 1
+  },
+  {
+    "id": 82,
+    "time": 15.000000000000325,
+    "type": "system",
+    "text": "アルト：「円弧斬り」の予約を取消",
+    "encounter": 1
+  },
+  {
+    "id": 83,
+    "time": 15.000000000000325,
+    "type": "shift",
+    "text": "オプティマ：崩し・防護・支援",
+    "encounter": 1
+  },
+  {
+    "id": 84,
+    "time": 15.066666666666995,
+    "type": "heal",
+    "text": "リネ：防護",
+    "source": "a1",
+    "target": "a1",
+    "visual": {
+      "skillId": "guard",
+      "actionName": "防御",
+      "comboIndex": 1
+    },
+    "encounter": 1
+  },
+  {
+    "id": 85,
+    "time": 15.250000000000338,
+    "type": "system",
+    "text": "リネ：確定予約2手目に「星の雨」を追加",
+    "source": "a1",
+    "encounter": 1
+  },
+  {
+    "id": 86,
+    "time": 15.683333333333692,
+    "type": "action",
+    "text": "セナ → 小さな祈り",
+    "source": "a2",
+    "visual": {
+      "skillId": "heal",
+      "actionName": "小さな祈り",
+      "comboIndex": 1
+    },
+    "encounter": 1
+  },
+  {
+    "id": 87,
+    "time": 15.750000000000362,
+    "type": "system",
+    "text": "セナ：確定予約1手目に「小さな祈り」を追加",
+    "source": "a2",
+    "encounter": 1
+  },
+  {
+    "id": 88,
+    "time": 16.033333333333704,
+    "type": "damage",
+    "text": "砲列の衛兵 → アルト 140",
+    "source": "e0",
+    "target": "a0",
+    "value": 140,
+    "visual": {
+      "actionName": "前列薙ぎ払い",
+      "shielded": true
+    },
+    "encounter": 1
+  },
+  {
+    "id": 89,
+    "time": 16.066666666667036,
+    "type": "damage",
+    "text": "後列狙いの砲手 → リネ 125",
+    "source": "e1",
+    "target": "a1",
+    "value": 125,
+    "visual": {
+      "actionName": "後列への交差砲撃",
+      "shielded": true
+    },
+    "encounter": 1
+  },
+  {
+    "id": 90,
+    "time": 16.066666666667036,
+    "type": "damage",
+    "text": "後列狙いの砲手 → セナ 250",
+    "source": "e1",
+    "target": "a2",
+    "value": 250,
+    "visual": {
+      "actionName": "後列への交差砲撃",
+      "shielded": false
+    },
+    "encounter": 1
+  },
+  {
+    "id": 91,
+    "time": 16.066666666667036,
+    "type": "damage",
+    "text": "前列狙いの砲手 → アルト 174",
+    "source": "e2",
+    "target": "a0",
+    "value": 174,
+    "visual": {
+      "actionName": "前列への交差砲撃",
+      "shielded": true
+    },
+    "encounter": 1
+  },
+  {
+    "id": 92,
+    "time": 16.350000000000353,
+    "type": "damage",
+    "text": "アルト → 砲列の衛兵 233",
+    "source": "a0",
+    "target": "e0",
+    "value": 233,
+    "visual": {
+      "skillId": "sweep",
+      "actionName": "円弧斬り",
+      "comboIndex": 1,
+      "shielded": false
+    },
+    "encounter": 1
+  },
+  {
+    "id": 93,
+    "time": 16.350000000000353,
+    "type": "damage",
+    "text": "アルト → 後列狙いの砲手 230",
+    "source": "a0",
+    "target": "e1",
+    "value": 230,
+    "visual": {
+      "skillId": "sweep",
+      "actionName": "円弧斬り",
+      "comboIndex": 1,
+      "shielded": false
+    },
+    "encounter": 1
+  },
+  {
+    "id": 94,
+    "time": 16.883333333333656,
+    "type": "heal",
+    "text": "アルト +190",
+    "target": "a0",
+    "source": "a2",
+    "value": 190,
+    "visual": {
+      "skillId": "heal",
+      "actionName": "小さな祈り",
+      "comboIndex": 1
+    },
+    "encounter": 1
+  },
+  {
+    "id": 95,
+    "time": 18.200000000000248,
+    "type": "shift",
+    "text": "アルト → 守護騎士",
+    "target": "a0",
+    "encounter": 1
+  },
+  {
+    "id": 96,
+    "time": 18.250000000000245,
+    "type": "system",
+    "text": "アルト：確定予約1手目に「護りの誓い」を追加",
+    "source": "a0",
+    "encounter": 1
+  },
+  {
+    "id": 97,
+    "time": 18.550000000000228,
+    "type": "action",
+    "text": "リネ → 星の雨",
+    "source": "a1",
+    "visual": {
+      "skillId": "rain",
+      "actionName": "星の雨",
+      "comboIndex": 1
+    },
+    "encounter": 1
+  },
+  {
+    "id": 98,
+    "time": 18.750000000000217,
+    "type": "system",
+    "text": "リネ：確定予約2手目に「星の雨」を追加",
+    "source": "a1",
+    "encounter": 1
+  },
+  {
+    "id": 99,
+    "time": 19.01666666666687,
+    "type": "action",
+    "text": "セナ → 小さな祈り",
+    "source": "a2",
+    "visual": {
+      "skillId": "heal",
+      "actionName": "小さな祈り",
+      "comboIndex": 1
+    },
+    "encounter": 1
+  },
+  {
+    "id": 100,
+    "time": 19.25000000000019,
+    "type": "system",
+    "text": "アルト：「護りの誓い」の予約を取消",
+    "encounter": 1
+  },
+  {
+    "id": 101,
+    "time": 19.25000000000019,
+    "type": "shift",
+    "text": "オプティマ：均衡の調べ",
+    "encounter": 1
+  },
+  {
+    "id": 102,
+    "time": 19.500000000000174,
+    "type": "system",
+    "text": "セナ：確定予約1手目に「小さな祈り」を追加",
+    "source": "a2",
+    "encounter": 1
+  },
+  {
+    "id": 103,
+    "time": 19.90000000000015,
+    "type": "shift",
+    "text": "アルト → 剣士",
+    "target": "a0",
+    "encounter": 1
+  },
+  {
+    "id": 104,
+    "time": 20.000000000000146,
+    "type": "system",
+    "text": "アルト：確定予約1手目に「円弧斬り」を追加",
+    "source": "a0",
+    "encounter": 1
+  },
+  {
+    "id": 105,
+    "time": 20.2166666666668,
+    "type": "heal",
+    "text": "アルト +190",
+    "target": "a0",
+    "source": "a2",
+    "value": 190,
+    "visual": {
+      "skillId": "heal",
+      "actionName": "小さな祈り",
+      "comboIndex": 1
+    },
+    "encounter": 1
+  },
+  {
+    "id": 106,
+    "time": 20.25000000000013,
+    "type": "system",
+    "text": "アルト：確定予約2手目に「円弧斬り」を追加",
+    "source": "a0",
+    "encounter": 1
+  },
+  {
+    "id": 107,
+    "time": 20.550000000000114,
+    "type": "damage",
+    "text": "リネ → 砲列の衛兵 50",
+    "source": "a1",
+    "target": "e0",
+    "value": 50,
+    "visual": {
+      "skillId": "rain",
+      "actionName": "星の雨",
+      "comboIndex": 1,
+      "shielded": false
+    },
+    "encounter": 1
+  },
+  {
+    "id": 108,
+    "time": 20.550000000000114,
+    "type": "damage",
+    "text": "リネ → 後列狙いの砲手 48",
+    "source": "a1",
+    "target": "e1",
+    "value": 48,
+    "visual": {
+      "skillId": "rain",
+      "actionName": "星の雨",
+      "comboIndex": 1,
+      "shielded": false
+    },
+    "encounter": 1
+  },
+  {
+    "id": 109,
+    "time": 21.18333333333341,
+    "type": "warning",
+    "text": "後列狙いの砲手：後列への交差砲撃",
+    "source": "e1",
+    "visual": {
+      "actionName": "後列への交差砲撃"
+    },
+    "encounter": 1
+  },
+  {
+    "id": 110,
+    "time": 21.18333333333341,
+    "type": "warning",
+    "text": "前列狙いの砲手：前列への交差砲撃",
+    "source": "e2",
+    "visual": {
+      "actionName": "前列への交差砲撃"
+    },
+    "encounter": 1
+  },
+  {
+    "id": 111,
+    "time": 21.333333333333403,
+    "type": "action",
+    "text": "アルト → 円弧斬り",
+    "source": "a0",
+    "visual": {
+      "skillId": "sweep",
+      "actionName": "円弧斬り",
+      "comboIndex": 1
+    },
+    "encounter": 1
+  },
+  {
+    "id": 112,
+    "time": 21.750000000000046,
+    "type": "warning",
+    "text": "砲列の衛兵：追尾狙撃 → セナ",
+    "source": "e0",
+    "visual": {
+      "actionName": "追尾狙撃"
+    },
+    "encounter": 1
+  },
+  {
+    "id": 113,
+    "time": 22.250000000000018,
+    "type": "system",
+    "text": "アルト：確定予約2手目に「円弧斬り」を追加",
+    "source": "a0",
+    "encounter": 1
+  },
+  {
+    "id": 114,
+    "time": 22.250000000000018,
+    "type": "system",
+    "text": "リネ：「星の雨」の予約を取消",
+    "encounter": 1
+  },
+  {
+    "id": 115,
+    "time": 22.250000000000018,
+    "type": "system",
+    "text": "リネ：「星の雨」の予約を取消",
+    "encounter": 1
+  },
+  {
+    "id": 116,
+    "time": 22.250000000000018,
+    "type": "system",
+    "text": "リネ：確定予約1手目に「防御」を追加",
+    "source": "a1",
+    "encounter": 1
+  },
+  {
+    "id": 117,
+    "time": 22.250000000000018,
+    "type": "system",
+    "text": "セナ：「小さな祈り」の予約を取消",
+    "encounter": 1
+  },
+  {
+    "id": 118,
+    "time": 22.250000000000018,
+    "type": "system",
+    "text": "セナ：確定予約1手目に「防御」を追加",
+    "source": "a2",
+    "encounter": 1
+  },
+  {
+    "id": 119,
+    "time": 22.366666666666678,
+    "type": "action",
+    "text": "セナ → 防御",
+    "source": "a2",
+    "visual": {
+      "skillId": "guard",
+      "actionName": "防御",
+      "comboIndex": 1
+    },
+    "encounter": 1
+  },
+  {
+    "id": 120,
+    "time": 22.500000000000004,
+    "type": "system",
+    "text": "セナ：確定予約1手目に「小さな祈り」を追加",
+    "source": "a2",
+    "encounter": 1
+  },
+  {
+    "id": 121,
+    "time": 22.766666666666655,
+    "type": "heal",
+    "text": "セナ：防護",
+    "source": "a2",
+    "target": "a2",
+    "visual": {
+      "skillId": "guard",
+      "actionName": "防御",
+      "comboIndex": 1
+    },
+    "encounter": 1
+  },
+  {
+    "id": 122,
+    "time": 22.999999999999975,
+    "type": "action",
+    "text": "リネ → 防御",
+    "source": "a1",
+    "visual": {
+      "skillId": "guard",
+      "actionName": "防御",
+      "comboIndex": 1
+    },
+    "encounter": 1
+  },
+  {
+    "id": 123,
+    "time": 22.999999999999975,
+    "type": "system",
+    "text": "リネ：確定予約1手目に「星の雨」を追加",
+    "source": "a1",
+    "encounter": 1
+  },
+  {
+    "id": 124,
+    "time": 23.1333333333333,
+    "type": "damage",
+    "text": "アルト → 砲列の衛兵 297",
+    "source": "a0",
+    "target": "e0",
+    "value": 297,
+    "visual": {
+      "skillId": "sweep",
+      "actionName": "円弧斬り",
+      "comboIndex": 1,
+      "shielded": false
+    },
+    "encounter": 1
+  },
+  {
+    "id": 125,
+    "time": 23.1333333333333,
+    "type": "damage",
+    "text": "アルト → 後列狙いの砲手 303",
+    "source": "a0",
+    "target": "e1",
+    "value": 303,
+    "visual": {
+      "skillId": "sweep",
+      "actionName": "円弧斬り",
+      "comboIndex": 1,
+      "shielded": false
+    },
+    "encounter": 1
+  },
+  {
+    "id": 126,
+    "time": 23.24999999999996,
+    "type": "system",
+    "text": "リネ：確定予約2手目に「星の雨」を追加",
+    "source": "a1",
+    "encounter": 1
+  },
+  {
+    "id": 127,
+    "time": 23.399999999999952,
+    "type": "heal",
+    "text": "リネ：防護",
+    "source": "a1",
+    "target": "a1",
+    "visual": {
+      "skillId": "guard",
+      "actionName": "防御",
+      "comboIndex": 1
+    },
+    "encounter": 1
+  },
+  {
+    "id": 128,
+    "time": 23.99999999999992,
+    "type": "system",
+    "text": "アルト：「円弧斬り」の予約を取消",
+    "encounter": 1
+  },
+  {
+    "id": 129,
+    "time": 23.99999999999992,
+    "type": "system",
+    "text": "アルト：「円弧斬り」の予約を取消",
+    "encounter": 1
+  },
+  {
+    "id": 130,
+    "time": 23.99999999999992,
+    "type": "shift",
+    "text": "オプティマ：崩し・防護・支援",
+    "encounter": 1
+  },
+  {
+    "id": 131,
+    "time": 24.549999999999887,
+    "type": "damage",
+    "text": "後列狙いの砲手 → リネ 93",
+    "source": "e1",
+    "target": "a1",
+    "value": 93,
+    "visual": {
+      "actionName": "後列への交差砲撃",
+      "shielded": true
+    },
+    "encounter": 1
+  },
+  {
+    "id": 132,
+    "time": 24.549999999999887,
+    "type": "damage",
+    "text": "後列狙いの砲手 → セナ 93",
+    "source": "e1",
+    "target": "a2",
+    "value": 93,
+    "visual": {
+      "actionName": "後列への交差砲撃",
+      "shielded": true
+    },
+    "encounter": 1
+  },
+  {
+    "id": 133,
+    "time": 24.549999999999887,
+    "type": "damage",
+    "text": "前列狙いの砲手 → アルト 258",
+    "source": "e2",
+    "target": "a0",
+    "value": 258,
+    "visual": {
+      "actionName": "前列への交差砲撃",
+      "shielded": false
+    },
+    "encounter": 1
+  },
+  {
+    "id": 134,
+    "time": 24.949999999999864,
+    "type": "damage",
+    "text": "砲列の衛兵 → セナ 93",
+    "source": "e0",
+    "target": "a2",
+    "value": 93,
+    "visual": {
+      "actionName": "追尾狙撃",
+      "shielded": true
+    },
+    "encounter": 1
+  },
+  {
+    "id": 135,
+    "time": 24.983333333333196,
+    "type": "shift",
+    "text": "アルト → 守護騎士",
+    "target": "a0",
+    "encounter": 1
+  },
+  {
+    "id": 136,
+    "time": 24.99999999999986,
+    "type": "action",
+    "text": "セナ → 小さな祈り",
+    "source": "a2",
+    "visual": {
+      "skillId": "heal",
+      "actionName": "小さな祈り",
+      "comboIndex": 1
+    },
+    "encounter": 1
+  },
+  {
+    "id": 137,
+    "time": 24.99999999999986,
+    "type": "system",
+    "text": "アルト：確定予約1手目に「護りの誓い」を追加",
+    "source": "a0",
+    "encounter": 1
+  },
+  {
+    "id": 138,
+    "time": 24.99999999999986,
+    "type": "system",
+    "text": "セナ：確定予約1手目に「小さな祈り」を追加",
+    "source": "a2",
+    "encounter": 1
+  },
+  {
+    "id": 139,
+    "time": 26.199999999999793,
+    "type": "heal",
+    "text": "セナ +190",
+    "target": "a2",
+    "source": "a2",
+    "value": 190,
+    "visual": {
+      "skillId": "heal",
+      "actionName": "小さな祈り",
+      "comboIndex": 1
+    },
+    "encounter": 1
+  },
+  {
+    "id": 140,
+    "time": 26.233333333333125,
+    "type": "action",
+    "text": "アルト → 護りの誓い",
+    "source": "a0",
+    "visual": {
+      "skillId": "ward",
+      "actionName": "護りの誓い",
+      "comboIndex": 1
+    },
+    "encounter": 1
+  },
+  {
+    "id": 141,
+    "time": 26.24999999999979,
+    "type": "system",
+    "text": "アルト：確定予約1手目に「護りの誓い」を追加",
+    "source": "a0",
+    "encounter": 1
+  },
+  {
+    "id": 142,
+    "time": 26.883333333333088,
+    "type": "action",
+    "text": "リネ → 星の雨",
+    "source": "a1",
+    "visual": {
+      "skillId": "rain",
+      "actionName": "星の雨",
+      "comboIndex": 1
+    },
+    "encounter": 1
+  },
+  {
+    "id": 143,
+    "time": 26.933333333333085,
+    "type": "heal",
+    "text": "アルト：防護",
+    "source": "a0",
+    "target": "a0",
+    "visual": {
+      "skillId": "ward",
+      "actionName": "護りの誓い",
+      "comboIndex": 1
+    },
+    "encounter": 1
+  },
+  {
+    "id": 144,
+    "time": 26.999999999999748,
+    "type": "system",
+    "text": "リネ：確定予約2手目に「星の雨」を追加",
+    "source": "a1",
+    "encounter": 1
+  },
+  {
+    "id": 145,
+    "time": 28.249999999999677,
+    "type": "system",
+    "text": "アルト：「護りの誓い」の予約を取消",
+    "encounter": 1
+  },
+  {
+    "id": 146,
+    "time": 28.249999999999677,
+    "type": "shift",
+    "text": "オプティマ：均衡の調べ",
+    "encounter": 1
+  },
+  {
+    "id": 147,
+    "time": 28.34999999999967,
+    "type": "action",
+    "text": "セナ → 小さな祈り",
+    "source": "a2",
+    "visual": {
+      "skillId": "heal",
+      "actionName": "小さな祈り",
+      "comboIndex": 1
+    },
+    "encounter": 1
+  },
+  {
+    "id": 148,
+    "time": 28.499999999999662,
+    "type": "system",
+    "text": "セナ：確定予約1手目に「小さな祈り」を追加",
+    "source": "a2",
+    "encounter": 1
+  },
+  {
+    "id": 149,
+    "time": 28.883333333332974,
+    "type": "damage",
+    "text": "リネ → 砲列の衛兵 58",
+    "source": "a1",
+    "target": "e0",
+    "value": 58,
+    "visual": {
+      "skillId": "rain",
+      "actionName": "星の雨",
+      "comboIndex": 1,
+      "shielded": false
+    },
+    "encounter": 1
+  },
+  {
+    "id": 150,
+    "time": 28.883333333332974,
+    "type": "damage",
+    "text": "リネ → 後列狙いの砲手 65",
+    "source": "a1",
+    "target": "e1",
+    "value": 65,
+    "visual": {
+      "skillId": "rain",
+      "actionName": "星の雨",
+      "comboIndex": 1,
+      "shielded": false
+    },
+    "encounter": 1
+  },
+  {
+    "id": 151,
+    "time": 28.89999999999964,
+    "type": "shift",
+    "text": "アルト → 剣士",
+    "target": "a0",
+    "encounter": 1
+  },
+  {
+    "id": 152,
+    "time": 28.999999999999634,
+    "type": "system",
+    "text": "アルト：確定予約1手目に「円弧斬り」を追加",
+    "source": "a0",
+    "encounter": 1
+  },
+  {
+    "id": 153,
+    "time": 29.24999999999962,
+    "type": "system",
+    "text": "アルト：確定予約2手目に「円弧斬り」を追加",
+    "source": "a0",
+    "encounter": 1
+  },
+  {
+    "id": 154,
+    "time": 29.549999999999603,
+    "type": "heal",
+    "text": "セナ +190",
+    "target": "a2",
+    "source": "a2",
+    "value": 190,
+    "visual": {
+      "skillId": "heal",
+      "actionName": "小さな祈り",
+      "comboIndex": 1
+    },
+    "encounter": 1
+  },
+  {
+    "id": 155,
+    "time": 29.666666666666263,
+    "type": "warning",
+    "text": "後列狙いの砲手：後列への交差砲撃",
+    "source": "e1",
+    "visual": {
+      "actionName": "後列への交差砲撃"
+    },
+    "encounter": 1
+  },
+  {
+    "id": 156,
+    "time": 29.666666666666263,
+    "type": "warning",
+    "text": "前列狙いの砲手：前列への交差砲撃",
+    "source": "e2",
+    "visual": {
+      "actionName": "前列への交差砲撃"
+    },
+    "encounter": 1
+  },
+  {
+    "id": 157,
+    "time": 30.249999999999563,
+    "type": "system",
+    "text": "リネ：「星の雨」の予約を取消",
+    "encounter": 1
+  },
+  {
+    "id": 158,
+    "time": 30.249999999999563,
+    "type": "system",
+    "text": "リネ：「星の雨」の予約を取消",
+    "encounter": 1
+  },
+  {
+    "id": 159,
+    "time": 30.249999999999563,
+    "type": "system",
+    "text": "リネ：確定予約1手目に「防御」を追加",
+    "source": "a1",
+    "encounter": 1
+  },
+  {
+    "id": 160,
+    "time": 30.249999999999563,
+    "type": "system",
+    "text": "セナ：「小さな祈り」の予約を取消",
+    "encounter": 1
+  },
+  {
+    "id": 161,
+    "time": 30.249999999999563,
+    "type": "system",
+    "text": "セナ：確定予約1手目に「防御」を追加",
+    "source": "a2",
+    "encounter": 1
+  },
+  {
+    "id": 162,
+    "time": 30.666666666666206,
+    "type": "warning",
+    "text": "砲列の衛兵：前列薙ぎ払い",
+    "source": "e0",
+    "visual": {
+      "actionName": "前列薙ぎ払い"
+    },
+    "encounter": 1
+  },
+  {
+    "id": 163,
+    "time": 30.96666666666619,
+    "type": "action",
+    "text": "アルト → 円弧斬り",
+    "source": "a0",
+    "visual": {
+      "skillId": "sweep",
+      "actionName": "円弧斬り",
+      "comboIndex": 1
+    },
+    "encounter": 1
+  },
+  {
+    "id": 164,
+    "time": 31.249999999999506,
+    "type": "system",
+    "text": "アルト：確定予約2手目に「円弧斬り」を追加",
+    "source": "a0",
+    "encounter": 1
+  },
+  {
+    "id": 165,
+    "time": 31.31666666666617,
+    "type": "action",
+    "text": "リネ → 防御",
+    "source": "a1",
+    "visual": {
+      "skillId": "guard",
+      "actionName": "防御",
+      "comboIndex": 1
+    },
+    "encounter": 1
+  },
+  {
+    "id": 166,
+    "time": 31.499999999999492,
+    "type": "system",
+    "text": "リネ：確定予約1手目に「星の雨」を追加",
+    "source": "a1",
+    "encounter": 1
+  },
+  {
+    "id": 167,
+    "time": 31.683333333332815,
+    "type": "action",
+    "text": "セナ → 防御",
+    "source": "a2",
+    "visual": {
+      "skillId": "guard",
+      "actionName": "防御",
+      "comboIndex": 1
+    },
+    "encounter": 1
+  },
+  {
+    "id": 168,
+    "time": 31.716666666666146,
+    "type": "heal",
+    "text": "リネ：防護",
+    "source": "a1",
+    "target": "a1",
+    "visual": {
+      "skillId": "guard",
+      "actionName": "防御",
+      "comboIndex": 1
+    },
+    "encounter": 1
+  },
+  {
+    "id": 169,
+    "time": 31.749999999999478,
+    "type": "system",
+    "text": "リネ：確定予約2手目に「星の雨」を追加",
+    "source": "a1",
+    "encounter": 1
+  },
+  {
+    "id": 170,
+    "time": 31.749999999999478,
+    "type": "system",
+    "text": "セナ：確定予約1手目に「小さな祈り」を追加",
+    "source": "a2",
+    "encounter": 1
+  },
+  {
+    "id": 171,
+    "time": 32.083333333332796,
+    "type": "heal",
+    "text": "セナ：防護",
+    "source": "a2",
+    "target": "a2",
+    "visual": {
+      "skillId": "guard",
+      "actionName": "防御",
+      "comboIndex": 1
+    },
+    "encounter": 1
+  },
+  {
+    "id": 172,
+    "time": 32.49999999999944,
+    "type": "system",
+    "text": "アルト：「円弧斬り」の予約を取消",
+    "encounter": 1
+  },
+  {
+    "id": 173,
+    "time": 32.49999999999944,
+    "type": "system",
+    "text": "アルト：「円弧斬り」の予約を取消",
+    "encounter": 1
+  },
+  {
+    "id": 174,
+    "time": 32.49999999999944,
+    "type": "shift",
+    "text": "オプティマ：崩し・防護・支援",
+    "encounter": 1
+  },
+  {
+    "id": 175,
+    "time": 32.76666666666609,
+    "type": "damage",
+    "text": "アルト → 砲列の衛兵 326",
+    "source": "a0",
+    "target": "e0",
+    "value": 326,
+    "visual": {
+      "skillId": "sweep",
+      "actionName": "円弧斬り",
+      "comboIndex": 1,
+      "shielded": false
+    },
+    "encounter": 1
+  },
+  {
+    "id": 176,
+    "time": 32.76666666666609,
+    "type": "damage",
+    "text": "アルト → 後列狙いの砲手 334",
+    "source": "a0",
+    "target": "e1",
+    "value": 334,
+    "visual": {
+      "skillId": "sweep",
+      "actionName": "円弧斬り",
+      "comboIndex": 1,
+      "shielded": false
+    },
+    "encounter": 1
+  },
+  {
+    "id": 177,
+    "time": 33.03333333333274,
+    "type": "damage",
+    "text": "後列狙いの砲手 → リネ 125",
+    "source": "e1",
+    "target": "a1",
+    "value": 125,
+    "visual": {
+      "actionName": "後列への交差砲撃",
+      "shielded": true
+    },
+    "encounter": 1
+  },
+  {
+    "id": 178,
+    "time": 33.03333333333274,
+    "type": "damage",
+    "text": "後列狙いの砲手 → セナ 125",
+    "source": "e1",
+    "target": "a2",
+    "value": 125,
+    "visual": {
+      "actionName": "後列への交差砲撃",
+      "shielded": true
+    },
+    "encounter": 1
+  },
+  {
+    "id": 179,
+    "time": 33.03333333333274,
+    "type": "damage",
+    "text": "前列狙いの砲手 → アルト 174",
+    "source": "e2",
+    "target": "a0",
+    "value": 174,
+    "visual": {
+      "actionName": "前列への交差砲撃",
+      "shielded": true
+    },
+    "encounter": 1
+  },
+  {
+    "id": 180,
+    "time": 33.86666666666603,
+    "type": "damage",
+    "text": "砲列の衛兵 → アルト 140",
+    "source": "e0",
+    "target": "a0",
+    "value": 140,
+    "visual": {
+      "actionName": "前列薙ぎ払い",
+      "shielded": true
+    },
+    "encounter": 1
+  },
+  {
+    "id": 181,
+    "time": 33.99999999999935,
+    "type": "system",
+    "text": "リネ：確定予約3手目に「救急薬」を追加",
+    "source": "a1",
+    "encounter": 1
+  },
+  {
+    "id": 182,
+    "time": 33.99999999999935,
+    "type": "system",
+    "text": "セナ：確定予約2手目に「救急薬」を追加",
+    "source": "a2",
+    "encounter": 1
+  },
+  {
+    "id": 183,
+    "time": 34.33333333333267,
+    "type": "action",
+    "text": "セナ → 小さな祈り",
+    "source": "a2",
+    "visual": {
+      "skillId": "heal",
+      "actionName": "小さな祈り",
+      "comboIndex": 1
+    },
+    "encounter": 1
+  },
+  {
+    "id": 184,
+    "time": 34.616666666665985,
+    "type": "shift",
+    "text": "アルト → 守護騎士",
+    "target": "a0",
+    "encounter": 1
+  },
+  {
+    "id": 185,
+    "time": 34.74999999999931,
+    "type": "system",
+    "text": "アルト：確定予約1手目に「救急薬」を追加",
+    "source": "a0",
+    "encounter": 1
+  },
+  {
+    "id": 186,
+    "time": 34.74999999999931,
+    "type": "system",
+    "text": "セナ：確定予約2手目に「小さな祈り」を追加",
+    "source": "a2",
+    "encounter": 1
+  },
+  {
+    "id": 187,
+    "time": 34.76666666666598,
+    "type": "action",
+    "text": "アルト → 救急薬",
+    "source": "a0",
+    "visual": {
+      "skillId": "potion",
+      "actionName": "救急薬",
+      "comboIndex": 1
+    },
+    "encounter": 1
+  },
+  {
+    "id": 188,
+    "time": 35.199999999999285,
+    "type": "action",
+    "text": "リネ → 星の雨",
+    "source": "a1",
+    "visual": {
+      "skillId": "rain",
+      "actionName": "星の雨",
+      "comboIndex": 1
+    },
+    "encounter": 1
+  },
+  {
+    "id": 189,
+    "time": 35.24999999999928,
+    "type": "system",
+    "text": "リネ：確定予約3手目に「星の雨」を追加",
+    "source": "a1",
+    "encounter": 1
+  },
+  {
+    "id": 190,
+    "time": 35.36666666666594,
+    "type": "heal",
+    "text": "アルト +400",
+    "target": "a0",
+    "source": "a0",
+    "value": 400,
+    "visual": {
+      "skillId": "potion",
+      "actionName": "救急薬",
+      "comboIndex": 1
+    },
+    "encounter": 1
+  },
+  {
+    "id": 191,
+    "time": 35.49999999999927,
+    "type": "system",
+    "text": "アルト：確定予約1手目に「護りの誓い」を追加",
+    "source": "a0",
+    "encounter": 1
+  },
+  {
+    "id": 192,
+    "time": 35.5333333333326,
+    "type": "heal",
+    "text": "アルト +190",
+    "target": "a0",
+    "source": "a2",
+    "value": 190,
+    "visual": {
+      "skillId": "heal",
+      "actionName": "小さな祈り",
+      "comboIndex": 1
+    },
+    "encounter": 1
+  },
+  {
+    "id": 193,
+    "time": 36.449999999999214,
+    "type": "action",
+    "text": "セナ → 救急薬",
+    "source": "a2",
+    "visual": {
+      "skillId": "potion",
+      "actionName": "救急薬",
+      "comboIndex": 1
+    },
+    "encounter": 1
+  },
+  {
+    "id": 194,
+    "time": 36.7499999999992,
+    "type": "system",
+    "text": "アルト：「護りの誓い」の予約を取消",
+    "encounter": 1
+  },
+  {
+    "id": 195,
+    "time": 36.7499999999992,
+    "type": "shift",
+    "text": "オプティマ：均衡の調べ",
+    "encounter": 1
+  },
+  {
+    "id": 196,
+    "time": 37.04999999999918,
+    "type": "heal",
+    "text": "アルト +353",
+    "target": "a0",
+    "source": "a2",
+    "value": 353,
+    "visual": {
+      "skillId": "potion",
+      "actionName": "救急薬",
+      "comboIndex": 1
+    },
+    "encounter": 1
+  },
+  {
+    "id": 197,
+    "time": 37.19999999999917,
+    "type": "damage",
+    "text": "リネ → 砲列の衛兵 72",
+    "source": "a1",
+    "target": "e0",
+    "value": 72,
+    "visual": {
+      "skillId": "rain",
+      "actionName": "星の雨",
+      "comboIndex": 1,
+      "shielded": false
+    },
+    "encounter": 1
+  },
+  {
+    "id": 198,
+    "time": 37.19999999999917,
+    "type": "damage",
+    "text": "リネ → 後列狙いの砲手 71",
+    "source": "a1",
+    "target": "e1",
+    "value": 71,
+    "visual": {
+      "skillId": "rain",
+      "actionName": "星の雨",
+      "comboIndex": 1,
+      "shielded": false
+    },
+    "encounter": 1
+  },
+  {
+    "id": 199,
+    "time": 37.39999999999916,
+    "type": "shift",
+    "text": "アルト → 剣士",
+    "target": "a0",
+    "encounter": 1
+  },
+  {
+    "id": 200,
+    "time": 37.499999999999154,
+    "type": "system",
+    "text": "アルト：確定予約1手目に「円弧斬り」を追加",
+    "source": "a0",
+    "encounter": 1
+  },
+  {
+    "id": 201,
+    "time": 37.74999999999914,
+    "type": "system",
+    "text": "アルト：確定予約2手目に「円弧斬り」を追加",
+    "source": "a0",
+    "encounter": 1
+  },
+  {
+    "id": 202,
+    "time": 38.14999999999912,
+    "type": "warning",
+    "text": "後列狙いの砲手：後列への交差砲撃",
+    "source": "e1",
+    "visual": {
+      "actionName": "後列への交差砲撃"
+    },
+    "encounter": 1
+  },
+  {
+    "id": 203,
+    "time": 38.14999999999912,
+    "type": "warning",
+    "text": "前列狙いの砲手：前列への交差砲撃",
+    "source": "e2",
+    "visual": {
+      "actionName": "前列への交差砲撃"
+    },
+    "encounter": 1
+  },
+  {
+    "id": 204,
+    "time": 38.74999999999908,
+    "type": "system",
+    "text": "アルト：「円弧斬り」の予約を取消",
+    "encounter": 1
+  },
+  {
+    "id": 205,
+    "time": 38.74999999999908,
+    "type": "system",
+    "text": "アルト：「円弧斬り」の予約を取消",
+    "encounter": 1
+  },
+  {
+    "id": 206,
+    "time": 38.74999999999908,
+    "type": "system",
+    "text": "アルト：確定予約1手目に「防御」を追加",
+    "source": "a0",
+    "encounter": 1
+  },
+  {
+    "id": 207,
+    "time": 38.74999999999908,
+    "type": "system",
+    "text": "リネ：「星の雨」の予約を取消",
+    "encounter": 1
+  },
+  {
+    "id": 208,
+    "time": 38.74999999999908,
+    "type": "system",
+    "text": "リネ：「救急薬」の予約を取消",
+    "encounter": 1
+  },
+  {
+    "id": 209,
+    "time": 38.74999999999908,
+    "type": "system",
+    "text": "リネ：「星の雨」の予約を取消",
+    "encounter": 1
+  },
+  {
+    "id": 210,
+    "time": 38.74999999999908,
+    "type": "system",
+    "text": "リネ：確定予約1手目に「防御」を追加",
+    "source": "a1",
+    "encounter": 1
+  },
+  {
+    "id": 211,
+    "time": 38.74999999999908,
+    "type": "system",
+    "text": "セナ：「小さな祈り」の予約を取消",
+    "encounter": 1
+  },
+  {
+    "id": 212,
+    "time": 38.74999999999908,
+    "type": "system",
+    "text": "セナ：確定予約1手目に「防御」を追加",
+    "source": "a2",
+    "encounter": 1
+  },
+  {
+    "id": 213,
+    "time": 38.76666666666575,
+    "type": "action",
+    "text": "アルト → 防御",
+    "source": "a0",
+    "visual": {
+      "skillId": "guard",
+      "actionName": "防御",
+      "comboIndex": 1
+    },
+    "encounter": 1
+  },
+  {
+    "id": 214,
+    "time": 39.166666666665726,
+    "type": "heal",
+    "text": "アルト：防護",
+    "source": "a0",
+    "target": "a0",
+    "visual": {
+      "skillId": "guard",
+      "actionName": "防御",
+      "comboIndex": 1
+    },
+    "encounter": 1
+  },
+  {
+    "id": 215,
+    "time": 39.249999999999055,
+    "type": "system",
+    "text": "アルト：確定予約1手目に「円弧斬り」を追加",
+    "source": "a0",
+    "encounter": 1
+  },
+  {
+    "id": 216,
+    "time": 39.283333333332386,
+    "type": "action",
+    "text": "セナ → 防御",
+    "source": "a2",
+    "visual": {
+      "skillId": "guard",
+      "actionName": "防御",
+      "comboIndex": 1
+    },
+    "encounter": 1
+  },
+  {
+    "id": 217,
+    "time": 39.49999999999904,
+    "type": "system",
+    "text": "アルト：確定予約2手目に「円弧斬り」を追加",
+    "source": "a0",
+    "encounter": 1
+  },
+  {
+    "id": 218,
+    "time": 39.49999999999904,
+    "type": "system",
+    "text": "セナ：確定予約1手目に「小さな祈り」を追加",
+    "source": "a2",
+    "encounter": 1
+  },
+  {
+    "id": 219,
+    "time": 39.58333333333237,
+    "type": "warning",
+    "text": "砲列の衛兵：前列薙ぎ払い",
+    "source": "e0",
+    "visual": {
+      "actionName": "前列薙ぎ払い"
+    },
+    "encounter": 1
+  },
+  {
+    "id": 220,
+    "time": 39.64999999999903,
+    "type": "action",
+    "text": "リネ → 防御",
+    "source": "a1",
+    "visual": {
+      "skillId": "guard",
+      "actionName": "防御",
+      "comboIndex": 1
+    },
+    "encounter": 1
+  },
+  {
+    "id": 221,
+    "time": 39.683333333332364,
+    "type": "heal",
+    "text": "セナ：防護",
+    "source": "a2",
+    "target": "a2",
+    "visual": {
+      "skillId": "guard",
+      "actionName": "防御",
+      "comboIndex": 1
+    },
+    "encounter": 1
+  },
+  {
+    "id": 222,
+    "time": 40.04999999999901,
+    "type": "heal",
+    "text": "リネ：防護",
+    "source": "a1",
+    "target": "a1",
+    "visual": {
+      "skillId": "guard",
+      "actionName": "防御",
+      "comboIndex": 1
+    },
+    "encounter": 1
+  },
+  {
+    "id": 223,
+    "time": 40.249999999999,
+    "type": "system",
+    "text": "リネ：確定予約1手目に「星の雨」を追加",
+    "source": "a1",
+    "encounter": 1
+  },
+  {
+    "id": 224,
+    "time": 40.499999999998984,
+    "type": "system",
+    "text": "リネ：確定予約2手目に「星の雨」を追加",
+    "source": "a1",
+    "encounter": 1
+  },
+  {
+    "id": 225,
+    "time": 40.999999999998956,
+    "type": "system",
+    "text": "アルト：「円弧斬り」の予約を取消",
+    "encounter": 1
+  },
+  {
+    "id": 226,
+    "time": 40.999999999998956,
+    "type": "system",
+    "text": "アルト：「円弧斬り」の予約を取消",
+    "encounter": 1
+  },
+  {
+    "id": 227,
+    "time": 40.999999999998956,
+    "type": "shift",
+    "text": "オプティマ：崩し・防護・支援",
+    "encounter": 1
+  },
+  {
+    "id": 228,
+    "time": 41.51666666666559,
+    "type": "damage",
+    "text": "後列狙いの砲手 → リネ 125",
+    "source": "e1",
+    "target": "a1",
+    "value": 125,
+    "visual": {
+      "actionName": "後列への交差砲撃",
+      "shielded": true
+    },
+    "encounter": 1
+  },
+  {
+    "id": 229,
+    "time": 41.51666666666559,
+    "type": "damage",
+    "text": "後列狙いの砲手 → セナ 125",
+    "source": "e1",
+    "target": "a2",
+    "value": 125,
+    "visual": {
+      "actionName": "後列への交差砲撃",
+      "shielded": true
+    },
+    "encounter": 1
+  },
+  {
+    "id": 230,
+    "time": 41.51666666666559,
+    "type": "damage",
+    "text": "前列狙いの砲手 → アルト 174",
+    "source": "e2",
+    "target": "a0",
+    "value": 174,
+    "visual": {
+      "actionName": "前列への交差砲撃",
+      "shielded": true
+    },
+    "encounter": 1
+  },
+  {
+    "id": 231,
+    "time": 41.64999999999892,
+    "type": "shift",
+    "text": "アルト → 守護騎士",
+    "target": "a0",
+    "encounter": 1
+  },
+  {
+    "id": 232,
+    "time": 41.74999999999891,
+    "type": "system",
+    "text": "アルト：後列へ移動指示",
+    "encounter": 1
+  },
+  {
+    "id": 233,
+    "time": 41.91666666666557,
+    "type": "action",
+    "text": "セナ → 小さな祈り",
+    "source": "a2",
+    "visual": {
+      "skillId": "heal",
+      "actionName": "小さな祈り",
+      "comboIndex": 1
+    },
+    "encounter": 1
+  },
+  {
+    "id": 234,
+    "time": 41.9999999999989,
+    "type": "system",
+    "text": "セナ：確定予約1手目に「小さな祈り」を追加",
+    "source": "a2",
+    "encounter": 1
+  },
+  {
+    "id": 235,
+    "time": 42.599999999998865,
+    "type": "move",
+    "text": "アルト → 後列",
+    "target": "a0",
+    "visual": {
+      "fromRow": "front",
+      "toRow": "back"
+    },
+    "encounter": 1
+  },
+  {
+    "id": 236,
+    "time": 42.78333333333219,
+    "type": "system",
+    "text": "砲列の衛兵：前列薙ぎ払いは誰にも当たらなかった",
+    "source": "e0",
+    "target": "e0",
+    "visual": {
+      "actionName": "前列薙ぎ払い",
+      "outcome": "miss"
+    },
+    "encounter": 1
+  },
+  {
+    "id": 237,
+    "time": 43.1166666666655,
+    "type": "heal",
+    "text": "リネ +190",
+    "target": "a1",
+    "source": "a2",
+    "value": 190,
+    "visual": {
+      "skillId": "heal",
+      "actionName": "小さな祈り",
+      "comboIndex": 1
+    },
+    "encounter": 1
+  },
+  {
+    "id": 238,
+    "time": 43.533333333332145,
+    "type": "action",
+    "text": "リネ → 星の雨",
+    "source": "a1",
+    "visual": {
+      "skillId": "rain",
+      "actionName": "星の雨",
+      "comboIndex": 1
+    },
+    "encounter": 1
+  },
+  {
+    "id": 239,
+    "time": 43.7499999999988,
+    "type": "system",
+    "text": "リネ：確定予約2手目に「星の雨」を追加",
+    "source": "a1",
+    "encounter": 1
+  },
+  {
+    "id": 240,
+    "time": 44.68333333333208,
+    "type": "action",
+    "text": "アルト → 護りの誓い",
+    "source": "a0",
+    "visual": {
+      "skillId": "ward",
+      "actionName": "護りの誓い",
+      "comboIndex": 1
+    },
+    "encounter": 1
+  },
+  {
+    "id": 241,
+    "time": 44.74999999999874,
+    "type": "system",
+    "text": "アルト：確定予約1手目に「護りの誓い」を追加",
+    "source": "a0",
+    "encounter": 1
+  },
+  {
+    "id": 242,
+    "time": 45.249999999998714,
+    "type": "system",
+    "text": "アルト：「護りの誓い」の予約を取消",
+    "encounter": 1
+  },
+  {
+    "id": 243,
+    "time": 45.249999999998714,
+    "type": "shift",
+    "text": "オプティマ：均衡の調べ",
+    "encounter": 1
+  },
+  {
+    "id": 244,
+    "time": 45.26666666666538,
+    "type": "action",
+    "text": "セナ → 小さな祈り",
+    "source": "a2",
+    "visual": {
+      "skillId": "heal",
+      "actionName": "小さな祈り",
+      "comboIndex": 1
+    },
+    "encounter": 1
+  },
+  {
+    "id": 245,
+    "time": 45.38333333333204,
+    "type": "heal",
+    "text": "アルト：防護",
+    "source": "a0",
+    "target": "a0",
+    "visual": {
+      "skillId": "ward",
+      "actionName": "護りの誓い",
+      "comboIndex": 1
+    },
+    "encounter": 1
+  },
+  {
+    "id": 246,
+    "time": 45.4999999999987,
+    "type": "system",
+    "text": "セナ：確定予約1手目に「小さな祈り」を追加",
+    "source": "a2",
+    "encounter": 1
+  },
+  {
+    "id": 247,
+    "time": 45.53333333333203,
+    "type": "damage",
+    "text": "リネ → 砲列の衛兵 61",
+    "source": "a1",
+    "target": "e0",
+    "value": 61,
+    "visual": {
+      "skillId": "rain",
+      "actionName": "星の雨",
+      "comboIndex": 1,
+      "shielded": false
+    },
+    "encounter": 1
+  },
+  {
+    "id": 248,
+    "time": 45.53333333333203,
+    "type": "damage",
+    "text": "リネ → 後列狙いの砲手 62",
+    "source": "a1",
+    "target": "e1",
+    "value": 62,
+    "visual": {
+      "skillId": "rain",
+      "actionName": "星の雨",
+      "comboIndex": 1,
+      "shielded": false
+    },
+    "encounter": 1
+  },
+  {
+    "id": 249,
+    "time": 46.46666666666531,
+    "type": "heal",
+    "text": "リネ +190",
+    "target": "a1",
+    "source": "a2",
+    "value": 190,
+    "visual": {
+      "skillId": "heal",
+      "actionName": "小さな祈り",
+      "comboIndex": 1
+    },
+    "encounter": 1
+  },
+  {
+    "id": 250,
+    "time": 46.63333333333197,
+    "type": "warning",
+    "text": "後列狙いの砲手：後列への交差砲撃",
+    "source": "e1",
+    "visual": {
+      "actionName": "後列への交差砲撃"
+    },
+    "encounter": 1
+  },
+  {
+    "id": 251,
+    "time": 46.63333333333197,
+    "type": "warning",
+    "text": "前列狙いの砲手：前列への交差砲撃",
+    "source": "e2",
+    "visual": {
+      "actionName": "前列への交差砲撃"
+    },
+    "encounter": 1
+  },
+  {
+    "id": 252,
+    "time": 46.93333333333195,
+    "type": "shift",
+    "text": "アルト → 剣士",
+    "target": "a0",
+    "encounter": 1
+  },
+  {
+    "id": 253,
+    "time": 46.98333333333195,
+    "type": "action",
+    "text": "アルト → 斬撃",
+    "source": "a0",
+    "visual": {
+      "skillId": "slash",
+      "actionName": "斬撃",
+      "comboIndex": 1
+    },
+    "encounter": 1
+  },
+  {
+    "id": 254,
+    "time": 47.2499999999986,
+    "type": "system",
+    "text": "アルト：確定予約2手目に「円弧斬り」を追加",
+    "source": "a0",
+    "encounter": 1
+  },
+  {
+    "id": 255,
+    "time": 47.2499999999986,
+    "type": "system",
+    "text": "リネ：「星の雨」の予約を取消",
+    "encounter": 1
+  },
+  {
+    "id": 256,
+    "time": 47.2499999999986,
+    "type": "system",
+    "text": "リネ：「星の雨」の予約を取消",
+    "encounter": 1
+  },
+  {
+    "id": 257,
+    "time": 47.2499999999986,
+    "type": "system",
+    "text": "リネ：確定予約1手目に「防御」を追加",
+    "source": "a1",
+    "encounter": 1
+  },
+  {
+    "id": 258,
+    "time": 47.2499999999986,
+    "type": "system",
+    "text": "セナ：「小さな祈り」の予約を取消",
+    "encounter": 1
+  },
+  {
+    "id": 259,
+    "time": 47.2499999999986,
+    "type": "system",
+    "text": "セナ：確定予約1手目に「防御」を追加",
+    "source": "a2",
+    "encounter": 1
+  },
+  {
+    "id": 260,
+    "time": 47.8833333333319,
+    "type": "damage",
+    "text": "アルト → 後列狙いの砲手 161",
+    "source": "a0",
+    "target": "e1",
+    "value": 161,
+    "visual": {
+      "skillId": "slash",
+      "actionName": "斬撃",
+      "comboIndex": 1,
+      "shielded": false
+    },
+    "encounter": 1
+  },
+  {
+    "id": 261,
+    "time": 47.98333333333189,
+    "type": "action",
+    "text": "リネ → 防御",
+    "source": "a1",
+    "visual": {
+      "skillId": "guard",
+      "actionName": "防御",
+      "comboIndex": 1
+    },
+    "encounter": 1
+  },
+  {
+    "id": 262,
+    "time": 47.99999999999856,
+    "type": "system",
+    "text": "リネ：確定予約1手目に「星の雨」を追加",
+    "source": "a1",
+    "encounter": 1
+  },
+  {
+    "id": 263,
+    "time": 48.083333333331886,
+    "type": "action",
+    "text": "アルト → 斬撃",
+    "source": "a0",
+    "visual": {
+      "skillId": "slash",
+      "actionName": "斬撃",
+      "comboIndex": 2
+    },
+    "encounter": 1
+  },
+  {
+    "id": 264,
+    "time": 48.24999999999854,
+    "type": "system",
+    "text": "アルト：確定予約2手目に「円弧斬り」を追加",
+    "source": "a0",
+    "encounter": 1
+  },
+  {
+    "id": 265,
+    "time": 48.24999999999854,
+    "type": "system",
+    "text": "リネ：確定予約2手目に「星の雨」を追加",
+    "source": "a1",
+    "encounter": 1
+  },
+  {
+    "id": 266,
+    "time": 48.38333333333187,
+    "type": "heal",
+    "text": "リネ：防護",
+    "source": "a1",
+    "target": "a1",
+    "visual": {
+      "skillId": "guard",
+      "actionName": "防御",
+      "comboIndex": 1
+    },
+    "encounter": 1
+  },
+  {
+    "id": 267,
+    "time": 48.49999999999853,
+    "type": "warning",
+    "text": "砲列の衛兵：追尾狙撃 → セナ",
+    "source": "e0",
+    "visual": {
+      "actionName": "追尾狙撃"
+    },
+    "encounter": 1
+  },
+  {
+    "id": 268,
+    "time": 48.59999999999852,
+    "type": "action",
+    "text": "セナ → 防御",
+    "source": "a2",
+    "visual": {
+      "skillId": "guard",
+      "actionName": "防御",
+      "comboIndex": 1
+    },
+    "encounter": 1
+  },
+  {
+    "id": 269,
+    "time": 48.983333333331835,
+    "type": "damage",
+    "text": "アルト → 砲列の衛兵 160",
+    "source": "a0",
+    "target": "e0",
+    "value": 160,
+    "visual": {
+      "skillId": "slash",
+      "actionName": "斬撃",
+      "comboIndex": 2,
+      "shielded": false
+    },
+    "encounter": 1
+  },
+  {
+    "id": 270,
+    "time": 48.9999999999985,
+    "type": "heal",
+    "text": "セナ：防護",
+    "source": "a2",
+    "target": "a2",
+    "visual": {
+      "skillId": "guard",
+      "actionName": "防御",
+      "comboIndex": 1
+    },
+    "encounter": 1
+  },
+  {
+    "id": 271,
+    "time": 48.9999999999985,
+    "type": "system",
+    "text": "セナ：確定予約1手目に「小さな祈り」を追加",
+    "source": "a2",
+    "encounter": 1
+  },
+  {
+    "id": 272,
+    "time": 49.49999999999847,
+    "type": "system",
+    "text": "アルト：「円弧斬り」の予約を取消",
+    "encounter": 1
+  },
+  {
+    "id": 273,
+    "time": 49.49999999999847,
+    "type": "system",
+    "text": "アルト：「円弧斬り」の予約を取消",
+    "encounter": 1
+  },
+  {
+    "id": 274,
+    "time": 49.49999999999847,
+    "type": "shift",
+    "text": "オプティマ：崩し・防護・支援",
+    "encounter": 1
+  },
+  {
+    "id": 275,
+    "time": 49.999999999998444,
+    "type": "damage",
+    "text": "後列狙いの砲手 → アルト 93",
+    "source": "e1",
+    "target": "a0",
+    "value": 93,
+    "visual": {
+      "actionName": "後列への交差砲撃",
+      "shielded": true
+    },
+    "encounter": 1
+  },
+  {
+    "id": 276,
+    "time": 49.999999999998444,
+    "type": "damage",
+    "text": "後列狙いの砲手 → リネ 93",
+    "source": "e1",
+    "target": "a1",
+    "value": 93,
+    "visual": {
+      "actionName": "後列への交差砲撃",
+      "shielded": true
+    },
+    "encounter": 1
+  },
+  {
+    "id": 277,
+    "time": 49.999999999998444,
+    "type": "damage",
+    "text": "後列狙いの砲手 → セナ 93",
+    "source": "e1",
+    "target": "a2",
+    "value": 93,
+    "visual": {
+      "actionName": "後列への交差砲撃",
+      "shielded": true
+    },
+    "encounter": 1
+  },
+  {
+    "id": 278,
+    "time": 49.999999999998444,
+    "type": "system",
+    "text": "前列狙いの砲手：前列への交差砲撃は誰にも当たらなかった",
+    "source": "e2",
+    "target": "e2",
+    "visual": {
+      "actionName": "前列への交差砲撃",
+      "outcome": "miss"
+    },
+    "encounter": 1
+  },
+  {
+    "id": 279,
+    "time": 50.63333333333174,
+    "type": "shift",
+    "text": "アルト → 守護騎士",
+    "target": "a0",
+    "encounter": 1
+  },
+  {
+    "id": 280,
+    "time": 51.24999999999837,
+    "type": "action",
+    "text": "セナ → 小さな祈り",
+    "source": "a2",
+    "visual": {
+      "skillId": "heal",
+      "actionName": "小さな祈り",
+      "comboIndex": 1
+    },
+    "encounter": 1
+  },
+  {
+    "id": 281,
+    "time": 51.24999999999837,
+    "type": "system",
+    "text": "セナ：確定予約1手目に「小さな祈り」を追加",
+    "source": "a2",
+    "encounter": 1
+  },
+  {
+    "id": 282,
+    "time": 51.69999999999835,
+    "type": "damage",
+    "text": "砲列の衛兵 → セナ 74",
+    "source": "e0",
+    "target": "a2",
+    "value": 74,
+    "visual": {
+      "actionName": "追尾狙撃",
+      "shielded": true
+    },
+    "encounter": 1
+  },
+  {
+    "id": 283,
+    "time": 51.866666666665004,
+    "type": "action",
+    "text": "リネ → 星の雨",
+    "source": "a1",
+    "visual": {
+      "skillId": "rain",
+      "actionName": "星の雨",
+      "comboIndex": 1
+    },
+    "encounter": 1
+  },
+  {
+    "id": 284,
+    "time": 51.99999999999833,
+    "type": "system",
+    "text": "リネ：確定予約2手目に「星の雨」を追加",
+    "source": "a1",
+    "encounter": 1
+  },
+  {
+    "id": 285,
+    "time": 52.449999999998305,
+    "type": "heal",
+    "text": "セナ +190",
+    "target": "a2",
+    "source": "a2",
+    "value": 190,
+    "visual": {
+      "skillId": "heal",
+      "actionName": "小さな祈り",
+      "comboIndex": 1
+    },
+    "encounter": 1
+  },
+  {
+    "id": 286,
+    "time": 53.74999999999823,
+    "type": "shift",
+    "text": "オプティマ：均衡の調べ",
+    "encounter": 1
+  },
+  {
+    "id": 287,
+    "time": 53.86666666666489,
+    "type": "damage",
+    "text": "リネ → 砲列の衛兵 71",
+    "source": "a1",
+    "target": "e0",
+    "value": 71,
+    "visual": {
+      "skillId": "rain",
+      "actionName": "星の雨",
+      "comboIndex": 1,
+      "shielded": false
+    },
+    "encounter": 1
+  },
+  {
+    "id": 288,
+    "time": 53.86666666666489,
+    "type": "break",
+    "text": "砲列の衛兵 BREAK — 12秒間の好機",
+    "target": "e0",
+    "source": "a1",
+    "visual": {
+      "skillId": "rain",
+      "actionName": "星の雨",
+      "comboIndex": 1
+    },
+    "encounter": 1
+  },
+  {
+    "id": 289,
+    "time": 53.86666666666489,
+    "type": "damage",
+    "text": "リネ → 後列狙いの砲手 69",
+    "source": "a1",
+    "target": "e1",
+    "value": 69,
+    "visual": {
+      "skillId": "rain",
+      "actionName": "星の雨",
+      "comboIndex": 1,
+      "shielded": false
+    },
+    "encounter": 1
+  },
+  {
+    "id": 290,
+    "time": 53.86666666666489,
+    "type": "break",
+    "text": "後列狙いの砲手 BREAK — 12秒間の好機",
+    "target": "e1",
+    "source": "a1",
+    "visual": {
+      "skillId": "rain",
+      "actionName": "星の雨",
+      "comboIndex": 1
+    },
+    "encounter": 1
+  },
+  {
+    "id": 291,
+    "time": 54.399999999998194,
+    "type": "shift",
+    "text": "アルト → 剣士",
+    "target": "a0",
+    "encounter": 1
+  },
+  {
+    "id": 292,
+    "time": 54.41666666666486,
+    "type": "action",
+    "text": "アルト → 斬撃",
+    "source": "a0",
+    "visual": {
+      "skillId": "slash",
+      "actionName": "斬撃",
+      "comboIndex": 1
+    },
+    "encounter": 1
+  },
+  {
+    "id": 293,
+    "time": 54.49999999999819,
+    "type": "system",
+    "text": "アルト：確定予約2手目に「円弧斬り」を追加",
+    "source": "a0",
+    "encounter": 1
+  },
+  {
+    "id": 294,
+    "time": 54.58333333333152,
+    "type": "action",
+    "text": "セナ → 小さな祈り",
+    "source": "a2",
+    "visual": {
+      "skillId": "heal",
+      "actionName": "小さな祈り",
+      "comboIndex": 1
+    },
+    "encounter": 1
+  },
+  {
+    "id": 295,
+    "time": 54.749999999998174,
+    "type": "system",
+    "text": "セナ：確定予約1手目に「小さな祈り」を追加",
+    "source": "a2",
+    "encounter": 1
+  },
+  {
+    "id": 296,
+    "time": 55.11666666666482,
+    "type": "warning",
+    "text": "前列狙いの砲手：前列への交差砲撃",
+    "source": "e2",
+    "visual": {
+      "actionName": "前列への交差砲撃"
+    },
+    "encounter": 1
+  },
+  {
+    "id": 297,
+    "time": 55.31666666666481,
+    "type": "damage",
+    "text": "アルト → 後列狙いの砲手 180",
+    "source": "a0",
+    "target": "e1",
+    "value": 180,
+    "visual": {
+      "skillId": "slash",
+      "actionName": "斬撃",
+      "comboIndex": 1,
+      "shielded": false
+    },
+    "encounter": 1
+  },
+  {
+    "id": 298,
+    "time": 55.5166666666648,
+    "type": "action",
+    "text": "アルト → 斬撃",
+    "source": "a0",
+    "visual": {
+      "skillId": "slash",
+      "actionName": "斬撃",
+      "comboIndex": 2
+    },
+    "encounter": 1
+  },
+  {
+    "id": 299,
+    "time": 55.74999999999812,
+    "type": "system",
+    "text": "アルト：確定予約2手目に「円弧斬り」を追加",
+    "source": "a0",
+    "encounter": 1
+  },
+  {
+    "id": 300,
+    "time": 55.78333333333145,
+    "type": "heal",
+    "text": "セナ +190",
+    "target": "a2",
+    "source": "a2",
+    "value": 190,
+    "visual": {
+      "skillId": "heal",
+      "actionName": "小さな祈り",
+      "comboIndex": 1
+    },
+    "encounter": 1
+  },
+  {
+    "id": 301,
+    "time": 56.416666666664746,
+    "type": "damage",
+    "text": "アルト → 後列狙いの砲手 200",
+    "source": "a0",
+    "target": "e1",
+    "value": 200,
+    "visual": {
+      "skillId": "slash",
+      "actionName": "斬撃",
+      "comboIndex": 2,
+      "shielded": false
+    },
+    "encounter": 1
+  },
+  {
+    "id": 302,
+    "time": 57.549999999998015,
+    "type": "action",
+    "text": "リネ → 星の雨",
+    "source": "a1",
+    "visual": {
+      "skillId": "rain",
+      "actionName": "星の雨",
+      "comboIndex": 1
+    },
+    "encounter": 1
+  },
+  {
+    "id": 303,
+    "time": 57.749999999998,
+    "type": "system",
+    "text": "リネ：確定予約2手目に「砕光」を追加",
+    "source": "a1",
+    "encounter": 1
+  },
+  {
+    "id": 304,
+    "time": 57.933333333331326,
+    "type": "action",
+    "text": "セナ → 小さな祈り",
+    "source": "a2",
+    "visual": {
+      "skillId": "heal",
+      "actionName": "小さな祈り",
+      "comboIndex": 1
+    },
+    "encounter": 1
+  },
+  {
+    "id": 305,
+    "time": 57.99999999999799,
+    "type": "system",
+    "text": "リネ：「星の雨」の予約を取消",
+    "encounter": 1
+  },
+  {
+    "id": 306,
+    "time": 57.99999999999799,
+    "type": "system",
+    "text": "リネ：「砕光」の予約を取消",
+    "encounter": 1
+  },
+  {
+    "id": 307,
+    "time": 57.99999999999799,
+    "type": "system",
+    "text": "リネ：確定予約1手目に「風渡りの弓に変更」を追加",
+    "source": "a1",
+    "encounter": 1
+  },
+  {
+    "id": 308,
+    "time": 58.249999999997975,
+    "type": "system",
+    "text": "セナ：確定予約1手目に「小さな祈り」を追加",
+    "source": "a2",
+    "encounter": 1
+  },
+  {
+    "id": 309,
+    "time": 58.483333333331295,
+    "type": "system",
+    "text": "前列狙いの砲手：前列への交差砲撃は誰にも当たらなかった",
+    "source": "e2",
+    "target": "e2",
+    "visual": {
+      "actionName": "前列への交差砲撃",
+      "outcome": "miss"
+    },
+    "encounter": 1
+  },
+  {
+    "id": 310,
+    "time": 59.13333333333126,
+    "type": "heal",
+    "text": "セナ +190",
+    "target": "a2",
+    "source": "a2",
+    "value": 190,
+    "visual": {
+      "skillId": "heal",
+      "actionName": "小さな祈り",
+      "comboIndex": 1
+    },
+    "encounter": 1
+  },
+  {
+    "id": 311,
+    "time": 59.24999999999792,
+    "type": "action",
+    "text": "アルト → 円弧斬り",
+    "source": "a0",
+    "visual": {
+      "skillId": "sweep",
+      "actionName": "円弧斬り",
+      "comboIndex": 1
+    },
+    "encounter": 1
+  },
+  {
+    "id": 312,
+    "time": 59.24999999999792,
+    "type": "system",
+    "text": "アルト：確定予約2手目に「円弧斬り」を追加",
+    "source": "a0",
+    "encounter": 1
+  },
+  {
+    "id": 313,
+    "time": 59.5499999999979,
+    "type": "damage",
+    "text": "リネ → 砲列の衛兵 100",
+    "source": "a1",
+    "target": "e0",
+    "value": 100,
+    "visual": {
+      "skillId": "rain",
+      "actionName": "星の雨",
+      "comboIndex": 1,
+      "shielded": false
+    },
+    "encounter": 1
+  },
+  {
+    "id": 314,
+    "time": 59.5499999999979,
+    "type": "damage",
+    "text": "リネ → 後列狙いの砲手 84",
+    "source": "a1",
+    "target": "e1",
+    "value": 84,
+    "visual": {
+      "skillId": "rain",
+      "actionName": "星の雨",
+      "comboIndex": 1,
+      "shielded": false
+    },
+    "encounter": 1
+  },
+  {
+    "id": 315,
+    "time": 59.5499999999979,
+    "type": "system",
+    "text": "後列狙いの砲手を倒した",
+    "source": "a1",
+    "target": "e1",
+    "visual": {
+      "skillId": "rain",
+      "actionName": "星の雨",
+      "comboIndex": 1,
+      "outcome": "defeat"
+    },
+    "encounter": 1
+  },
+  {
+    "id": 316,
+    "time": 61.049999999997816,
+    "type": "damage",
+    "text": "アルト → 砲列の衛兵 322",
+    "source": "a0",
+    "target": "e0",
+    "value": 322,
+    "visual": {
+      "skillId": "sweep",
+      "actionName": "円弧斬り",
+      "comboIndex": 1,
+      "shielded": false
+    },
+    "encounter": 1
+  },
+  {
+    "id": 317,
+    "time": 61.26666666666447,
+    "type": "action",
+    "text": "セナ → 小さな祈り",
+    "source": "a2",
+    "visual": {
+      "skillId": "heal",
+      "actionName": "小さな祈り",
+      "comboIndex": 1
+    },
+    "encounter": 1
+  },
+  {
+    "id": 318,
+    "time": 61.41666666666446,
+    "type": "shift",
+    "text": "リネ → 射手",
+    "target": "a1",
+    "encounter": 1
+  },
+  {
+    "id": 319,
+    "time": 61.49999999999779,
+    "type": "system",
+    "text": "リネ：確定予約1手目に「射撃」を追加",
+    "source": "a1",
+    "encounter": 1
+  },
+  {
+    "id": 320,
+    "time": 61.49999999999779,
+    "type": "system",
+    "text": "セナ：確定予約1手目に「小さな祈り」を追加",
+    "source": "a2",
+    "encounter": 1
+  },
+  {
+    "id": 321,
+    "time": 61.749999999997776,
+    "type": "system",
+    "text": "リネ：確定予約2手目に「射撃」を追加",
+    "source": "a1",
+    "encounter": 1
+  },
+  {
+    "id": 322,
+    "time": 61.99999999999776,
+    "type": "system",
+    "text": "リネ：確定予約3手目に「射撃」を追加",
+    "source": "a1",
+    "encounter": 1
+  },
+  {
+    "id": 323,
+    "time": 62.4666666666644,
+    "type": "heal",
+    "text": "リネ +190",
+    "target": "a1",
+    "source": "a2",
+    "value": 190,
+    "visual": {
+      "skillId": "heal",
+      "actionName": "小さな祈り",
+      "comboIndex": 1
+    },
+    "encounter": 1
+  },
+  {
+    "id": 324,
+    "time": 62.649999999997725,
+    "type": "action",
+    "text": "リネ → 射撃",
+    "source": "a1",
+    "visual": {
+      "skillId": "shot",
+      "actionName": "射撃",
+      "comboIndex": 1
+    },
+    "encounter": 1
+  },
+  {
+    "id": 325,
+    "time": 62.74999999999772,
+    "type": "system",
+    "text": "リネ：確定予約3手目に「射撃」を追加",
+    "source": "a1",
+    "encounter": 1
+  },
+  {
+    "id": 326,
+    "time": 63.59999999999767,
+    "type": "warning",
+    "text": "前列狙いの砲手：前列への交差砲撃",
+    "source": "e2",
+    "visual": {
+      "actionName": "前列への交差砲撃"
+    },
+    "encounter": 1
+  },
+  {
+    "id": 327,
+    "time": 63.64999999999767,
+    "type": "damage",
+    "text": "リネ → 砲列の衛兵 275",
+    "source": "a1",
+    "target": "e0",
+    "value": 275,
+    "visual": {
+      "skillId": "shot",
+      "actionName": "射撃",
+      "comboIndex": 1,
+      "shielded": false
+    },
+    "encounter": 1
+  },
+  {
+    "id": 328,
+    "time": 64.61666666666429,
+    "type": "action",
+    "text": "セナ → 小さな祈り",
+    "source": "a2",
+    "visual": {
+      "skillId": "heal",
+      "actionName": "小さな祈り",
+      "comboIndex": 1
+    },
+    "encounter": 1
+  },
+  {
+    "id": 329,
+    "time": 64.73333333333095,
+    "type": "action",
+    "text": "アルト → 円弧斬り",
+    "source": "a0",
+    "visual": {
+      "skillId": "sweep",
+      "actionName": "円弧斬り",
+      "comboIndex": 1
+    },
+    "encounter": 1
+  },
+  {
+    "id": 330,
+    "time": 64.74999999999761,
+    "type": "system",
+    "text": "アルト：確定予約2手目に「斬撃」を追加",
+    "source": "a0",
+    "encounter": 1
+  },
+  {
+    "id": 331,
+    "time": 64.74999999999761,
+    "type": "system",
+    "text": "セナ：確定予約1手目に「小さな祈り」を追加",
+    "source": "a2",
+    "encounter": 1
+  },
+  {
+    "id": 332,
+    "time": 64.9999999999976,
+    "type": "system",
+    "text": "アルト：確定予約3手目に「斬撃」を追加",
+    "source": "a0",
+    "encounter": 1
+  },
+  {
+    "id": 333,
+    "time": 65.79999999999755,
+    "type": "action",
+    "text": "リネ → 射撃",
+    "source": "a1",
+    "visual": {
+      "skillId": "shot",
+      "actionName": "射撃",
+      "comboIndex": 1
+    },
+    "encounter": 1
+  },
+  {
+    "id": 334,
+    "time": 65.81666666666422,
+    "type": "heal",
+    "text": "リネ +116",
+    "target": "a1",
+    "source": "a2",
+    "value": 116,
+    "visual": {
+      "skillId": "heal",
+      "actionName": "小さな祈り",
+      "comboIndex": 1
+    },
+    "encounter": 1
+  },
+  {
+    "id": 335,
+    "time": 65.84999999999755,
+    "type": "system",
+    "text": "砲列の衛兵：ブレイク終了",
+    "encounter": 1
+  },
+  {
+    "id": 336,
+    "time": 65.99999999999754,
+    "type": "system",
+    "text": "リネ：「射撃」の予約を取消",
+    "encounter": 1
+  },
+  {
+    "id": 337,
+    "time": 65.99999999999754,
+    "type": "system",
+    "text": "リネ：「射撃」の予約を取消",
+    "encounter": 1
+  },
+  {
+    "id": 338,
+    "time": 65.99999999999754,
+    "type": "system",
+    "text": "セナ：「小さな祈り」の予約を取消",
+    "encounter": 1
+  },
+  {
+    "id": 339,
+    "time": 65.99999999999754,
+    "type": "shift",
+    "text": "オプティマ：崩しの連奏",
+    "encounter": 1
+  },
+  {
+    "id": 340,
+    "time": 66.53333333333084,
+    "type": "damage",
+    "text": "アルト → 砲列の衛兵 162",
+    "source": "a0",
+    "target": "e0",
+    "value": 162,
+    "visual": {
+      "skillId": "sweep",
+      "actionName": "円弧斬り",
+      "comboIndex": 1,
+      "shielded": false
+    },
+    "encounter": 1
+  },
+  {
+    "id": 341,
+    "time": 66.7999999999975,
+    "type": "damage",
+    "text": "リネ → 砲列の衛兵 35",
+    "source": "a1",
+    "target": "e0",
+    "value": 35,
+    "visual": {
+      "skillId": "shot",
+      "actionName": "射撃",
+      "comboIndex": 1,
+      "shielded": false
+    },
+    "encounter": 1
+  },
+  {
+    "id": 342,
+    "time": 66.7999999999975,
+    "type": "system",
+    "text": "砲列の衛兵を倒した",
+    "source": "a1",
+    "target": "e0",
+    "visual": {
+      "skillId": "shot",
+      "actionName": "射撃",
+      "comboIndex": 1,
+      "outcome": "defeat"
+    },
+    "encounter": 1
+  },
+  {
+    "id": 343,
+    "time": 66.96666666666415,
+    "type": "system",
+    "text": "前列狙いの砲手：前列への交差砲撃は誰にも当たらなかった",
+    "source": "e2",
+    "target": "e2",
+    "visual": {
+      "actionName": "前列への交差砲撃",
+      "outcome": "miss"
+    },
+    "encounter": 1
+  },
+  {
+    "id": 344,
+    "time": 67.36666666666413,
+    "type": "shift",
+    "text": "セナ → 鉤槍使い",
+    "target": "a2",
+    "encounter": 1
+  },
+  {
+    "id": 345,
+    "time": 67.49999999999746,
+    "type": "system",
+    "text": "セナ：確定予約1手目に「引き寄せ」を追加",
+    "source": "a2",
+    "encounter": 1
+  },
+  {
+    "id": 346,
+    "time": 68.34999999999741,
+    "type": "shift",
+    "text": "リネ → 魔術師",
+    "target": "a1",
+    "encounter": 1
+  },
+  {
+    "id": 347,
+    "time": 68.4999999999974,
+    "type": "system",
+    "text": "リネ：確定予約1手目に「砕光」を追加",
+    "source": "a1",
+    "encounter": 1
+  },
+  {
+    "id": 348,
+    "time": 68.74999999999739,
+    "type": "system",
+    "text": "リネ：確定予約2手目に「砕光」を追加",
+    "source": "a1",
+    "encounter": 1
+  },
+  {
+    "id": 349,
+    "time": 68.99999999999737,
+    "type": "system",
+    "text": "リネ：確定予約3手目に「砕光」を追加",
+    "source": "a1",
+    "encounter": 1
+  },
+  {
+    "id": 350,
+    "time": 69.766666666664,
+    "type": "action",
+    "text": "リネ → 砕光",
+    "source": "a1",
+    "visual": {
+      "skillId": "spark",
+      "actionName": "砕光",
+      "comboIndex": 1
+    },
+    "encounter": 1
+  },
+  {
+    "id": 351,
+    "time": 69.99999999999731,
+    "type": "system",
+    "text": "リネ：確定予約3手目に「砕光」を追加",
+    "source": "a1",
+    "encounter": 1
+  },
+  {
+    "id": 352,
+    "time": 70.21666666666397,
+    "type": "action",
+    "text": "セナ → 引き寄せ",
+    "source": "a2",
+    "visual": {
+      "skillId": "pull",
+      "actionName": "引き寄せ",
+      "comboIndex": 1
+    },
+    "encounter": 1
+  },
+  {
+    "id": 353,
+    "time": 70.2499999999973,
+    "type": "system",
+    "text": "セナ：確定予約1手目に「引き寄せ」を追加",
+    "source": "a2",
+    "encounter": 1
+  },
+  {
+    "id": 354,
+    "time": 70.59999999999728,
+    "type": "action",
+    "text": "アルト → 円弧斬り",
+    "source": "a0",
+    "visual": {
+      "skillId": "sweep",
+      "actionName": "円弧斬り",
+      "comboIndex": 1
+    },
+    "encounter": 1
+  },
+  {
+    "id": 355,
+    "time": 70.74999999999727,
+    "type": "system",
+    "text": "アルト：確定予約3手目に「斬撃」を追加",
+    "source": "a0",
+    "encounter": 1
+  },
+  {
+    "id": 356,
+    "time": 70.76666666666394,
+    "type": "damage",
+    "text": "リネ → 前列狙いの砲手 33",
+    "source": "a1",
+    "target": "e2",
+    "value": 33,
+    "visual": {
+      "skillId": "spark",
+      "actionName": "砕光",
+      "comboIndex": 1,
+      "shielded": false
+    },
+    "encounter": 1
+  },
+  {
+    "id": 357,
+    "time": 71.3166666666639,
+    "type": "damage",
+    "text": "セナ → 前列狙いの砲手 50",
+    "source": "a2",
+    "target": "e2",
+    "value": 50,
+    "visual": {
+      "skillId": "pull",
+      "actionName": "引き寄せ",
+      "comboIndex": 1,
+      "shielded": false
+    },
+    "encounter": 1
+  },
+  {
+    "id": 358,
+    "time": 71.3166666666639,
+    "type": "move",
+    "text": "前列狙いの砲手 → 前列",
+    "source": "a2",
+    "target": "e2",
+    "visual": {
+      "fromRow": "back",
+      "toRow": "front"
+    },
+    "encounter": 1
+  },
+  {
+    "id": 359,
+    "time": 71.49999999999723,
+    "type": "system",
+    "text": "セナ：確定予約2手目に「砕突」を追加",
+    "source": "a2",
+    "encounter": 1
+  },
+  {
+    "id": 360,
+    "time": 71.74999999999721,
+    "type": "system",
+    "text": "セナ：確定予約3手目に「砕突」を追加",
+    "source": "a2",
+    "encounter": 1
+  },
+  {
+    "id": 361,
+    "time": 72.08333333333053,
+    "type": "warning",
+    "text": "前列狙いの砲手：前列への交差砲撃",
+    "source": "e2",
+    "visual": {
+      "actionName": "前列への交差砲撃"
+    },
+    "encounter": 1
+  },
+  {
+    "id": 362,
+    "time": 72.39999999999718,
+    "type": "damage",
+    "text": "アルト → 前列狙いの砲手 220",
+    "source": "a0",
+    "target": "e2",
+    "value": 220,
+    "visual": {
+      "skillId": "sweep",
+      "actionName": "円弧斬り",
+      "comboIndex": 1,
+      "shielded": false
+    },
+    "encounter": 1
+  },
+  {
+    "id": 363,
+    "time": 73.09999999999714,
+    "type": "action",
+    "text": "リネ → 砕光",
+    "source": "a1",
+    "visual": {
+      "skillId": "spark",
+      "actionName": "砕光",
+      "comboIndex": 1
+    },
+    "encounter": 1
+  },
+  {
+    "id": 364,
+    "time": 73.24999999999713,
+    "type": "system",
+    "text": "リネ：確定予約3手目に「砕光」を追加",
+    "source": "a1",
+    "encounter": 1
+  },
+  {
+    "id": 365,
+    "time": 74.09999999999708,
+    "type": "damage",
+    "text": "リネ → 前列狙いの砲手 59",
+    "source": "a1",
+    "target": "e2",
+    "value": 59,
+    "visual": {
+      "skillId": "spark",
+      "actionName": "砕光",
+      "comboIndex": 1,
+      "shielded": false
+    },
+    "encounter": 1
+  },
+  {
+    "id": 366,
+    "time": 75.0166666666637,
+    "type": "action",
+    "text": "アルト → 斬撃",
+    "source": "a0",
+    "visual": {
+      "skillId": "slash",
+      "actionName": "斬撃",
+      "comboIndex": 1
+    },
+    "encounter": 1
+  },
+  {
+    "id": 367,
+    "time": 75.24999999999702,
+    "type": "system",
+    "text": "アルト：確定予約3手目に「斬撃」を追加",
+    "source": "a0",
+    "encounter": 1
+  },
+  {
+    "id": 368,
+    "time": 75.28333333333035,
+    "type": "action",
+    "text": "セナ → 引き寄せ",
+    "source": "a2",
+    "visual": {
+      "skillId": "pull",
+      "actionName": "引き寄せ",
+      "comboIndex": 1
+    },
+    "encounter": 1
+  },
+  {
+    "id": 369,
+    "time": 75.449999999997,
+    "type": "system",
+    "text": "前列狙いの砲手：前列への交差砲撃は誰にも当たらなかった",
+    "source": "e2",
+    "target": "e2",
+    "visual": {
+      "actionName": "前列への交差砲撃",
+      "outcome": "miss"
+    },
+    "encounter": 1
+  },
+  {
+    "id": 370,
+    "time": 75.499999999997,
+    "type": "system",
+    "text": "セナ：確定予約3手目に「砕突」を追加",
+    "source": "a2",
+    "encounter": 1
+  },
+  {
+    "id": 371,
+    "time": 75.91666666666364,
+    "type": "damage",
+    "text": "アルト → 前列狙いの砲手 162",
+    "source": "a0",
+    "target": "e2",
+    "value": 162,
+    "visual": {
+      "skillId": "slash",
+      "actionName": "斬撃",
+      "comboIndex": 1,
+      "shielded": false
+    },
+    "encounter": 1
+  },
+  {
+    "id": 372,
+    "time": 76.38333333333028,
+    "type": "damage",
+    "text": "セナ → 前列狙いの砲手 79",
+    "source": "a2",
+    "target": "e2",
+    "value": 79,
+    "visual": {
+      "skillId": "pull",
+      "actionName": "引き寄せ",
+      "comboIndex": 1,
+      "shielded": false
+    },
+    "encounter": 1
+  },
+  {
+    "id": 373,
+    "time": 76.38333333333028,
+    "type": "break",
+    "text": "前列狙いの砲手 BREAK — 12秒間の好機",
+    "target": "e2",
+    "source": "a2",
+    "visual": {
+      "skillId": "pull",
+      "actionName": "引き寄せ",
+      "comboIndex": 1
+    },
+    "encounter": 1
+  },
+  {
+    "id": 374,
+    "time": 76.43333333333028,
+    "type": "action",
+    "text": "リネ → 砕光",
+    "source": "a1",
+    "visual": {
+      "skillId": "spark",
+      "actionName": "砕光",
+      "comboIndex": 1
+    },
+    "encounter": 1
+  },
+  {
+    "id": 375,
+    "time": 76.49999999999694,
+    "type": "system",
+    "text": "リネ：「砕光」の予約を取消",
+    "encounter": 1
+  },
+  {
+    "id": 376,
+    "time": 76.49999999999694,
+    "type": "system",
+    "text": "リネ：「砕光」の予約を取消",
+    "encounter": 1
+  },
+  {
+    "id": 377,
+    "time": 76.49999999999694,
+    "type": "shift",
+    "text": "オプティマ：終幕の一撃",
+    "encounter": 1
+  },
+  {
+    "id": 378,
+    "time": 77.43333333333022,
+    "type": "damage",
+    "text": "リネ → 前列狙いの砲手 75",
+    "source": "a1",
+    "target": "e2",
+    "value": 75,
+    "visual": {
+      "skillId": "spark",
+      "actionName": "砕光",
+      "comboIndex": 1,
+      "shielded": false
+    },
+    "encounter": 1
+  },
+  {
+    "id": 379,
+    "time": 78.34999999999684,
+    "type": "action",
+    "text": "アルト → 斬撃",
+    "source": "a0",
+    "visual": {
+      "skillId": "slash",
+      "actionName": "斬撃",
+      "comboIndex": 1
+    },
+    "encounter": 1
+  },
+  {
+    "id": 380,
+    "time": 78.49999999999683,
+    "type": "system",
+    "text": "アルト：確定予約3手目に「斬撃」を追加",
+    "source": "a0",
+    "encounter": 1
+  },
+  {
+    "id": 381,
+    "time": 78.89999999999681,
+    "type": "action",
+    "text": "セナ → 砕突",
+    "source": "a2",
+    "visual": {
+      "skillId": "jab",
+      "actionName": "砕突",
+      "comboIndex": 1
+    },
+    "encounter": 1
+  },
+  {
+    "id": 382,
+    "time": 78.98333333333014,
+    "type": "shift",
+    "text": "リネ → 射手",
+    "target": "a1",
+    "encounter": 1
+  },
+  {
+    "id": 383,
+    "time": 78.9999999999968,
+    "type": "system",
+    "text": "リネ：確定予約1手目に「射撃」を追加",
+    "source": "a1",
+    "encounter": 1
+  },
+  {
+    "id": 384,
+    "time": 78.9999999999968,
+    "type": "system",
+    "text": "セナ：確定予約3手目に「砕突」を追加",
+    "source": "a2",
+    "encounter": 1
+  },
+  {
+    "id": 385,
+    "time": 79.24999999999679,
+    "type": "damage",
+    "text": "アルト → 前列狙いの砲手 211",
+    "source": "a0",
+    "target": "e2",
+    "value": 211,
+    "visual": {
+      "skillId": "slash",
+      "actionName": "斬撃",
+      "comboIndex": 1,
+      "shielded": false
+    },
+    "encounter": 1
+  },
+  {
+    "id": 386,
+    "time": 79.24999999999679,
+    "type": "system",
+    "text": "リネ：確定予約2手目に「射撃」を追加",
+    "source": "a1",
+    "encounter": 1
+  },
+  {
+    "id": 387,
+    "time": 79.49999999999677,
+    "type": "system",
+    "text": "リネ：確定予約3手目に「射撃」を追加",
+    "source": "a1",
+    "encounter": 1
+  },
+  {
+    "id": 388,
+    "time": 79.79999999999676,
+    "type": "damage",
+    "text": "セナ → 前列狙いの砲手 80",
+    "source": "a2",
+    "target": "e2",
+    "value": 80,
+    "visual": {
+      "skillId": "jab",
+      "actionName": "砕突",
+      "comboIndex": 1,
+      "shielded": false
+    },
+    "encounter": 1
+  },
+  {
+    "id": 389,
+    "time": 80.41666666666339,
+    "type": "action",
+    "text": "リネ → 射撃",
+    "source": "a1",
+    "visual": {
+      "skillId": "shot",
+      "actionName": "射撃",
+      "comboIndex": 1
+    },
+    "encounter": 1
+  },
+  {
+    "id": 390,
+    "time": 80.49999999999672,
+    "type": "system",
+    "text": "リネ：確定予約3手目に「射撃」を追加",
+    "source": "a1",
+    "encounter": 1
+  },
+  {
+    "id": 391,
+    "time": 81.41666666666333,
+    "type": "damage",
+    "text": "リネ → 前列狙いの砲手 321",
+    "source": "a1",
+    "target": "e2",
+    "value": 321,
+    "visual": {
+      "skillId": "shot",
+      "actionName": "射撃",
+      "comboIndex": 1,
+      "shielded": false
+    },
+    "encounter": 1
+  },
+  {
+    "id": 392,
+    "time": 81.68333333332998,
+    "type": "action",
+    "text": "アルト → 斬撃",
+    "source": "a0",
+    "visual": {
+      "skillId": "slash",
+      "actionName": "斬撃",
+      "comboIndex": 1
+    },
+    "encounter": 1
+  },
+  {
+    "id": 393,
+    "time": 81.74999999999665,
+    "type": "system",
+    "text": "アルト：確定予約3手目に「斬撃」を追加",
+    "source": "a0",
+    "encounter": 1
+  },
+  {
+    "id": 394,
+    "time": 82.23333333332995,
+    "type": "action",
+    "text": "セナ → 砕突",
+    "source": "a2",
+    "visual": {
+      "skillId": "jab",
+      "actionName": "砕突",
+      "comboIndex": 1
+    },
+    "encounter": 1
+  },
+  {
+    "id": 395,
+    "time": 82.24999999999662,
+    "type": "system",
+    "text": "セナ：確定予約3手目に「砕突」を追加",
+    "source": "a2",
+    "encounter": 1
+  },
+  {
+    "id": 396,
+    "time": 82.58333333332993,
+    "type": "damage",
+    "text": "アルト → 前列狙いの砲手 295",
+    "source": "a0",
+    "target": "e2",
+    "value": 295,
+    "visual": {
+      "skillId": "slash",
+      "actionName": "斬撃",
+      "comboIndex": 1,
+      "shielded": false
+    },
+    "encounter": 1
+  },
+  {
+    "id": 397,
+    "time": 83.1333333333299,
+    "type": "damage",
+    "text": "セナ → 前列狙いの砲手 89",
+    "source": "a2",
+    "target": "e2",
+    "value": 89,
+    "visual": {
+      "skillId": "jab",
+      "actionName": "砕突",
+      "comboIndex": 1,
+      "shielded": false
+    },
+    "encounter": 1
+  },
+  {
+    "id": 398,
+    "time": 83.1333333333299,
+    "type": "system",
+    "text": "前列狙いの砲手を倒した",
+    "source": "a2",
+    "target": "e2",
+    "visual": {
+      "skillId": "jab",
+      "actionName": "砕突",
+      "comboIndex": 1,
+      "outcome": "defeat"
+    },
+    "encounter": 1
+  },
+  {
+    "id": 399,
+    "time": 83.1333333333299,
+    "type": "system",
+    "text": "勝利。轟砕の槌・流星の弓・帰還の軍旗を入手。",
+    "encounter": 1
+  },
+  {
+    "id": 400,
+    "time": 83.1333333333299,
+    "type": "system",
+    "text": "第二戦へ。HPと集中力が全回復しました。",
+    "encounter": 2
+  },
+  {
+    "id": 401,
+    "time": 83.1333333333299,
+    "type": "shift",
+    "text": "オプティマ：崩しの連奏",
+    "encounter": 2
+  },
+  {
+    "id": 402,
+    "time": 83.38333333332989,
+    "type": "system",
+    "text": "アルト：確定予約1手目に「斬撃」を追加",
+    "source": "a0",
+    "encounter": 2
+  },
+  {
+    "id": 403,
+    "time": 83.38333333332989,
+    "type": "system",
+    "text": "セナ：確定予約1手目に「引き寄せ」を追加",
+    "source": "a2",
+    "encounter": 2
+  },
+  {
+    "id": 404,
+    "time": 83.39999999999655,
+    "type": "action",
+    "text": "アルト → 斬撃",
+    "source": "a0",
+    "visual": {
+      "skillId": "slash",
+      "actionName": "斬撃",
+      "comboIndex": 1
+    },
+    "encounter": 2
+  },
+  {
+    "id": 405,
+    "time": 83.63333333332987,
+    "type": "system",
+    "text": "アルト：確定予約1手目に「円弧斬り」を追加",
+    "source": "a0",
+    "encounter": 2
+  },
+  {
+    "id": 406,
+    "time": 83.78333333332986,
+    "type": "shift",
+    "text": "リネ → 魔術師",
+    "target": "a1",
+    "encounter": 2
+  },
+  {
+    "id": 407,
+    "time": 83.88333333332986,
+    "type": "system",
+    "text": "アルト：確定予約2手目に「円弧斬り」を追加",
+    "source": "a0",
+    "encounter": 2
+  },
+  {
+    "id": 408,
+    "time": 83.88333333332986,
+    "type": "system",
+    "text": "リネ：確定予約1手目に「星の雨」を追加",
+    "source": "a1",
+    "encounter": 2
+  },
+  {
+    "id": 409,
+    "time": 84.13333333332984,
+    "type": "system",
+    "text": "リネ：確定予約2手目に「星の雨」を追加",
+    "source": "a1",
+    "encounter": 2
+  },
+  {
+    "id": 410,
+    "time": 84.2999999999965,
+    "type": "damage",
+    "text": "アルト → 砲列の重衛兵 113",
+    "source": "a0",
+    "target": "e0",
+    "value": 113,
+    "visual": {
+      "skillId": "slash",
+      "actionName": "斬撃",
+      "comboIndex": 1,
+      "shielded": false
+    },
+    "encounter": 2
+  },
+  {
+    "id": 411,
+    "time": 84.56666666666315,
+    "type": "action",
+    "text": "セナ → 引き寄せ",
+    "source": "a2",
+    "visual": {
+      "skillId": "pull",
+      "actionName": "引き寄せ",
+      "comboIndex": 1
+    },
+    "encounter": 2
+  },
+  {
+    "id": 412,
+    "time": 84.63333333332982,
+    "type": "system",
+    "text": "セナ：確定予約1手目に「引き寄せ」を追加",
+    "source": "a2",
+    "encounter": 2
+  },
+  {
+    "id": 413,
+    "time": 85.21666666666312,
+    "type": "action",
+    "text": "リネ → 星の雨",
+    "source": "a1",
+    "visual": {
+      "skillId": "rain",
+      "actionName": "星の雨",
+      "comboIndex": 1
+    },
+    "encounter": 2
+  },
+  {
+    "id": 414,
+    "time": 85.38333333332977,
+    "type": "system",
+    "text": "リネ：確定予約2手目に「星の雨」を追加",
+    "source": "a1",
+    "encounter": 2
+  },
+  {
+    "id": 415,
+    "time": 85.66666666666309,
+    "type": "damage",
+    "text": "セナ → 後列狙いの重砲 25",
+    "source": "a2",
+    "target": "e1",
+    "value": 25,
+    "visual": {
+      "skillId": "pull",
+      "actionName": "引き寄せ",
+      "comboIndex": 1,
+      "shielded": true
+    },
+    "encounter": 2
+  },
+  {
+    "id": 416,
+    "time": 85.66666666666309,
+    "type": "move",
+    "text": "後列狙いの重砲 → 前列",
+    "source": "a2",
+    "target": "e1",
+    "visual": {
+      "fromRow": "back",
+      "toRow": "front"
+    },
+    "encounter": 2
+  },
+  {
+    "id": 417,
+    "time": 86.74999999999636,
+    "type": "warning",
+    "text": "砲列の重衛兵：前列薙ぎ払い",
+    "source": "e0",
+    "visual": {
+      "actionName": "前列薙ぎ払い"
+    },
+    "encounter": 2
+  },
+  {
+    "id": 418,
+    "time": 87.04999999999634,
+    "type": "warning",
+    "text": "後列狙いの重砲：後列への交差砲撃",
+    "source": "e1",
+    "visual": {
+      "actionName": "後列への交差砲撃"
+    },
+    "encounter": 2
+  },
+  {
+    "id": 419,
+    "time": 87.04999999999634,
+    "type": "warning",
+    "text": "前列狙いの重砲：前列への交差砲撃",
+    "source": "e2",
+    "visual": {
+      "actionName": "前列への交差砲撃"
+    },
+    "encounter": 2
+  },
+  {
+    "id": 420,
+    "time": 87.216666666663,
+    "type": "damage",
+    "text": "リネ → 前列狙いの重砲 30",
+    "source": "a1",
+    "target": "e2",
+    "value": 30,
+    "visual": {
+      "skillId": "rain",
+      "actionName": "星の雨",
+      "comboIndex": 1,
+      "shielded": true
+    },
+    "encounter": 2
+  },
+  {
+    "id": 421,
+    "time": 87.63333333332965,
+    "type": "system",
+    "text": "アルト：「円弧斬り」の予約を取消",
+    "encounter": 2
+  },
+  {
+    "id": 422,
+    "time": 87.63333333332965,
+    "type": "system",
+    "text": "アルト：「円弧斬り」の予約を取消",
+    "encounter": 2
+  },
+  {
+    "id": 423,
+    "time": 87.63333333332965,
+    "type": "system",
+    "text": "アルト：確定予約1手目に「防御」を追加",
+    "source": "a0",
+    "encounter": 2
+  },
+  {
+    "id": 424,
+    "time": 87.63333333332965,
+    "type": "system",
+    "text": "セナ：「引き寄せ」の予約を取消",
+    "encounter": 2
+  },
+  {
+    "id": 425,
+    "time": 87.63333333332965,
+    "type": "system",
+    "text": "セナ：確定予約1手目に「防御」を追加",
+    "source": "a2",
+    "encounter": 2
+  },
+  {
+    "id": 426,
+    "time": 87.64999999999631,
+    "type": "action",
+    "text": "アルト → 防御",
+    "source": "a0",
+    "visual": {
+      "skillId": "guard",
+      "actionName": "防御",
+      "comboIndex": 1
+    },
+    "encounter": 2
+  },
+  {
+    "id": 427,
+    "time": 88.04999999999629,
+    "type": "heal",
+    "text": "アルト：防護",
+    "source": "a0",
+    "target": "a0",
+    "visual": {
+      "skillId": "guard",
+      "actionName": "防御",
+      "comboIndex": 1
+    },
+    "encounter": 2
+  },
+  {
+    "id": 428,
+    "time": 88.13333333332962,
+    "type": "system",
+    "text": "アルト：確定予約1手目に「斬撃」を追加",
+    "source": "a0",
+    "encounter": 2
+  },
+  {
+    "id": 429,
+    "time": 88.19999999999628,
+    "type": "action",
+    "text": "セナ → 防御",
+    "source": "a2",
+    "visual": {
+      "skillId": "guard",
+      "actionName": "防御",
+      "comboIndex": 1
+    },
+    "encounter": 2
+  },
+  {
+    "id": 430,
+    "time": 88.3833333333296,
+    "type": "system",
+    "text": "アルト：確定予約2手目に「斬撃」を追加",
+    "source": "a0",
+    "encounter": 2
+  },
+  {
+    "id": 431,
+    "time": 88.3833333333296,
+    "type": "system",
+    "text": "セナ：確定予約1手目に「砕突」を追加",
+    "source": "a2",
+    "encounter": 2
+  },
+  {
+    "id": 432,
+    "time": 88.59999999999626,
+    "type": "heal",
+    "text": "セナ：防護",
+    "source": "a2",
+    "target": "a2",
+    "visual": {
+      "skillId": "guard",
+      "actionName": "防御",
+      "comboIndex": 1
+    },
+    "encounter": 2
+  },
+  {
+    "id": 433,
+    "time": 88.63333333332959,
+    "type": "system",
+    "text": "アルト：「斬撃」の予約を取消",
+    "encounter": 2
+  },
+  {
+    "id": 434,
+    "time": 88.63333333332959,
+    "type": "system",
+    "text": "アルト：「斬撃」の予約を取消",
+    "encounter": 2
+  },
+  {
+    "id": 435,
+    "time": 88.63333333332959,
+    "type": "system",
+    "text": "アルト：確定予約1手目に「誓いの盾槍に変更」を追加",
+    "source": "a0",
+    "encounter": 2
+  },
+  {
+    "id": 436,
+    "time": 88.88333333332957,
+    "type": "system",
+    "text": "セナ：確定予約2手目に「砕突」を追加",
+    "source": "a2",
+    "encounter": 2
+  },
+  {
+    "id": 437,
+    "time": 89.13333333332956,
+    "type": "system",
+    "text": "セナ：確定予約3手目に「砕突」を追加",
+    "source": "a2",
+    "encounter": 2
+  },
+  {
+    "id": 438,
+    "time": 89.71666666666286,
+    "type": "shift",
+    "text": "アルト → 守護騎士",
+    "target": "a0",
+    "encounter": 2
+  },
+  {
+    "id": 439,
+    "time": 89.88333333332952,
+    "type": "system",
+    "text": "アルト：確定予約1手目に「護りの誓い」を追加",
+    "source": "a0",
+    "encounter": 2
+  },
+  {
+    "id": 440,
+    "time": 89.94999999999618,
+    "type": "system",
+    "text": "砲列の重衛兵：前列薙ぎ払いは誰にも当たらなかった",
+    "source": "e0",
+    "target": "e0",
+    "visual": {
+      "actionName": "前列薙ぎ払い",
+      "outcome": "miss"
+    },
+    "encounter": 2
+  },
+  {
+    "id": 441,
+    "time": 89.96666666666285,
+    "type": "action",
+    "text": "アルト → 護りの誓い",
+    "source": "a0",
+    "visual": {
+      "skillId": "ward",
+      "actionName": "護りの誓い",
+      "comboIndex": 1
+    },
+    "encounter": 2
+  },
+  {
+    "id": 442,
+    "time": 90.1333333333295,
+    "type": "system",
+    "text": "アルト：確定予約1手目に「護りの誓い」を追加",
+    "source": "a0",
+    "encounter": 2
+  },
+  {
+    "id": 443,
+    "time": 90.24999999999616,
+    "type": "damage",
+    "text": "後列狙いの重砲 → アルト 100",
+    "source": "e1",
+    "target": "a0",
+    "value": 100,
+    "visual": {
+      "actionName": "後列への交差砲撃",
+      "shielded": true
+    },
+    "encounter": 2
+  },
+  {
+    "id": 444,
+    "time": 90.24999999999616,
+    "type": "damage",
+    "text": "後列狙いの重砲 → リネ 200",
+    "source": "e1",
+    "target": "a1",
+    "value": 200,
+    "visual": {
+      "actionName": "後列への交差砲撃",
+      "shielded": false
+    },
+    "encounter": 2
+  },
+  {
+    "id": 445,
+    "time": 90.24999999999616,
+    "type": "damage",
+    "text": "後列狙いの重砲 → セナ 100",
+    "source": "e1",
+    "target": "a2",
+    "value": 100,
+    "visual": {
+      "actionName": "後列への交差砲撃",
+      "shielded": true
+    },
+    "encounter": 2
+  },
+  {
+    "id": 446,
+    "time": 90.24999999999616,
+    "type": "system",
+    "text": "前列狙いの重砲：前列への交差砲撃は誰にも当たらなかった",
+    "source": "e2",
+    "target": "e2",
+    "visual": {
+      "actionName": "前列への交差砲撃",
+      "outcome": "miss"
+    },
+    "encounter": 2
+  },
+  {
+    "id": 447,
+    "time": 90.6666666666628,
+    "type": "heal",
+    "text": "リネ：防護",
+    "source": "a0",
+    "target": "a1",
+    "visual": {
+      "skillId": "ward",
+      "actionName": "護りの誓い",
+      "comboIndex": 1
+    },
+    "encounter": 2
+  },
+  {
+    "id": 448,
+    "time": 91.03333333332945,
+    "type": "action",
+    "text": "セナ → 砕突",
+    "source": "a2",
+    "visual": {
+      "skillId": "jab",
+      "actionName": "砕突",
+      "comboIndex": 1
+    },
+    "encounter": 2
+  },
+  {
+    "id": 449,
+    "time": 91.13333333332945,
+    "type": "system",
+    "text": "セナ：確定予約3手目に「引き寄せ」を追加",
+    "source": "a2",
+    "encounter": 2
+  },
+  {
+    "id": 450,
+    "time": 91.28333333332944,
+    "type": "action",
+    "text": "リネ → 星の雨",
+    "source": "a1",
+    "visual": {
+      "skillId": "rain",
+      "actionName": "星の雨",
+      "comboIndex": 1
+    },
+    "encounter": 2
+  },
+  {
+    "id": 451,
+    "time": 91.38333333332943,
+    "type": "system",
+    "text": "リネ：確定予約2手目に「星の雨」を追加",
+    "source": "a1",
+    "encounter": 2
+  },
+  {
+    "id": 452,
+    "time": 91.9333333333294,
+    "type": "damage",
+    "text": "セナ → 前列狙いの重砲 18",
+    "source": "a2",
+    "target": "e2",
+    "value": 18,
+    "visual": {
+      "skillId": "jab",
+      "actionName": "砕突",
+      "comboIndex": 1,
+      "shielded": true
+    },
+    "encounter": 2
+  },
+  {
+    "id": 453,
+    "time": 92.88333333332935,
+    "type": "system",
+    "text": "アルト：「護りの誓い」の予約を取消",
+    "encounter": 2
+  },
+  {
+    "id": 454,
+    "time": 92.88333333332935,
+    "type": "shift",
+    "text": "オプティマ：崩しの連奏",
+    "encounter": 2
+  },
+  {
+    "id": 455,
+    "time": 93.28333333332932,
+    "type": "damage",
+    "text": "リネ → 前列狙いの重砲 30",
+    "source": "a1",
+    "target": "e2",
+    "value": 30,
+    "visual": {
+      "skillId": "rain",
+      "actionName": "星の雨",
+      "comboIndex": 1,
+      "shielded": true
+    },
+    "encounter": 2
+  },
+  {
+    "id": 456,
+    "time": 93.53333333332931,
+    "type": "shift",
+    "text": "アルト → 剣士",
+    "target": "a0",
+    "encounter": 2
+  },
+  {
+    "id": 457,
+    "time": 93.6333333333293,
+    "type": "system",
+    "text": "アルト：確定予約1手目に「斬撃」を追加",
+    "source": "a0",
+    "encounter": 2
+  },
+  {
+    "id": 458,
+    "time": 93.64999999999597,
+    "type": "action",
+    "text": "アルト → 斬撃",
+    "source": "a0",
+    "visual": {
+      "skillId": "slash",
+      "actionName": "斬撃",
+      "comboIndex": 1
+    },
+    "encounter": 2
+  },
+  {
+    "id": 459,
+    "time": 93.88333333332929,
+    "type": "system",
+    "text": "アルト：確定予約1手目に「斬撃」を追加",
+    "source": "a0",
+    "encounter": 2
+  },
+  {
+    "id": 460,
+    "time": 94.13333333332928,
+    "type": "system",
+    "text": "アルト：確定予約2手目に「斬撃」を追加",
+    "source": "a0",
+    "encounter": 2
+  },
+  {
+    "id": 461,
+    "time": 94.34999999999593,
+    "type": "action",
+    "text": "セナ → 砕突",
+    "source": "a2",
+    "visual": {
+      "skillId": "jab",
+      "actionName": "砕突",
+      "comboIndex": 1
+    },
+    "encounter": 2
+  },
+  {
+    "id": 462,
+    "time": 94.38333333332926,
+    "type": "system",
+    "text": "アルト：確定予約3手目に「斬撃」を追加",
+    "source": "a0",
+    "encounter": 2
+  },
+  {
+    "id": 463,
+    "time": 94.54999999999592,
+    "type": "damage",
+    "text": "アルト → 前列狙いの重砲 91",
+    "source": "a0",
+    "target": "e2",
+    "value": 91,
+    "visual": {
+      "skillId": "slash",
+      "actionName": "斬撃",
+      "comboIndex": 1,
+      "shielded": true
+    },
+    "encounter": 2
+  },
+  {
+    "id": 464,
+    "time": 95.06666666666256,
+    "type": "warning",
+    "text": "後列狙いの重砲：後列への交差砲撃",
+    "source": "e1",
+    "visual": {
+      "actionName": "後列への交差砲撃"
+    },
+    "encounter": 2
+  },
+  {
+    "id": 465,
+    "time": 95.06666666666256,
+    "type": "warning",
+    "text": "前列狙いの重砲：前列への交差砲撃",
+    "source": "e2",
+    "visual": {
+      "actionName": "前列への交差砲撃"
+    },
+    "encounter": 2
+  },
+  {
+    "id": 466,
+    "time": 95.24999999999588,
+    "type": "damage",
+    "text": "セナ → 前列狙いの重砲 34",
+    "source": "a2",
+    "target": "e2",
+    "value": 34,
+    "visual": {
+      "skillId": "jab",
+      "actionName": "砕突",
+      "comboIndex": 1,
+      "shielded": true
+    },
+    "encounter": 2
+  },
+  {
+    "id": 467,
+    "time": 95.63333333332919,
+    "type": "system",
+    "text": "アルト：「斬撃」の予約を取消",
+    "encounter": 2
+  },
+  {
+    "id": 468,
+    "time": 95.63333333332919,
+    "type": "system",
+    "text": "アルト：「斬撃」の予約を取消",
+    "encounter": 2
+  },
+  {
+    "id": 469,
+    "time": 95.63333333332919,
+    "type": "system",
+    "text": "アルト：「斬撃」の予約を取消",
+    "encounter": 2
+  },
+  {
+    "id": 470,
+    "time": 95.63333333332919,
+    "type": "system",
+    "text": "アルト：確定予約1手目に「防御」を追加",
+    "source": "a0",
+    "encounter": 2
+  },
+  {
+    "id": 471,
+    "time": 95.63333333332919,
+    "type": "system",
+    "text": "セナ：「砕突」の予約を取消",
+    "encounter": 2
+  },
+  {
+    "id": 472,
+    "time": 95.63333333332919,
+    "type": "system",
+    "text": "セナ：「引き寄せ」の予約を取消",
+    "encounter": 2
+  },
+  {
+    "id": 473,
+    "time": 95.63333333332919,
+    "type": "system",
+    "text": "セナ：確定予約1手目に「防御」を追加",
+    "source": "a2",
+    "encounter": 2
+  },
+  {
+    "id": 474,
+    "time": 95.66666666666252,
+    "type": "warning",
+    "text": "砲列の重衛兵：前列薙ぎ払い",
+    "source": "e0",
+    "visual": {
+      "actionName": "前列薙ぎ払い"
+    },
+    "encounter": 2
+  },
+  {
+    "id": 475,
+    "time": 96.96666666666245,
+    "type": "action",
+    "text": "アルト → 防御",
+    "source": "a0",
+    "visual": {
+      "skillId": "guard",
+      "actionName": "防御",
+      "comboIndex": 1
+    },
+    "encounter": 2
+  },
+  {
+    "id": 476,
+    "time": 97.1333333333291,
+    "type": "system",
+    "text": "アルト：確定予約1手目に「誓いの盾槍に変更」を追加",
+    "source": "a0",
+    "encounter": 2
+  },
+  {
+    "id": 477,
+    "time": 97.3333333333291,
+    "type": "action",
+    "text": "リネ → 星の雨",
+    "source": "a1",
+    "visual": {
+      "skillId": "rain",
+      "actionName": "星の雨",
+      "comboIndex": 1
+    },
+    "encounter": 2
+  },
+  {
+    "id": 478,
+    "time": 97.36666666666243,
+    "type": "heal",
+    "text": "アルト：防護",
+    "source": "a0",
+    "target": "a0",
+    "visual": {
+      "skillId": "guard",
+      "actionName": "防御",
+      "comboIndex": 1
+    },
+    "encounter": 2
+  },
+  {
+    "id": 479,
+    "time": 97.38333333332909,
+    "type": "system",
+    "text": "リネ：確定予約2手目に「星の雨」を追加",
+    "source": "a1",
+    "encounter": 2
+  },
+  {
+    "id": 480,
+    "time": 97.68333333332907,
+    "type": "action",
+    "text": "セナ → 防御",
+    "source": "a2",
+    "visual": {
+      "skillId": "guard",
+      "actionName": "防御",
+      "comboIndex": 1
+    },
+    "encounter": 2
+  },
+  {
+    "id": 481,
+    "time": 97.88333333332906,
+    "type": "system",
+    "text": "セナ：確定予約1手目に「砕突」を追加",
+    "source": "a2",
+    "encounter": 2
+  },
+  {
+    "id": 482,
+    "time": 98.08333333332905,
+    "type": "heal",
+    "text": "セナ：防護",
+    "source": "a2",
+    "target": "a2",
+    "visual": {
+      "skillId": "guard",
+      "actionName": "防御",
+      "comboIndex": 1
+    },
+    "encounter": 2
+  },
+  {
+    "id": 483,
+    "time": 98.13333333332905,
+    "type": "system",
+    "text": "セナ：確定予約2手目に「砕突」を追加",
+    "source": "a2",
+    "encounter": 2
+  },
+  {
+    "id": 484,
+    "time": 98.26666666666237,
+    "type": "damage",
+    "text": "後列狙いの重砲 → アルト 125",
+    "source": "e1",
+    "target": "a0",
+    "value": 125,
+    "visual": {
+      "actionName": "後列への交差砲撃",
+      "shielded": true
+    },
+    "encounter": 2
+  },
+  {
+    "id": 485,
+    "time": 98.26666666666237,
+    "type": "damage",
+    "text": "後列狙いの重砲 → リネ 125",
+    "source": "e1",
+    "target": "a1",
+    "value": 125,
+    "visual": {
+      "actionName": "後列への交差砲撃",
+      "shielded": true
+    },
+    "encounter": 2
+  },
+  {
+    "id": 486,
+    "time": 98.26666666666237,
+    "type": "damage",
+    "text": "後列狙いの重砲 → セナ 125",
+    "source": "e1",
+    "target": "a2",
+    "value": 125,
+    "visual": {
+      "actionName": "後列への交差砲撃",
+      "shielded": true
+    },
+    "encounter": 2
+  },
+  {
+    "id": 487,
+    "time": 98.26666666666237,
+    "type": "system",
+    "text": "前列狙いの重砲：前列への交差砲撃は誰にも当たらなかった",
+    "source": "e2",
+    "target": "e2",
+    "visual": {
+      "actionName": "前列への交差砲撃",
+      "outcome": "miss"
+    },
+    "encounter": 2
+  },
+  {
+    "id": 488,
+    "time": 98.38333333332903,
+    "type": "system",
+    "text": "セナ：確定予約3手目に「引き寄せ」を追加",
+    "source": "a2",
+    "encounter": 2
+  },
+  {
+    "id": 489,
+    "time": 98.86666666666234,
+    "type": "system",
+    "text": "砲列の重衛兵：前列薙ぎ払いは誰にも当たらなかった",
+    "source": "e0",
+    "target": "e0",
+    "visual": {
+      "actionName": "前列薙ぎ払い",
+      "outcome": "miss"
+    },
+    "encounter": 2
+  },
+  {
+    "id": 490,
+    "time": 99.033333333329,
+    "type": "shift",
+    "text": "アルト → 守護騎士",
+    "target": "a0",
+    "encounter": 2
+  },
+  {
+    "id": 491,
+    "time": 99.33333333332898,
+    "type": "damage",
+    "text": "リネ → 前列狙いの重砲 56",
+    "source": "a1",
+    "target": "e2",
+    "value": 56,
+    "visual": {
+      "skillId": "rain",
+      "actionName": "星の雨",
+      "comboIndex": 1,
+      "shielded": true
+    },
+    "encounter": 2
+  },
+  {
+    "id": 492,
+    "time": 99.33333333332898,
+    "type": "break",
+    "text": "前列狙いの重砲 BREAK — 12秒間の好機",
+    "target": "e2",
+    "source": "a1",
+    "visual": {
+      "skillId": "rain",
+      "actionName": "星の雨",
+      "comboIndex": 1
+    },
+    "encounter": 2
+  },
+  {
+    "id": 493,
+    "time": 99.38333333332898,
+    "type": "system",
+    "text": "アルト：確定予約1手目に「護りの誓い」を追加",
+    "source": "a0",
+    "encounter": 2
+  },
+  {
+    "id": 494,
+    "time": 100.46666666666225,
+    "type": "action",
+    "text": "アルト → 護りの誓い",
+    "source": "a0",
+    "visual": {
+      "skillId": "ward",
+      "actionName": "護りの誓い",
+      "comboIndex": 1
+    },
+    "encounter": 2
+  },
+  {
+    "id": 495,
+    "time": 100.51666666666225,
+    "type": "action",
+    "text": "セナ → 砕突",
+    "source": "a2",
+    "visual": {
+      "skillId": "jab",
+      "actionName": "砕突",
+      "comboIndex": 1
+    },
+    "encounter": 2
+  },
+  {
+    "id": 496,
+    "time": 100.6333333333289,
+    "type": "system",
+    "text": "アルト：確定予約1手目に「護りの誓い」を追加",
+    "source": "a0",
+    "encounter": 2
+  },
+  {
+    "id": 497,
+    "time": 101.16666666666221,
+    "type": "heal",
+    "text": "リネ：防護",
+    "source": "a0",
+    "target": "a1",
+    "visual": {
+      "skillId": "ward",
+      "actionName": "護りの誓い",
+      "comboIndex": 1
+    },
+    "encounter": 2
+  },
+  {
+    "id": 498,
+    "time": 101.38333333332886,
+    "type": "system",
+    "text": "アルト：「護りの誓い」の予約を取消",
+    "encounter": 2
+  },
+  {
+    "id": 499,
+    "time": 101.38333333332886,
+    "type": "system",
+    "text": "リネ：「星の雨」の予約を取消",
+    "encounter": 2
+  },
+  {
+    "id": 500,
+    "time": 101.38333333332886,
+    "type": "system",
+    "text": "リネ：「星の雨」の予約を取消",
+    "encounter": 2
+  },
+  {
+    "id": 501,
+    "time": 101.38333333332886,
+    "type": "shift",
+    "text": "オプティマ：終幕の一撃",
+    "encounter": 2
+  },
+  {
+    "id": 502,
+    "time": 101.4166666666622,
+    "type": "damage",
+    "text": "セナ → 前列狙いの重砲 38",
+    "source": "a2",
+    "target": "e2",
+    "value": 38,
+    "visual": {
+      "skillId": "jab",
+      "actionName": "砕突",
+      "comboIndex": 1,
+      "shielded": true
+    },
+    "encounter": 2
+  },
+  {
+    "id": 503,
+    "time": 102.03333333332883,
+    "type": "shift",
+    "text": "リネ → 射手",
+    "target": "a1",
+    "encounter": 2
+  },
+  {
+    "id": 504,
+    "time": 102.13333333332882,
+    "type": "system",
+    "text": "リネ：確定予約1手目に「射撃」を追加",
+    "source": "a1",
+    "encounter": 2
+  },
+  {
+    "id": 505,
+    "time": 102.3833333333288,
+    "type": "system",
+    "text": "リネ：確定予約2手目に「射撃」を追加",
+    "source": "a1",
+    "encounter": 2
+  },
+  {
+    "id": 506,
+    "time": 102.61666666666213,
+    "type": "action",
+    "text": "リネ → 射撃",
+    "source": "a1",
+    "visual": {
+      "skillId": "shot",
+      "actionName": "射撃",
+      "comboIndex": 1
+    },
+    "encounter": 2
+  },
+  {
+    "id": 507,
+    "time": 102.63333333332879,
+    "type": "system",
+    "text": "リネ：確定予約2手目に「射撃」を追加",
+    "source": "a1",
+    "encounter": 2
+  },
+  {
+    "id": 508,
+    "time": 102.71666666666212,
+    "type": "shift",
+    "text": "アルト → 剣士",
+    "target": "a0",
+    "encounter": 2
+  },
+  {
+    "id": 509,
+    "time": 102.88333333332878,
+    "type": "system",
+    "text": "アルト：確定予約1手目に「斬撃」を追加",
+    "source": "a0",
+    "encounter": 2
+  },
+  {
+    "id": 510,
+    "time": 102.88333333332878,
+    "type": "system",
+    "text": "リネ：確定予約3手目に「射撃」を追加",
+    "source": "a1",
+    "encounter": 2
+  },
+  {
+    "id": 511,
+    "time": 103.08333333332877,
+    "type": "warning",
+    "text": "後列狙いの重砲：後列への交差砲撃",
+    "source": "e1",
+    "visual": {
+      "actionName": "後列への交差砲撃"
+    },
+    "encounter": 2
+  },
+  {
+    "id": 512,
+    "time": 103.61666666666207,
+    "type": "damage",
+    "text": "リネ → 前列狙いの重砲 150",
+    "source": "a1",
+    "target": "e2",
+    "value": 150,
+    "visual": {
+      "skillId": "shot",
+      "actionName": "射撃",
+      "comboIndex": 1,
+      "shielded": true
+    },
+    "encounter": 2
+  },
+  {
+    "id": 513,
+    "time": 103.63333333332874,
+    "type": "system",
+    "text": "アルト：「斬撃」の予約を取消",
+    "encounter": 2
+  },
+  {
+    "id": 514,
+    "time": 103.63333333332874,
+    "type": "system",
+    "text": "アルト：前列へ移動指示",
+    "encounter": 2
+  },
+  {
+    "id": 515,
+    "time": 103.63333333332874,
+    "type": "system",
+    "text": "リネ：「射撃」の予約を取消",
+    "encounter": 2
+  },
+  {
+    "id": 516,
+    "time": 103.63333333332874,
+    "type": "system",
+    "text": "リネ：「射撃」の予約を取消",
+    "encounter": 2
+  },
+  {
+    "id": 517,
+    "time": 103.63333333332874,
+    "type": "system",
+    "text": "リネ：「射撃」の予約を取消",
+    "encounter": 2
+  },
+  {
+    "id": 518,
+    "time": 103.63333333332874,
+    "type": "system",
+    "text": "リネ：前列へ移動指示",
+    "encounter": 2
+  },
+  {
+    "id": 519,
+    "time": 103.63333333332874,
+    "type": "system",
+    "text": "セナ：「砕突」の予約を取消",
+    "encounter": 2
+  },
+  {
+    "id": 520,
+    "time": 103.63333333332874,
+    "type": "system",
+    "text": "セナ：「引き寄せ」の予約を取消",
+    "encounter": 2
+  },
+  {
+    "id": 521,
+    "time": 103.63333333332874,
+    "type": "system",
+    "text": "セナ：前列へ移動指示",
+    "encounter": 2
+  },
+  {
+    "id": 522,
+    "time": 104.48333333332869,
+    "type": "move",
+    "text": "アルト → 前列",
+    "target": "a0",
+    "visual": {
+      "fromRow": "back",
+      "toRow": "front"
+    },
+    "encounter": 2
+  },
+  {
+    "id": 523,
+    "time": 104.48333333332869,
+    "type": "move",
+    "text": "リネ → 前列",
+    "target": "a1",
+    "visual": {
+      "fromRow": "back",
+      "toRow": "front"
+    },
+    "encounter": 2
+  },
+  {
+    "id": 524,
+    "time": 104.48333333332869,
+    "type": "move",
+    "text": "セナ → 前列",
+    "target": "a2",
+    "visual": {
+      "fromRow": "back",
+      "toRow": "front"
+    },
+    "encounter": 2
+  },
+  {
+    "id": 525,
+    "time": 104.58333333332868,
+    "type": "warning",
+    "text": "砲列の重衛兵：追尾狙撃 → リネ",
+    "source": "e0",
+    "visual": {
+      "actionName": "追尾狙撃"
+    },
+    "encounter": 2
+  },
+  {
+    "id": 526,
+    "time": 105.13333333332865,
+    "type": "system",
+    "text": "アルト：確定予約1手目に「斬撃」を追加",
+    "source": "a0",
+    "encounter": 2
+  },
+  {
+    "id": 527,
+    "time": 105.13333333332865,
+    "type": "system",
+    "text": "リネ：確定予約1手目に「射撃」を追加",
+    "source": "a1",
+    "encounter": 2
+  },
+  {
+    "id": 528,
+    "time": 105.13333333332865,
+    "type": "system",
+    "text": "セナ：確定予約1手目に「引き寄せ」を追加",
+    "source": "a2",
+    "encounter": 2
+  },
+  {
+    "id": 529,
+    "time": 105.14999999999532,
+    "type": "action",
+    "text": "アルト → 斬撃",
+    "source": "a0",
+    "visual": {
+      "skillId": "slash",
+      "actionName": "斬撃",
+      "comboIndex": 1
+    },
+    "encounter": 2
+  },
+  {
+    "id": 530,
+    "time": 105.38333333332864,
+    "type": "system",
+    "text": "アルト：確定予約1手目に「斬撃」を追加",
+    "source": "a0",
+    "encounter": 2
+  },
+  {
+    "id": 531,
+    "time": 105.38333333332864,
+    "type": "system",
+    "text": "リネ：確定予約2手目に「射撃」を追加",
+    "source": "a1",
+    "encounter": 2
+  },
+  {
+    "id": 532,
+    "time": 105.63333333332862,
+    "type": "system",
+    "text": "アルト：確定予約2手目に「斬撃」を追加",
+    "source": "a0",
+    "encounter": 2
+  },
+  {
+    "id": 533,
+    "time": 105.63333333332862,
+    "type": "system",
+    "text": "リネ：確定予約3手目に「射撃」を追加",
+    "source": "a1",
+    "encounter": 2
+  },
+  {
+    "id": 534,
+    "time": 105.88333333332861,
+    "type": "system",
+    "text": "アルト：確定予約3手目に「斬撃」を追加",
+    "source": "a0",
+    "encounter": 2
+  },
+  {
+    "id": 535,
+    "time": 105.9333333333286,
+    "type": "action",
+    "text": "リネ → 射撃",
+    "source": "a1",
+    "visual": {
+      "skillId": "shot",
+      "actionName": "射撃",
+      "comboIndex": 1
+    },
+    "encounter": 2
+  },
+  {
+    "id": 536,
+    "time": 106.04999999999526,
+    "type": "damage",
+    "text": "アルト → 前列狙いの重砲 246",
+    "source": "a0",
+    "target": "e2",
+    "value": 246,
+    "visual": {
+      "skillId": "slash",
+      "actionName": "斬撃",
+      "comboIndex": 1,
+      "shielded": true
+    },
+    "encounter": 2
+  },
+  {
+    "id": 537,
+    "time": 106.11666666666193,
+    "type": "action",
+    "text": "セナ → 引き寄せ",
+    "source": "a2",
+    "visual": {
+      "skillId": "pull",
+      "actionName": "引き寄せ",
+      "comboIndex": 1
+    },
+    "encounter": 2
+  },
+  {
+    "id": 538,
+    "time": 106.1333333333286,
+    "type": "system",
+    "text": "リネ：確定予約3手目に「射撃」を追加",
+    "source": "a1",
+    "encounter": 2
+  },
+  {
+    "id": 539,
+    "time": 106.1333333333286,
+    "type": "system",
+    "text": "セナ：確定予約1手目に「引き寄せ」を追加",
+    "source": "a2",
+    "encounter": 2
+  },
+  {
+    "id": 540,
+    "time": 106.28333333332859,
+    "type": "system",
+    "text": "後列狙いの重砲：後列への交差砲撃は誰にも当たらなかった",
+    "source": "e1",
+    "target": "e1",
+    "visual": {
+      "actionName": "後列への交差砲撃",
+      "outcome": "miss"
+    },
+    "encounter": 2
+  },
+  {
+    "id": 541,
+    "time": 106.93333333332855,
+    "type": "damage",
+    "text": "リネ → 前列狙いの重砲 225",
+    "source": "a1",
+    "target": "e2",
+    "value": 225,
+    "visual": {
+      "skillId": "shot",
+      "actionName": "射撃",
+      "comboIndex": 1,
+      "shielded": true
+    },
+    "encounter": 2
+  },
+  {
+    "id": 542,
+    "time": 107.21666666666187,
+    "type": "damage",
+    "text": "セナ → 砲列の重衛兵 73",
+    "source": "a2",
+    "target": "e0",
+    "value": 73,
+    "visual": {
+      "skillId": "pull",
+      "actionName": "引き寄せ",
+      "comboIndex": 1,
+      "shielded": false
+    },
+    "encounter": 2
+  },
+  {
+    "id": 543,
+    "time": 107.7833333333285,
+    "type": "damage",
+    "text": "砲列の重衛兵 → リネ 129",
+    "source": "e0",
+    "target": "a1",
+    "value": 129,
+    "visual": {
+      "actionName": "追尾狙撃",
+      "shielded": true
+    },
+    "encounter": 2
+  },
+  {
+    "id": 544,
+    "time": 107.8833333333285,
+    "type": "system",
+    "text": "セナ：「引き寄せ」の予約を取消",
+    "encounter": 2
+  },
+  {
+    "id": 545,
+    "time": 107.8833333333285,
+    "type": "system",
+    "text": "セナ：確定予約1手目に「巡礼の祈祷鈴に変更」を追加",
+    "source": "a2",
+    "encounter": 2
+  },
+  {
+    "id": 546,
+    "time": 108.3166666666618,
+    "type": "action",
+    "text": "アルト → 斬撃",
+    "source": "a0",
+    "visual": {
+      "skillId": "slash",
+      "actionName": "斬撃",
+      "comboIndex": 1
+    },
+    "encounter": 2
+  },
+  {
+    "id": 547,
+    "time": 108.38333333332847,
+    "type": "system",
+    "text": "アルト：確定予約3手目に「斬撃」を追加",
+    "source": "a0",
+    "encounter": 2
+  },
+  {
+    "id": 548,
+    "time": 108.98333333332843,
+    "type": "shift",
+    "text": "セナ → 祈祷師",
+    "target": "a2",
+    "encounter": 2
+  },
+  {
+    "id": 549,
+    "time": 109.13333333332842,
+    "type": "system",
+    "text": "セナ：確定予約1手目に「小さな祈り」を追加",
+    "source": "a2",
+    "encounter": 2
+  },
+  {
+    "id": 550,
+    "time": 109.21666666666175,
+    "type": "damage",
+    "text": "アルト → 前列狙いの重砲 242",
+    "source": "a0",
+    "target": "e2",
+    "value": 242,
+    "visual": {
+      "skillId": "slash",
+      "actionName": "斬撃",
+      "comboIndex": 1,
+      "shielded": true
+    },
+    "encounter": 2
+  },
+  {
+    "id": 551,
+    "time": 109.23333333332842,
+    "type": "action",
+    "text": "リネ → 射撃",
+    "source": "a1",
+    "visual": {
+      "skillId": "shot",
+      "actionName": "射撃",
+      "comboIndex": 1
+    },
+    "encounter": 2
+  },
+  {
+    "id": 552,
+    "time": 109.38333333332841,
+    "type": "system",
+    "text": "リネ：確定予約3手目に「射撃」を追加",
+    "source": "a1",
+    "encounter": 2
+  },
+  {
+    "id": 553,
+    "time": 110.23333333332836,
+    "type": "damage",
+    "text": "リネ → 前列狙いの重砲 227",
+    "source": "a1",
+    "target": "e2",
+    "value": 227,
+    "visual": {
+      "skillId": "shot",
+      "actionName": "射撃",
+      "comboIndex": 1,
+      "shielded": true
+    },
+    "encounter": 2
+  },
+  {
+    "id": 554,
+    "time": 110.23333333332836,
+    "type": "action",
+    "text": "セナ → 小さな祈り",
+    "source": "a2",
+    "visual": {
+      "skillId": "heal",
+      "actionName": "小さな祈り",
+      "comboIndex": 1
+    },
+    "encounter": 2
+  },
+  {
+    "id": 555,
+    "time": 110.38333333332835,
+    "type": "system",
+    "text": "セナ：確定予約1手目に「小さな祈り」を追加",
+    "source": "a2",
+    "encounter": 2
+  },
+  {
+    "id": 556,
+    "time": 111.09999999999498,
+    "type": "warning",
+    "text": "後列狙いの重砲：後列への交差砲撃",
+    "source": "e1",
+    "visual": {
+      "actionName": "後列への交差砲撃"
+    },
+    "encounter": 2
+  },
+  {
+    "id": 557,
+    "time": 111.31666666666163,
+    "type": "system",
+    "text": "前列狙いの重砲：ブレイク終了",
+    "encounter": 2
+  },
+  {
+    "id": 558,
+    "time": 111.43333333332829,
+    "type": "heal",
+    "text": "リネ +190",
+    "target": "a1",
+    "source": "a2",
+    "value": 190,
+    "visual": {
+      "skillId": "heal",
+      "actionName": "小さな祈り",
+      "comboIndex": 1
+    },
+    "encounter": 2
+  },
+  {
+    "id": 559,
+    "time": 111.46666666666162,
+    "type": "action",
+    "text": "アルト → 斬撃",
+    "source": "a0",
+    "visual": {
+      "skillId": "slash",
+      "actionName": "斬撃",
+      "comboIndex": 1
+    },
+    "encounter": 2
+  },
+  {
+    "id": 560,
+    "time": 111.63333333332828,
+    "type": "system",
+    "text": "アルト：確定予約3手目に「円弧斬り」を追加",
+    "source": "a0",
+    "encounter": 2
+  },
+  {
+    "id": 561,
+    "time": 112.13333333332825,
+    "type": "system",
+    "text": "リネ：「射撃」の予約を取消",
+    "encounter": 2
+  },
+  {
+    "id": 562,
+    "time": 112.13333333332825,
+    "type": "system",
+    "text": "リネ：「射撃」の予約を取消",
+    "encounter": 2
+  },
+  {
+    "id": 563,
+    "time": 112.13333333332825,
+    "type": "system",
+    "text": "リネ：「射撃」の予約を取消",
+    "encounter": 2
+  },
+  {
+    "id": 564,
+    "time": 112.13333333332825,
+    "type": "system",
+    "text": "セナ：「小さな祈り」の予約を取消",
+    "encounter": 2
+  },
+  {
+    "id": 565,
+    "time": 112.13333333332825,
+    "type": "shift",
+    "text": "オプティマ：崩しの連奏",
+    "encounter": 2
+  },
+  {
+    "id": 566,
+    "time": 112.36666666666157,
+    "type": "damage",
+    "text": "アルト → 前列狙いの重砲 93",
+    "source": "a0",
+    "target": "e2",
+    "value": 93,
+    "visual": {
+      "skillId": "slash",
+      "actionName": "斬撃",
+      "comboIndex": 1,
+      "shielded": true
+    },
+    "encounter": 2
+  },
+  {
+    "id": 567,
+    "time": 112.78333333332822,
+    "type": "shift",
+    "text": "リネ → 魔術師",
+    "target": "a1",
+    "encounter": 2
+  },
+  {
+    "id": 568,
+    "time": 112.88333333332821,
+    "type": "system",
+    "text": "リネ：確定予約1手目に「星の雨」を追加",
+    "source": "a1",
+    "encounter": 2
+  },
+  {
+    "id": 569,
+    "time": 112.9833333333282,
+    "type": "shift",
+    "text": "セナ → 鉤槍使い",
+    "target": "a2",
+    "encounter": 2
+  },
+  {
+    "id": 570,
+    "time": 113.1333333333282,
+    "type": "system",
+    "text": "リネ：確定予約2手目に「星の雨」を追加",
+    "source": "a1",
+    "encounter": 2
+  },
+  {
+    "id": 571,
+    "time": 113.1333333333282,
+    "type": "system",
+    "text": "セナ：確定予約1手目に「引き寄せ」を追加",
+    "source": "a2",
+    "encounter": 2
+  },
+  {
+    "id": 572,
+    "time": 113.49999999999484,
+    "type": "warning",
+    "text": "砲列の重衛兵：前列薙ぎ払い",
+    "source": "e0",
+    "visual": {
+      "actionName": "前列薙ぎ払い"
+    },
+    "encounter": 2
+  },
+  {
+    "id": 573,
+    "time": 114.13333333332814,
+    "type": "system",
+    "text": "アルト：「斬撃」の予約を取消",
+    "encounter": 2
+  },
+  {
+    "id": 574,
+    "time": 114.13333333332814,
+    "type": "system",
+    "text": "アルト：「斬撃」の予約を取消",
+    "encounter": 2
+  },
+  {
+    "id": 575,
+    "time": 114.13333333332814,
+    "type": "system",
+    "text": "アルト：「円弧斬り」の予約を取消",
+    "encounter": 2
+  },
+  {
+    "id": 576,
+    "time": 114.13333333332814,
+    "type": "system",
+    "text": "アルト：確定予約1手目に「防御」を追加",
+    "source": "a0",
+    "encounter": 2
+  },
+  {
+    "id": 577,
+    "time": 114.13333333332814,
+    "type": "system",
+    "text": "リネ：「星の雨」の予約を取消",
+    "encounter": 2
+  },
+  {
+    "id": 578,
+    "time": 114.13333333332814,
+    "type": "system",
+    "text": "リネ：「星の雨」の予約を取消",
+    "encounter": 2
+  },
+  {
+    "id": 579,
+    "time": 114.13333333332814,
+    "type": "system",
+    "text": "リネ：確定予約1手目に「防御」を追加",
+    "source": "a1",
+    "encounter": 2
+  },
+  {
+    "id": 580,
+    "time": 114.13333333332814,
+    "type": "system",
+    "text": "セナ：「引き寄せ」の予約を取消",
+    "encounter": 2
+  },
+  {
+    "id": 581,
+    "time": 114.13333333332814,
+    "type": "system",
+    "text": "セナ：確定予約1手目に「防御」を追加",
+    "source": "a2",
+    "encounter": 2
+  },
+  {
+    "id": 582,
+    "time": 114.1499999999948,
+    "type": "action",
+    "text": "リネ → 防御",
+    "source": "a1",
+    "visual": {
+      "skillId": "guard",
+      "actionName": "防御",
+      "comboIndex": 1
+    },
+    "encounter": 2
+  },
+  {
+    "id": 583,
+    "time": 114.2999999999948,
+    "type": "system",
+    "text": "後列狙いの重砲：後列への交差砲撃は誰にも当たらなかった",
+    "source": "e1",
+    "target": "e1",
+    "visual": {
+      "actionName": "後列への交差砲撃",
+      "outcome": "miss"
+    },
+    "encounter": 2
+  },
+  {
+    "id": 584,
+    "time": 114.33333333332813,
+    "type": "warning",
+    "text": "前列狙いの重砲：前列への交差砲撃",
+    "source": "e2",
+    "visual": {
+      "actionName": "前列への交差砲撃"
+    },
+    "encounter": 2
+  },
+  {
+    "id": 585,
+    "time": 114.39999999999479,
+    "type": "action",
+    "text": "セナ → 防御",
+    "source": "a2",
+    "visual": {
+      "skillId": "guard",
+      "actionName": "防御",
+      "comboIndex": 1
+    },
+    "encounter": 2
+  },
+  {
+    "id": 586,
+    "time": 114.54999999999478,
+    "type": "heal",
+    "text": "リネ：防護",
+    "source": "a1",
+    "target": "a1",
+    "visual": {
+      "skillId": "guard",
+      "actionName": "防御",
+      "comboIndex": 1
+    },
+    "encounter": 2
+  },
+  {
+    "id": 587,
+    "time": 114.79999999999477,
+    "type": "action",
+    "text": "アルト → 防御",
+    "source": "a0",
+    "visual": {
+      "skillId": "guard",
+      "actionName": "防御",
+      "comboIndex": 1
+    },
+    "encounter": 2
+  },
+  {
+    "id": 588,
+    "time": 114.79999999999477,
+    "type": "heal",
+    "text": "セナ：防護",
+    "source": "a2",
+    "target": "a2",
+    "visual": {
+      "skillId": "guard",
+      "actionName": "防御",
+      "comboIndex": 1
+    },
+    "encounter": 2
+  },
+  {
+    "id": 589,
+    "time": 114.8833333333281,
+    "type": "system",
+    "text": "アルト：確定予約1手目に「円弧斬り」を追加",
+    "source": "a0",
+    "encounter": 2
+  },
+  {
+    "id": 590,
+    "time": 114.8833333333281,
+    "type": "system",
+    "text": "リネ：後列へ移動指示",
+    "encounter": 2
+  },
+  {
+    "id": 591,
+    "time": 114.8833333333281,
+    "type": "system",
+    "text": "セナ：後列へ移動指示",
+    "encounter": 2
+  },
+  {
+    "id": 592,
+    "time": 115.13333333332808,
+    "type": "system",
+    "text": "アルト：確定予約2手目に「円弧斬り」を追加",
+    "source": "a0",
+    "encounter": 2
+  },
+  {
+    "id": 593,
+    "time": 115.19999999999474,
+    "type": "heal",
+    "text": "アルト：防護",
+    "source": "a0",
+    "target": "a0",
+    "visual": {
+      "skillId": "guard",
+      "actionName": "防御",
+      "comboIndex": 1
+    },
+    "encounter": 2
+  },
+  {
+    "id": 594,
+    "time": 115.73333333332805,
+    "type": "move",
+    "text": "リネ → 後列",
+    "target": "a1",
+    "visual": {
+      "fromRow": "front",
+      "toRow": "back"
+    },
+    "encounter": 2
+  },
+  {
+    "id": 595,
+    "time": 115.73333333332805,
+    "type": "move",
+    "text": "セナ → 後列",
+    "target": "a2",
+    "visual": {
+      "fromRow": "front",
+      "toRow": "back"
+    },
+    "encounter": 2
+  },
+  {
+    "id": 596,
+    "time": 115.88333333332804,
+    "type": "system",
+    "text": "リネ：確定予約1手目に「星の雨」を追加",
+    "source": "a1",
+    "encounter": 2
+  },
+  {
+    "id": 597,
+    "time": 115.88333333332804,
+    "type": "system",
+    "text": "セナ：確定予約1手目に「砕突」を追加",
+    "source": "a2",
+    "encounter": 2
+  },
+  {
+    "id": 598,
+    "time": 116.13333333332803,
+    "type": "system",
+    "text": "リネ：確定予約2手目に「星の雨」を追加",
+    "source": "a1",
+    "encounter": 2
+  },
+  {
+    "id": 599,
+    "time": 116.13333333332803,
+    "type": "system",
+    "text": "セナ：確定予約2手目に「砕突」を追加",
+    "source": "a2",
+    "encounter": 2
+  },
+  {
+    "id": 600,
+    "time": 116.38333333332801,
+    "type": "system",
+    "text": "セナ：確定予約3手目に「砕突」を追加",
+    "source": "a2",
+    "encounter": 2
+  },
+  {
+    "id": 601,
+    "time": 116.633333333328,
+    "type": "system",
+    "text": "アルト：「円弧斬り」の予約を取消",
+    "encounter": 2
+  },
+  {
+    "id": 602,
+    "time": 116.633333333328,
+    "type": "system",
+    "text": "アルト：「円弧斬り」の予約を取消",
+    "encounter": 2
+  },
+  {
+    "id": 603,
+    "time": 116.633333333328,
+    "type": "system",
+    "text": "アルト：確定予約1手目に「誓いの盾槍に変更」を追加",
+    "source": "a0",
+    "encounter": 2
+  },
+  {
+    "id": 604,
+    "time": 116.69999999999466,
+    "type": "damage",
+    "text": "砲列の重衛兵 → アルト 140",
+    "source": "e0",
+    "target": "a0",
+    "value": 140,
+    "visual": {
+      "actionName": "前列薙ぎ払い",
+      "shielded": true
+    },
+    "encounter": 2
+  },
+  {
+    "id": 605,
+    "time": 117.23333333332796,
+    "type": "action",
+    "text": "セナ → 砕突",
+    "source": "a2",
+    "visual": {
+      "skillId": "jab",
+      "actionName": "砕突",
+      "comboIndex": 1
+    },
+    "encounter": 2
+  },
+  {
+    "id": 606,
+    "time": 117.29999999999463,
+    "type": "shift",
+    "text": "アルト → 守護騎士",
+    "target": "a0",
+    "encounter": 2
+  },
+  {
+    "id": 607,
+    "time": 117.38333333332795,
+    "type": "system",
+    "text": "セナ：確定予約3手目に「砕突」を追加",
+    "source": "a2",
+    "encounter": 2
+  },
+  {
+    "id": 608,
+    "time": 117.46666666666128,
+    "type": "action",
+    "text": "リネ → 星の雨",
+    "source": "a1",
+    "visual": {
+      "skillId": "rain",
+      "actionName": "星の雨",
+      "comboIndex": 1
+    },
+    "encounter": 2
+  },
+  {
+    "id": 609,
+    "time": 117.53333333332795,
+    "type": "damage",
+    "text": "前列狙いの重砲 → アルト 103",
+    "source": "e2",
+    "target": "a0",
+    "value": 103,
+    "visual": {
+      "actionName": "前列への交差砲撃",
+      "shielded": true
+    },
+    "encounter": 2
+  },
+  {
+    "id": 610,
+    "time": 117.63333333332794,
+    "type": "system",
+    "text": "リネ：確定予約2手目に「星の雨」を追加",
+    "source": "a1",
+    "encounter": 2
+  },
+  {
+    "id": 611,
+    "time": 118.13333333332791,
+    "type": "damage",
+    "text": "セナ → 砲列の重衛兵 33",
+    "source": "a2",
+    "target": "e0",
+    "value": 33,
+    "visual": {
+      "skillId": "jab",
+      "actionName": "砕突",
+      "comboIndex": 1,
+      "shielded": false
+    },
+    "encounter": 2
+  },
+  {
+    "id": 612,
+    "time": 119.11666666666119,
+    "type": "warning",
+    "text": "後列狙いの重砲：後列への交差砲撃",
+    "source": "e1",
+    "visual": {
+      "actionName": "後列への交差砲撃"
+    },
+    "encounter": 2
+  },
+  {
+    "id": 613,
+    "time": 119.46666666666117,
+    "type": "damage",
+    "text": "リネ → 砲列の重衛兵 49",
+    "source": "a1",
+    "target": "e0",
+    "value": 49,
+    "visual": {
+      "skillId": "rain",
+      "actionName": "星の雨",
+      "comboIndex": 1,
+      "shielded": false
+    },
+    "encounter": 2
+  },
+  {
+    "id": 614,
+    "time": 119.46666666666117,
+    "type": "damage",
+    "text": "リネ → 後列狙いの重砲 38",
+    "source": "a1",
+    "target": "e1",
+    "value": 38,
+    "visual": {
+      "skillId": "rain",
+      "actionName": "星の雨",
+      "comboIndex": 1,
+      "shielded": false
+    },
+    "encounter": 2
+  },
+  {
+    "id": 615,
+    "time": 119.63333333332783,
+    "type": "system",
+    "text": "リネ：「星の雨」の予約を取消",
+    "encounter": 2
+  },
+  {
+    "id": 616,
+    "time": 119.63333333332783,
+    "type": "system",
+    "text": "リネ：「星の雨」の予約を取消",
+    "encounter": 2
+  },
+  {
+    "id": 617,
+    "time": 119.63333333332783,
+    "type": "system",
+    "text": "リネ：前列へ移動指示",
+    "encounter": 2
+  },
+  {
+    "id": 618,
+    "time": 119.63333333332783,
+    "type": "system",
+    "text": "セナ：「砕突」の予約を取消",
+    "encounter": 2
+  },
+  {
+    "id": 619,
+    "time": 119.63333333332783,
+    "type": "system",
+    "text": "セナ：「砕突」の予約を取消",
+    "encounter": 2
+  },
+  {
+    "id": 620,
+    "time": 119.63333333332783,
+    "type": "system",
+    "text": "セナ：「砕突」の予約を取消",
+    "encounter": 2
+  },
+  {
+    "id": 621,
+    "time": 119.63333333332783,
+    "type": "system",
+    "text": "セナ：前列へ移動指示",
+    "encounter": 2
+  },
+  {
+    "id": 622,
+    "time": 120.0833333333278,
+    "type": "action",
+    "text": "アルト → 護りの誓い",
+    "source": "a0",
+    "visual": {
+      "skillId": "ward",
+      "actionName": "護りの誓い",
+      "comboIndex": 1
+    },
+    "encounter": 2
+  },
+  {
+    "id": 623,
+    "time": 120.1333333333278,
+    "type": "system",
+    "text": "アルト：確定予約1手目に「護りの誓い」を追加",
+    "source": "a0",
+    "encounter": 2
+  },
+  {
+    "id": 624,
+    "time": 120.48333333332778,
+    "type": "move",
+    "text": "リネ → 前列",
+    "target": "a1",
+    "visual": {
+      "fromRow": "back",
+      "toRow": "front"
+    },
+    "encounter": 2
+  },
+  {
+    "id": 625,
+    "time": 120.48333333332778,
+    "type": "move",
+    "text": "セナ → 前列",
+    "target": "a2",
+    "visual": {
+      "fromRow": "back",
+      "toRow": "front"
+    },
+    "encounter": 2
+  },
+  {
+    "id": 626,
+    "time": 120.63333333332777,
+    "type": "system",
+    "text": "リネ：確定予約1手目に「星の雨」を追加",
+    "source": "a1",
+    "encounter": 2
+  },
+  {
+    "id": 627,
+    "time": 120.63333333332777,
+    "type": "system",
+    "text": "セナ：確定予約1手目に「引き寄せ」を追加",
+    "source": "a2",
+    "encounter": 2
+  },
+  {
+    "id": 628,
+    "time": 120.78333333332776,
+    "type": "heal",
+    "text": "リネ：防護",
+    "source": "a0",
+    "target": "a1",
+    "visual": {
+      "skillId": "ward",
+      "actionName": "護りの誓い",
+      "comboIndex": 1
+    },
+    "encounter": 2
+  },
+  {
+    "id": 629,
+    "time": 120.88333333332776,
+    "type": "system",
+    "text": "アルト：「護りの誓い」の予約を取消",
+    "encounter": 2
+  },
+  {
+    "id": 630,
+    "time": 120.88333333332776,
+    "type": "system",
+    "text": "セナ：「引き寄せ」の予約を取消",
+    "encounter": 2
+  },
+  {
+    "id": 631,
+    "time": 120.88333333332776,
+    "type": "shift",
+    "text": "オプティマ：均衡の調べ",
+    "encounter": 2
+  },
+  {
+    "id": 632,
+    "time": 121.13333333332774,
+    "type": "system",
+    "text": "リネ：確定予約2手目に「星の雨」を追加",
+    "source": "a1",
+    "encounter": 2
+  },
+  {
+    "id": 633,
+    "time": 121.53333333332772,
+    "type": "shift",
+    "text": "セナ → 祈祷師",
+    "target": "a2",
+    "encounter": 2
+  },
+  {
+    "id": 634,
+    "time": 121.63333333332771,
+    "type": "system",
+    "text": "セナ：確定予約1手目に「小さな祈り」を追加",
+    "source": "a2",
+    "encounter": 2
+  },
+  {
+    "id": 635,
+    "time": 121.99999999999436,
+    "type": "action",
+    "text": "セナ → 小さな祈り",
+    "source": "a2",
+    "visual": {
+      "skillId": "heal",
+      "actionName": "小さな祈り",
+      "comboIndex": 1
+    },
+    "encounter": 2
+  },
+  {
+    "id": 636,
+    "time": 122.13333333332768,
+    "type": "system",
+    "text": "セナ：確定予約1手目に「小さな祈り」を追加",
+    "source": "a2",
+    "encounter": 2
+  },
+  {
+    "id": 637,
+    "time": 122.316666666661,
+    "type": "system",
+    "text": "後列狙いの重砲：後列への交差砲撃は誰にも当たらなかった",
+    "source": "e1",
+    "target": "e1",
+    "visual": {
+      "actionName": "後列への交差砲撃",
+      "outcome": "miss"
+    },
+    "encounter": 2
+  },
+  {
+    "id": 638,
+    "time": 122.33333333332767,
+    "type": "shift",
+    "text": "アルト → 剣士",
+    "target": "a0",
+    "encounter": 2
+  },
+  {
+    "id": 639,
+    "time": 122.34999999999434,
+    "type": "warning",
+    "text": "前列狙いの重砲：前列への交差砲撃",
+    "source": "e2",
+    "visual": {
+      "actionName": "前列への交差砲撃"
+    },
+    "encounter": 2
+  },
+  {
+    "id": 640,
+    "time": 122.416666666661,
+    "type": "warning",
+    "text": "砲列の重衛兵：前列薙ぎ払い",
+    "source": "e0",
+    "visual": {
+      "actionName": "前列薙ぎ払い"
+    },
+    "encounter": 2
+  },
+  {
+    "id": 641,
+    "time": 123.13333333332763,
+    "type": "system",
+    "text": "アルト：後列へ移動指示",
+    "encounter": 2
+  },
+  {
+    "id": 642,
+    "time": 123.13333333332763,
+    "type": "system",
+    "text": "リネ：「星の雨」の予約を取消",
+    "encounter": 2
+  },
+  {
+    "id": 643,
+    "time": 123.13333333332763,
+    "type": "system",
+    "text": "リネ：「星の雨」の予約を取消",
+    "encounter": 2
+  },
+  {
+    "id": 644,
+    "time": 123.13333333332763,
+    "type": "system",
+    "text": "リネ：後列へ移動指示",
+    "encounter": 2
+  },
+  {
+    "id": 645,
+    "time": 123.13333333332763,
+    "type": "system",
+    "text": "セナ：「小さな祈り」の予約を取消",
+    "encounter": 2
+  },
+  {
+    "id": 646,
+    "time": 123.13333333332763,
+    "type": "system",
+    "text": "セナ：後列へ移動指示",
+    "encounter": 2
+  },
+  {
+    "id": 647,
+    "time": 123.19999999999429,
+    "type": "heal",
+    "text": "アルト +190",
+    "target": "a0",
+    "source": "a2",
+    "value": 190,
+    "visual": {
+      "skillId": "heal",
+      "actionName": "小さな祈り",
+      "comboIndex": 1
+    },
+    "encounter": 2
+  },
+  {
+    "id": 648,
+    "time": 123.98333333332758,
+    "type": "move",
+    "text": "アルト → 後列",
+    "target": "a0",
+    "visual": {
+      "fromRow": "front",
+      "toRow": "back"
+    },
+    "encounter": 2
+  },
+  {
+    "id": 649,
+    "time": 123.98333333332758,
+    "type": "move",
+    "text": "リネ → 後列",
+    "target": "a1",
+    "visual": {
+      "fromRow": "front",
+      "toRow": "back"
+    },
+    "encounter": 2
+  },
+  {
+    "id": 650,
+    "time": 123.98333333332758,
+    "type": "move",
+    "text": "セナ → 後列",
+    "target": "a2",
+    "visual": {
+      "fromRow": "front",
+      "toRow": "back"
+    },
+    "encounter": 2
+  },
+  {
+    "id": 651,
+    "time": 124.1166666666609,
+    "type": "action",
+    "text": "アルト → 斬撃",
+    "source": "a0",
+    "visual": {
+      "skillId": "slash",
+      "actionName": "斬撃",
+      "comboIndex": 1
+    },
+    "encounter": 2
+  },
+  {
+    "id": 652,
+    "time": 124.1166666666609,
+    "type": "action",
+    "text": "リネ → 砕光",
+    "source": "a1",
+    "visual": {
+      "skillId": "spark",
+      "actionName": "砕光",
+      "comboIndex": 1
+    },
+    "encounter": 2
+  },
+  {
+    "id": 653,
+    "time": 124.13333333332757,
+    "type": "system",
+    "text": "アルト：確定予約2手目に「円弧斬り」を追加",
+    "source": "a0",
+    "encounter": 2
+  },
+  {
+    "id": 654,
+    "time": 124.13333333332757,
+    "type": "system",
+    "text": "リネ：確定予約2手目に「星の雨」を追加",
+    "source": "a1",
+    "encounter": 2
+  },
+  {
+    "id": 655,
+    "time": 124.13333333332757,
+    "type": "system",
+    "text": "セナ：確定予約1手目に「小さな祈り」を追加",
+    "source": "a2",
+    "encounter": 2
+  },
+  {
+    "id": 656,
+    "time": 125.01666666666085,
+    "type": "damage",
+    "text": "アルト → 砲列の重衛兵 118",
+    "source": "a0",
+    "target": "e0",
+    "value": 118,
+    "visual": {
+      "skillId": "slash",
+      "actionName": "斬撃",
+      "comboIndex": 1,
+      "shielded": false
+    },
+    "encounter": 2
+  },
+  {
+    "id": 657,
+    "time": 125.11666666666085,
+    "type": "damage",
+    "text": "リネ → 砲列の重衛兵 47",
+    "source": "a1",
+    "target": "e0",
+    "value": 47,
+    "visual": {
+      "skillId": "spark",
+      "actionName": "砕光",
+      "comboIndex": 1,
+      "shielded": false
+    },
+    "encounter": 2
+  },
+  {
+    "id": 658,
+    "time": 125.13333333332751,
+    "type": "system",
+    "text": "アルト：「斬撃」の予約を取消",
+    "encounter": 2
+  },
+  {
+    "id": 659,
+    "time": 125.13333333332751,
+    "type": "system",
+    "text": "アルト：「円弧斬り」の予約を取消",
+    "encounter": 2
+  },
+  {
+    "id": 660,
+    "time": 125.13333333332751,
+    "type": "system",
+    "text": "セナ：「小さな祈り」の予約を取消",
+    "encounter": 2
+  },
+  {
+    "id": 661,
+    "time": 125.13333333332751,
+    "type": "system",
+    "text": "アルト：確定予約1手目に「誓いの盾槍に変更」を追加",
+    "source": "a0",
+    "encounter": 2
+  },
+  {
+    "id": 662,
+    "time": 125.13333333332751,
+    "type": "system",
+    "text": "セナ：確定予約1手目に「渡り鳥の鉤槍に変更」を追加",
+    "source": "a2",
+    "encounter": 2
+  },
+  {
+    "id": 663,
+    "time": 125.31666666666084,
+    "type": "action",
+    "text": "リネ → 砕光",
+    "source": "a1",
+    "visual": {
+      "skillId": "spark",
+      "actionName": "砕光",
+      "comboIndex": 2
+    },
+    "encounter": 2
+  },
+  {
+    "id": 664,
+    "time": 125.3833333333275,
+    "type": "system",
+    "text": "リネ：確定予約2手目に「星の雨」を追加",
+    "source": "a1",
+    "encounter": 2
+  },
+  {
+    "id": 665,
+    "time": 125.54999999999416,
+    "type": "system",
+    "text": "前列狙いの重砲：前列への交差砲撃は誰にも当たらなかった",
+    "source": "e2",
+    "target": "e2",
+    "visual": {
+      "actionName": "前列への交差砲撃",
+      "outcome": "miss"
+    },
+    "encounter": 2
+  },
+  {
+    "id": 666,
+    "time": 125.61666666666082,
+    "type": "system",
+    "text": "砲列の重衛兵：前列薙ぎ払いは誰にも当たらなかった",
+    "source": "e0",
+    "target": "e0",
+    "visual": {
+      "actionName": "前列薙ぎ払い",
+      "outcome": "miss"
+    },
+    "encounter": 2
+  },
+  {
+    "id": 667,
+    "time": 125.79999999999414,
+    "type": "shift",
+    "text": "セナ → 鉤槍使い",
+    "target": "a2",
+    "encounter": 2
+  },
+  {
+    "id": 668,
+    "time": 125.88333333332747,
+    "type": "system",
+    "text": "セナ：確定予約1手目に「引き寄せ」を追加",
+    "source": "a2",
+    "encounter": 2
+  },
+  {
+    "id": 669,
+    "time": 126.31666666666078,
+    "type": "damage",
+    "text": "リネ → 砲列の重衛兵 50",
+    "source": "a1",
+    "target": "e0",
+    "value": 50,
+    "visual": {
+      "skillId": "spark",
+      "actionName": "砕光",
+      "comboIndex": 2,
+      "shielded": false
+    },
+    "encounter": 2
+  },
+  {
+    "id": 670,
+    "time": 126.68333333332743,
+    "type": "shift",
+    "text": "アルト → 守護騎士",
+    "target": "a0",
+    "encounter": 2
+  },
+  {
+    "id": 671,
+    "time": 126.69999999999409,
+    "type": "action",
+    "text": "アルト → 護りの誓い",
+    "source": "a0",
+    "visual": {
+      "skillId": "ward",
+      "actionName": "護りの誓い",
+      "comboIndex": 1
+    },
+    "encounter": 2
+  },
+  {
+    "id": 672,
+    "time": 126.88333333332741,
+    "type": "system",
+    "text": "アルト：確定予約1手目に「護りの誓い」を追加",
+    "source": "a0",
+    "encounter": 2
+  },
+  {
+    "id": 673,
+    "time": 127.1333333333274,
+    "type": "warning",
+    "text": "後列狙いの重砲：後列への交差砲撃",
+    "source": "e1",
+    "visual": {
+      "actionName": "後列への交差砲撃"
+    },
+    "encounter": 2
+  },
+  {
+    "id": 674,
+    "time": 127.39999999999405,
+    "type": "heal",
+    "text": "アルト：防護",
+    "source": "a0",
+    "target": "a0",
+    "visual": {
+      "skillId": "ward",
+      "actionName": "護りの誓い",
+      "comboIndex": 1
+    },
+    "encounter": 2
+  },
+  {
+    "id": 675,
+    "time": 127.46666666666071,
+    "type": "action",
+    "text": "セナ → 引き寄せ",
+    "source": "a2",
+    "visual": {
+      "skillId": "pull",
+      "actionName": "引き寄せ",
+      "comboIndex": 1
+    },
+    "encounter": 2
+  },
+  {
+    "id": 676,
+    "time": 127.63333333332737,
+    "type": "system",
+    "text": "アルト：「護りの誓い」の予約を取消",
+    "encounter": 2
+  },
+  {
+    "id": 677,
+    "time": 127.63333333332737,
+    "type": "system",
+    "text": "アルト：前列へ移動指示",
+    "encounter": 2
+  },
+  {
+    "id": 678,
+    "time": 127.63333333332737,
+    "type": "system",
+    "text": "リネ：「星の雨」の予約を取消",
+    "encounter": 2
+  },
+  {
+    "id": 679,
+    "time": 127.63333333332737,
+    "type": "system",
+    "text": "リネ：「星の雨」の予約を取消",
+    "encounter": 2
+  },
+  {
+    "id": 680,
+    "time": 127.63333333332737,
+    "type": "system",
+    "text": "リネ：前列へ移動指示",
+    "encounter": 2
+  },
+  {
+    "id": 681,
+    "time": 127.63333333332737,
+    "type": "system",
+    "text": "セナ：確定予約1手目に「引き寄せ」を追加",
+    "source": "a2",
+    "encounter": 2
+  },
+  {
+    "id": 682,
+    "time": 128.48333333332772,
+    "type": "move",
+    "text": "アルト → 前列",
+    "target": "a0",
+    "visual": {
+      "fromRow": "back",
+      "toRow": "front"
+    },
+    "encounter": 2
+  },
+  {
+    "id": 683,
+    "time": 128.48333333332772,
+    "type": "move",
+    "text": "リネ → 前列",
+    "target": "a1",
+    "visual": {
+      "fromRow": "back",
+      "toRow": "front"
+    },
+    "encounter": 2
+  },
+  {
+    "id": 684,
+    "time": 128.56666666666112,
+    "type": "damage",
+    "text": "セナ → 前列狙いの重砲 19",
+    "source": "a2",
+    "target": "e2",
+    "value": 19,
+    "visual": {
+      "skillId": "pull",
+      "actionName": "引き寄せ",
+      "comboIndex": 1,
+      "shielded": true
+    },
+    "encounter": 2
+  },
+  {
+    "id": 685,
+    "time": 128.56666666666112,
+    "type": "move",
+    "text": "前列狙いの重砲 → 前列",
+    "source": "a2",
+    "target": "e2",
+    "visual": {
+      "fromRow": "back",
+      "toRow": "front"
+    },
+    "encounter": 2
+  },
+  {
+    "id": 686,
+    "time": 128.63333333332784,
+    "type": "system",
+    "text": "アルト：確定予約1手目に「護りの誓い」を追加",
+    "source": "a0",
+    "encounter": 2
+  },
+  {
+    "id": 687,
+    "time": 128.63333333332784,
+    "type": "system",
+    "text": "リネ：確定予約1手目に「星の雨」を追加",
+    "source": "a1",
+    "encounter": 2
+  },
+  {
+    "id": 688,
+    "time": 128.63333333332784,
+    "type": "system",
+    "text": "セナ：確定予約2手目に「砕突」を追加",
+    "source": "a2",
+    "encounter": 2
+  },
+  {
+    "id": 689,
+    "time": 128.88333333332804,
+    "type": "system",
+    "text": "リネ：確定予約2手目に「星の雨」を追加",
+    "source": "a1",
+    "encounter": 2
+  },
+  {
+    "id": 690,
+    "time": 128.88333333332804,
+    "type": "system",
+    "text": "セナ：確定予約3手目に「砕突」を追加",
+    "source": "a2",
+    "encounter": 2
+  },
+  {
+    "id": 691,
+    "time": 129.88333333332884,
+    "type": "action",
+    "text": "アルト → 護りの誓い",
+    "source": "a0",
+    "visual": {
+      "skillId": "ward",
+      "actionName": "護りの誓い",
+      "comboIndex": 1
+    },
+    "encounter": 2
+  },
+  {
+    "id": 692,
+    "time": 129.88333333332884,
+    "type": "system",
+    "text": "アルト：確定予約1手目に「護りの誓い」を追加",
+    "source": "a0",
+    "encounter": 2
+  },
+  {
+    "id": 693,
+    "time": 130.3333333333292,
+    "type": "damage",
+    "text": "後列狙いの重砲 → セナ 148",
+    "source": "e1",
+    "target": "a2",
+    "value": 148,
+    "visual": {
+      "actionName": "後列への交差砲撃",
+      "shielded": false
+    },
+    "encounter": 2
+  },
+  {
+    "id": 694,
+    "time": 130.36666666666255,
+    "type": "warning",
+    "text": "前列狙いの重砲：前列への交差砲撃",
+    "source": "e2",
+    "visual": {
+      "actionName": "前列への交差砲撃"
+    },
+    "encounter": 2
+  },
+  {
+    "id": 695,
+    "time": 130.5833333333294,
+    "type": "heal",
+    "text": "セナ：防護",
+    "source": "a0",
+    "target": "a2",
+    "visual": {
+      "skillId": "ward",
+      "actionName": "護りの誓い",
+      "comboIndex": 1
+    },
+    "encounter": 2
+  },
+  {
+    "id": 696,
+    "time": 130.88333333332963,
+    "type": "system",
+    "text": "アルト：「護りの誓い」の予約を取消",
+    "encounter": 2
+  },
+  {
+    "id": 697,
+    "time": 130.88333333332963,
+    "type": "system",
+    "text": "セナ：「引き寄せ」の予約を取消",
+    "encounter": 2
+  },
+  {
+    "id": 698,
+    "time": 130.88333333332963,
+    "type": "system",
+    "text": "セナ：「砕突」の予約を取消",
+    "encounter": 2
+  },
+  {
+    "id": 699,
+    "time": 130.88333333332963,
+    "type": "system",
+    "text": "セナ：「砕突」の予約を取消",
+    "encounter": 2
+  },
+  {
+    "id": 700,
+    "time": 130.88333333332963,
+    "type": "shift",
+    "text": "オプティマ：均衡の調べ",
+    "encounter": 2
+  },
+  {
+    "id": 701,
+    "time": 130.93333333332967,
+    "type": "action",
+    "text": "リネ → 星の雨",
+    "source": "a1",
+    "visual": {
+      "skillId": "rain",
+      "actionName": "星の雨",
+      "comboIndex": 1
+    },
+    "encounter": 2
+  },
+  {
+    "id": 702,
+    "time": 131.13333333332983,
+    "type": "system",
+    "text": "リネ：確定予約2手目に「星の雨」を追加",
+    "source": "a1",
+    "encounter": 2
+  },
+  {
+    "id": 703,
+    "time": 131.33333333333,
+    "type": "warning",
+    "text": "砲列の重衛兵：追尾狙撃 → リネ",
+    "source": "e0",
+    "visual": {
+      "actionName": "追尾狙撃"
+    },
+    "encounter": 2
+  },
+  {
+    "id": 704,
+    "time": 131.53333333333015,
+    "type": "shift",
+    "text": "セナ → 祈祷師",
+    "target": "a2",
+    "encounter": 2
+  },
+  {
+    "id": 705,
+    "time": 131.71666666666363,
+    "type": "action",
+    "text": "セナ → 小さな祈り",
+    "source": "a2",
+    "visual": {
+      "skillId": "heal",
+      "actionName": "小さな祈り",
+      "comboIndex": 1
+    },
+    "encounter": 2
+  },
+  {
+    "id": 706,
+    "time": 131.88333333333043,
+    "type": "system",
+    "text": "セナ：確定予約1手目に「小さな祈り」を追加",
+    "source": "a2",
+    "encounter": 2
+  },
+  {
+    "id": 707,
+    "time": 132.13333333333063,
+    "type": "shift",
+    "text": "アルト → 剣士",
+    "target": "a0",
+    "encounter": 2
+  },
+  {
+    "id": 708,
+    "time": 132.13333333333063,
+    "type": "system",
+    "text": "アルト：後列へ移動指示",
+    "encounter": 2
+  },
+  {
+    "id": 709,
+    "time": 132.91666666666458,
+    "type": "heal",
+    "text": "セナ +190",
+    "target": "a2",
+    "source": "a2",
+    "value": 190,
+    "visual": {
+      "skillId": "heal",
+      "actionName": "小さな祈り",
+      "comboIndex": 1
+    },
+    "encounter": 2
+  },
+  {
+    "id": 710,
+    "time": 132.93333333333126,
+    "type": "damage",
+    "text": "リネ → 砲列の重衛兵 75",
+    "source": "a1",
+    "target": "e0",
+    "value": 75,
+    "visual": {
+      "skillId": "rain",
+      "actionName": "星の雨",
+      "comboIndex": 1,
+      "shielded": false
+    },
+    "encounter": 2
+  },
+  {
+    "id": 711,
+    "time": 132.93333333333126,
+    "type": "damage",
+    "text": "リネ → 後列狙いの重砲 53",
+    "source": "a1",
+    "target": "e1",
+    "value": 53,
+    "visual": {
+      "skillId": "rain",
+      "actionName": "星の雨",
+      "comboIndex": 1,
+      "shielded": false
+    },
+    "encounter": 2
+  },
+  {
+    "id": 712,
+    "time": 132.93333333333126,
+    "type": "damage",
+    "text": "リネ → 前列狙いの重砲 54",
+    "source": "a1",
+    "target": "e2",
+    "value": 54,
+    "visual": {
+      "skillId": "rain",
+      "actionName": "星の雨",
+      "comboIndex": 1,
+      "shielded": false
+    },
+    "encounter": 2
+  },
+  {
+    "id": 713,
+    "time": 132.9833333333313,
+    "type": "move",
+    "text": "アルト → 後列",
+    "target": "a0",
+    "visual": {
+      "fromRow": "front",
+      "toRow": "back"
+    },
+    "encounter": 2
+  },
+  {
+    "id": 714,
+    "time": 133.13333333333142,
+    "type": "system",
+    "text": "アルト：確定予約1手目に「円弧斬り」を追加",
+    "source": "a0",
+    "encounter": 2
+  },
+  {
+    "id": 715,
+    "time": 133.38333333333162,
+    "type": "system",
+    "text": "アルト：確定予約2手目に「円弧斬り」を追加",
+    "source": "a0",
+    "encounter": 2
+  },
+  {
+    "id": 716,
+    "time": 133.5666666666651,
+    "type": "damage",
+    "text": "前列狙いの重砲 → リネ 347",
+    "source": "e2",
+    "target": "a1",
+    "value": 347,
+    "visual": {
+      "actionName": "前列への交差砲撃",
+      "shielded": false
+    },
+    "encounter": 2
+  },
+  {
+    "id": 717,
+    "time": 134.53333333333254,
+    "type": "damage",
+    "text": "砲列の重衛兵 → リネ 258",
+    "source": "e0",
+    "target": "a1",
+    "value": 258,
+    "visual": {
+      "actionName": "追尾狙撃",
+      "shielded": false
+    },
+    "encounter": 2
+  },
+  {
+    "id": 718,
+    "time": 134.63333333333262,
+    "type": "system",
+    "text": "アルト：確定予約3手目に「救急薬」を追加",
+    "source": "a0",
+    "encounter": 2
+  },
+  {
+    "id": 719,
+    "time": 135.0499999999996,
+    "type": "action",
+    "text": "セナ → 小さな祈り",
+    "source": "a2",
+    "visual": {
+      "skillId": "heal",
+      "actionName": "小さな祈り",
+      "comboIndex": 1
+    },
+    "encounter": 2
+  },
+  {
+    "id": 720,
+    "time": 135.133333333333,
+    "type": "system",
+    "text": "セナ：確定予約1手目に「小さな祈り」を追加",
+    "source": "a2",
+    "encounter": 2
+  },
+  {
+    "id": 721,
+    "time": 135.1499999999997,
+    "type": "warning",
+    "text": "後列狙いの重砲：後列への交差砲撃",
+    "source": "e1",
+    "visual": {
+      "actionName": "後列への交差砲撃"
+    },
+    "encounter": 2
+  },
+  {
+    "id": 722,
+    "time": 135.4666666666666,
+    "type": "action",
+    "text": "アルト → 円弧斬り",
+    "source": "a0",
+    "visual": {
+      "skillId": "sweep",
+      "actionName": "円弧斬り",
+      "comboIndex": 1
+    },
+    "encounter": 2
+  },
+  {
+    "id": 723,
+    "time": 135.8833333333336,
+    "type": "system",
+    "text": "アルト：確定予約3手目に「円弧斬り」を追加",
+    "source": "a0",
+    "encounter": 2
+  },
+  {
+    "id": 724,
+    "time": 135.8833333333336,
+    "type": "system",
+    "text": "セナ：「小さな祈り」の予約を取消",
+    "encounter": 2
+  },
+  {
+    "id": 725,
+    "time": 135.8833333333336,
+    "type": "system",
+    "text": "セナ：前列へ移動指示",
+    "encounter": 2
+  },
+  {
+    "id": 726,
+    "time": 136.25000000000057,
+    "type": "heal",
+    "text": "セナ +183",
+    "target": "a2",
+    "source": "a2",
+    "value": 183,
+    "visual": {
+      "skillId": "heal",
+      "actionName": "小さな祈り",
+      "comboIndex": 1
+    },
+    "encounter": 2
+  },
+  {
+    "id": 727,
+    "time": 136.61666666666753,
+    "type": "action",
+    "text": "リネ → 星の雨",
+    "source": "a1",
+    "visual": {
+      "skillId": "rain",
+      "actionName": "星の雨",
+      "comboIndex": 1
+    },
+    "encounter": 2
+  },
+  {
+    "id": 728,
+    "time": 136.6333333333342,
+    "type": "system",
+    "text": "リネ：確定予約2手目に「星の雨」を追加",
+    "source": "a1",
+    "encounter": 2
+  },
+  {
+    "id": 729,
+    "time": 136.7333333333343,
+    "type": "move",
+    "text": "セナ → 前列",
+    "target": "a2",
+    "visual": {
+      "fromRow": "back",
+      "toRow": "front"
+    },
+    "encounter": 2
+  },
+  {
+    "id": 730,
+    "time": 136.8833333333344,
+    "type": "system",
+    "text": "セナ：確定予約1手目に「小さな祈り」を追加",
+    "source": "a2",
+    "encounter": 2
+  },
+  {
+    "id": 731,
+    "time": 137.26666666666804,
+    "type": "damage",
+    "text": "アルト → 砲列の重衛兵 260",
+    "source": "a0",
+    "target": "e0",
+    "value": 260,
+    "visual": {
+      "skillId": "sweep",
+      "actionName": "円弧斬り",
+      "comboIndex": 1,
+      "shielded": false
+    },
+    "encounter": 2
+  },
+  {
+    "id": 732,
+    "time": 137.26666666666804,
+    "type": "damage",
+    "text": "アルト → 後列狙いの重砲 165",
+    "source": "a0",
+    "target": "e1",
+    "value": 165,
+    "visual": {
+      "skillId": "sweep",
+      "actionName": "円弧斬り",
+      "comboIndex": 1,
+      "shielded": false
+    },
+    "encounter": 2
+  },
+  {
+    "id": 733,
+    "time": 137.26666666666804,
+    "type": "damage",
+    "text": "アルト → 前列狙いの重砲 169",
+    "source": "a0",
+    "target": "e2",
+    "value": 169,
+    "visual": {
+      "skillId": "sweep",
+      "actionName": "円弧斬り",
+      "comboIndex": 1,
+      "shielded": false
+    },
+    "encounter": 2
+  },
+  {
+    "id": 734,
+    "time": 137.8833333333352,
+    "type": "system",
+    "text": "アルト：「円弧斬り」の予約を取消",
+    "encounter": 2
+  },
+  {
+    "id": 735,
+    "time": 137.8833333333352,
+    "type": "system",
+    "text": "アルト：「救急薬」の予約を取消",
+    "encounter": 2
+  },
+  {
+    "id": 736,
+    "time": 137.8833333333352,
+    "type": "system",
+    "text": "アルト：「円弧斬り」の予約を取消",
+    "encounter": 2
+  },
+  {
+    "id": 737,
+    "time": 137.8833333333352,
+    "type": "shift",
+    "text": "オプティマ：崩し・防護・支援",
+    "encounter": 2
+  },
+  {
+    "id": 738,
+    "time": 138.1333333333354,
+    "type": "system",
+    "text": "リネ：確定予約3手目に「救急薬」を追加",
+    "source": "a1",
+    "encounter": 2
+  },
+  {
+    "id": 739,
+    "time": 138.35000000000224,
+    "type": "damage",
+    "text": "後列狙いの重砲 → アルト 250",
+    "source": "e1",
+    "target": "a0",
+    "value": 250,
+    "visual": {
+      "actionName": "後列への交差砲撃",
+      "shielded": false
+    },
+    "encounter": 2
+  },
+  {
+    "id": 740,
+    "time": 138.3833333333356,
+    "type": "warning",
+    "text": "前列狙いの重砲：前列への交差砲撃",
+    "source": "e2",
+    "visual": {
+      "actionName": "前列への交差砲撃"
+    },
+    "encounter": 2
+  },
+  {
+    "id": 741,
+    "time": 138.40000000000228,
+    "type": "action",
+    "text": "セナ → 小さな祈り",
+    "source": "a2",
+    "visual": {
+      "skillId": "heal",
+      "actionName": "小さな祈り",
+      "comboIndex": 1
+    },
+    "encounter": 2
+  },
+  {
+    "id": 742,
+    "time": 138.61666666666912,
+    "type": "damage",
+    "text": "リネ → 砲列の重衛兵 112",
+    "source": "a1",
+    "target": "e0",
+    "value": 112,
+    "visual": {
+      "skillId": "rain",
+      "actionName": "星の雨",
+      "comboIndex": 1,
+      "shielded": false
+    },
+    "encounter": 2
+  },
+  {
+    "id": 743,
+    "time": 138.61666666666912,
+    "type": "break",
+    "text": "砲列の重衛兵 BREAK — 12秒間の好機",
+    "target": "e0",
+    "source": "a1",
+    "visual": {
+      "skillId": "rain",
+      "actionName": "星の雨",
+      "comboIndex": 1
+    },
+    "encounter": 2
+  },
+  {
+    "id": 744,
+    "time": 138.61666666666912,
+    "type": "damage",
+    "text": "リネ → 後列狙いの重砲 82",
+    "source": "a1",
+    "target": "e1",
+    "value": 82,
+    "visual": {
+      "skillId": "rain",
+      "actionName": "星の雨",
+      "comboIndex": 1,
+      "shielded": false
+    },
+    "encounter": 2
+  },
+  {
+    "id": 745,
+    "time": 138.61666666666912,
+    "type": "damage",
+    "text": "リネ → 前列狙いの重砲 85",
+    "source": "a1",
+    "target": "e2",
+    "value": 85,
+    "visual": {
+      "skillId": "rain",
+      "actionName": "星の雨",
+      "comboIndex": 1,
+      "shielded": false
+    },
+    "encounter": 2
+  },
+  {
+    "id": 746,
+    "time": 138.883333333336,
+    "type": "system",
+    "text": "リネ：「星の雨」の予約を取消",
+    "encounter": 2
+  },
+  {
+    "id": 747,
+    "time": 138.883333333336,
+    "type": "system",
+    "text": "リネ：「星の雨」の予約を取消",
+    "encounter": 2
+  },
+  {
+    "id": 748,
+    "time": 138.883333333336,
+    "type": "system",
+    "text": "リネ：「救急薬」の予約を取消",
+    "encounter": 2
+  },
+  {
+    "id": 749,
+    "time": 138.883333333336,
+    "type": "system",
+    "text": "リネ：後列へ移動指示",
+    "encounter": 2
+  },
+  {
+    "id": 750,
+    "time": 138.883333333336,
+    "type": "system",
+    "text": "セナ：後列へ移動指示",
+    "encounter": 2
+  },
+  {
+    "id": 751,
+    "time": 139.11666666666952,
+    "type": "shift",
+    "text": "アルト → 守護騎士",
+    "target": "a0",
+    "encounter": 2
+  },
+  {
+    "id": 752,
+    "time": 139.1333333333362,
+    "type": "system",
+    "text": "アルト：確定予約1手目に「救急薬」を追加",
+    "source": "a0",
+    "encounter": 2
+  },
+  {
+    "id": 753,
+    "time": 139.15000000000288,
+    "type": "action",
+    "text": "アルト → 救急薬",
+    "source": "a0",
+    "visual": {
+      "skillId": "potion",
+      "actionName": "救急薬",
+      "comboIndex": 1
+    },
+    "encounter": 2
+  },
+  {
+    "id": 754,
+    "time": 139.3833333333364,
+    "type": "system",
+    "text": "アルト：確定予約1手目に「護りの誓い」を追加",
+    "source": "a0",
+    "encounter": 2
+  },
+  {
+    "id": 755,
+    "time": 139.60000000000323,
+    "type": "heal",
+    "text": "リネ +190",
+    "target": "a1",
+    "source": "a2",
+    "value": 190,
+    "visual": {
+      "skillId": "heal",
+      "actionName": "小さな祈り",
+      "comboIndex": 1
+    },
+    "encounter": 2
+  },
+  {
+    "id": 756,
+    "time": 139.73333333333667,
+    "type": "move",
+    "text": "リネ → 後列",
+    "target": "a1",
+    "visual": {
+      "fromRow": "front",
+      "toRow": "back"
+    },
+    "encounter": 2
+  },
+  {
+    "id": 757,
+    "time": 139.73333333333667,
+    "type": "move",
+    "text": "セナ → 後列",
+    "target": "a2",
+    "visual": {
+      "fromRow": "front",
+      "toRow": "back"
+    },
+    "encounter": 2
+  },
+  {
+    "id": 758,
+    "time": 139.75000000000335,
+    "type": "heal",
+    "text": "リネ +400",
+    "target": "a1",
+    "source": "a0",
+    "value": 400,
+    "visual": {
+      "skillId": "potion",
+      "actionName": "救急薬",
+      "comboIndex": 1
+    },
+    "encounter": 2
+  },
+  {
+    "id": 759,
+    "time": 139.8833333333368,
+    "type": "system",
+    "text": "リネ：確定予約1手目に「星の雨」を追加",
+    "source": "a1",
+    "encounter": 2
+  },
+  {
+    "id": 760,
+    "time": 139.8833333333368,
+    "type": "system",
+    "text": "セナ：確定予約1手目に「小さな祈り」を追加",
+    "source": "a2",
+    "encounter": 2
+  },
+  {
+    "id": 761,
+    "time": 140.133333333337,
+    "type": "system",
+    "text": "リネ：確定予約2手目に「星の雨」を追加",
+    "source": "a1",
+    "encounter": 2
+  },
+  {
+    "id": 762,
+    "time": 141.58333333333815,
+    "type": "system",
+    "text": "前列狙いの重砲：前列への交差砲撃は誰にも当たらなかった",
+    "source": "e2",
+    "target": "e2",
+    "visual": {
+      "actionName": "前列への交差砲撃",
+      "outcome": "miss"
+    },
+    "encounter": 2
+  },
+  {
+    "id": 763,
+    "time": 141.75000000000495,
+    "type": "action",
+    "text": "セナ → 小さな祈り",
+    "source": "a2",
+    "visual": {
+      "skillId": "heal",
+      "actionName": "小さな祈り",
+      "comboIndex": 1
+    },
+    "encounter": 2
+  },
+  {
+    "id": 764,
+    "time": 141.88333333333838,
+    "type": "system",
+    "text": "アルト：「護りの誓い」の予約を取消",
+    "encounter": 2
+  },
+  {
+    "id": 765,
+    "time": 141.88333333333838,
+    "type": "system",
+    "text": "リネ：「星の雨」の予約を取消",
+    "encounter": 2
+  },
+  {
+    "id": 766,
+    "time": 141.88333333333838,
+    "type": "system",
+    "text": "リネ：「星の雨」の予約を取消",
+    "encounter": 2
+  },
+  {
+    "id": 767,
+    "time": 141.88333333333838,
+    "type": "system",
+    "text": "アルト：確定予約1手目に「黎明の剣に変更」を追加",
+    "source": "a0",
+    "encounter": 2
+  },
+  {
+    "id": 768,
+    "time": 141.88333333333838,
+    "type": "system",
+    "text": "リネ：確定予約1手目に「風渡りの弓に変更」を追加",
+    "source": "a1",
+    "encounter": 2
+  },
+  {
+    "id": 769,
+    "time": 142.13333333333858,
+    "type": "system",
+    "text": "セナ：確定予約1手目に「小さな祈り」を追加",
+    "source": "a2",
+    "encounter": 2
+  },
+  {
+    "id": 770,
+    "time": 142.55000000000558,
+    "type": "shift",
+    "text": "アルト → 剣士",
+    "target": "a0",
+    "encounter": 2
+  },
+  {
+    "id": 771,
+    "time": 142.55000000000558,
+    "type": "shift",
+    "text": "リネ → 射手",
+    "target": "a1",
+    "encounter": 2
+  },
+  {
+    "id": 772,
+    "time": 142.63333333333898,
+    "type": "system",
+    "text": "アルト：確定予約1手目に「円弧斬り」を追加",
+    "source": "a0",
+    "encounter": 2
+  },
+  {
+    "id": 773,
+    "time": 142.63333333333898,
+    "type": "system",
+    "text": "リネ：確定予約1手目に「一斉射」を追加",
+    "source": "a1",
+    "encounter": 2
+  },
+  {
+    "id": 774,
+    "time": 142.88333333333918,
+    "type": "system",
+    "text": "アルト：確定予約2手目に「円弧斬り」を追加",
+    "source": "a0",
+    "encounter": 2
+  },
+  {
+    "id": 775,
+    "time": 142.88333333333918,
+    "type": "system",
+    "text": "リネ：確定予約2手目に「一斉射」を追加",
+    "source": "a1",
+    "encounter": 2
+  },
+  {
+    "id": 776,
+    "time": 142.9500000000059,
+    "type": "heal",
+    "text": "アルト +190",
+    "target": "a0",
+    "source": "a2",
+    "value": 190,
+    "visual": {
+      "skillId": "heal",
+      "actionName": "小さな祈り",
+      "comboIndex": 1
+    },
+    "encounter": 2
+  },
+  {
+    "id": 777,
+    "time": 142.96666666667258,
+    "type": "action",
+    "text": "リネ → 一斉射",
+    "source": "a1",
+    "visual": {
+      "skillId": "volley",
+      "actionName": "一斉射",
+      "comboIndex": 1
+    },
+    "encounter": 2
+  },
+  {
+    "id": 778,
+    "time": 143.13333333333938,
+    "type": "system",
+    "text": "リネ：確定予約2手目に「一斉射」を追加",
+    "source": "a1",
+    "encounter": 2
+  },
+  {
+    "id": 779,
+    "time": 143.16666666667274,
+    "type": "warning",
+    "text": "後列狙いの重砲：後列への交差砲撃",
+    "source": "e1",
+    "visual": {
+      "actionName": "後列への交差砲撃"
+    },
+    "encounter": 2
+  },
+  {
+    "id": 780,
+    "time": 143.8666666666733,
+    "type": "action",
+    "text": "アルト → 円弧斬り",
+    "source": "a0",
+    "visual": {
+      "skillId": "sweep",
+      "actionName": "円弧斬り",
+      "comboIndex": 1
+    },
+    "encounter": 2
+  },
+  {
+    "id": 781,
+    "time": 143.88333333333998,
+    "type": "system",
+    "text": "アルト：確定予約2手目に「円弧斬り」を追加",
+    "source": "a0",
+    "encounter": 2
+  },
+  {
+    "id": 782,
+    "time": 143.88333333333998,
+    "type": "system",
+    "text": "セナ：「小さな祈り」の予約を取消",
+    "encounter": 2
+  },
+  {
+    "id": 783,
+    "time": 143.88333333333998,
+    "type": "system",
+    "text": "セナ：前列へ移動指示",
+    "encounter": 2
+  },
+  {
+    "id": 784,
+    "time": 144.73333333334065,
+    "type": "move",
+    "text": "セナ → 前列",
+    "target": "a2",
+    "visual": {
+      "fromRow": "back",
+      "toRow": "front"
+    },
+    "encounter": 2
+  },
+  {
+    "id": 785,
+    "time": 144.8666666666741,
+    "type": "damage",
+    "text": "リネ → 砲列の重衛兵 406",
+    "source": "a1",
+    "target": "e0",
+    "value": 406,
+    "visual": {
+      "skillId": "volley",
+      "actionName": "一斉射",
+      "comboIndex": 1,
+      "shielded": false
+    },
+    "encounter": 2
+  },
+  {
+    "id": 786,
+    "time": 144.8666666666741,
+    "type": "damage",
+    "text": "リネ → 後列狙いの重砲 275",
+    "source": "a1",
+    "target": "e1",
+    "value": 275,
+    "visual": {
+      "skillId": "volley",
+      "actionName": "一斉射",
+      "comboIndex": 1,
+      "shielded": false
+    },
+    "encounter": 2
+  },
+  {
+    "id": 787,
+    "time": 144.8666666666741,
+    "type": "damage",
+    "text": "リネ → 前列狙いの重砲 273",
+    "source": "a1",
+    "target": "e2",
+    "value": 273,
+    "visual": {
+      "skillId": "volley",
+      "actionName": "一斉射",
+      "comboIndex": 1,
+      "shielded": false
+    },
+    "encounter": 2
+  },
+  {
+    "id": 788,
+    "time": 144.88333333334077,
+    "type": "system",
+    "text": "セナ：確定予約1手目に「小さな祈り」を追加",
+    "source": "a2",
+    "encounter": 2
+  },
+  {
+    "id": 789,
+    "time": 145.66666666667473,
+    "type": "damage",
+    "text": "アルト → 砲列の重衛兵 351",
+    "source": "a0",
+    "target": "e0",
+    "value": 351,
+    "visual": {
+      "skillId": "sweep",
+      "actionName": "円弧斬り",
+      "comboIndex": 1,
+      "shielded": false
+    },
+    "encounter": 2
+  },
+  {
+    "id": 790,
+    "time": 145.66666666667473,
+    "type": "damage",
+    "text": "アルト → 後列狙いの重砲 249",
+    "source": "a0",
+    "target": "e1",
+    "value": 249,
+    "visual": {
+      "skillId": "sweep",
+      "actionName": "円弧斬り",
+      "comboIndex": 1,
+      "shielded": false
+    },
+    "encounter": 2
+  },
+  {
+    "id": 791,
+    "time": 145.66666666667473,
+    "type": "damage",
+    "text": "アルト → 前列狙いの重砲 163",
+    "source": "a0",
+    "target": "e2",
+    "value": 163,
+    "visual": {
+      "skillId": "sweep",
+      "actionName": "円弧斬り",
+      "comboIndex": 1,
+      "shielded": false
+    },
+    "encounter": 2
+  },
+  {
+    "id": 792,
+    "time": 145.66666666667473,
+    "type": "system",
+    "text": "前列狙いの重砲を倒した",
+    "source": "a0",
+    "target": "e2",
+    "visual": {
+      "skillId": "sweep",
+      "actionName": "円弧斬り",
+      "comboIndex": 1,
+      "outcome": "defeat"
+    },
+    "encounter": 2
+  },
+  {
+    "id": 793,
+    "time": 145.9333333333416,
+    "type": "action",
+    "text": "セナ → 小さな祈り",
+    "source": "a2",
+    "visual": {
+      "skillId": "heal",
+      "actionName": "小さな祈り",
+      "comboIndex": 1
+    },
+    "encounter": 2
+  },
+  {
+    "id": 794,
+    "time": 146.13333333334177,
+    "type": "system",
+    "text": "セナ：確定予約1手目に「小さな祈り」を追加",
+    "source": "a2",
+    "encounter": 2
+  },
+  {
+    "id": 795,
+    "time": 146.3666666666753,
+    "type": "damage",
+    "text": "後列狙いの重砲 → アルト 250",
+    "source": "e1",
+    "target": "a0",
+    "value": 250,
+    "visual": {
+      "actionName": "後列への交差砲撃",
+      "shielded": false
+    },
+    "encounter": 2
+  },
+  {
+    "id": 796,
+    "time": 146.3666666666753,
+    "type": "damage",
+    "text": "後列狙いの重砲 → リネ 250",
+    "source": "e1",
+    "target": "a1",
+    "value": 250,
+    "visual": {
+      "actionName": "後列への交差砲撃",
+      "shielded": false
+    },
+    "encounter": 2
+  },
+  {
+    "id": 797,
+    "time": 147.13333333334256,
+    "type": "heal",
+    "text": "アルト +190",
+    "target": "a0",
+    "source": "a2",
+    "value": 190,
+    "visual": {
+      "skillId": "heal",
+      "actionName": "小さな祈り",
+      "comboIndex": 1
+    },
+    "encounter": 2
+  },
+  {
+    "id": 798,
+    "time": 148.55000000001036,
+    "type": "action",
+    "text": "リネ → 一斉射",
+    "source": "a1",
+    "visual": {
+      "skillId": "volley",
+      "actionName": "一斉射",
+      "comboIndex": 1
+    },
+    "encounter": 2
+  },
+  {
+    "id": 799,
+    "time": 148.63333333334376,
+    "type": "system",
+    "text": "リネ：確定予約2手目に「一斉射」を追加",
+    "source": "a1",
+    "encounter": 2
+  },
+  {
+    "id": 800,
+    "time": 149.28333333334427,
+    "type": "action",
+    "text": "セナ → 小さな祈り",
+    "source": "a2",
+    "visual": {
+      "skillId": "heal",
+      "actionName": "小さな祈り",
+      "comboIndex": 1
+    },
+    "encounter": 2
+  },
+  {
+    "id": 801,
+    "time": 149.350000000011,
+    "type": "action",
+    "text": "アルト → 円弧斬り",
+    "source": "a0",
+    "visual": {
+      "skillId": "sweep",
+      "actionName": "円弧斬り",
+      "comboIndex": 1
+    },
+    "encounter": 2
+  },
+  {
+    "id": 802,
+    "time": 149.38333333334435,
+    "type": "system",
+    "text": "アルト：確定予約2手目に「円弧斬り」を追加",
+    "source": "a0",
+    "encounter": 2
+  },
+  {
+    "id": 803,
+    "time": 149.38333333334435,
+    "type": "system",
+    "text": "セナ：確定予約1手目に「小さな祈り」を追加",
+    "source": "a2",
+    "encounter": 2
+  },
+  {
+    "id": 804,
+    "time": 150.45000000001187,
+    "type": "damage",
+    "text": "リネ → 砲列の重衛兵 412",
+    "source": "a1",
+    "target": "e0",
+    "value": 412,
+    "visual": {
+      "skillId": "volley",
+      "actionName": "一斉射",
+      "comboIndex": 1,
+      "shielded": false
+    },
+    "encounter": 2
+  },
+  {
+    "id": 805,
+    "time": 150.45000000001187,
+    "type": "damage",
+    "text": "リネ → 後列狙いの重砲 305",
+    "source": "a1",
+    "target": "e1",
+    "value": 305,
+    "visual": {
+      "skillId": "volley",
+      "actionName": "一斉射",
+      "comboIndex": 1,
+      "shielded": false
+    },
+    "encounter": 2
+  },
+  {
+    "id": 806,
+    "time": 150.48333333334523,
+    "type": "heal",
+    "text": "アルト +190",
+    "target": "a0",
+    "source": "a2",
+    "value": 190,
+    "visual": {
+      "skillId": "heal",
+      "actionName": "小さな祈り",
+      "comboIndex": 1
+    },
+    "encounter": 2
+  },
+  {
+    "id": 807,
+    "time": 150.600000000012,
+    "type": "system",
+    "text": "砲列の重衛兵：ブレイク終了",
+    "encounter": 2
+  },
+  {
+    "id": 808,
+    "time": 151.15000000001243,
+    "type": "damage",
+    "text": "アルト → 砲列の重衛兵 161",
+    "source": "a0",
+    "target": "e0",
+    "value": 161,
+    "visual": {
+      "skillId": "sweep",
+      "actionName": "円弧斬り",
+      "comboIndex": 1,
+      "shielded": false
+    },
+    "encounter": 2
+  },
+  {
+    "id": 809,
+    "time": 151.15000000001243,
+    "type": "damage",
+    "text": "アルト → 後列狙いの重砲 284",
+    "source": "a0",
+    "target": "e1",
+    "value": 284,
+    "visual": {
+      "skillId": "sweep",
+      "actionName": "円弧斬り",
+      "comboIndex": 1,
+      "shielded": false
+    },
+    "encounter": 2
+  },
+  {
+    "id": 810,
+    "time": 151.1833333333458,
+    "type": "warning",
+    "text": "後列狙いの重砲：後列への交差砲撃",
+    "source": "e1",
+    "visual": {
+      "actionName": "後列への交差砲撃"
+    },
+    "encounter": 2
+  },
+  {
+    "id": 811,
+    "time": 151.88333333334634,
+    "type": "system",
+    "text": "アルト：「円弧斬り」の予約を取消",
+    "encounter": 2
+  },
+  {
+    "id": 812,
+    "time": 151.88333333334634,
+    "type": "system",
+    "text": "アルト：「円弧斬り」の予約を取消",
+    "encounter": 2
+  },
+  {
+    "id": 813,
+    "time": 151.88333333334634,
+    "type": "system",
+    "text": "アルト：前列へ移動指示",
+    "encounter": 2
+  },
+  {
+    "id": 814,
+    "time": 151.88333333334634,
+    "type": "system",
+    "text": "リネ：「一斉射」の予約を取消",
+    "encounter": 2
+  },
+  {
+    "id": 815,
+    "time": 151.88333333334634,
+    "type": "system",
+    "text": "リネ：「一斉射」の予約を取消",
+    "encounter": 2
+  },
+  {
+    "id": 816,
+    "time": 151.88333333334634,
+    "type": "system",
+    "text": "リネ：前列へ移動指示",
+    "encounter": 2
+  },
+  {
+    "id": 817,
+    "time": 152.61666666668026,
+    "type": "action",
+    "text": "セナ → 小さな祈り",
+    "source": "a2",
+    "visual": {
+      "skillId": "heal",
+      "actionName": "小さな祈り",
+      "comboIndex": 1
+    },
+    "encounter": 2
+  },
+  {
+    "id": 818,
+    "time": 152.63333333334694,
+    "type": "system",
+    "text": "セナ：確定予約1手目に「小さな祈り」を追加",
+    "source": "a2",
+    "encounter": 2
+  },
+  {
+    "id": 819,
+    "time": 152.73333333334702,
+    "type": "move",
+    "text": "アルト → 前列",
+    "target": "a0",
+    "visual": {
+      "fromRow": "back",
+      "toRow": "front"
+    },
+    "encounter": 2
+  },
+  {
+    "id": 820,
+    "time": 152.73333333334702,
+    "type": "move",
+    "text": "リネ → 前列",
+    "target": "a1",
+    "visual": {
+      "fromRow": "back",
+      "toRow": "front"
+    },
+    "encounter": 2
+  },
+  {
+    "id": 821,
+    "time": 152.88333333334714,
+    "type": "system",
+    "text": "アルト：確定予約1手目に「円弧斬り」を追加",
+    "source": "a0",
+    "encounter": 2
+  },
+  {
+    "id": 822,
+    "time": 152.88333333334714,
+    "type": "system",
+    "text": "リネ：確定予約1手目に「一斉射」を追加",
+    "source": "a1",
+    "encounter": 2
+  },
+  {
+    "id": 823,
+    "time": 153.13333333334734,
+    "type": "system",
+    "text": "アルト：確定予約2手目に「円弧斬り」を追加",
+    "source": "a0",
+    "encounter": 2
+  },
+  {
+    "id": 824,
+    "time": 153.13333333334734,
+    "type": "system",
+    "text": "リネ：確定予約2手目に「一斉射」を追加",
+    "source": "a1",
+    "encounter": 2
+  },
+  {
+    "id": 825,
+    "time": 153.61666666668106,
+    "type": "warning",
+    "text": "砲列の重衛兵：前列薙ぎ払い",
+    "source": "e0",
+    "visual": {
+      "actionName": "前列薙ぎ払い"
+    },
+    "encounter": 2
+  },
+  {
+    "id": 826,
+    "time": 153.81666666668121,
+    "type": "heal",
+    "text": "リネ +190",
+    "target": "a1",
+    "source": "a2",
+    "value": 190,
+    "visual": {
+      "skillId": "heal",
+      "actionName": "小さな祈り",
+      "comboIndex": 1
+    },
+    "encounter": 2
+  },
+  {
+    "id": 827,
+    "time": 154.13333333334813,
+    "type": "system",
+    "text": "アルト：「円弧斬り」の予約を取消",
+    "encounter": 2
+  },
+  {
+    "id": 828,
+    "time": 154.13333333334813,
+    "type": "system",
+    "text": "アルト：「円弧斬り」の予約を取消",
+    "encounter": 2
+  },
+  {
+    "id": 829,
+    "time": 154.13333333334813,
+    "type": "system",
+    "text": "アルト：確定予約1手目に「防御」を追加",
+    "source": "a0",
+    "encounter": 2
+  },
+  {
+    "id": 830,
+    "time": 154.13333333334813,
+    "type": "system",
+    "text": "リネ：「一斉射」の予約を取消",
+    "encounter": 2
+  },
+  {
+    "id": 831,
+    "time": 154.13333333334813,
+    "type": "system",
+    "text": "リネ：「一斉射」の予約を取消",
+    "encounter": 2
+  },
+  {
+    "id": 832,
+    "time": 154.13333333334813,
+    "type": "system",
+    "text": "リネ：確定予約1手目に「防御」を追加",
+    "source": "a1",
+    "encounter": 2
+  },
+  {
+    "id": 833,
+    "time": 154.13333333334813,
+    "type": "system",
+    "text": "セナ：「小さな祈り」の予約を取消",
+    "encounter": 2
+  },
+  {
+    "id": 834,
+    "time": 154.13333333334813,
+    "type": "system",
+    "text": "セナ：確定予約1手目に「防御」を追加",
+    "source": "a2",
+    "encounter": 2
+  },
+  {
+    "id": 835,
+    "time": 154.1500000000148,
+    "type": "action",
+    "text": "アルト → 防御",
+    "source": "a0",
+    "visual": {
+      "skillId": "guard",
+      "actionName": "防御",
+      "comboIndex": 1
+    },
+    "encounter": 2
+  },
+  {
+    "id": 836,
+    "time": 154.1500000000148,
+    "type": "action",
+    "text": "リネ → 防御",
+    "source": "a1",
+    "visual": {
+      "skillId": "guard",
+      "actionName": "防御",
+      "comboIndex": 1
+    },
+    "encounter": 2
+  },
+  {
+    "id": 837,
+    "time": 154.38333333334833,
+    "type": "system",
+    "text": "後列狙いの重砲：後列への交差砲撃は誰にも当たらなかった",
+    "source": "e1",
+    "target": "e1",
+    "visual": {
+      "actionName": "後列への交差砲撃",
+      "outcome": "miss"
+    },
+    "encounter": 2
+  },
+  {
+    "id": 838,
+    "time": 154.38333333334833,
+    "type": "system",
+    "text": "アルト：後列へ移動指示",
+    "encounter": 2
+  },
+  {
+    "id": 839,
+    "time": 154.38333333334833,
+    "type": "system",
+    "text": "リネ：後列へ移動指示",
+    "encounter": 2
+  },
+  {
+    "id": 840,
+    "time": 154.38333333334833,
+    "type": "system",
+    "text": "セナ：「防御」の予約を取消",
+    "encounter": 2
+  },
+  {
+    "id": 841,
+    "time": 154.38333333334833,
+    "type": "system",
+    "text": "セナ：後列へ移動指示",
+    "encounter": 2
+  },
+  {
+    "id": 842,
+    "time": 154.55000000001513,
+    "type": "heal",
+    "text": "アルト：防護",
+    "source": "a0",
+    "target": "a0",
+    "visual": {
+      "skillId": "guard",
+      "actionName": "防御",
+      "comboIndex": 1
+    },
+    "encounter": 2
+  },
+  {
+    "id": 843,
+    "time": 154.55000000001513,
+    "type": "heal",
+    "text": "リネ：防護",
+    "source": "a1",
+    "target": "a1",
+    "visual": {
+      "skillId": "guard",
+      "actionName": "防御",
+      "comboIndex": 1
+    },
+    "encounter": 2
+  },
+  {
+    "id": 844,
+    "time": 155.233333333349,
+    "type": "move",
+    "text": "アルト → 後列",
+    "target": "a0",
+    "visual": {
+      "fromRow": "front",
+      "toRow": "back"
+    },
+    "encounter": 2
+  },
+  {
+    "id": 845,
+    "time": 155.233333333349,
+    "type": "move",
+    "text": "リネ → 後列",
+    "target": "a1",
+    "visual": {
+      "fromRow": "front",
+      "toRow": "back"
+    },
+    "encounter": 2
+  },
+  {
+    "id": 846,
+    "time": 155.233333333349,
+    "type": "move",
+    "text": "セナ → 後列",
+    "target": "a2",
+    "visual": {
+      "fromRow": "front",
+      "toRow": "back"
+    },
+    "encounter": 2
+  },
+  {
+    "id": 847,
+    "time": 155.38333333334913,
+    "type": "system",
+    "text": "アルト：確定予約1手目に「円弧斬り」を追加",
+    "source": "a0",
+    "encounter": 2
+  },
+  {
+    "id": 848,
+    "time": 155.38333333334913,
+    "type": "system",
+    "text": "リネ：確定予約1手目に「一斉射」を追加",
+    "source": "a1",
+    "encounter": 2
+  },
+  {
+    "id": 849,
+    "time": 155.38333333334913,
+    "type": "system",
+    "text": "セナ：確定予約1手目に「小さな祈り」を追加",
+    "source": "a2",
+    "encounter": 2
+  },
+  {
+    "id": 850,
+    "time": 155.63333333334933,
+    "type": "system",
+    "text": "アルト：確定予約2手目に「円弧斬り」を追加",
+    "source": "a0",
+    "encounter": 2
+  },
+  {
+    "id": 851,
+    "time": 155.63333333334933,
+    "type": "system",
+    "text": "リネ：確定予約2手目に「一斉射」を追加",
+    "source": "a1",
+    "encounter": 2
+  },
+  {
+    "id": 852,
+    "time": 156.48333333335,
+    "type": "action",
+    "text": "セナ → 小さな祈り",
+    "source": "a2",
+    "visual": {
+      "skillId": "heal",
+      "actionName": "小さな祈り",
+      "comboIndex": 1
+    },
+    "encounter": 2
+  },
+  {
+    "id": 853,
+    "time": 156.63333333335012,
+    "type": "system",
+    "text": "セナ：確定予約1手目に「小さな祈り」を追加",
+    "source": "a2",
+    "encounter": 2
+  },
+  {
+    "id": 854,
+    "time": 156.8166666666836,
+    "type": "system",
+    "text": "砲列の重衛兵：前列薙ぎ払いは誰にも当たらなかった",
+    "source": "e0",
+    "target": "e0",
+    "visual": {
+      "actionName": "前列薙ぎ払い",
+      "outcome": "miss"
+    },
+    "encounter": 2
+  },
+  {
+    "id": 855,
+    "time": 157.61666666668424,
+    "type": "action",
+    "text": "リネ → 一斉射",
+    "source": "a1",
+    "visual": {
+      "skillId": "volley",
+      "actionName": "一斉射",
+      "comboIndex": 1
+    },
+    "encounter": 2
+  },
+  {
+    "id": 856,
+    "time": 157.63333333335092,
+    "type": "system",
+    "text": "リネ：確定予約2手目に「一斉射」を追加",
+    "source": "a1",
+    "encounter": 2
+  },
+  {
+    "id": 857,
+    "time": 157.68333333335096,
+    "type": "heal",
+    "text": "リネ +190",
+    "target": "a1",
+    "source": "a2",
+    "value": 190,
+    "visual": {
+      "skillId": "heal",
+      "actionName": "小さな祈り",
+      "comboIndex": 1
+    },
+    "encounter": 2
+  },
+  {
+    "id": 858,
+    "time": 157.86666666668444,
+    "type": "action",
+    "text": "アルト → 円弧斬り",
+    "source": "a0",
+    "visual": {
+      "skillId": "sweep",
+      "actionName": "円弧斬り",
+      "comboIndex": 1
+    },
+    "encounter": 2
+  },
+  {
+    "id": 859,
+    "time": 157.88333333335112,
+    "type": "system",
+    "text": "リネ：「一斉射」の予約を取消",
+    "encounter": 2
+  },
+  {
+    "id": 860,
+    "time": 157.88333333335112,
+    "type": "system",
+    "text": "リネ：「一斉射」の予約を取消",
+    "encounter": 2
+  },
+  {
+    "id": 861,
+    "time": 157.88333333335112,
+    "type": "system",
+    "text": "セナ：「小さな祈り」の予約を取消",
+    "encounter": 2
+  },
+  {
+    "id": 862,
+    "time": 157.88333333335112,
+    "type": "shift",
+    "text": "オプティマ：崩しの連奏",
+    "encounter": 2
+  },
+  {
+    "id": 863,
+    "time": 158.13333333335132,
+    "type": "system",
+    "text": "アルト：確定予約2手目に「円弧斬り」を追加",
+    "source": "a0",
+    "encounter": 2
+  },
+  {
+    "id": 864,
+    "time": 159.20000000001883,
+    "type": "warning",
+    "text": "後列狙いの重砲：後列への交差砲撃",
+    "source": "e1",
+    "visual": {
+      "actionName": "後列への交差砲撃"
+    },
+    "encounter": 2
+  },
+  {
+    "id": 865,
+    "time": 159.2333333333522,
+    "type": "shift",
+    "text": "セナ → 鉤槍使い",
+    "target": "a2",
+    "encounter": 2
+  },
+  {
+    "id": 866,
+    "time": 159.51666666668575,
+    "type": "damage",
+    "text": "リネ → 砲列の重衛兵 187",
+    "source": "a1",
+    "target": "e0",
+    "value": 187,
+    "visual": {
+      "skillId": "volley",
+      "actionName": "一斉射",
+      "comboIndex": 1,
+      "shielded": false
+    },
+    "encounter": 2
+  },
+  {
+    "id": 867,
+    "time": 159.51666666668575,
+    "type": "damage",
+    "text": "リネ → 後列狙いの重砲 290",
+    "source": "a1",
+    "target": "e1",
+    "value": 290,
+    "visual": {
+      "skillId": "volley",
+      "actionName": "一斉射",
+      "comboIndex": 1,
+      "shielded": false
+    },
+    "encounter": 2
+  },
+  {
+    "id": 868,
+    "time": 159.66666666668587,
+    "type": "damage",
+    "text": "アルト → 砲列の重衛兵 166",
+    "source": "a0",
+    "target": "e0",
+    "value": 166,
+    "visual": {
+      "skillId": "sweep",
+      "actionName": "円弧斬り",
+      "comboIndex": 1,
+      "shielded": false
+    },
+    "encounter": 2
+  },
+  {
+    "id": 869,
+    "time": 159.66666666668587,
+    "type": "damage",
+    "text": "アルト → 後列狙いの重砲 273",
+    "source": "a0",
+    "target": "e1",
+    "value": 273,
+    "visual": {
+      "skillId": "sweep",
+      "actionName": "円弧斬り",
+      "comboIndex": 1,
+      "shielded": false
+    },
+    "encounter": 2
+  },
+  {
+    "id": 870,
+    "time": 159.8833333333527,
+    "type": "system",
+    "text": "アルト：「円弧斬り」の予約を取消",
+    "encounter": 2
+  },
+  {
+    "id": 871,
+    "time": 159.8833333333527,
+    "type": "system",
+    "text": "アルト：「円弧斬り」の予約を取消",
+    "encounter": 2
+  },
+  {
+    "id": 872,
+    "time": 159.8833333333527,
+    "type": "system",
+    "text": "アルト：前列へ移動指示",
+    "encounter": 2
+  },
+  {
+    "id": 873,
+    "time": 159.8833333333527,
+    "type": "system",
+    "text": "セナ：前列へ移動指示",
+    "encounter": 2
+  },
+  {
+    "id": 874,
+    "time": 160.7333333333534,
+    "type": "move",
+    "text": "アルト → 前列",
+    "target": "a0",
+    "visual": {
+      "fromRow": "back",
+      "toRow": "front"
+    },
+    "encounter": 2
+  },
+  {
+    "id": 875,
+    "time": 160.7333333333534,
+    "type": "move",
+    "text": "セナ → 前列",
+    "target": "a2",
+    "visual": {
+      "fromRow": "back",
+      "toRow": "front"
+    },
+    "encounter": 2
+  },
+  {
+    "id": 876,
+    "time": 160.8833333333535,
+    "type": "system",
+    "text": "アルト：確定予約1手目に「円弧斬り」を追加",
+    "source": "a0",
+    "encounter": 2
+  },
+  {
+    "id": 877,
+    "time": 160.8833333333535,
+    "type": "system",
+    "text": "セナ：確定予約1手目に「砕突」を追加",
+    "source": "a2",
+    "encounter": 2
+  },
+  {
+    "id": 878,
+    "time": 161.1333333333537,
+    "type": "system",
+    "text": "アルト：確定予約2手目に「円弧斬り」を追加",
+    "source": "a0",
+    "encounter": 2
+  },
+  {
+    "id": 879,
+    "time": 161.1333333333537,
+    "type": "system",
+    "text": "セナ：確定予約2手目に「砕突」を追加",
+    "source": "a2",
+    "encounter": 2
+  },
+  {
+    "id": 880,
+    "time": 161.36666666668722,
+    "type": "shift",
+    "text": "リネ → 魔術師",
+    "target": "a1",
+    "encounter": 2
+  },
+  {
+    "id": 881,
+    "time": 161.3833333333539,
+    "type": "system",
+    "text": "リネ：前列へ移動指示",
+    "encounter": 2
+  },
+  {
+    "id": 882,
+    "time": 161.3833333333539,
+    "type": "system",
+    "text": "セナ：確定予約3手目に「砕突」を追加",
+    "source": "a2",
+    "encounter": 2
+  },
+  {
+    "id": 883,
+    "time": 161.50000000002066,
+    "type": "action",
+    "text": "セナ → 砕突",
+    "source": "a2",
+    "visual": {
+      "skillId": "jab",
+      "actionName": "砕突",
+      "comboIndex": 1
+    },
+    "encounter": 2
+  },
+  {
+    "id": 884,
+    "time": 161.6333333333541,
+    "type": "system",
+    "text": "セナ：確定予約3手目に「砕突」を追加",
+    "source": "a2",
+    "encounter": 2
+  },
+  {
+    "id": 885,
+    "time": 162.23333333335458,
+    "type": "move",
+    "text": "リネ → 前列",
+    "target": "a1",
+    "visual": {
+      "fromRow": "back",
+      "toRow": "front"
+    },
+    "encounter": 2
+  },
+  {
+    "id": 886,
+    "time": 162.3833333333547,
+    "type": "system",
+    "text": "アルト：「円弧斬り」の予約を取消",
+    "encounter": 2
+  },
+  {
+    "id": 887,
+    "time": 162.3833333333547,
+    "type": "system",
+    "text": "アルト：「円弧斬り」の予約を取消",
+    "encounter": 2
+  },
+  {
+    "id": 888,
+    "time": 162.3833333333547,
+    "type": "system",
+    "text": "アルト：確定予約1手目に「誓いの盾槍に変更」を追加",
+    "source": "a0",
+    "encounter": 2
+  },
+  {
+    "id": 889,
+    "time": 162.40000000002138,
+    "type": "damage",
+    "text": "セナ → 後列狙いの重砲 85",
+    "source": "a2",
+    "target": "e1",
+    "value": 85,
+    "visual": {
+      "skillId": "jab",
+      "actionName": "砕突",
+      "comboIndex": 1,
+      "shielded": false
+    },
+    "encounter": 2
+  },
+  {
+    "id": 890,
+    "time": 162.40000000002138,
+    "type": "system",
+    "text": "後列狙いの重砲：後列への交差砲撃は誰にも当たらなかった",
+    "source": "e1",
+    "target": "e1",
+    "visual": {
+      "actionName": "後列への交差砲撃",
+      "outcome": "miss"
+    },
+    "encounter": 2
+  },
+  {
+    "id": 891,
+    "time": 162.53333333335482,
+    "type": "warning",
+    "text": "砲列の重衛兵：前列薙ぎ払い",
+    "source": "e0",
+    "visual": {
+      "actionName": "前列薙ぎ払い"
+    },
+    "encounter": 2
+  },
+  {
+    "id": 892,
+    "time": 163.0500000000219,
+    "type": "shift",
+    "text": "アルト → 守護騎士",
+    "target": "a0",
+    "encounter": 2
+  },
+  {
+    "id": 893,
+    "time": 163.06666666668858,
+    "type": "action",
+    "text": "アルト → 護りの誓い",
+    "source": "a0",
+    "visual": {
+      "skillId": "ward",
+      "actionName": "護りの誓い",
+      "comboIndex": 1
+    },
+    "encounter": 2
+  },
+  {
+    "id": 894,
+    "time": 163.1333333333553,
+    "type": "system",
+    "text": "アルト：後列へ移動指示",
+    "encounter": 2
+  },
+  {
+    "id": 895,
+    "time": 163.1333333333553,
+    "type": "system",
+    "text": "リネ：後列へ移動指示",
+    "encounter": 2
+  },
+  {
+    "id": 896,
+    "time": 163.1333333333553,
+    "type": "system",
+    "text": "セナ：「砕突」の予約を取消",
+    "encounter": 2
+  },
+  {
+    "id": 897,
+    "time": 163.1333333333553,
+    "type": "system",
+    "text": "セナ：「砕突」の予約を取消",
+    "encounter": 2
+  },
+  {
+    "id": 898,
+    "time": 163.1333333333553,
+    "type": "system",
+    "text": "セナ：「砕突」の予約を取消",
+    "encounter": 2
+  },
+  {
+    "id": 899,
+    "time": 163.1333333333553,
+    "type": "system",
+    "text": "セナ：後列へ移動指示",
+    "encounter": 2
+  },
+  {
+    "id": 900,
+    "time": 163.76666666668913,
+    "type": "heal",
+    "text": "アルト：防護",
+    "source": "a0",
+    "target": "a0",
+    "visual": {
+      "skillId": "ward",
+      "actionName": "護りの誓い",
+      "comboIndex": 1
+    },
+    "encounter": 2
+  },
+  {
+    "id": 901,
+    "time": 163.98333333335597,
+    "type": "move",
+    "text": "アルト → 後列",
+    "target": "a0",
+    "visual": {
+      "fromRow": "front",
+      "toRow": "back"
+    },
+    "encounter": 2
+  },
+  {
+    "id": 902,
+    "time": 163.98333333335597,
+    "type": "move",
+    "text": "リネ → 後列",
+    "target": "a1",
+    "visual": {
+      "fromRow": "front",
+      "toRow": "back"
+    },
+    "encounter": 2
+  },
+  {
+    "id": 903,
+    "time": 163.98333333335597,
+    "type": "move",
+    "text": "セナ → 後列",
+    "target": "a2",
+    "visual": {
+      "fromRow": "front",
+      "toRow": "back"
+    },
+    "encounter": 2
+  },
+  {
+    "id": 904,
+    "time": 164.1333333333561,
+    "type": "system",
+    "text": "アルト：確定予約1手目に「護りの誓い」を追加",
+    "source": "a0",
+    "encounter": 2
+  },
+  {
+    "id": 905,
+    "time": 164.1333333333561,
+    "type": "system",
+    "text": "リネ：確定予約1手目に「星の雨」を追加",
+    "source": "a1",
+    "encounter": 2
+  },
+  {
+    "id": 906,
+    "time": 164.1333333333561,
+    "type": "system",
+    "text": "セナ：確定予約1手目に「砕突」を追加",
+    "source": "a2",
+    "encounter": 2
+  },
+  {
+    "id": 907,
+    "time": 164.3833333333563,
+    "type": "system",
+    "text": "リネ：確定予約2手目に「星の雨」を追加",
+    "source": "a1",
+    "encounter": 2
+  },
+  {
+    "id": 908,
+    "time": 164.3833333333563,
+    "type": "system",
+    "text": "セナ：確定予約2手目に「砕突」を追加",
+    "source": "a2",
+    "encounter": 2
+  },
+  {
+    "id": 909,
+    "time": 164.6333333333565,
+    "type": "system",
+    "text": "セナ：確定予約3手目に「砕突」を追加",
+    "source": "a2",
+    "encounter": 2
+  },
+  {
+    "id": 910,
+    "time": 165.41666666669045,
+    "type": "action",
+    "text": "セナ → 砕突",
+    "source": "a2",
+    "visual": {
+      "skillId": "jab",
+      "actionName": "砕突",
+      "comboIndex": 1
+    },
+    "encounter": 2
+  },
+  {
+    "id": 911,
+    "time": 165.63333333335729,
+    "type": "system",
+    "text": "セナ：確定予約3手目に「砕突」を追加",
+    "source": "a2",
+    "encounter": 2
+  },
+  {
+    "id": 912,
+    "time": 165.73333333335736,
+    "type": "system",
+    "text": "砲列の重衛兵：前列薙ぎ払いは誰にも当たらなかった",
+    "source": "e0",
+    "target": "e0",
+    "visual": {
+      "actionName": "前列薙ぎ払い",
+      "outcome": "miss"
+    },
+    "encounter": 2
+  },
+  {
+    "id": 913,
+    "time": 165.93333333335752,
+    "type": "action",
+    "text": "リネ → 星の雨",
+    "source": "a1",
+    "visual": {
+      "skillId": "rain",
+      "actionName": "星の雨",
+      "comboIndex": 1
+    },
+    "encounter": 2
+  },
+  {
+    "id": 914,
+    "time": 165.98333333335756,
+    "type": "action",
+    "text": "アルト → 護りの誓い",
+    "source": "a0",
+    "visual": {
+      "skillId": "ward",
+      "actionName": "護りの誓い",
+      "comboIndex": 1
+    },
+    "encounter": 2
+  },
+  {
+    "id": 915,
+    "time": 166.13333333335768,
+    "type": "system",
+    "text": "アルト：確定予約1手目に「護りの誓い」を追加",
+    "source": "a0",
+    "encounter": 2
+  },
+  {
+    "id": 916,
+    "time": 166.13333333335768,
+    "type": "system",
+    "text": "リネ：確定予約2手目に「星の雨」を追加",
+    "source": "a1",
+    "encounter": 2
+  },
+  {
+    "id": 917,
+    "time": 166.31666666669116,
+    "type": "damage",
+    "text": "セナ → 後列狙いの重砲 50",
+    "source": "a2",
+    "target": "e1",
+    "value": 50,
+    "visual": {
+      "skillId": "jab",
+      "actionName": "砕突",
+      "comboIndex": 1,
+      "shielded": false
+    },
+    "encounter": 2
+  },
+  {
+    "id": 918,
+    "time": 166.31666666669116,
+    "type": "break",
+    "text": "後列狙いの重砲 BREAK — 12秒間の好機",
+    "target": "e1",
+    "source": "a2",
+    "visual": {
+      "skillId": "jab",
+      "actionName": "砕突",
+      "comboIndex": 1
+    },
+    "encounter": 2
+  },
+  {
+    "id": 919,
+    "time": 166.38333333335788,
+    "type": "system",
+    "text": "アルト：「護りの誓い」の予約を取消",
+    "encounter": 2
+  },
+  {
+    "id": 920,
+    "time": 166.38333333335788,
+    "type": "system",
+    "text": "リネ：「星の雨」の予約を取消",
+    "encounter": 2
+  },
+  {
+    "id": 921,
+    "time": 166.38333333335788,
+    "type": "system",
+    "text": "リネ：「星の雨」の予約を取消",
+    "encounter": 2
+  },
+  {
+    "id": 922,
+    "time": 166.38333333335788,
+    "type": "shift",
+    "text": "オプティマ：終幕の一撃",
+    "encounter": 2
+  },
+  {
+    "id": 923,
+    "time": 166.68333333335812,
+    "type": "heal",
+    "text": "リネ：防護",
+    "source": "a0",
+    "target": "a1",
+    "visual": {
+      "skillId": "ward",
+      "actionName": "護りの誓い",
+      "comboIndex": 1
+    },
+    "encounter": 2
+  },
+  {
+    "id": 924,
+    "time": 167.93333333335912,
+    "type": "damage",
+    "text": "リネ → 砲列の重衛兵 41",
+    "source": "a1",
+    "target": "e0",
+    "value": 41,
+    "visual": {
+      "skillId": "rain",
+      "actionName": "星の雨",
+      "comboIndex": 1,
+      "shielded": false
+    },
+    "encounter": 2
+  },
+  {
+    "id": 925,
+    "time": 167.93333333335912,
+    "type": "damage",
+    "text": "リネ → 後列狙いの重砲 69",
+    "source": "a1",
+    "target": "e1",
+    "value": 69,
+    "visual": {
+      "skillId": "rain",
+      "actionName": "星の雨",
+      "comboIndex": 1,
+      "shielded": false
+    },
+    "encounter": 2
+  },
+  {
+    "id": 926,
+    "time": 167.93333333335912,
+    "type": "system",
+    "text": "後列狙いの重砲を倒した",
+    "source": "a1",
+    "target": "e1",
+    "visual": {
+      "skillId": "rain",
+      "actionName": "星の雨",
+      "comboIndex": 1,
+      "outcome": "defeat"
+    },
+    "encounter": 2
+  },
+  {
+    "id": 927,
+    "time": 168.23333333335935,
+    "type": "shift",
+    "text": "アルト → 剣士",
+    "target": "a0",
+    "encounter": 2
+  },
+  {
+    "id": 928,
+    "time": 168.38333333335947,
+    "type": "system",
+    "text": "アルト：確定予約1手目に「斬撃」を追加",
+    "source": "a0",
+    "encounter": 2
+  },
+  {
+    "id": 929,
+    "time": 168.63333333335967,
+    "type": "system",
+    "text": "アルト：確定予約2手目に「斬撃」を追加",
+    "source": "a0",
+    "encounter": 2
+  },
+  {
+    "id": 930,
+    "time": 168.75000000002643,
+    "type": "action",
+    "text": "セナ → 砕突",
+    "source": "a2",
+    "visual": {
+      "skillId": "jab",
+      "actionName": "砕突",
+      "comboIndex": 1
+    },
+    "encounter": 2
+  },
+  {
+    "id": 931,
+    "time": 168.88333333335987,
+    "type": "system",
+    "text": "アルト：確定予約3手目に「斬撃」を追加",
+    "source": "a0",
+    "encounter": 2
+  },
+  {
+    "id": 932,
+    "time": 168.88333333335987,
+    "type": "system",
+    "text": "セナ：確定予約3手目に「砕突」を追加",
+    "source": "a2",
+    "encounter": 2
+  },
+  {
+    "id": 933,
+    "time": 169.65000000002715,
+    "type": "damage",
+    "text": "セナ → 砲列の重衛兵 46",
+    "source": "a2",
+    "target": "e0",
+    "value": 46,
+    "visual": {
+      "skillId": "jab",
+      "actionName": "砕突",
+      "comboIndex": 1,
+      "shielded": false
+    },
+    "encounter": 2
+  },
+  {
+    "id": 934,
+    "time": 169.66666666669383,
+    "type": "action",
+    "text": "アルト → 斬撃",
+    "source": "a0",
+    "visual": {
+      "skillId": "slash",
+      "actionName": "斬撃",
+      "comboIndex": 1
+    },
+    "encounter": 2
+  },
+  {
+    "id": 935,
+    "time": 169.7833333333606,
+    "type": "shift",
+    "text": "リネ → 射手",
+    "target": "a1",
+    "encounter": 2
+  },
+  {
+    "id": 936,
+    "time": 169.88333333336067,
+    "type": "system",
+    "text": "アルト：確定予約3手目に「斬撃」を追加",
+    "source": "a0",
+    "encounter": 2
+  },
+  {
+    "id": 937,
+    "time": 169.88333333336067,
+    "type": "system",
+    "text": "リネ：確定予約1手目に「射撃」を追加",
+    "source": "a1",
+    "encounter": 2
+  },
+  {
+    "id": 938,
+    "time": 170.13333333336087,
+    "type": "system",
+    "text": "リネ：確定予約2手目に「射撃」を追加",
+    "source": "a1",
+    "encounter": 2
+  },
+  {
+    "id": 939,
+    "time": 170.38333333336107,
+    "type": "system",
+    "text": "リネ：確定予約3手目に「射撃」を追加",
+    "source": "a1",
+    "encounter": 2
+  },
+  {
+    "id": 940,
+    "time": 170.56666666669454,
+    "type": "damage",
+    "text": "アルト → 砲列の重衛兵 66",
+    "source": "a0",
+    "target": "e0",
+    "value": 66,
+    "visual": {
+      "skillId": "slash",
+      "actionName": "斬撃",
+      "comboIndex": 1,
+      "shielded": false
+    },
+    "encounter": 2
+  },
+  {
+    "id": 941,
+    "time": 170.56666666669454,
+    "type": "system",
+    "text": "砲列の重衛兵を倒した",
+    "source": "a0",
+    "target": "e0",
+    "visual": {
+      "skillId": "slash",
+      "actionName": "斬撃",
+      "comboIndex": 1,
+      "outcome": "defeat"
+    },
+    "encounter": 2
+  },
+  {
+    "id": 942,
+    "time": 170.56666666669454,
+    "type": "system",
+    "text": "リネ：「射撃」の予約を解除（対象・武器・残数を確認）",
+    "encounter": 2
+  },
+  {
+    "id": 943,
+    "time": 170.56666666669454,
+    "type": "system",
+    "text": "二つの戦いを突破した。",
+    "encounter": 2
+  }
+]

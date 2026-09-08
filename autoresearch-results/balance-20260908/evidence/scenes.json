@@ -1,0 +1,2396 @@
+[
+  {
+    "title": "break",
+    "why": "Largest broken-enemy exposure fraction at level 1",
+    "candidate": "atb0.850-hp1.000-power1.000",
+    "policy": "tactician",
+    "set": "belfry",
+    "seed": 2603,
+    "level": 1,
+    "interestingTime": 7.283333333333313,
+    "startTick": 257,
+    "replay": "scenes/01-break-tactician-belfry.replay.json",
+    "scene": "scenes/01-break-tactician-belfry.scene.json",
+    "summary": {
+      "initialAtb": 1,
+      "loadout": "keep",
+      "fullInventory": false,
+      "loadoutWeapons": [
+        [
+          "sword",
+          "shield"
+        ],
+        [
+          "staff",
+          "bow"
+        ],
+        [
+          "bell",
+          "hook"
+        ]
+      ],
+      "planning": "queue",
+      "queuedDuringAction": 0,
+      "appendedPlans": 20,
+      "maxQueueDepth": 2,
+      "encounterSet": "belfry",
+      "encounterLevel": 1,
+      "policy": "tactician",
+      "ablation": "none",
+      "seed": 2603,
+      "enemyPower": 1,
+      "atbRate": 0.85,
+      "atbMode": "idle",
+      "chainActions": true,
+      "atbMax": 4,
+      "bonusMode": "strong",
+      "enemyHpScale": 1,
+      "decisionInterval": 0.25,
+      "reactionSeconds": 0.35,
+      "maxSeconds": 180,
+      "outcome": "victory",
+      "seconds": 43.31666666666549,
+      "realSeconds": 43.31666666666549,
+      "metrics": {
+        "damage": 7700,
+        "taken": 0,
+        "healed": 0,
+        "breaks": 5,
+        "inputs": 25,
+        "focusUsed": 0
+      },
+      "encounters": [
+        {
+          "encounter": 1,
+          "outcome": "loot",
+          "seconds": 19.800000000000157,
+          "realSeconds": 19.800000000000157,
+          "metrics": {
+            "damage": 2750,
+            "taken": 0,
+            "healed": 0,
+            "breaks": 2,
+            "inputs": 11,
+            "focusUsed": 0
+          }
+        },
+        {
+          "encounter": 2,
+          "outcome": "victory",
+          "seconds": 23.516666666665333,
+          "realSeconds": 23.516666666665333,
+          "metrics": {
+            "damage": 4950,
+            "taken": 0,
+            "healed": 0,
+            "breaks": 3,
+            "inputs": 14,
+            "focusUsed": 0
+          }
+        }
+      ],
+      "rejectedCommands": 0,
+      "decisions": 23,
+      "shifts": 4,
+      "moves": 1,
+      "cancellations": 2,
+      "deaths": 0,
+      "potionsUsed": 0,
+      "actions": {
+        "slash": 2,
+        "spark": 2,
+        "pull": 2,
+        "jab": 14,
+        "rain": 3,
+        "sweep": 8,
+        "volley": 4,
+        "guard": 1
+      },
+      "enemyOutcomes": {
+        "hit": 0,
+        "empty-row": 2,
+        "break": 3,
+        "displacement": 0,
+        "killed": 0
+      },
+      "roleSeconds": {
+        "ABS": 0.6500000000000004,
+        "ABB": 20.31666666666616,
+        "AAB": 22.34999999999933
+      },
+      "activeRoleSeconds": {
+        "ABS": 0.6500000000000004,
+        "ABB": 20.31666666666616,
+        "AAB": 22.34999999999933
+      },
+      "rowPersonSeconds": {
+        "front": 6.099999999999984,
+        "back": 123.8499999999934
+      },
+      "actorSeconds": {
+        "acting": 71.33333333333013,
+        "moving": 0.849999999999997,
+        "shifting": 2.599999999999959,
+        "waiting": 55.16666666666457
+      },
+      "minHpFraction": 1,
+      "finalHp": [
+        1300,
+        1100,
+        1150
+      ],
+      "replayVerified": true,
+      "finalHash": "80504da7e7ffa9404b465cee50412a9884f409e7dfc0c217bf59ade88a27bde2"
+    },
+    "telemetry": {
+      "firstBreakSeconds": 7.283333333333313,
+      "breakDamageShare": 0.69,
+      "breakDamage": 5313,
+      "normalDamage": 2387,
+      "breakEnemySeconds": 41.066666666665306,
+      "normalEnemySeconds": 53.81666666666412,
+      "breakDamageRate": 129.3750000000043,
+      "normalDamageRate": 44.354289253641,
+      "maxChain": 287,
+      "enemyBrokenFraction": 0.4328122255401405,
+      "waitingFraction": 0.4245222521482635,
+      "cleanupSeconds": 4.908333333333136,
+      "cleanupEncounterCount": 2,
+      "dangerEpisodes": 0,
+      "recoveredEpisodes": 0,
+      "dangerDeaths": 0,
+      "censoredEpisodes": 0,
+      "dangerWindows": [],
+      "recoverySeconds": null,
+      "maxHitHpFraction": null,
+      "handoffAttempts": 0,
+      "handoffActions": 0,
+      "handoffCompletions": 0,
+      "commandAttempts": 27,
+      "acceptedCommands": 27,
+      "rejectedCommands": 0,
+      "cancellations": 0,
+      "acceptedMoveCommands": 1,
+      "totalMoveEvents": 3,
+      "commandsByType": {
+        "start": {
+          "attempted": 1,
+          "accepted": 1,
+          "rejected": 0
+        },
+        "optima": {
+          "attempted": 4,
+          "accepted": 4,
+          "rejected": 0
+        },
+        "enqueue": {
+          "attempted": 20,
+          "accepted": 20,
+          "rejected": 0
+        },
+        "move": {
+          "attempted": 1,
+          "accepted": 1,
+          "rejected": 0
+        },
+        "next": {
+          "attempted": 1,
+          "accepted": 1,
+          "rejected": 0
+        }
+      },
+      "replayVerified": true
+    }
+  },
+  {
+    "title": "danger",
+    "why": "Most danger deaths, then largest per-hit HP fraction; includes held-out level 2",
+    "candidate": "atb0.850-hp1.000-power1.000",
+    "policy": "rush",
+    "set": "crossfire",
+    "seed": 2601,
+    "level": 2,
+    "interestingTime": 16.066666666667036,
+    "episode": {
+      "actorId": 1,
+      "encounter": 1,
+      "startTime": 16.066666666667036,
+      "endTime": 24.549999999999887,
+      "outcome": "death"
+    },
+    "startTick": 785,
+    "replay": "scenes/02-danger-rush-crossfire.replay.json",
+    "scene": "scenes/02-danger-rush-crossfire.scene.json",
+    "summary": {
+      "initialAtb": 1,
+      "loadout": "keep",
+      "fullInventory": false,
+      "loadoutWeapons": [
+        [
+          "sword",
+          "shield"
+        ],
+        [
+          "staff",
+          "bow"
+        ],
+        [
+          "bell",
+          "hook"
+        ]
+      ],
+      "planning": "queue",
+      "queuedDuringAction": 0,
+      "appendedPlans": 0,
+      "maxQueueDepth": 1,
+      "encounterSet": "crossfire",
+      "encounterLevel": 2,
+      "policy": "rush",
+      "ablation": "none",
+      "seed": 2601,
+      "enemyPower": 1,
+      "atbRate": 0.85,
+      "atbMode": "idle",
+      "chainActions": true,
+      "atbMax": 4,
+      "bonusMode": "strong",
+      "enemyHpScale": 1,
+      "decisionInterval": 0.25,
+      "reactionSeconds": 0.35,
+      "maxSeconds": 180,
+      "outcome": "defeat",
+      "seconds": 33.03333333333274,
+      "realSeconds": 33.03333333333274,
+      "metrics": {
+        "damage": 4855,
+        "taken": 3550,
+        "healed": 0,
+        "breaks": 2,
+        "inputs": 6,
+        "focusUsed": 0
+      },
+      "encounters": [
+        {
+          "encounter": 1,
+          "outcome": "defeat",
+          "seconds": 33.03333333333274,
+          "realSeconds": 33.03333333333274,
+          "metrics": {
+            "damage": 4855,
+            "taken": 3550,
+            "healed": 0,
+            "breaks": 2,
+            "inputs": 6,
+            "focusUsed": 0
+          }
+        }
+      ],
+      "rejectedCommands": 0,
+      "decisions": 5,
+      "shifts": 5,
+      "moves": 2,
+      "cancellations": 1,
+      "deaths": 3,
+      "potionsUsed": 0,
+      "actions": {
+        "slash": 12,
+        "spark": 4,
+        "jab": 10,
+        "shot": 4
+      },
+      "enemyOutcomes": {
+        "hit": 4,
+        "empty-row": 1,
+        "break": 2,
+        "displacement": 0,
+        "killed": 0
+      },
+      "roleSeconds": {
+        "ABS": 0.6500000000000004,
+        "ABB": 19.83333333333276,
+        "AAB": 12.54999999999998
+      },
+      "activeRoleSeconds": {
+        "ABS": 0.6500000000000004,
+        "ABB": 11.349999999999905,
+        "AAB": 12.54999999999998,
+        "A--": 8.483333333332855
+      },
+      "rowPersonSeconds": {
+        "front": 80.4333333333292,
+        "back": 1.6999999999999962
+      },
+      "actorSeconds": {
+        "acting": 42.78333333333183,
+        "moving": 1.6999999999999962,
+        "shifting": 2.599999999999956,
+        "waiting": 35.049999999999045
+      },
+      "minHpFraction": 0,
+      "finalHp": [
+        0,
+        0,
+        0
+      ],
+      "replayVerified": true,
+      "finalHash": "bf92d3b03f7463df0796c230b5f4a69acb5f63fd690ad60958ee3998f1b1592c"
+    },
+    "telemetry": {
+      "firstBreakSeconds": 4.233333333333324,
+      "breakDamageShare": 0.5130792996910402,
+      "breakDamage": 2491,
+      "normalDamage": 2364,
+      "breakEnemySeconds": 13.333333333333357,
+      "normalEnemySeconds": 52.499999999997456,
+      "breakDamageRate": 186.82499999999968,
+      "normalDamageRate": 45.02857142857361,
+      "maxChain": 252.375,
+      "enemyBrokenFraction": 0.20253164556962835,
+      "waitingFraction": 0.4267451298701313,
+      "cleanupSeconds": null,
+      "cleanupEncounterCount": 0,
+      "dangerEpisodes": 3,
+      "recoveredEpisodes": 0,
+      "dangerDeaths": 3,
+      "censoredEpisodes": 0,
+      "dangerWindows": [
+        {
+          "actorId": 1,
+          "encounter": 1,
+          "startTime": 16.066666666667036,
+          "endTime": 24.549999999999887,
+          "outcome": "death"
+        },
+        {
+          "actorId": 2,
+          "encounter": 1,
+          "startTime": 16.066666666667036,
+          "endTime": 24.549999999999887,
+          "outcome": "death"
+        },
+        {
+          "actorId": 0,
+          "encounter": 1,
+          "startTime": 24.549999999999887,
+          "endTime": 33.03333333333274,
+          "outcome": "death"
+        }
+      ],
+      "recoverySeconds": null,
+      "maxHitHpFraction": 0.39454545454545453,
+      "handoffAttempts": 0,
+      "handoffActions": 0,
+      "handoffCompletions": 0,
+      "commandAttempts": 7,
+      "acceptedCommands": 7,
+      "rejectedCommands": 0,
+      "cancellations": 0,
+      "acceptedMoveCommands": 1,
+      "totalMoveEvents": 2,
+      "commandsByType": {
+        "start": {
+          "attempted": 1,
+          "accepted": 1,
+          "rejected": 0
+        },
+        "formation": {
+          "attempted": 1,
+          "accepted": 1,
+          "rejected": 0
+        },
+        "optima": {
+          "attempted": 5,
+          "accepted": 5,
+          "rejected": 0
+        }
+      },
+      "replayVerified": true
+    }
+  },
+  {
+    "title": "recovery",
+    "why": "Most completed danger → recovery → offensive hit episodes",
+    "candidate": "atb0.850-hp1.000-power1.000",
+    "policy": "adaptive",
+    "set": "crossfire",
+    "seed": 2602,
+    "level": 2,
+    "interestingTime": 16.066666666667036,
+    "episode": {
+      "actorId": 0,
+      "encounter": 1,
+      "startTime": 16.066666666667036,
+      "endTime": 23.09999999999997,
+      "outcome": "recovered"
+    },
+    "startTick": 785,
+    "replay": "scenes/03-recovery-adaptive-crossfire.replay.json",
+    "scene": "scenes/03-recovery-adaptive-crossfire.scene.json",
+    "summary": {
+      "initialAtb": 1,
+      "loadout": "keep",
+      "fullInventory": false,
+      "loadoutWeapons": [
+        [
+          "sword",
+          "shield"
+        ],
+        [
+          "staff",
+          "bow"
+        ],
+        [
+          "bell",
+          "hook"
+        ]
+      ],
+      "planning": "queue",
+      "queuedDuringAction": 183,
+      "appendedPlans": 265,
+      "maxQueueDepth": 3,
+      "encounterSet": "crossfire",
+      "encounterLevel": 2,
+      "policy": "adaptive",
+      "ablation": "none",
+      "seed": 2602,
+      "enemyPower": 1,
+      "atbRate": 0.85,
+      "atbMode": "idle",
+      "chainActions": true,
+      "atbMax": 4,
+      "bonusMode": "strong",
+      "enemyHpScale": 1,
+      "decisionInterval": 0.25,
+      "reactionSeconds": 0.35,
+      "maxSeconds": 180,
+      "outcome": "timeout",
+      "seconds": 180.00000000003539,
+      "realSeconds": 180.00000000003539,
+      "metrics": {
+        "damage": 9666,
+        "taken": 10439,
+        "healed": 8226,
+        "breaks": 5,
+        "inputs": 363,
+        "focusUsed": 0
+      },
+      "encounters": [
+        {
+          "encounter": 1,
+          "outcome": "loot",
+          "seconds": 60.84999999999783,
+          "realSeconds": 60.84999999999783,
+          "metrics": {
+            "damage": 5330,
+            "taken": 3593,
+            "healed": 2906,
+            "breaks": 3,
+            "inputs": 145,
+            "focusUsed": 0
+          }
+        },
+        {
+          "encounter": 2,
+          "outcome": "timeout",
+          "seconds": 119.15000000003755,
+          "realSeconds": 119.15000000003755,
+          "metrics": {
+            "damage": 4336,
+            "taken": 6846,
+            "healed": 5320,
+            "breaks": 2,
+            "inputs": 218,
+            "focusUsed": 0
+          }
+        }
+      ],
+      "rejectedCommands": 0,
+      "decisions": 228,
+      "shifts": 39,
+      "moves": 1,
+      "cancellations": 1,
+      "deaths": 0,
+      "potionsUsed": 3,
+      "actions": {
+        "slash": 11,
+        "rain": 23,
+        "pull": 3,
+        "sweep": 8,
+        "guard": 21,
+        "jab": 7,
+        "ward": 29,
+        "heal": 39,
+        "potion": 3,
+        "volley": 5,
+        "spark": 3,
+        "shot": 2
+      },
+      "enemyOutcomes": {
+        "hit": 28,
+        "empty-row": 24,
+        "break": 2,
+        "displacement": 1,
+        "killed": 0
+      },
+      "roleSeconds": {
+        "ABS": 38.28333333333656,
+        "ABB": 24.38333333333234,
+        "DBB": 16.93333333333266,
+        "DBS": 68.26666666670084,
+        "AAS": 16.766666666666765,
+        "DAS": 12.533333333333047,
+        "AAB": 2.8333333333331723
+      },
+      "activeRoleSeconds": {
+        "ABS": 38.28333333333656,
+        "ABB": 24.38333333333234,
+        "DBB": 16.93333333333266,
+        "DBS": 68.26666666670084,
+        "AAS": 16.766666666666765,
+        "DAS": 12.533333333333047,
+        "AAB": 2.8333333333331723
+      },
+      "rowPersonSeconds": {
+        "front": 39.599999999999035,
+        "back": 500.3999999996546
+      },
+      "actorSeconds": {
+        "acting": 318.2833333332105,
+        "moving": 0.8499999999999517,
+        "shifting": 25.350000000000986,
+        "waiting": 195.51666666669774
+      },
+      "minHpFraction": 0.24153846153846154,
+      "finalHp": [
+        577,
+        896,
+        551
+      ],
+      "replayVerified": true,
+      "finalHash": "f354546005640ebcc388607889da09a9011050e3f8dd19fe89587403a69a5a36"
+    },
+    "telemetry": {
+      "firstBreakSeconds": 31.133333333332846,
+      "breakDamageShare": 0.22687771570453136,
+      "breakDamage": 2193,
+      "normalDamage": 7473,
+      "breakEnemySeconds": 35.43333333333439,
+      "normalEnemySeconds": 463.46666666635485,
+      "breakDamageRate": 61.890874882406436,
+      "normalDamageRate": 16.124136939021206,
+      "maxChain": 244.0999999999999,
+      "enemyBrokenFraction": 0.07102291708429836,
+      "waitingFraction": 0.3620679012346863,
+      "cleanupSeconds": 18.749999999998934,
+      "cleanupEncounterCount": 1,
+      "dangerEpisodes": 2,
+      "recoveredEpisodes": 2,
+      "dangerDeaths": 0,
+      "censoredEpisodes": 0,
+      "dangerWindows": [
+        {
+          "actorId": 0,
+          "encounter": 1,
+          "startTime": 16.066666666667036,
+          "endTime": 23.09999999999997,
+          "outcome": "recovered"
+        },
+        {
+          "actorId": 1,
+          "encounter": 2,
+          "startTime": 140.1166666666703,
+          "endTime": 147.75000000000972,
+          "outcome": "recovered"
+        }
+      ],
+      "recoverySeconds": 7.333333333336171,
+      "maxHitHpFraction": 0.33384615384615385,
+      "handoffAttempts": 0,
+      "handoffActions": 0,
+      "handoffCompletions": 0,
+      "commandAttempts": 365,
+      "acceptedCommands": 365,
+      "rejectedCommands": 0,
+      "cancellations": 81,
+      "acceptedMoveCommands": 1,
+      "totalMoveEvents": 4,
+      "commandsByType": {
+        "start": {
+          "attempted": 1,
+          "accepted": 1,
+          "rejected": 0
+        },
+        "optima": {
+          "attempted": 16,
+          "accepted": 16,
+          "rejected": 0
+        },
+        "enqueue": {
+          "attempted": 265,
+          "accepted": 265,
+          "rejected": 0
+        },
+        "removePlan": {
+          "attempted": 81,
+          "accepted": 81,
+          "rejected": 0
+        },
+        "move": {
+          "attempted": 1,
+          "accepted": 1,
+          "rejected": 0
+        },
+        "next": {
+          "attempted": 1,
+          "accepted": 1,
+          "rejected": 0
+        }
+      },
+      "replayVerified": true
+    }
+  },
+  {
+    "title": "break",
+    "why": "Largest broken-enemy exposure fraction at level 1",
+    "candidate": "atb1.000-hp0.850-power0.800",
+    "policy": "tactician",
+    "set": "belfry",
+    "seed": 2602,
+    "level": 1,
+    "interestingTime": 6.766666666666648,
+    "startTick": 226,
+    "replay": "scenes/04-break-tactician-belfry.replay.json",
+    "scene": "scenes/04-break-tactician-belfry.scene.json",
+    "summary": {
+      "initialAtb": 1,
+      "loadout": "keep",
+      "fullInventory": false,
+      "loadoutWeapons": [
+        [
+          "sword",
+          "shield"
+        ],
+        [
+          "staff",
+          "bow"
+        ],
+        [
+          "bell",
+          "hook"
+        ]
+      ],
+      "planning": "queue",
+      "queuedDuringAction": 0,
+      "appendedPlans": 20,
+      "maxQueueDepth": 2,
+      "encounterSet": "belfry",
+      "encounterLevel": 1,
+      "policy": "tactician",
+      "ablation": "none",
+      "seed": 2602,
+      "enemyPower": 0.8,
+      "atbRate": 1,
+      "atbMode": "idle",
+      "chainActions": true,
+      "atbMax": 4,
+      "bonusMode": "strong",
+      "enemyHpScale": 0.85,
+      "decisionInterval": 0.25,
+      "reactionSeconds": 0.35,
+      "maxSeconds": 180,
+      "outcome": "victory",
+      "seconds": 35.666666666665925,
+      "realSeconds": 35.666666666665925,
+      "metrics": {
+        "damage": 6546,
+        "taken": 0,
+        "healed": 0,
+        "breaks": 5,
+        "inputs": 25,
+        "focusUsed": 0
+      },
+      "encounters": [
+        {
+          "encounter": 1,
+          "outcome": "loot",
+          "seconds": 17.866666666666934,
+          "realSeconds": 17.866666666666934,
+          "metrics": {
+            "damage": 2338,
+            "taken": 0,
+            "healed": 0,
+            "breaks": 2,
+            "inputs": 11,
+            "focusUsed": 0
+          }
+        },
+        {
+          "encounter": 2,
+          "outcome": "victory",
+          "seconds": 17.79999999999899,
+          "realSeconds": 17.79999999999899,
+          "metrics": {
+            "damage": 4208,
+            "taken": 0,
+            "healed": 0,
+            "breaks": 3,
+            "inputs": 14,
+            "focusUsed": 0
+          }
+        }
+      ],
+      "rejectedCommands": 0,
+      "decisions": 21,
+      "shifts": 4,
+      "moves": 1,
+      "cancellations": 2,
+      "deaths": 0,
+      "potionsUsed": 0,
+      "actions": {
+        "slash": 2,
+        "spark": 2,
+        "pull": 2,
+        "jab": 12,
+        "rain": 3,
+        "sweep": 7,
+        "volley": 3,
+        "guard": 1
+      },
+      "enemyOutcomes": {
+        "hit": 0,
+        "empty-row": 2,
+        "break": 1,
+        "displacement": 0,
+        "killed": 0
+      },
+      "roleSeconds": {
+        "ABS": 0.6500000000000004,
+        "ABB": 19.266666666666165,
+        "AAB": 15.74999999999976
+      },
+      "activeRoleSeconds": {
+        "ABS": 0.6500000000000004,
+        "ABB": 19.266666666666165,
+        "AAB": 15.74999999999976
+      },
+      "rowPersonSeconds": {
+        "front": 6.099999999999984,
+        "back": 100.8999999999947
+      },
+      "actorSeconds": {
+        "acting": 62.68333333333046,
+        "moving": 0.849999999999997,
+        "shifting": 2.599999999999959,
+        "waiting": 40.86666666666554
+      },
+      "minHpFraction": 1,
+      "finalHp": [
+        1300,
+        1100,
+        1150
+      ],
+      "replayVerified": true,
+      "finalHash": "f9d6cbf0634475c7aaff4afc7d09fc90fa07c1492cea9a978f873922b397ffe1"
+    },
+    "telemetry": {
+      "firstBreakSeconds": 6.766666666666648,
+      "breakDamageShare": 0.6356553620531622,
+      "breakDamage": 4161,
+      "normalDamage": 2385,
+      "breakEnemySeconds": 33.04999999999912,
+      "normalEnemySeconds": 50.18333333333105,
+      "breakDamageRate": 125.90015128593375,
+      "normalDamageRate": 47.525738957159255,
+      "maxChain": 287,
+      "enemyBrokenFraction": 0.39707649179015275,
+      "waitingFraction": 0.3819314641744587,
+      "cleanupSeconds": 2.549999999999984,
+      "cleanupEncounterCount": 2,
+      "dangerEpisodes": 0,
+      "recoveredEpisodes": 0,
+      "dangerDeaths": 0,
+      "censoredEpisodes": 0,
+      "dangerWindows": [],
+      "recoverySeconds": null,
+      "maxHitHpFraction": null,
+      "handoffAttempts": 0,
+      "handoffActions": 0,
+      "handoffCompletions": 0,
+      "commandAttempts": 27,
+      "acceptedCommands": 27,
+      "rejectedCommands": 0,
+      "cancellations": 0,
+      "acceptedMoveCommands": 1,
+      "totalMoveEvents": 3,
+      "commandsByType": {
+        "start": {
+          "attempted": 1,
+          "accepted": 1,
+          "rejected": 0
+        },
+        "optima": {
+          "attempted": 4,
+          "accepted": 4,
+          "rejected": 0
+        },
+        "enqueue": {
+          "attempted": 20,
+          "accepted": 20,
+          "rejected": 0
+        },
+        "move": {
+          "attempted": 1,
+          "accepted": 1,
+          "rejected": 0
+        },
+        "next": {
+          "attempted": 1,
+          "accepted": 1,
+          "rejected": 0
+        }
+      },
+      "replayVerified": true
+    }
+  },
+  {
+    "title": "danger",
+    "why": "Most danger deaths, then largest per-hit HP fraction; includes held-out level 2",
+    "candidate": "atb1.000-hp0.850-power0.800",
+    "policy": "rush",
+    "set": "crossfire",
+    "seed": 2601,
+    "level": 2,
+    "interestingTime": 7.583333333333312,
+    "startTick": 275,
+    "replay": "scenes/05-danger-rush-crossfire.replay.json",
+    "scene": "scenes/05-danger-rush-crossfire.scene.json",
+    "summary": {
+      "initialAtb": 1,
+      "loadout": "keep",
+      "fullInventory": false,
+      "loadoutWeapons": [
+        [
+          "sword",
+          "shield"
+        ],
+        [
+          "staff",
+          "bow"
+        ],
+        [
+          "bell",
+          "hook"
+        ]
+      ],
+      "planning": "queue",
+      "queuedDuringAction": 0,
+      "appendedPlans": 0,
+      "maxQueueDepth": 1,
+      "encounterSet": "crossfire",
+      "encounterLevel": 2,
+      "policy": "rush",
+      "ablation": "none",
+      "seed": 2601,
+      "enemyPower": 0.8,
+      "atbRate": 1,
+      "atbMode": "idle",
+      "chainActions": true,
+      "atbMax": 4,
+      "bonusMode": "strong",
+      "enemyHpScale": 0.85,
+      "decisionInterval": 0.25,
+      "reactionSeconds": 0.35,
+      "maxSeconds": 180,
+      "outcome": "victory",
+      "seconds": 53.83333333333156,
+      "realSeconds": 53.83333333333156,
+      "metrics": {
+        "damage": 9890,
+        "taken": 4164,
+        "healed": 0,
+        "breaks": 6,
+        "inputs": 13,
+        "focusUsed": 0
+      },
+      "encounters": [
+        {
+          "encounter": 1,
+          "outcome": "loot",
+          "seconds": 26.816666666666425,
+          "realSeconds": 26.816666666666425,
+          "metrics": {
+            "damage": 4530,
+            "taken": 2082,
+            "healed": 0,
+            "breaks": 3,
+            "inputs": 7,
+            "focusUsed": 0
+          }
+        },
+        {
+          "encounter": 2,
+          "outcome": "victory",
+          "seconds": 27.016666666665134,
+          "realSeconds": 27.016666666665134,
+          "metrics": {
+            "damage": 5360,
+            "taken": 2082,
+            "healed": 0,
+            "breaks": 3,
+            "inputs": 6,
+            "focusUsed": 0
+          }
+        }
+      ],
+      "rejectedCommands": 0,
+      "decisions": 12,
+      "shifts": 12,
+      "moves": 2,
+      "cancellations": 4,
+      "deaths": 0,
+      "potionsUsed": 0,
+      "actions": {
+        "slash": 22,
+        "spark": 9,
+        "jab": 21,
+        "shot": 9
+      },
+      "enemyOutcomes": {
+        "hit": 4,
+        "empty-row": 2,
+        "break": 6,
+        "displacement": 0,
+        "killed": 0
+      },
+      "roleSeconds": {
+        "ABS": 0.6500000000000004,
+        "ABB": 28.13333333333249,
+        "AAB": 25.04999999999907
+      },
+      "activeRoleSeconds": {
+        "ABS": 0.6500000000000004,
+        "ABB": 28.13333333333249,
+        "AAB": 25.04999999999907
+      },
+      "rowPersonSeconds": {
+        "front": 159.79999999996426,
+        "back": 1.6999999999999962
+      },
+      "actorSeconds": {
+        "acting": 90.69999999999563,
+        "moving": 1.6999999999999962,
+        "shifting": 7.14999999999977,
+        "waiting": 61.94999999999767
+      },
+      "minHpFraction": 0.3690909090909091,
+      "finalHp": [
+        606,
+        406,
+        456
+      ],
+      "replayVerified": true,
+      "finalHash": "d92b1409eb6c2224ea2cdde377827197b54da7b35ca92c36b2ff5e02290ebd8f"
+    },
+    "telemetry": {
+      "firstBreakSeconds": 4.0666666666666575,
+      "breakDamageShare": 0.5442871587462083,
+      "breakDamage": 5383,
+      "normalDamage": 4507,
+      "breakEnemySeconds": 27.04999999999904,
+      "normalEnemySeconds": 82.14999999999577,
+      "breakDamageRate": 199.00184842884255,
+      "normalDamageRate": 54.863055386490956,
+      "maxChain": 283.25,
+      "enemyBrokenFraction": 0.2477106227106257,
+      "waitingFraction": 0.3835913312693519,
+      "cleanupSeconds": 8.949999999999491,
+      "cleanupEncounterCount": 2,
+      "dangerEpisodes": 0,
+      "recoveredEpisodes": 0,
+      "dangerDeaths": 0,
+      "censoredEpisodes": 0,
+      "dangerWindows": [],
+      "recoverySeconds": null,
+      "maxHitHpFraction": 0.31545454545454543,
+      "handoffAttempts": 0,
+      "handoffActions": 0,
+      "handoffCompletions": 0,
+      "commandAttempts": 15,
+      "acceptedCommands": 15,
+      "rejectedCommands": 0,
+      "cancellations": 0,
+      "acceptedMoveCommands": 1,
+      "totalMoveEvents": 2,
+      "commandsByType": {
+        "start": {
+          "attempted": 1,
+          "accepted": 1,
+          "rejected": 0
+        },
+        "formation": {
+          "attempted": 1,
+          "accepted": 1,
+          "rejected": 0
+        },
+        "optima": {
+          "attempted": 12,
+          "accepted": 12,
+          "rejected": 0
+        },
+        "next": {
+          "attempted": 1,
+          "accepted": 1,
+          "rejected": 0
+        }
+      },
+      "replayVerified": true
+    }
+  },
+  {
+    "title": "break",
+    "why": "Largest broken-enemy exposure fraction at level 1",
+    "candidate": "atb0.925-hp0.850-power0.800",
+    "policy": "tactician",
+    "set": "belfry",
+    "seed": 2602,
+    "level": 1,
+    "interestingTime": 6.9999999999999805,
+    "startTick": 240,
+    "replay": "scenes/06-break-tactician-belfry.replay.json",
+    "scene": "scenes/06-break-tactician-belfry.scene.json",
+    "summary": {
+      "initialAtb": 1,
+      "loadout": "keep",
+      "fullInventory": false,
+      "loadoutWeapons": [
+        [
+          "sword",
+          "shield"
+        ],
+        [
+          "staff",
+          "bow"
+        ],
+        [
+          "bell",
+          "hook"
+        ]
+      ],
+      "planning": "queue",
+      "queuedDuringAction": 0,
+      "appendedPlans": 20,
+      "maxQueueDepth": 2,
+      "encounterSet": "belfry",
+      "encounterLevel": 1,
+      "policy": "tactician",
+      "ablation": "none",
+      "seed": 2602,
+      "enemyPower": 0.8,
+      "atbRate": 0.925,
+      "atbMode": "idle",
+      "chainActions": true,
+      "atbMax": 4,
+      "bonusMode": "strong",
+      "enemyHpScale": 0.85,
+      "decisionInterval": 0.25,
+      "reactionSeconds": 0.35,
+      "maxSeconds": 180,
+      "outcome": "victory",
+      "seconds": 36.81666666666586,
+      "realSeconds": 36.81666666666586,
+      "metrics": {
+        "damage": 6546,
+        "taken": 0,
+        "healed": 0,
+        "breaks": 5,
+        "inputs": 25,
+        "focusUsed": 0
+      },
+      "encounters": [
+        {
+          "encounter": 1,
+          "outcome": "loot",
+          "seconds": 18.433333333333568,
+          "realSeconds": 18.433333333333568,
+          "metrics": {
+            "damage": 2338,
+            "taken": 0,
+            "healed": 0,
+            "breaks": 2,
+            "inputs": 11,
+            "focusUsed": 0
+          }
+        },
+        {
+          "encounter": 2,
+          "outcome": "victory",
+          "seconds": 18.383333333332292,
+          "realSeconds": 18.383333333332292,
+          "metrics": {
+            "damage": 4208,
+            "taken": 0,
+            "healed": 0,
+            "breaks": 3,
+            "inputs": 14,
+            "focusUsed": 0
+          }
+        }
+      ],
+      "rejectedCommands": 0,
+      "decisions": 20,
+      "shifts": 4,
+      "moves": 1,
+      "cancellations": 2,
+      "deaths": 0,
+      "potionsUsed": 0,
+      "actions": {
+        "slash": 2,
+        "spark": 2,
+        "pull": 2,
+        "jab": 12,
+        "rain": 3,
+        "sweep": 7,
+        "volley": 3,
+        "guard": 1
+      },
+      "enemyOutcomes": {
+        "hit": 0,
+        "empty-row": 2,
+        "break": 1,
+        "displacement": 0,
+        "killed": 0
+      },
+      "roleSeconds": {
+        "ABS": 0.6500000000000004,
+        "ABB": 19.749999999999496,
+        "AAB": 16.416666666666366
+      },
+      "activeRoleSeconds": {
+        "ABS": 0.6500000000000004,
+        "ABB": 19.749999999999496,
+        "AAB": 16.416666666666366
+      },
+      "rowPersonSeconds": {
+        "front": 6.099999999999984,
+        "back": 104.34999999999451
+      },
+      "actorSeconds": {
+        "acting": 62.78333333333053,
+        "moving": 0.849999999999997,
+        "shifting": 2.599999999999959,
+        "waiting": 44.216666666665276
+      },
+      "minHpFraction": 1,
+      "finalHp": [
+        1300,
+        1100,
+        1150
+      ],
+      "replayVerified": true,
+      "finalHash": "8060224b3841a900f769201682a315ea6a611e76e746d2f5d22cfe59f316f88a"
+    },
+    "telemetry": {
+      "firstBreakSeconds": 6.9999999999999805,
+      "breakDamageShare": 0.6356553620531622,
+      "breakDamage": 4161,
+      "normalDamage": 2385,
+      "breakEnemySeconds": 33.9333333333324,
+      "normalEnemySeconds": 51.84999999999759,
+      "breakDamageRate": 122.62278978389335,
+      "normalDamageRate": 45.998071359693554,
+      "maxChain": 287,
+      "enemyBrokenFraction": 0.39557023508840555,
+      "waitingFraction": 0.4003319752527567,
+      "cleanupSeconds": 2.6749999999999554,
+      "cleanupEncounterCount": 2,
+      "dangerEpisodes": 0,
+      "recoveredEpisodes": 0,
+      "dangerDeaths": 0,
+      "censoredEpisodes": 0,
+      "dangerWindows": [],
+      "recoverySeconds": null,
+      "maxHitHpFraction": null,
+      "handoffAttempts": 0,
+      "handoffActions": 0,
+      "handoffCompletions": 0,
+      "commandAttempts": 27,
+      "acceptedCommands": 27,
+      "rejectedCommands": 0,
+      "cancellations": 0,
+      "acceptedMoveCommands": 1,
+      "totalMoveEvents": 3,
+      "commandsByType": {
+        "start": {
+          "attempted": 1,
+          "accepted": 1,
+          "rejected": 0
+        },
+        "optima": {
+          "attempted": 4,
+          "accepted": 4,
+          "rejected": 0
+        },
+        "enqueue": {
+          "attempted": 20,
+          "accepted": 20,
+          "rejected": 0
+        },
+        "move": {
+          "attempted": 1,
+          "accepted": 1,
+          "rejected": 0
+        },
+        "next": {
+          "attempted": 1,
+          "accepted": 1,
+          "rejected": 0
+        }
+      },
+      "replayVerified": true
+    }
+  },
+  {
+    "title": "danger",
+    "why": "Most danger deaths, then largest per-hit HP fraction; includes held-out level 2",
+    "candidate": "atb0.925-hp0.850-power0.800",
+    "policy": "rush",
+    "set": "crossfire",
+    "seed": 2601,
+    "level": 2,
+    "interestingTime": 7.583333333333312,
+    "startTick": 275,
+    "replay": "scenes/07-danger-rush-crossfire.replay.json",
+    "scene": "scenes/07-danger-rush-crossfire.scene.json",
+    "summary": {
+      "initialAtb": 1,
+      "loadout": "keep",
+      "fullInventory": false,
+      "loadoutWeapons": [
+        [
+          "sword",
+          "shield"
+        ],
+        [
+          "staff",
+          "bow"
+        ],
+        [
+          "bell",
+          "hook"
+        ]
+      ],
+      "planning": "queue",
+      "queuedDuringAction": 0,
+      "appendedPlans": 0,
+      "maxQueueDepth": 1,
+      "encounterSet": "crossfire",
+      "encounterLevel": 2,
+      "policy": "rush",
+      "ablation": "none",
+      "seed": 2601,
+      "enemyPower": 0.8,
+      "atbRate": 0.925,
+      "atbMode": "idle",
+      "chainActions": true,
+      "atbMax": 4,
+      "bonusMode": "strong",
+      "enemyHpScale": 0.85,
+      "decisionInterval": 0.25,
+      "reactionSeconds": 0.35,
+      "maxSeconds": 180,
+      "outcome": "victory",
+      "seconds": 55.03333333333149,
+      "realSeconds": 55.03333333333149,
+      "metrics": {
+        "damage": 9890,
+        "taken": 4938,
+        "healed": 0,
+        "breaks": 6,
+        "inputs": 13,
+        "focusUsed": 0
+      },
+      "encounters": [
+        {
+          "encounter": 1,
+          "outcome": "loot",
+          "seconds": 27.233333333333068,
+          "realSeconds": 27.233333333333068,
+          "metrics": {
+            "damage": 4530,
+            "taken": 2082,
+            "healed": 0,
+            "breaks": 3,
+            "inputs": 7,
+            "focusUsed": 0
+          }
+        },
+        {
+          "encounter": 2,
+          "outcome": "victory",
+          "seconds": 27.799999999998423,
+          "realSeconds": 27.799999999998423,
+          "metrics": {
+            "damage": 5360,
+            "taken": 2856,
+            "healed": 0,
+            "breaks": 3,
+            "inputs": 6,
+            "focusUsed": 0
+          }
+        }
+      ],
+      "rejectedCommands": 0,
+      "decisions": 12,
+      "shifts": 12,
+      "moves": 2,
+      "cancellations": 2,
+      "deaths": 0,
+      "potionsUsed": 0,
+      "actions": {
+        "slash": 22,
+        "spark": 10,
+        "jab": 21,
+        "shot": 8
+      },
+      "enemyOutcomes": {
+        "hit": 5,
+        "empty-row": 2,
+        "break": 5,
+        "displacement": 0,
+        "killed": 0
+      },
+      "roleSeconds": {
+        "ABS": 0.6500000000000004,
+        "ABB": 30.133333333332363,
+        "AAB": 24.24999999999913
+      },
+      "activeRoleSeconds": {
+        "ABS": 0.6500000000000004,
+        "ABB": 30.133333333332363,
+        "AAB": 24.24999999999913
+      },
+      "rowPersonSeconds": {
+        "front": 163.39999999996098,
+        "back": 1.6999999999999962
+      },
+      "actorSeconds": {
+        "acting": 89.79999999999576,
+        "moving": 1.6999999999999962,
+        "shifting": 7.1499999999996975,
+        "waiting": 66.44999999999733
+      },
+      "minHpFraction": 0.13454545454545455,
+      "finalHp": [
+        348,
+        148,
+        198
+      ],
+      "replayVerified": true,
+      "finalHash": "51e8ee5ad88ac33313a7ad24f60dc8e4c62e73e578184a645fe32c08e1893544"
+    },
+    "telemetry": {
+      "firstBreakSeconds": 4.133333333333324,
+      "breakDamageShare": 0.5585439838220425,
+      "breakDamage": 5524,
+      "normalDamage": 4366,
+      "breakEnemySeconds": 28.33333333333228,
+      "normalEnemySeconds": 83.66666666666235,
+      "breakDamageRate": 194.9647058823602,
+      "normalDamageRate": 52.18326693227361,
+      "maxChain": 294.25833333333304,
+      "enemyBrokenFraction": 0.2529761904761932,
+      "waitingFraction": 0.40248334342822667,
+      "cleanupSeconds": 8.983333333332823,
+      "cleanupEncounterCount": 2,
+      "dangerEpisodes": 3,
+      "recoveredEpisodes": 0,
+      "dangerDeaths": 0,
+      "censoredEpisodes": 3,
+      "dangerWindows": [
+        {
+          "actorId": 0,
+          "encounter": 2,
+          "startTime": 50.383333333331755,
+          "endTime": 55.03333333333149,
+          "outcome": "censored"
+        },
+        {
+          "actorId": 1,
+          "encounter": 2,
+          "startTime": 50.383333333331755,
+          "endTime": 55.03333333333149,
+          "outcome": "censored"
+        },
+        {
+          "actorId": 2,
+          "encounter": 2,
+          "startTime": 50.383333333331755,
+          "endTime": 55.03333333333149,
+          "outcome": "censored"
+        }
+      ],
+      "recoverySeconds": null,
+      "maxHitHpFraction": 0.31545454545454543,
+      "handoffAttempts": 0,
+      "handoffActions": 0,
+      "handoffCompletions": 0,
+      "commandAttempts": 15,
+      "acceptedCommands": 15,
+      "rejectedCommands": 0,
+      "cancellations": 0,
+      "acceptedMoveCommands": 1,
+      "totalMoveEvents": 2,
+      "commandsByType": {
+        "start": {
+          "attempted": 1,
+          "accepted": 1,
+          "rejected": 0
+        },
+        "formation": {
+          "attempted": 1,
+          "accepted": 1,
+          "rejected": 0
+        },
+        "optima": {
+          "attempted": 12,
+          "accepted": 12,
+          "rejected": 0
+        },
+        "next": {
+          "attempted": 1,
+          "accepted": 1,
+          "rejected": 0
+        }
+      },
+      "replayVerified": true
+    }
+  },
+  {
+    "title": "recovery",
+    "why": "Most completed danger → recovery → offensive hit episodes",
+    "candidate": "atb0.925-hp0.850-power0.800",
+    "policy": "adaptive",
+    "set": "crossfire",
+    "seed": 2601,
+    "level": 2,
+    "interestingTime": 16.066666666667036,
+    "episode": {
+      "actorId": 0,
+      "encounter": 1,
+      "startTime": 16.066666666667036,
+      "endTime": 22.78333333333332,
+      "outcome": "recovered"
+    },
+    "startTick": 785,
+    "replay": "scenes/08-recovery-adaptive-crossfire.replay.json",
+    "scene": "scenes/08-recovery-adaptive-crossfire.scene.json",
+    "summary": {
+      "initialAtb": 1,
+      "loadout": "keep",
+      "fullInventory": false,
+      "loadoutWeapons": [
+        [
+          "sword",
+          "shield"
+        ],
+        [
+          "staff",
+          "bow"
+        ],
+        [
+          "bell",
+          "hook"
+        ]
+      ],
+      "planning": "queue",
+      "queuedDuringAction": 127,
+      "appendedPlans": 197,
+      "maxQueueDepth": 3,
+      "encounterSet": "crossfire",
+      "encounterLevel": 2,
+      "policy": "adaptive",
+      "ablation": "none",
+      "seed": 2601,
+      "enemyPower": 0.8,
+      "atbRate": 0.925,
+      "atbMode": "idle",
+      "chainActions": true,
+      "atbMax": 4,
+      "bonusMode": "strong",
+      "enemyHpScale": 0.85,
+      "decisionInterval": 0.25,
+      "reactionSeconds": 0.35,
+      "maxSeconds": 180,
+      "outcome": "victory",
+      "seconds": 108.38333333332847,
+      "realSeconds": 108.38333333332847,
+      "metrics": {
+        "damage": 9890,
+        "taken": 3919,
+        "healed": 2671,
+        "breaks": 4,
+        "inputs": 310,
+        "focusUsed": 0
+      },
+      "encounters": [
+        {
+          "encounter": 1,
+          "outcome": "loot",
+          "seconds": 46.63333333333197,
+          "realSeconds": 46.63333333333197,
+          "metrics": {
+            "damage": 4530,
+            "taken": 2357,
+            "healed": 1531,
+            "breaks": 2,
+            "inputs": 122,
+            "focusUsed": 0
+          }
+        },
+        {
+          "encounter": 2,
+          "outcome": "victory",
+          "seconds": 61.7499999999965,
+          "realSeconds": 61.7499999999965,
+          "metrics": {
+            "damage": 5360,
+            "taken": 1562,
+            "healed": 1140,
+            "breaks": 2,
+            "inputs": 188,
+            "focusUsed": 0
+          }
+        }
+      ],
+      "rejectedCommands": 0,
+      "decisions": 159,
+      "shifts": 26,
+      "moves": 14,
+      "cancellations": 0,
+      "deaths": 0,
+      "potionsUsed": 3,
+      "actions": {
+        "slash": 14,
+        "rain": 9,
+        "pull": 4,
+        "sweep": 9,
+        "guard": 13,
+        "jab": 15,
+        "ward": 4,
+        "heal": 8,
+        "potion": 3,
+        "volley": 4,
+        "spark": 2,
+        "shot": 6
+      },
+      "enemyOutcomes": {
+        "hit": 16,
+        "empty-row": 10,
+        "break": 0,
+        "displacement": 1,
+        "killed": 2
+      },
+      "roleSeconds": {
+        "ABS": 8.116666666666557,
+        "ABB": 41.79999999999821,
+        "DBB": 19.799999999999233,
+        "DBS": 2.5833333333331865,
+        "AAB": 11.849999999999326,
+        "AAS": 24.23333333333196
+      },
+      "activeRoleSeconds": {
+        "ABS": 8.116666666666557,
+        "ABB": 41.79999999999821,
+        "DBB": 19.799999999999233,
+        "DBS": 2.5833333333331865,
+        "AAB": 11.849999999999326,
+        "AAS": 24.23333333333196
+      },
+      "rowPersonSeconds": {
+        "front": 112.29999999999491,
+        "back": 212.84999999991612
+      },
+      "actorSeconds": {
+        "acting": 187.43333333327274,
+        "moving": 8.549999999999514,
+        "shifting": 16.89999999999925,
+        "waiting": 112.2666666666615
+      },
+      "minHpFraction": 0.27615384615384614,
+      "finalHp": [
+        918,
+        1088,
+        1122
+      ],
+      "replayVerified": true,
+      "finalHash": "1babbbfd1b9b169ef531dcd5900351050a2cd762d3089ade60d4b503b985fcbc"
+    },
+    "telemetry": {
+      "firstBreakSeconds": 25.11666666666652,
+      "breakDamageShare": 0.2531850353892821,
+      "breakDamage": 2504,
+      "normalDamage": 7386,
+      "breakEnemySeconds": 23.966666666665304,
+      "normalEnemySeconds": 248.34999999988383,
+      "breakDamageRate": 104.4784422809517,
+      "normalDamageRate": 29.74028588686714,
+      "maxChain": 254.14999999999583,
+      "enemyBrokenFraction": 0.08801028214704319,
+      "waitingFraction": 0.34527653903332195,
+      "cleanupSeconds": 9.333333333332805,
+      "cleanupEncounterCount": 2,
+      "dangerEpisodes": 1,
+      "recoveredEpisodes": 1,
+      "dangerDeaths": 0,
+      "censoredEpisodes": 0,
+      "dangerWindows": [
+        {
+          "actorId": 0,
+          "encounter": 1,
+          "startTime": 16.066666666667036,
+          "endTime": 22.78333333333332,
+          "outcome": "recovered"
+        }
+      ],
+      "recoverySeconds": 6.716666666666285,
+      "maxHitHpFraction": 0.26692307692307693,
+      "handoffAttempts": 0,
+      "handoffActions": 0,
+      "handoffCompletions": 0,
+      "commandAttempts": 312,
+      "acceptedCommands": 312,
+      "rejectedCommands": 0,
+      "cancellations": 87,
+      "acceptedMoveCommands": 14,
+      "totalMoveEvents": 17,
+      "commandsByType": {
+        "start": {
+          "attempted": 1,
+          "accepted": 1,
+          "rejected": 0
+        },
+        "optima": {
+          "attempted": 12,
+          "accepted": 12,
+          "rejected": 0
+        },
+        "enqueue": {
+          "attempted": 197,
+          "accepted": 197,
+          "rejected": 0
+        },
+        "removePlan": {
+          "attempted": 87,
+          "accepted": 87,
+          "rejected": 0
+        },
+        "move": {
+          "attempted": 14,
+          "accepted": 14,
+          "rejected": 0
+        },
+        "next": {
+          "attempted": 1,
+          "accepted": 1,
+          "rejected": 0
+        }
+      },
+      "replayVerified": true
+    }
+  },
+  {
+    "title": "break",
+    "why": "Largest broken-enemy exposure fraction at level 1",
+    "candidate": "atb0.700-hp1.150-power0.800",
+    "policy": "tactician",
+    "set": "belfry",
+    "seed": 2602,
+    "level": 1,
+    "interestingTime": 8.04999999999998,
+    "startTick": 303,
+    "replay": "scenes/09-break-tactician-belfry.replay.json",
+    "scene": "scenes/09-break-tactician-belfry.scene.json",
+    "summary": {
+      "initialAtb": 1,
+      "loadout": "keep",
+      "fullInventory": false,
+      "loadoutWeapons": [
+        [
+          "sword",
+          "shield"
+        ],
+        [
+          "staff",
+          "bow"
+        ],
+        [
+          "bell",
+          "hook"
+        ]
+      ],
+      "planning": "queue",
+      "queuedDuringAction": 0,
+      "appendedPlans": 22,
+      "maxQueueDepth": 2,
+      "encounterSet": "belfry",
+      "encounterLevel": 1,
+      "policy": "tactician",
+      "ablation": "none",
+      "seed": 2602,
+      "enemyPower": 0.8,
+      "atbRate": 0.7,
+      "atbMode": "idle",
+      "chainActions": true,
+      "atbMax": 4,
+      "bonusMode": "strong",
+      "enemyHpScale": 1.15,
+      "decisionInterval": 0.25,
+      "reactionSeconds": 0.35,
+      "maxSeconds": 180,
+      "outcome": "victory",
+      "seconds": 51.48333333333169,
+      "realSeconds": 51.48333333333169,
+      "metrics": {
+        "damage": 8855,
+        "taken": 0,
+        "healed": 0,
+        "breaks": 5,
+        "inputs": 33,
+        "focusUsed": 0
+      },
+      "encounters": [
+        {
+          "encounter": 1,
+          "outcome": "loot",
+          "seconds": 21.866666666666706,
+          "realSeconds": 21.866666666666706,
+          "metrics": {
+            "damage": 3163,
+            "taken": 0,
+            "healed": 0,
+            "breaks": 2,
+            "inputs": 11,
+            "focusUsed": 0
+          }
+        },
+        {
+          "encounter": 2,
+          "outcome": "victory",
+          "seconds": 29.616666666664987,
+          "realSeconds": 29.616666666664987,
+          "metrics": {
+            "damage": 5692,
+            "taken": 0,
+            "healed": 0,
+            "breaks": 3,
+            "inputs": 22,
+            "focusUsed": 0
+          }
+        }
+      ],
+      "rejectedCommands": 0,
+      "decisions": 27,
+      "shifts": 5,
+      "moves": 5,
+      "cancellations": 3,
+      "deaths": 0,
+      "potionsUsed": 0,
+      "actions": {
+        "slash": 2,
+        "spark": 4,
+        "pull": 2,
+        "jab": 14,
+        "rain": 3,
+        "sweep": 8,
+        "volley": 4,
+        "guard": 1
+      },
+      "enemyOutcomes": {
+        "hit": 0,
+        "empty-row": 2,
+        "break": 4,
+        "displacement": 0,
+        "killed": 1
+      },
+      "roleSeconds": {
+        "ABS": 0.6500000000000004,
+        "ABB": 24.31666666666602,
+        "AAB": 26.516666666665675
+      },
+      "activeRoleSeconds": {
+        "ABS": 0.6500000000000004,
+        "ABB": 24.31666666666602,
+        "AAB": 26.516666666665675
+      },
+      "rowPersonSeconds": {
+        "front": 17.599999999999337,
+        "back": 136.84999999998513
+      },
+      "actorSeconds": {
+        "acting": 77.06666666666338,
+        "moving": 1.6999999999999487,
+        "shifting": 3.249999999999922,
+        "waiting": 72.43333333333001
+      },
+      "minHpFraction": 1,
+      "finalHp": [
+        1300,
+        1100,
+        1150
+      ],
+      "replayVerified": true,
+      "finalHash": "436c3a376400b7dd14a452dfe4ffbd0e539825616e448da287fb468876087386"
+    },
+    "telemetry": {
+      "firstBreakSeconds": 8.04999999999998,
+      "breakDamageShare": 0.7138339920948616,
+      "breakDamage": 6321,
+      "normalDamage": 2534,
+      "breakEnemySeconds": 47.849999999998225,
+      "normalEnemySeconds": 62.433333333330225,
+      "breakDamageRate": 132.10031347962874,
+      "normalDamageRate": 40.587293112655516,
+      "maxChain": 305.2,
+      "enemyBrokenFraction": 0.4338824240592445,
+      "waitingFraction": 0.46897593611740485,
+      "cleanupSeconds": 6.441666666666305,
+      "cleanupEncounterCount": 2,
+      "dangerEpisodes": 0,
+      "recoveredEpisodes": 0,
+      "dangerDeaths": 0,
+      "censoredEpisodes": 0,
+      "dangerWindows": [],
+      "recoverySeconds": null,
+      "maxHitHpFraction": null,
+      "handoffAttempts": 0,
+      "handoffActions": 0,
+      "handoffCompletions": 0,
+      "commandAttempts": 35,
+      "acceptedCommands": 35,
+      "rejectedCommands": 0,
+      "cancellations": 1,
+      "acceptedMoveCommands": 5,
+      "totalMoveEvents": 7,
+      "commandsByType": {
+        "start": {
+          "attempted": 1,
+          "accepted": 1,
+          "rejected": 0
+        },
+        "optima": {
+          "attempted": 5,
+          "accepted": 5,
+          "rejected": 0
+        },
+        "enqueue": {
+          "attempted": 22,
+          "accepted": 22,
+          "rejected": 0
+        },
+        "move": {
+          "attempted": 5,
+          "accepted": 5,
+          "rejected": 0
+        },
+        "next": {
+          "attempted": 1,
+          "accepted": 1,
+          "rejected": 0
+        },
+        "removePlan": {
+          "attempted": 1,
+          "accepted": 1,
+          "rejected": 0
+        }
+      },
+      "replayVerified": true
+    }
+  },
+  {
+    "title": "danger",
+    "why": "Most danger deaths, then largest per-hit HP fraction; includes held-out level 2",
+    "candidate": "atb0.700-hp1.150-power0.800",
+    "policy": "rush",
+    "set": "crossfire",
+    "seed": 2601,
+    "level": 2,
+    "interestingTime": 57.549999999998015,
+    "episode": {
+      "actorId": 1,
+      "encounter": 2,
+      "startTime": 57.549999999998015,
+      "endTime": 65.56666666666423,
+      "outcome": "death"
+    },
+    "startTick": 3273,
+    "replay": "scenes/10-danger-rush-crossfire.replay.json",
+    "scene": "scenes/10-danger-rush-crossfire.scene.json",
+    "summary": {
+      "initialAtb": 1,
+      "loadout": "keep",
+      "fullInventory": false,
+      "loadoutWeapons": [
+        [
+          "sword",
+          "shield"
+        ],
+        [
+          "staff",
+          "bow"
+        ],
+        [
+          "bell",
+          "hook"
+        ]
+      ],
+      "planning": "queue",
+      "queuedDuringAction": 0,
+      "appendedPlans": 0,
+      "maxQueueDepth": 1,
+      "encounterSet": "crossfire",
+      "encounterLevel": 2,
+      "policy": "rush",
+      "ablation": "none",
+      "seed": 2601,
+      "enemyPower": 0.8,
+      "atbRate": 0.7,
+      "atbMode": "idle",
+      "chainActions": true,
+      "atbMax": 4,
+      "bonusMode": "strong",
+      "enemyHpScale": 1.15,
+      "decisionInterval": 0.25,
+      "reactionSeconds": 0.35,
+      "maxSeconds": 180,
+      "outcome": "defeat",
+      "seconds": 73.58333333333044,
+      "realSeconds": 73.58333333333044,
+      "metrics": {
+        "damage": 12371,
+        "taken": 6406,
+        "healed": 0,
+        "breaks": 5,
+        "inputs": 12,
+        "focusUsed": 0
+      },
+      "encounters": [
+        {
+          "encounter": 1,
+          "outcome": "loot",
+          "seconds": 34.39999999999933,
+          "realSeconds": 34.39999999999933,
+          "metrics": {
+            "damage": 6130,
+            "taken": 2856,
+            "healed": 0,
+            "breaks": 3,
+            "inputs": 7,
+            "focusUsed": 0
+          }
+        },
+        {
+          "encounter": 2,
+          "outcome": "defeat",
+          "seconds": 39.18333333333111,
+          "realSeconds": 39.18333333333111,
+          "metrics": {
+            "damage": 6241,
+            "taken": 3550,
+            "healed": 0,
+            "breaks": 2,
+            "inputs": 5,
+            "focusUsed": 0
+          }
+        }
+      ],
+      "rejectedCommands": 0,
+      "decisions": 11,
+      "shifts": 11,
+      "moves": 2,
+      "cancellations": 4,
+      "deaths": 3,
+      "potionsUsed": 0,
+      "actions": {
+        "slash": 26,
+        "spark": 8,
+        "jab": 23,
+        "shot": 11
+      },
+      "enemyOutcomes": {
+        "hit": 8,
+        "empty-row": 4,
+        "break": 3,
+        "displacement": 0,
+        "killed": 0
+      },
+      "roleSeconds": {
+        "ABS": 0.6500000000000004,
+        "ABB": 33.33333333333188,
+        "AAB": 39.599999999998566
+      },
+      "activeRoleSeconds": {
+        "ABS": 0.6500000000000004,
+        "ABB": 25.316666666665668,
+        "AAB": 39.599999999998566,
+        "A--": 8.016666666666211
+      },
+      "rowPersonSeconds": {
+        "front": 203.01666666659173,
+        "back": 1.6999999999999962
+      },
+      "actorSeconds": {
+        "acting": 102.1833333333286,
+        "moving": 1.6999999999999962,
+        "shifting": 6.499999999999734,
+        "waiting": 94.3333333333289
+      },
+      "minHpFraction": 0,
+      "finalHp": [
+        0,
+        0,
+        0
+      ],
+      "replayVerified": true,
+      "finalHash": "a372f4dd16023d98288ebabf91f9bea84d4de67472712c8da6f770adcc2540d0"
+    },
+    "telemetry": {
+      "firstBreakSeconds": 4.483333333333323,
+      "breakDamageShare": 0.6184625333441113,
+      "breakDamage": 7651,
+      "normalDamage": 4720,
+      "breakEnemySeconds": 40.449999999998525,
+      "normalEnemySeconds": 114.7666666666606,
+      "breakDamageRate": 189.14709517924052,
+      "normalDamageRate": 41.12692419401902,
+      "maxChain": 281.7999999999995,
+      "enemyBrokenFraction": 0.2606034575324846,
+      "waitingFraction": 0.46079947895465234,
+      "cleanupSeconds": 8.73333333333284,
+      "cleanupEncounterCount": 1,
+      "dangerEpisodes": 6,
+      "recoveredEpisodes": 0,
+      "dangerDeaths": 3,
+      "censoredEpisodes": 3,
+      "dangerWindows": [
+        {
+          "actorId": 0,
+          "encounter": 1,
+          "startTime": 24.549999999999887,
+          "endTime": 34.39999999999933,
+          "outcome": "censored"
+        },
+        {
+          "actorId": 1,
+          "encounter": 1,
+          "startTime": 24.549999999999887,
+          "endTime": 34.39999999999933,
+          "outcome": "censored"
+        },
+        {
+          "actorId": 2,
+          "encounter": 1,
+          "startTime": 24.549999999999887,
+          "endTime": 34.39999999999933,
+          "outcome": "censored"
+        },
+        {
+          "actorId": 1,
+          "encounter": 2,
+          "startTime": 57.549999999998015,
+          "endTime": 65.56666666666423,
+          "outcome": "death"
+        },
+        {
+          "actorId": 2,
+          "encounter": 2,
+          "startTime": 57.549999999998015,
+          "endTime": 65.56666666666423,
+          "outcome": "death"
+        },
+        {
+          "actorId": 0,
+          "encounter": 2,
+          "startTime": 57.549999999998015,
+          "endTime": 73.58333333333044,
+          "outcome": "death"
+        }
+      ],
+      "recoverySeconds": null,
+      "maxHitHpFraction": 0.31545454545454543,
+      "handoffAttempts": 0,
+      "handoffActions": 0,
+      "handoffCompletions": 0,
+      "commandAttempts": 14,
+      "acceptedCommands": 14,
+      "rejectedCommands": 0,
+      "cancellations": 0,
+      "acceptedMoveCommands": 1,
+      "totalMoveEvents": 2,
+      "commandsByType": {
+        "start": {
+          "attempted": 1,
+          "accepted": 1,
+          "rejected": 0
+        },
+        "formation": {
+          "attempted": 1,
+          "accepted": 1,
+          "rejected": 0
+        },
+        "optima": {
+          "attempted": 11,
+          "accepted": 11,
+          "rejected": 0
+        },
+        "next": {
+          "attempted": 1,
+          "accepted": 1,
+          "rejected": 0
+        }
+      },
+      "replayVerified": true
+    }
+  },
+  {
+    "title": "recovery",
+    "why": "Most completed danger → recovery → offensive hit episodes",
+    "candidate": "atb0.700-hp1.150-power0.800",
+    "policy": "adaptive",
+    "set": "crossfire",
+    "seed": 2603,
+    "level": 2,
+    "interestingTime": 33.86666666666603,
+    "episode": {
+      "actorId": 0,
+      "encounter": 1,
+      "startTime": 33.86666666666603,
+      "endTime": 47.8833333333319,
+      "outcome": "recovered"
+    },
+    "startTick": 1852,
+    "replay": "scenes/11-recovery-adaptive-crossfire.replay.json",
+    "scene": "scenes/11-recovery-adaptive-crossfire.scene.json",
+    "summary": {
+      "initialAtb": 1,
+      "loadout": "keep",
+      "fullInventory": false,
+      "loadoutWeapons": [
+        [
+          "sword",
+          "shield"
+        ],
+        [
+          "staff",
+          "bow"
+        ],
+        [
+          "bell",
+          "hook"
+        ]
+      ],
+      "planning": "queue",
+      "queuedDuringAction": 160,
+      "appendedPlans": 278,
+      "maxQueueDepth": 3,
+      "encounterSet": "crossfire",
+      "encounterLevel": 2,
+      "policy": "adaptive",
+      "ablation": "none",
+      "seed": 2603,
+      "enemyPower": 0.8,
+      "atbRate": 0.7,
+      "atbMode": "idle",
+      "chainActions": true,
+      "atbMax": 4,
+      "bonusMode": "strong",
+      "enemyHpScale": 1.15,
+      "decisionInterval": 0.25,
+      "reactionSeconds": 0.35,
+      "maxSeconds": 180,
+      "outcome": "victory",
+      "seconds": 170.56666666669454,
+      "realSeconds": 170.56666666669454,
+      "metrics": {
+        "damage": 13382,
+        "taken": 6094,
+        "healed": 5442,
+        "breaks": 6,
+        "inputs": 464,
+        "focusUsed": 0
+      },
+      "encounters": [
+        {
+          "encounter": 1,
+          "outcome": "loot",
+          "seconds": 83.1333333333299,
+          "realSeconds": 83.1333333333299,
+          "metrics": {
+            "damage": 6130,
+            "taken": 3444,
+            "healed": 3149,
+            "breaks": 3,
+            "inputs": 180,
+            "focusUsed": 0
+          }
+        },
+        {
+          "encounter": 2,
+          "outcome": "victory",
+          "seconds": 87.43333333336464,
+          "realSeconds": 87.43333333336464,
+          "metrics": {
+            "damage": 7252,
+            "taken": 2650,
+            "healed": 2293,
+            "breaks": 3,
+            "inputs": 284,
+            "focusUsed": 0
+          }
+        }
+      ],
+      "rejectedCommands": 0,
+      "decisions": 243,
+      "shifts": 42,
+      "moves": 29,
+      "cancellations": 1,
+      "deaths": 0,
+      "potionsUsed": 3,
+      "actions": {
+        "slash": 15,
+        "rain": 15,
+        "pull": 6,
+        "sweep": 11,
+        "guard": 21,
+        "jab": 10,
+        "ward": 10,
+        "heal": 23,
+        "potion": 3,
+        "shot": 6,
+        "spark": 5,
+        "volley": 3
+      },
+      "enemyOutcomes": {
+        "hit": 26,
+        "empty-row": 19,
+        "break": 0,
+        "displacement": 0,
+        "killed": 0
+      },
+      "roleSeconds": {
+        "ABS": 43.20000000000395,
+        "ABB": 38.25000000000102,
+        "DBB": 23.783333333339687,
+        "DBS": 23.25000000000222,
+        "AAS": 26.433333333346063,
+        "AAB": 14.966666666668303,
+        "DAB": 0.6833333333332945
+      },
+      "activeRoleSeconds": {
+        "ABS": 43.20000000000395,
+        "ABB": 38.25000000000102,
+        "DBB": 23.783333333339687,
+        "DBS": 23.25000000000222,
+        "AAS": 26.433333333346063,
+        "AAB": 14.966666666668303,
+        "DAB": 0.6833333333332945
+      },
+      "rowPersonSeconds": {
+        "front": 134.10000000002992,
+        "back": 377.5999999997663
+      },
+      "actorSeconds": {
+        "acting": 265.5666666666302,
+        "moving": 12.900000000005434,
+        "shifting": 27.30000000000422,
+        "waiting": 205.93333333333914
+      },
+      "minHpFraction": 0.21,
+      "finalHp": [
+        1092,
+        951,
+        1150
+      ],
+      "replayVerified": true,
+      "finalHash": "8bb913f82d8340699478fc9f306155d9740667a3e809699003d1908bb188ab3a"
+    },
+    "telemetry": {
+      "firstBreakSeconds": 53.86666666666489,
+      "breakDamageShare": 0.34359587505604544,
+      "breakDamage": 4598,
+      "normalDamage": 8784,
+      "breakEnemySeconds": 50.00000000000876,
+      "normalEnemySeconds": 394.24999999975114,
+      "breakDamageRate": 91.95999999998389,
+      "normalDamageRate": 22.280279010794025,
+      "maxChain": 297.2,
+      "enemyBrokenFraction": 0.11254924029270857,
+      "waitingFraction": 0.4024493518337846,
+      "cleanupSeconds": 9.483333333333917,
+      "cleanupEncounterCount": 2,
+      "dangerEpisodes": 2,
+      "recoveredEpisodes": 2,
+      "dangerDeaths": 0,
+      "censoredEpisodes": 0,
+      "dangerWindows": [
+        {
+          "actorId": 0,
+          "encounter": 1,
+          "startTime": 33.86666666666603,
+          "endTime": 47.8833333333319,
+          "outcome": "recovered"
+        },
+        {
+          "actorId": 1,
+          "encounter": 2,
+          "startTime": 134.53333333333254,
+          "endTime": 144.8666666666741,
+          "outcome": "recovered"
+        }
+      ],
+      "recoverySeconds": 12.175000000003713,
+      "maxHitHpFraction": 0.31545454545454543,
+      "handoffAttempts": 0,
+      "handoffActions": 0,
+      "handoffCompletions": 0,
+      "commandAttempts": 466,
+      "acceptedCommands": 466,
+      "rejectedCommands": 0,
+      "cancellations": 134,
+      "acceptedMoveCommands": 29,
+      "totalMoveEvents": 33,
+      "commandsByType": {
+        "start": {
+          "attempted": 1,
+          "accepted": 1,
+          "rejected": 0
+        },
+        "optima": {
+          "attempted": 23,
+          "accepted": 23,
+          "rejected": 0
+        },
+        "enqueue": {
+          "attempted": 278,
+          "accepted": 278,
+          "rejected": 0
+        },
+        "removePlan": {
+          "attempted": 134,
+          "accepted": 134,
+          "rejected": 0
+        },
+        "move": {
+          "attempted": 29,
+          "accepted": 29,
+          "rejected": 0
+        },
+        "next": {
+          "attempted": 1,
+          "accepted": 1,
+          "rejected": 0
+        }
+      },
+      "replayVerified": true
+    }
+  }
+]
