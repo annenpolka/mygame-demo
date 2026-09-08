@@ -69,6 +69,7 @@ export function PadBattleConsole({
 }: Props) {
   const consoleRoot = useRef<HTMLElement>(null);
   const flight = useRef<HTMLSpanElement>(null);
+  const previousScroll = useRef({ page: ui.page, key: ui.key, selected: s.selected });
   useEffect(() => {
     if (
       ui.feedback?.kind !== 'added' ||
@@ -105,6 +106,10 @@ export function PadBattleConsole({
     return () => animation.cancel();
   }, [ui.stamp]);
   useEffect(() => {
+    const previous = previousScroll.current;
+    previousScroll.current = { page: ui.page, key: ui.key, selected: s.selected };
+    if (previous.page === ui.page && previous.key === ui.key && previous.selected === s.selected)
+      return;
     if (showSkills && !matchMedia('(max-width: 800px)').matches) return;
     const root = consoleRoot.current;
     const active =

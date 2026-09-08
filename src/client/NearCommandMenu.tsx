@@ -41,7 +41,7 @@ export function NearCommandMenu({
     const card = root?.querySelector<HTMLElement>(`.field-unit[data-unit="a${a.id}"]`);
     if (!root || !card) return;
     const measure = () => {
-      const frame = root.getBoundingClientRect();
+      const frame = (root.closest('.battle-stage') ?? root).getBoundingClientRect();
       const actor = card.getBoundingClientRect();
       const next = {
         left: actor.left - frame.left,

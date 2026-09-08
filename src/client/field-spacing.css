@@ -8,7 +8,11 @@
   align-items: stretch;
 }
 .battle-layout .battle-lane {
-  grid-template-rows: 27px repeat(3, minmax(var(--field-unit-height), auto));
+  grid-template-rows:
+    27px
+    minmax(var(--field-row-0, var(--field-unit-height)), auto)
+    minmax(var(--field-row-1, var(--field-unit-height)), auto)
+    minmax(var(--field-row-2, var(--field-unit-height)), auto);
   align-content: start;
   gap: 8px;
   padding: 0 7px 8px;

@@ -89,6 +89,7 @@ export function App() {
   const [pending, setPending] = useState<string | null>(null);
   const [battleUI, storeBattleUI] = useState(newBattlePad);
   const [commandLayout, setCommandLayout] = useState<'desk' | 'shelf' | 'orbit'>('orbit');
+  const commandField = useRef<HTMLDivElement>(null);
   const battleUIRef = useRef(battleUI);
   const setBattleUI = (update: BattlePad | ((previous: BattlePad) => BattlePad)) => {
     const next = typeof update === 'function' ? update(battleUIRef.current) : update;
@@ -1118,83 +1119,90 @@ export function App() {
             </div>
           )}
 
-          {!watching && (s.phase === 'ready' || s.phase === 'battle') && (
-            <div className="command-layout-picker" role="group" aria-label="メニュー位置">
-              <span>メニュー位置</span>
-              {(
-                [
-                  ['desk', '下の操作盤'],
-                  ['shelf', '足元にまとめる'],
-                  ['orbit', '周囲に展開'],
-                ] as const
-              ).map(([mode, label]) => (
-                <button
-                  key={mode}
-                  aria-pressed={commandLayout === mode}
-                  onClick={() => setCommandLayout(mode)}
-                >
-                  {label}
-                </button>
-              ))}
-              <small>
-                {commandLayout === 'desk'
-                  ? '配置を切り替えて比較できます'
-                  : '同じ技・同じ操作で比較。狭い画面では戦場の下にまとめます'}
-              </small>
-            </div>
-          )}
-          <Battlefield
-            state={s}
-            commandLayout={!watching && s.phase === 'battle' ? commandLayout : 'desk'}
-            renderCommands={
-              !watching && s.phase === 'battle' && commandLayout !== 'desk'
-                ? (field) => (
-                    <NearCommandMenu
-                      state={s}
-                      ui={battleUI}
-                      mode={commandLayout}
-                      field={field}
-                      keyboard={!padActive}
-                      bindings={gamepad.bindings}
-                      family={gamepad.family}
-                      act={applyBattleInput}
-                    />
-                  )
-                : undefined
-            }
-            pending={shownPending ? SKILLS[shownPending] : null}
-            aim={aim}
-            targets={s.phase === 'battle' && !watching ? paletteTargets(s, battleUI) : null}
-            recovery={battleUI.targetRecovery}
-            palette={
-              s.phase === 'battle' && !watching && !shownPending ? paletteCursor(s, battleUI) : null
-            }
-            onCandidate={(side, target) => setBattleUI(selectCandidate(s, battleUI, side, target))}
-            onAlly={select}
-            onTarget={chooseTarget}
-            onAim={aimTarget}
-            onBack={backFromTarget}
-            confirmLabel={
-              padActive ? buttonName(gamepad.bindings.confirm, gamepad.family) : 'Enter'
-            }
-            navigationLabel={
-              padActive
-                ? `${gamepad.bindings.navigation === 'dpad' ? '十字キー' : '左スティック'}：駒の位置へ · ${gamepad.bindings.sideAxis < 0 ? '補助で敵／味方' : '右スティック ← 味方 / → 敵'}`
-                : undefined
-            }
-            backLabel={padActive ? buttonName(gamepad.bindings.back, gamepad.family) : 'Esc'}
-          />
-          {s.phase === 'battle' && (
-            <AtbTimeline
+          <div
+            className="battle-stage"
+            data-active={s.phase === 'battle'}
+            data-layout={watching ? 'desk' : commandLayout}
+          >
+            <Battlefield
               state={s}
-              send={send}
-              select={select}
-              act={applyBattleInput}
-              keyboard={!padActive}
-              bindings={gamepad.bindings}
-              family={gamepad.family}
+              fieldRef={commandField}
+              commandLayout={!watching && s.phase === 'battle' ? commandLayout : 'desk'}
+              pending={shownPending ? SKILLS[shownPending] : null}
+              aim={aim}
+              targets={s.phase === 'battle' && !watching ? paletteTargets(s, battleUI) : null}
+              recovery={battleUI.targetRecovery}
+              palette={
+                s.phase === 'battle' && !watching && !shownPending
+                  ? paletteCursor(s, battleUI)
+                  : null
+              }
+              onCandidate={(side, target) =>
+                setBattleUI(selectCandidate(s, battleUI, side, target))
+              }
+              onAlly={select}
+              onTarget={chooseTarget}
+              onAim={aimTarget}
+              onBack={backFromTarget}
+              confirmLabel={
+                padActive ? buttonName(gamepad.bindings.confirm, gamepad.family) : 'Enter'
+              }
+              navigationLabel={
+                padActive
+                  ? `${gamepad.bindings.navigation === 'dpad' ? '十字キー' : '左スティック'}：駒の位置へ · ${gamepad.bindings.sideAxis < 0 ? '補助で敵／味方' : '右スティック ← 味方 / → 敵'}`
+                  : undefined
+              }
+              backLabel={padActive ? buttonName(gamepad.bindings.back, gamepad.family) : 'Esc'}
             />
-          )}
+            {s.phase === 'battle' && (
+              <AtbTimeline
+                state={s}
+                send={send}
+                select={select}
+                act={applyBattleInput}
+                keyboard={!padActive}
+                bindings={gamepad.bindings}
+                family={gamepad.family}
+              />
+            )}
+            {!watching && s.phase === 'battle' && commandLayout !== 'desk' && (
+              <NearCommandMenu
+                state={s}
+                ui={battleUI}
+                mode={commandLayout}
+                field={commandField}
+                keyboard={!padActive}
+                bindings={gamepad.bindings}
+                family={gamepad.family}
+                act={applyBattleInput}
+              />
+            )}
+            {!watching && (s.phase === 'ready' || s.phase === 'battle') && (
+              <div className="command-layout-picker" role="group" aria-label="メニュー位置">
+                <span>メニュー位置</span>
+                {(
+                  [
+                    ['desk', '下の操作盤'],
+                    ['shelf', '足元にまとめる'],
+                    ['orbit', '周囲に展開'],
+                  ] as const
+                ).map(([mode, label]) => (
+                  <button
+                    key={mode}
+                    aria-pressed={commandLayout === mode}
+                    onClick={() => setCommandLayout(mode)}
+                  >
+                    {label}
+                  </button>
+                ))}
+                <small>
+                  {commandLayout === 'desk'
+                    ? '配置を切り替えて比較できます'
+                    : '同じ技・同じ操作で比較。狭い画面では戦場の下にまとめます'}
+                </small>
+              </div>
+            )}
+          </div>
         </section>
 
         {watching ? (

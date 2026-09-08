@@ -164,17 +164,40 @@
   .battle-layout
     .battlefield:is([data-command-layout='shelf'], [data-command-layout='orbit'])
     .battle-lane {
-    grid-template-rows: 27px repeat(3, minmax(224px, auto));
     gap: 5px;
   }
   .battle-layout
     .battlefield:is([data-command-layout='shelf'], [data-command-layout='orbit'])
-    .field-unit.friend {
+    .field-unit.friend.selected {
     grid-template-columns: 64px minmax(0, 1fr);
     grid-template-rows: 12px 68px;
     align-content: start;
     padding: 44px 7px 0;
     gap: 2px 7px;
+  }
+  .battle-layout .battlefield[data-command-layout='shelf'] .field-unit.friend.selected {
+    padding-top: 3px;
+  }
+  .battle-layout
+    .battlefield:is(
+      [data-command-layout='shelf'],
+      [data-command-layout='orbit']
+    )[data-command-track='0'] {
+    --field-row-0: 184px;
+  }
+  .battle-layout
+    .battlefield:is(
+      [data-command-layout='shelf'],
+      [data-command-layout='orbit']
+    )[data-command-track='1'] {
+    --field-row-1: 184px;
+  }
+  .battle-layout
+    .battlefield:is(
+      [data-command-layout='shelf'],
+      [data-command-layout='orbit']
+    )[data-command-track='2'] {
+    --field-row-2: 184px;
   }
   .battle-layout
     .battlefield:is([data-command-layout='shelf'], [data-command-layout='orbit'])

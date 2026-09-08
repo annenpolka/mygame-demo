@@ -1,0 +1,235 @@
+/* Keep the battlefield and its action budget together; secondary controls follow. */
+.battle-stage {
+  position: relative;
+  grid-column: 1 / -1;
+  min-width: 0;
+}
+.battle-stage > .command-layout-picker {
+  margin-top: 4px;
+}
+.battle-stage > .near-command-menu {
+  margin-inline: 0;
+}
+
+@media (min-width: 801px) {
+  .battle-stage .atb-timeline .sequence-controls button {
+    min-height: 44px;
+  }
+  .battle-stage .atb-timeline header {
+    height: auto;
+    min-height: 44px;
+  }
+}
+
+@media (min-width: 801px) and (max-height: 800px) {
+  .app:has(.battle-stage[data-active='true']) .topbar {
+    min-height: 48px;
+    padding-block: 4px;
+  }
+  .app:has(.battle-stage[data-active='true']) .brand-mark {
+    line-height: 1;
+  }
+}
+
+@media (min-width: 801px) and (min-height: 701px) and (max-height: 800px) {
+  .battle-stage[data-active='true'] .battlefield {
+    --field-unit-height: 128px;
+  }
+}
+
+@media (min-width: 801px) and (max-height: 700px) {
+  .battle-stage[data-active='true'] .battlefield {
+    --field-unit-height: 114px;
+  }
+  .battle-stage[data-active='true'] .battlefield .field-unit {
+    grid-template-rows: 14px minmax(0, 1fr);
+    padding-block: 3px 6px;
+  }
+  .battle-stage[data-active='true'] .battlefield .unit-intent {
+    line-height: 14px;
+  }
+  .battle-stage[data-active='true'] .battlefield .battle-lane {
+    gap: 4px;
+  }
+}
+
+@media (min-width: 801px) and (max-width: 1100px) and (max-height: 700px) {
+  .battle-layout:has(.battle-stage[data-active='true']) .battle-heading > div:first-child {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .battle-layout:has(.battle-stage[data-active='true']) .battle-heading h1 {
+    margin: 0;
+    font-size: 20px;
+  }
+  .battle-layout:has(.battle-stage[data-active='true']) .battle-clock > small {
+    display: none;
+  }
+  .battle-stage[data-active='true'] .battlefield {
+    --field-unit-height: 104px;
+  }
+  .battle-stage[data-active='true'] .battlefield .unit-gauges {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 2px;
+  }
+  .battle-stage[data-active='true'] .battlefield .unit-gauge small {
+    line-height: 1.2;
+    white-space: nowrap;
+  }
+  .battle-stage[data-active='true'] .battlefield .unit-telegraph {
+    min-height: 0;
+    margin: 0;
+  }
+  .battle-stage[data-active='true'] .battlefield .unit-telegraph > small {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    min-height: 0;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+  .battle-stage[data-active='true'] .field-legend {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    overflow: hidden;
+    clip-path: inset(50%);
+  }
+  .battle-stage[data-active='true'] .field-footer {
+    min-height: 34px;
+  }
+  .battle-stage[data-active='true'] .field-hint {
+    padding-block: 1px;
+  }
+  .battle-stage[data-active='true'] .atb-timeline {
+    padding: 3px 8px;
+    margin-top: 3px;
+  }
+  .battle-stage[data-active='true'] .atb-timeline header {
+    flex-wrap: nowrap;
+    gap: 6px;
+  }
+  .battle-stage[data-active='true'] .atb-timeline .atb-action-now {
+    min-width: 0;
+    font-size: 10px;
+  }
+  .battle-stage[data-active='true'] .atb-timeline .sequence-controls {
+    flex-basis: auto;
+    flex-wrap: nowrap;
+    flex-shrink: 0;
+    margin: 0;
+    gap: 4px;
+  }
+  .battle-stage[data-active='true'] .sequence-controls button {
+    padding: 3px 6px;
+    font-size: 10px;
+  }
+  .battle-stage[data-active='true'] .sequence-controls small {
+    display: none;
+  }
+  .battle-stage[data-active='true'] .atb-budget {
+    grid-template-rows: 20px 10px;
+    margin-block: 2px;
+  }
+  .battle-stage[data-active='true'] .atb-reservation strong {
+    font-size: 11px;
+    line-height: 1.2;
+  }
+  .battle-stage[data-active='true'] .atb-subline {
+    min-height: 12px;
+    line-height: 1.2;
+  }
+}
+
+@media (min-width: 1101px) and (max-height: 700px) {
+  .battle-stage[data-active='true'] {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 280px;
+    align-items: start;
+    gap: 8px;
+  }
+  .battle-stage[data-active='true'] > .battlefield {
+    grid-column: 1;
+    grid-row: 1;
+  }
+  .battle-stage[data-active='true'] > .atb-timeline {
+    grid-column: 2;
+    grid-row: 1;
+    margin: 0;
+    padding: 10px;
+  }
+  .battle-stage[data-active='true'] > .command-layout-picker {
+    grid-column: 1 / -1;
+    grid-row: 2;
+  }
+  .battle-stage[data-active='true'] .atb-timeline header {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 10px;
+  }
+  .battle-stage[data-active='true'] .atb-party {
+    display: grid;
+    grid-template-columns: 28px repeat(3, minmax(0, 1fr)) 28px;
+    gap: 3px;
+  }
+  .battle-stage[data-active='true'] .atb-party .pad-actor {
+    display: grid;
+    justify-items: center;
+    gap: 3px;
+    padding: 4px 0;
+    font-size: 11px;
+  }
+  .battle-stage[data-active='true'] .atb-number {
+    margin: 0;
+  }
+  .battle-stage[data-active='true'] .sequence-controls {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+    margin: 0;
+  }
+  .battle-stage[data-active='true'] .sequence-controls button {
+    flex: 1;
+    min-width: 0;
+  }
+  .battle-stage[data-active='true'] .sequence-controls small {
+    display: block;
+    flex-basis: 100%;
+  }
+  .battle-stage[data-active='true'] .atb-budget {
+    margin-block: 12px;
+    grid-template-rows: 48px 16px;
+  }
+  .battle-stage[data-active='true'] .atb-reservation {
+    padding: 2px;
+    gap: 2px;
+  }
+  .battle-stage[data-active='true'] .atb-reservation strong {
+    white-space: normal;
+    overflow-wrap: anywhere;
+    font-size: 10px;
+  }
+  .battle-stage[data-active='true'] .atb-reservation small {
+    display: none;
+  }
+  .battle-stage[data-active='true'] .atb-subline {
+    flex-wrap: wrap;
+    gap: 4px;
+  }
+  .battle-stage[data-active='true']
+    .battlefield[data-command-layout='orbit']
+    .field-unit.friend.selected {
+    grid-template-rows: 12px 68px;
+    padding-top: 44px;
+  }
+  .battle-stage[data-active='true']
+    .battlefield[data-command-layout='shelf']
+    .field-unit.friend.selected {
+    grid-template-rows: 12px 68px;
+  }
+}

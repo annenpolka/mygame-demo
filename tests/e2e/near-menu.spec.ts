@@ -217,9 +217,9 @@ for (const [mode, label] of modes) {
       await expect(menu).toHaveAttribute('data-actor-id', '0');
       const readLayout = () =>
         menu.evaluate((node) => {
-          const field = node.closest('.battlefield')!.getBoundingClientRect();
+          const field = node.closest('.battle-stage')!.getBoundingClientRect();
           const unitBottom = Math.max(
-            ...Array.from(node.closest('.battlefield')!.querySelectorAll('[data-unit]')).map(
+            ...Array.from(node.closest('.battle-stage')!.querySelectorAll('[data-unit]')).map(
               (unit) => unit.getBoundingClientRect().bottom,
             ),
           );
@@ -239,7 +239,7 @@ for (const [mode, label] of modes) {
           );
           const bodies = Array.from(
             node
-              .closest('.battlefield')!
+              .closest('.battle-stage')!
               .querySelectorAll('[data-unit] .field-symbol, [data-unit] .field-unit-info'),
           ).map((element) => {
             const rect = element.getBoundingClientRect();

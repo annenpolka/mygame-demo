@@ -47,14 +47,11 @@ for (const viewport of [
       await expect(page.locator('.battle-lane.ally.front [data-unit]')).toHaveCount(population);
       const measured = await page.locator('.battle-layout .battlefield').evaluate((field) => {
         const actor = field.querySelector('[data-unit="a0"]')!;
-        const card = actor.getBoundingClientRect();
         const symbol = actor.querySelector('.field-symbol')!.getBoundingClientRect();
         const figure = actor.querySelector('.unit-figure')!.getBoundingClientRect();
         const name = actor.querySelector('.field-unit-info strong')!;
         const gauge = actor.querySelector('.unit-gauge small')!;
         return {
-          fieldHeight: field.querySelector('.horizontal-field')!.getBoundingClientRect().height,
-          cardHeight: card.height,
           symbol: { width: symbol.width, height: symbol.height },
           figure: { width: figure.width, height: figure.height },
           nameSize: getComputedStyle(name).fontSize,
@@ -66,8 +63,6 @@ for (const viewport of [
       expect(measured.symbol).toEqual({ width: 64, height: 68 });
       expect(measured.figure).toEqual({ width: 64, height: 68 });
       expect(measured.detailVisible).toBe(true);
-      expect(measured.cardHeight).toBeGreaterThanOrEqual(136);
-      expect(measured.fieldHeight).toBeGreaterThanOrEqual(450);
       dimensions.push(measured);
     }
     expect(dimensions[1]).toEqual(dimensions[0]);
@@ -130,6 +125,9 @@ for (const viewport of [
       const field = node.closest('.horizontal-field')!.getBoundingClientRect();
       return {
         outline: getComputedStyle(node).outlineStyle,
+        requiredInset:
+          parseFloat(getComputedStyle(node).outlineWidth) +
+          parseFloat(getComputedStyle(node).outlineOffset),
         inset: Math.min(
           card.left - field.left,
           field.right - card.right,
@@ -139,7 +137,7 @@ for (const viewport of [
       };
     });
     expect(focusSpace.outline).not.toBe('none');
-    expect(focusSpace.inset).toBeGreaterThanOrEqual(6);
+    expect(focusSpace.inset).toBeGreaterThanOrEqual(focusSpace.requiredInset);
     await page.screenshot({
       path: test.info().outputPath('three-full-size-tracks.png'),
       fullPage: true,

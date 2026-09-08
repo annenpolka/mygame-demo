@@ -5,7 +5,7 @@ import { COMBAT_RULES, percent } from '../content/rules';
 import { HandoffStatus } from './HandoffStatus';
 import { executionStatus } from './timing';
 import { canAppend, planned, stepName } from '../sim/plan';
-import { useEffect, useRef, type CSSProperties, type ReactNode, type RefObject } from 'react';
+import { useEffect, useRef, type CSSProperties, type RefObject } from 'react';
 import { BattleEffects } from './effects/BattleEffects';
 import { UnitEmblem } from './effects/UnitEmblem';
 import { UnitTargetMarks, SkillIcon } from './TargetVisuals';
@@ -30,7 +30,7 @@ export function Battlefield({
   backLabel = 'Esc',
   navigationLabel = '矢印：駒の位置へ移動 · , 味方 / . 敵',
   commandLayout = 'desk',
-  renderCommands,
+  fieldRef,
 }: {
   state: State;
   pending: Skill | null;
@@ -47,9 +47,13 @@ export function Battlefield({
   backLabel?: string;
   navigationLabel?: string;
   commandLayout?: 'desk' | 'shelf' | 'orbit';
-  renderCommands?: (field: RefObject<HTMLDivElement | null>) => ReactNode;
+  fieldRef?: RefObject<HTMLDivElement | null>;
 }) {
-  const field = useRef<HTMLDivElement>(null);
+  const localField = useRef<HTMLDivElement>(null);
+  const field = fieldRef ?? localField;
+  const selectedTrack = s.allies
+    .filter((ally) => ally.row === s.allies[s.selected].row)
+    .findIndex((ally) => ally.id === s.selected);
   const tracks = Math.max(
     2,
     ...FIELD_COLUMNS.map(
@@ -107,6 +111,7 @@ export function Battlefield({
       style={{ '--field-tracks': tracks } as CSSProperties}
       data-density={tracks}
       data-command-layout={commandLayout}
+      data-command-track={selectedTrack}
     >
       {palette ? (
         <div className="palette-target-bar">
@@ -454,7 +459,6 @@ export function Battlefield({
             </section>
           );
         })}
-        {renderCommands?.(field)}
         <BattleEffects
           state={s}
           cues={effects}
