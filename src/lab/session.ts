@@ -14,6 +14,16 @@ export class Session {
   private lastEvent = 0;
   private encounterStart: State | null = null;
   private accumulator = 0;
+  private observers = new Set<() => void>();
+  subscribe(observer: () => void) {
+    this.observers.add(observer);
+    return () => {
+      this.observers.delete(observer);
+    };
+  }
+  private changed() {
+    for (const observer of this.observers) observer();
+  }
   constructor(config: Partial<Config> = {}, controlMode: State['controlMode'] = 'manual') {
     this.state = createState(config, controlMode);
     this.initial = copy(this.state);
@@ -57,6 +67,7 @@ export class Session {
           focusUsed: 0,
         };
       }
+      this.changed();
     }
     return accepted;
   }
@@ -75,6 +86,7 @@ export class Session {
       step(this.state);
       this.capture();
       this.accumulator -= DT;
+      this.changed();
     }
   }
   reset(config: Partial<Config> = this.state.config) {
@@ -85,6 +97,7 @@ export class Session {
     this.accumulator = 0;
     this.encounterStart = null;
     this.resetLog();
+    this.changed();
   }
   retry() {
     this.state = copy(this.encounterStart ?? this.initial);
@@ -93,6 +106,7 @@ export class Session {
     this.gestures = 0;
     this.accumulator = 0;
     this.resetLog();
+    this.changed();
   }
   snapshot() {
     return JSON.stringify(
@@ -111,6 +125,7 @@ export class Session {
     this.encounterStart = null;
     this.resetLog();
     if (log) this.log = log;
+    this.changed();
   }
   recording(): Recording {
     return {
@@ -130,6 +145,7 @@ export class Session {
     this.gestures = data.inputs.length;
     this.accumulator = 0;
     this.encounterStart = null;
+    this.changed();
   }
 }
 
