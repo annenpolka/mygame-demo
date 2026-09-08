@@ -62,9 +62,9 @@ test('layout comparisons preserve the complete battle state and reset to the sel
     await choice.click();
     await expect(choice).toBeFocused();
     await expect(choice).toHaveAttribute('aria-pressed', 'true');
-    await expect(page.locator('[data-near-action]')).toHaveCount(mode === 'desk' ? 0 : 5);
+    await expect(page.locator('[data-near-action]')).toHaveCount(mode === 'desk' ? 0 : 4);
     if (mode !== 'desk')
-      await expect(page.locator(`[data-menu-location=${mode}] [data-near-action]`)).toHaveCount(5);
+      await expect(page.locator(`[data-menu-location=${mode}] [data-near-action]`)).toHaveCount(4);
     expect(await snapshot(page)).toEqual(before);
   }
   await layouts.getByRole('button', { name: '足元にまとめる', exact: true }).click();
@@ -74,7 +74,7 @@ test('layout comparisons preserve the complete battle state and reset to the sel
     'true',
   );
   await page.getByRole('button', { name: '戦闘開始 →', exact: true }).click();
-  await expect(page.locator('[data-menu-location=orbit] [data-near-action]')).toHaveCount(5);
+  await expect(page.locator('[data-menu-location=orbit] [data-near-action]')).toHaveCount(4);
   await expect(page.getByRole('button', { name: /^基本技：斬撃/ })).toHaveCount(1);
 });
 
@@ -120,7 +120,7 @@ for (const viewport of [
 }
 
 for (const [mode, label] of modes) {
-  test(`${mode}: native focus does not issue a command and Enter adds exactly once`, async ({
+  test(`${mode}: native focus does not issue a command, Enter adds once and the separate ATB control commits`, async ({
     page,
   }) => {
     await load(page);
@@ -128,6 +128,14 @@ for (const [mode, label] of modes) {
       .getByRole('group', { name: 'メニュー位置' })
       .getByRole('button', { name: label, exact: true })
       .click();
+    const menu = page.locator(`[data-menu-location=${mode}]`);
+    await expect(menu.getByRole('button')).toHaveCount(4);
+    await expect(menu.getByRole('button', { name: /行動開始|確定/ })).toHaveCount(0);
+    await expect(page.locator('[data-near-action=execute]')).toHaveCount(0);
+    const execute = page
+      .getByRole('region', { name: 'アルトのATBと行動予約', exact: true })
+      .getByRole('button', { name: 'H 行動開始', exact: true });
+    await expect(execute).toBeDisabled();
     const basic = page.locator('[data-near-action=basic]');
     await expect(page.getByRole('button', { name: /^基本技：斬撃/ })).toHaveCount(1);
     await basic.focus();
@@ -147,7 +155,10 @@ for (const [mode, label] of modes) {
     await page.locator('[data-near-action=potion]').click();
     await expect(drafts(page)).toHaveCount(2);
     await expect(drafts(page).last().getByRole('button')).toHaveAccessibleName(/救急薬、リネ/);
-    await page.locator('[data-near-action=execute]').click();
+    await expect(execute).toBeEnabled();
+    await execute.focus();
+    await expect(drafts(page)).toHaveCount(2);
+    await page.keyboard.press('Enter');
     await expect(drafts(page)).toHaveCount(0);
     await expect(page.locator('.pad-plan-list [data-plan-status=committed]')).toHaveCount(2);
   });
@@ -254,6 +265,12 @@ for (const [mode, label] of modes) {
         });
       const assertLayout = async () => {
         const layout = await readLayout();
+        expect(layout.controls.map((control) => control.action)).toEqual([
+          'basic',
+          'skill',
+          'guard',
+          'potion',
+        ]);
         expect(layout.overlaps).toEqual([]);
         for (const button of layout.controls) {
           expect(button.width).toBeGreaterThanOrEqual(44);
