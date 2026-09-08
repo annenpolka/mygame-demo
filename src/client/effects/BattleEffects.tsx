@@ -1,8 +1,10 @@
-import { useEffect, useState, type RefObject } from 'react';
+import { useEffect, useLayoutEffect, useState, type RefObject } from 'react';
 import type { State, Target } from '../../sim/types';
 import { type EffectCue, type ActionCue } from './events';
 import { Particles } from './Particles';
 import { PALETTE, arc, clamp, columnX, type Layout, type Anchor } from './geometry';
+import { FIELD_COLUMNS } from '../../input/field-navigation';
+import { MovementEffects } from './MovementEffects';
 
 export function BattleEffects({
   state: s,
@@ -22,7 +24,7 @@ export function BattleEffects({
   const [layout, setLayout] = useState<Layout>({ width: 1, height: 1, points: {} });
   const [reduced, setReduced] = useState(false);
   const positions = s.allies.map((a) => a.row).join() + s.enemies.map((e) => e.row).join();
-  useEffect(() => {
+  useLayoutEffect(() => {
     const root = field.current;
     if (!root) return;
     const measure = () => {
@@ -40,8 +42,27 @@ export function BattleEffects({
           height: card.height,
         };
       });
+      const lanes: NonNullable<Layout['lanes']> = {};
+      for (const { side, row } of FIELD_COLUMNS) {
+        const lane = root.querySelector<HTMLElement>(`.battle-lane.${side}.${row}`);
+        if (!lane) continue;
+        const rect = lane.getBoundingClientRect();
+        const style = getComputedStyle(lane);
+        const rows = style.gridTemplateRows.split(' ').map(parseFloat);
+        const gap = parseFloat(style.rowGap) || 0;
+        let top = rect.top - b.top + (parseFloat(style.paddingTop) || 0) + rows[0] + gap;
+        lanes[`${side}-${row}`] = {
+          left: rect.left - b.left,
+          width: rect.width,
+          tracks: rows.slice(1).map((height) => {
+            const track = { top, height };
+            top += height + gap;
+            return track;
+          }),
+        };
+      }
       setLayout((old) => {
-        const next = { width: b.width, height: b.height, points };
+        const next = { width: b.width, height: b.height, points, lanes };
         return JSON.stringify(old) === JSON.stringify(next) ? old : next;
       });
     };
@@ -151,6 +172,7 @@ export function BattleEffects({
         )}
       </svg>
       <Particles layout={layout} cues={cues} actions={actions} reduced={reduced} />
+      <MovementEffects state={s} layout={layout} reduced={reduced} />
       <svg
         className="battle-effects fx-foreground"
         viewBox={`0 0 ${layout.width} ${layout.height}`}

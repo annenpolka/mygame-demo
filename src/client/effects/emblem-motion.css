@@ -1,0 +1,62 @@
+/* Inner SVG parts follow battle progress; the field-symbol anchor remains unchanged. */
+.combat-emblem .emblem-weapon {
+  transform-origin: 47px 41px;
+  transform: translate(var(--emblem-weapon-x), var(--emblem-weapon-y))
+    rotate(var(--emblem-weapon-turn));
+}
+.combat-emblem .emblem-shield {
+  transform-origin: 18px 39px;
+}
+.combat-emblem .emblem-fist,
+.combat-emblem .emblem-cannon {
+  transform-origin: 32px 35px;
+}
+.combat-emblem .emblem-forearms {
+  transform-origin: 32px 32px;
+  transform: rotate(var(--emblem-arm-turn));
+}
+.combat-emblem .emblem-left-leg {
+  transform: translateY(var(--emblem-left-leg-y));
+}
+.combat-emblem .emblem-right-leg {
+  transform: translateY(var(--emblem-right-leg-y));
+}
+.combat-emblem .emblem-swing-trace {
+  opacity: calc(var(--emblem-strike) * 0.6);
+  stroke-width: 1.1;
+  stroke-linecap: round;
+}
+.combat-emblem:is([data-action-type='shot'], [data-action-type='blast']) .emblem-swing-trace {
+  display: none;
+}
+.combat-emblem .emblem-focus {
+  opacity: var(--emblem-charge);
+  color: var(--emblem-glow);
+  stroke-width: 1.1;
+}
+.combat-emblem .emblem-focus-orbit {
+  transform-origin: 0 0;
+  transform: rotate(var(--emblem-focus-turn)) scale(var(--emblem-focus-scale));
+}
+.combat-emblem .emblem-guard-arc {
+  opacity: calc(var(--emblem-guard) * 0.65);
+  fill: #80e9e40d;
+  stroke: #a1eee1;
+  stroke-width: 1.2;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .combat-emblem .emblem-body,
+  .combat-emblem .emblem-weapon,
+  .combat-emblem .emblem-forearms,
+  .combat-emblem .emblem-left-leg,
+  .combat-emblem .emblem-right-leg,
+  .combat-emblem .emblem-focus-orbit {
+    transform: none;
+    filter: none;
+  }
+  .combat-emblem .emblem-focus,
+  .combat-emblem .emblem-swing-trace {
+    display: none;
+  }
+}

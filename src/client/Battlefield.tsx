@@ -5,11 +5,12 @@ import { COMBAT_RULES, percent } from '../content/rules';
 import { HandoffStatus } from './HandoffStatus';
 import { executionStatus } from './timing';
 import { canAppend, planned, stepName } from '../sim/plan';
-import { useEffect, useRef, type CSSProperties, type RefObject } from 'react';
+import { useEffect, useId, useRef, type CSSProperties, type RefObject } from 'react';
 import { BattleEffects } from './effects/BattleEffects';
 import { UnitEmblem } from './effects/UnitEmblem';
 import { UnitTargetMarks, SkillIcon } from './TargetVisuals';
 import { actionCues, effectCues } from './effects/events';
+import { movementCues } from './effects/movement';
 import { BATTLE_TIMING, ROW_NAMES } from '../content/data';
 import { weaponOf } from '../sim/engine';
 import type { State, Skill, Target } from '../sim/types';
@@ -50,6 +51,7 @@ export function Battlefield({
   fieldRef?: RefObject<HTMLDivElement | null>;
 }) {
   const localField = useRef<HTMLDivElement>(null);
+  const movementId = useId();
   const field = fieldRef ?? localField;
   const selectedTrack = s.allies
     .filter((ally) => ally.row === s.allies[s.selected].row)
@@ -61,7 +63,8 @@ export function Battlefield({
     ),
   );
   const effects = effectCues(s),
-    actions = actionCues(s);
+    actions = actionCues(s),
+    movements = movementCues(s);
   const intent = (id: string) => actions.find((c) => c.source === id);
   const reaction = (id: string) =>
     effects.filter((c) => c.target === id && c.value !== undefined).at(-1);
@@ -202,11 +205,14 @@ export function Battlefield({
                         !!recovery &&
                         recovery.target.kind === 'ally' &&
                         recovery.target.id === a.id;
+                      const movement = movements.find((c) => c.target === `a${a.id}`);
                       return (
                         <button
                           key={a.id}
                           id={targetable ? `field-target-ally-${a.id}` : undefined}
                           data-unit={`a${a.id}`}
+                          data-moving={movement?.phase === 'moving' || undefined}
+                          aria-describedby={movement ? `${movementId}-${a.id}` : undefined}
                           data-target={marked ? 'ally' : undefined}
                           data-editing={(!!palette && aimed) || undefined}
                           data-candidate={candidate || undefined}
@@ -243,6 +249,13 @@ export function Battlefield({
                           }
                         >
                           {intentLabel(`a${a.id}`)}
+                          {movement && (
+                            <span id={`${movementId}-${a.id}`} className="sr-only">
+                              {movement.phase === 'moving'
+                                ? `${ROW_NAMES[movement.fromRow]}から${ROW_NAMES[movement.toRow]}へ移動中。到着までは${ROW_NAMES[movement.fromRow]}にいます。`
+                                : `${ROW_NAMES[movement.toRow]}に到着しました。`}
+                            </span>
+                          )}
                           {targets && (
                             <UnitTargetMarks
                               side="ally"
@@ -266,6 +279,7 @@ export function Battlefield({
                             id={`a${a.id}`}
                             action={intent(`a${a.id}`)}
                             reaction={reaction(`a${a.id}`)}
+                            movement={movement}
                           />
                           <span className="field-unit-info">
                             <strong>

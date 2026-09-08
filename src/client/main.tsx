@@ -25,3 +25,5 @@ import './near-command-menu.css';
 import './battle-viewport.css';
 import './mobile-battle-fit.css';
 import './motion.css';
+import './effects/movement.css';
+import './effects/emblem-motion.css';

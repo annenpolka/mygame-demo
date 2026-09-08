@@ -1,0 +1,50 @@
+/* These values are drawn from battle time; CSS transitions must not interpolate them. */
+.fx-movement-layer {
+  z-index: 5;
+}
+.fx-move-route {
+  stroke-width: 1.5px;
+  stroke-dasharray: 3 6;
+  opacity: 0.45;
+}
+.fx-move-progress {
+  stroke-width: 2px;
+  opacity: 0.85;
+}
+.fx-move-clock {
+  stroke-width: 2px;
+  opacity: 0.65;
+}
+.fx-move-destination {
+  stroke-width: 1.5px;
+  opacity: 0.8;
+}
+.fx-move-token circle {
+  fill: #182639;
+  stroke-width: 1.5px;
+}
+.fx-move-token ellipse {
+  fill: currentColor;
+  stroke: none;
+}
+.fx-move-token text {
+  font:
+    600 10px 'Noto Sans JP',
+    sans-serif;
+  stroke-width: 2px;
+}
+.fx-move-caption {
+  font:
+    600 9px 'Noto Sans JP',
+    sans-serif;
+  stroke-width: 4px;
+}
+.fx-move-landing {
+  stroke-width: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .fx-move-token {
+    display: none;
+  }
+}

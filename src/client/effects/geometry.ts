@@ -14,6 +14,10 @@ export interface Layout {
   width: number;
   height: number;
   points: Record<string, Anchor>;
+  lanes?: Record<
+    string,
+    { left: number; width: number; tracks: { top: number; height: number }[] }
+  >;
 }
 export const PALETTE = {
   slash: '#ffe1a3',
