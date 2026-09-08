@@ -1,7 +1,4 @@
-import type { CSSProperties } from 'react';
-import { SKILLS, WEAPONS } from '../content/data';
-import type { State, Target } from '../sim/types';
-import { UnitEmblem } from './effects/UnitEmblem';
+import { SKILLS } from '../content/data';
 
 export function SkillIcon({
   skillId,
@@ -140,71 +137,5 @@ export function UnitTargetMarks({
         </span>
       )}
     </>
-  );
-}
-
-export function recipientUnits(s: State, target: Target | null | undefined, skillId: string) {
-  if (!target) return [];
-  const side =
-    target.kind === 'row'
-      ? SKILLS[skillId]?.target.startsWith('enemy')
-        ? 'enemy'
-        : 'ally'
-      : target.kind;
-  const units = side === 'ally' ? s.allies : s.enemies;
-  return units
-    .filter((u) => (target.kind === 'row' ? u.row === target.row && u.hp > 0 : u.id === target.id))
-    .map((u) => ({ unit: u, side }));
-}
-
-export function RecipientPortraits({
-  state: s,
-  target,
-  skillId,
-  candidate = false,
-  invalid = false,
-}: {
-  state: State;
-  target?: Target | null;
-  skillId: string;
-  candidate?: boolean;
-  invalid?: boolean;
-}) {
-  const recipients = recipientUnits(s, target, skillId);
-  return (
-    <span
-      className={`recipient-portraits ${target?.kind === 'row' ? 'recipient-row' : ''} ${candidate ? 'candidate' : ''} ${invalid ? 'invalid' : ''}`}
-      aria-hidden="true"
-    >
-      {recipients.map(({ unit, side }) => {
-        const weapon = 'weapons' in unit ? WEAPONS[unit.weapons[unit.slot]] : null;
-        const kind = weapon
-          ? weapon.skills.includes('shot')
-            ? 'bow'
-            : weapon.skills.includes('jab')
-              ? 'fist'
-              : weapon.skills.includes('smash')
-                ? 'hammer'
-                : weapon.role
-          : 'kind' in unit
-            ? unit.kind
-            : 'A';
-        return (
-          <span
-            key={`${side}-${unit.id}`}
-            className={`recipient-portrait ${side} ${unit.hp <= 0 ? 'invalid' : ''}`}
-            style={{ '--unit-color': 'color' in unit ? unit.color : '#e7b494' } as CSSProperties}
-          >
-            <UnitEmblem id={`${side === 'ally' ? 'a' : 'e'}${unit.id}`} kind={kind} />
-            <i>{'initial' in unit ? unit.initial : unit.name.slice(0, 1)}</i>
-          </span>
-        );
-      })}
-      {!recipients.length && (
-        <span className="recipient-missing">
-          <SkillIcon symbol="blocked" />
-        </span>
-      )}
-    </span>
   );
 }

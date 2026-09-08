@@ -1,7 +1,7 @@
 import { COMBAT_RULES } from '../content/rules';
 import { partyBonus } from '../sim/bonuses';
 import { skillTiming } from './timing';
-import { SkillIcon, RecipientPortraits } from './TargetVisuals';
+import { SkillIcon } from './TargetVisuals';
 import { ROLE_NAMES, SKILLS, WEAPONS } from '../content/data';
 import { Fragment, useEffect, useRef } from 'react';
 import {
@@ -15,7 +15,6 @@ import {
 } from '../sim/plan';
 import {
   choices,
-  paletteTargets,
   skillPreview,
   selectedChoice,
   unavailable,
@@ -180,7 +179,6 @@ export function PadBattleConsole({
     log: '戦闘ログ',
     aux: '補助メニュー',
   };
-  const recipients = paletteTargets(s, ui);
   const commandCards: { action: PadAction; skillId?: string; title: string; fallback: string }[] = [
     { action: 'skill', skillId: w.skills[1], title: '主力技', fallback: 'west' },
     { action: 'guard', skillId: 'guard', title: '防御', fallback: 'north' },
@@ -275,14 +273,6 @@ export function PadBattleConsole({
                   const preview = skill ? skillPreview(s, ui, skill.id) : null;
                   const candidate = !!preview?.candidateTarget;
                   const retry = candidate && ui.targetRecovery?.skillId === skill?.id;
-                  const target =
-                    preview?.target ??
-                    preview?.candidateTarget ??
-                    (skill?.target === 'self'
-                      ? { kind: 'ally' as const, id: a.id }
-                      : skill?.target.startsWith('enemy')
-                        ? recipients.enemy
-                        : recipients.ally);
                   const reason = skill ? unavailable(s, skill.id) : undefined;
                   const failed =
                     ui.feedback?.kind === 'blocked' && ui.feedback.skillId === skill?.id;
@@ -315,14 +305,7 @@ export function PadBattleConsole({
                       <span className="command-identity">
                         <strong>{skill?.name ?? card.title}</strong>
                         {skill && (
-                          <span className="command-recipient">
-                            <RecipientPortraits
-                              state={s}
-                              target={target}
-                              skillId={skill.id}
-                              candidate={candidate}
-                              invalid={!preview?.target && !candidate}
-                            />
+                          <span className="command-cost">
                             <span className="skill-cost" aria-hidden="true">
                               {Array.from({ length: skill.cost }, (_, i) => (
                                 <i key={i} />
@@ -582,10 +565,7 @@ export function PadBattleConsole({
                         </em>
                         {timing[i].linked && <em className="link-tag">連結予定</em>}
                       </strong>
-                      <span className="plan-recipient">
-                        {p.kind === 'skill' && (
-                          <RecipientPortraits state={s} target={p.target} skillId={p.skillId} />
-                        )}
+                      <span className="plan-arrival">
                         <small
                           title={
                             timing[i].status === 'invalid'

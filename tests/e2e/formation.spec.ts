@@ -59,11 +59,15 @@ test('full-width formation shows HP, chain, break duration and enemy cast withou
   await expect(page.getByRole('complementary', { name: '実験室', exact: true })).toHaveCount(0);
   await expect(page.locator('.enemy-strip')).toHaveCount(0);
   const meter = page.getByRole('meter', {
-    name: '鐘楼の衛兵のチェイン',
+    name: '鐘楼の衛兵のブレイク残り時間',
     exact: true,
     includeHidden: true,
   });
   await expect(meter).toHaveAttribute('aria-valuenow', '12');
+  await expect(
+    page.getByRole('meter', { name: '鐘楼の衛兵のチェイン', exact: true }),
+  ).toHaveAttribute('aria-valuenow', '220');
+  await expect(page.locator('[data-unit=e0]')).toContainText('220% · ×2.20');
   await expect(page.locator('[data-unit=e0]')).toContainText('BREAK 12.0s');
   const field = await page.locator('.battlefield').boundingBox();
   expect(field!.width).toBeGreaterThan(950);

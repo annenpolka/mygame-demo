@@ -1117,85 +1117,11 @@
   font-size: 13px;
   white-space: nowrap;
 }
-.command-recipient,
-.plan-recipient {
+.command-cost,
+.plan-arrival {
   display: flex;
   align-items: center;
   gap: 8px;
-}
-.recipient-portraits {
-  display: inline-flex;
-  position: relative;
-  gap: 2px;
-  flex: 0 0 auto;
-  padding: 1px;
-  align-items: center;
-}
-.recipient-portrait {
-  display: inline-block;
-  position: relative;
-  width: 27px;
-  height: 25px;
-  overflow: hidden;
-  border: 1.5px solid #438577;
-  border-radius: 50%;
-  background: #142b36;
-}
-.recipient-portrait.enemy {
-  border-color: #94642e;
-  border-radius: 3px;
-}
-.recipient-portrait .field-symbol {
-  display: block;
-  width: 25px;
-  height: 25px;
-  position: absolute;
-  top: 0;
-  left: 0;
-}
-.recipient-portrait .unit-figure {
-  width: 25px;
-  height: 27px;
-}
-.recipient-portrait i {
-  position: absolute;
-  bottom: -1px;
-  right: 0;
-  font: 700 9px system-ui;
-  color: #fff3d1;
-  text-shadow:
-    -1px -1px 1px #000,
-    1px 1px 1px #000;
-}
-.recipient-portraits.recipient-row {
-  border-bottom: 2px solid currentColor;
-  border-radius: 0 0 4px 4px;
-}
-.recipient-portraits.candidate {
-  outline: 1px dashed currentColor;
-  outline-offset: 1px;
-}
-.recipient-portraits.invalid::after,
-.recipient-portrait.invalid::after {
-  content: '';
-  position: absolute;
-  height: 2px;
-  inset: 50% 0 auto;
-  background: #e2a09a;
-  transform: rotate(-38deg);
-}
-.recipient-portrait.invalid .unit-figure {
-  opacity: 0.4;
-}
-.recipient-missing {
-  display: grid;
-  place-content: center;
-  width: 27px;
-  height: 25px;
-}
-.recipient-missing .skill-icon {
-  width: 22px;
-  height: 22px;
 }
 .skill-cost {
   display: flex;
@@ -1271,7 +1197,7 @@
   width: 24px;
   height: 24px;
 }
-.pad-plan-list .plan-recipient small {
+.pad-plan-list .plan-arrival small {
   margin-left: auto;
   white-space: nowrap;
   font-size: 10px;
@@ -1356,20 +1282,8 @@
   .direct-command .command-identity > strong {
     font-size: 11px;
   }
-  .command-recipient {
+  .command-cost {
     gap: 3px;
-  }
-  .recipient-portrait {
-    width: 22px;
-    height: 22px;
-  }
-  .recipient-portrait .field-symbol {
-    width: 21px;
-    height: 23px;
-  }
-  .recipient-portrait .unit-figure {
-    width: 21px;
-    height: 23px;
   }
   .pad-direction-commands {
     grid-template-columns: repeat(5, minmax(0, 1fr));
@@ -1440,15 +1354,6 @@
   .pad-layout .pad-console:not(.keyboard-console) .command-identity > strong {
     font-size: 12px;
     line-height: 1.2;
-  }
-  .pad-layout .pad-console:not(.keyboard-console) .command-recipient .recipient-portrait {
-    width: 22px;
-    height: 22px;
-  }
-  .pad-layout .pad-console:not(.keyboard-console) .command-recipient .field-symbol,
-  .pad-layout .pad-console:not(.keyboard-console) .command-recipient .unit-figure {
-    width: 21px;
-    height: 23px;
   }
 }
 @media (min-width: 801px) and (max-height: 800px) {

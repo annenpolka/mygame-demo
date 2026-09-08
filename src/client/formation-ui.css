@@ -33,6 +33,21 @@
   grid-template-columns: 1fr 1fr;
   gap: 8px;
 }
+.enemy-chain-status {
+  display: grid;
+  gap: 2px;
+  min-width: 0;
+}
+.enemy-chain-status .gauge-chain small {
+  color: #f2c675;
+  font-weight: 700;
+}
+.break-threshold {
+  font:
+    9px ui-monospace,
+    monospace;
+  color: #bfced5;
+}
 .unit-gauge {
   display: block;
   color: #bfced5;

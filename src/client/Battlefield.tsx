@@ -381,21 +381,31 @@ export function Battlefield({
                                 kind="enemy-hp"
                                 text={`${Math.ceil(e.hp)} / ${e.maxHp}`}
                               />
-                              <UnitGauge
-                                label={`${e.name}のチェイン`}
-                                value={e.broken || e.chain - 100}
-                                max={
-                                  e.broken
-                                    ? BATTLE_TIMING.breakDuration
-                                    : COMBAT_RULES.breakThreshold - 100
-                                }
-                                kind={e.broken ? 'break' : 'chain'}
-                                text={
-                                  e.broken
-                                    ? `BREAK ${e.broken.toFixed(1)}s`
-                                    : `CHAIN ${e.chain.toFixed(0)}% / ${COMBAT_RULES.breakThreshold}%`
-                                }
-                              />
+                              <span className="enemy-chain-status">
+                                <UnitGauge
+                                  label={`${e.name}のチェイン`}
+                                  value={e.chain}
+                                  min={100}
+                                  max={
+                                    e.broken ? COMBAT_RULES.chainMax : COMBAT_RULES.breakThreshold
+                                  }
+                                  kind="chain"
+                                  text={`${e.chain.toFixed(0)}% · ×${(e.chain / 100).toFixed(2)}`}
+                                />
+                                {e.broken > 0 ? (
+                                  <UnitGauge
+                                    label={`${e.name}のブレイク残り時間`}
+                                    value={e.broken}
+                                    max={BATTLE_TIMING.breakDuration}
+                                    kind="break"
+                                    text={`BREAK ${e.broken.toFixed(1)}s`}
+                                  />
+                                ) : (
+                                  <small className="break-threshold">
+                                    BREAK {COMBAT_RULES.breakThreshold}%
+                                  </small>
+                                )}
+                              </span>
                             </span>
                             <span className="unit-telegraph">
                               {e.cast ? (
@@ -493,12 +503,14 @@ export function Battlefield({
 function UnitGauge({
   label,
   value,
+  min = 0,
   max,
   kind,
   text,
 }: {
   label: string;
   value: number;
+  min?: number;
   max: number;
   kind: string;
   text?: string;
@@ -509,11 +521,13 @@ function UnitGauge({
       <span
         role="meter"
         aria-label={label}
-        aria-valuemin={0}
+        aria-valuemin={min}
         aria-valuemax={max}
         aria-valuenow={Math.max(0, Math.min(max, value))}
       >
-        <i style={{ width: `${Math.max(0, Math.min(100, (value / max) * 100))}%` }} />
+        <i
+          style={{ width: `${Math.max(0, Math.min(100, ((value - min) / (max - min)) * 100))}%` }}
+        />
       </span>
     </span>
   );

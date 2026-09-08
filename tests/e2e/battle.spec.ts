@@ -322,7 +322,8 @@ test('a new encounter clears the defeated target and starts with visible valid p
   await page.keyboard.press('z');
   await page.keyboard.press('h');
   await page.clock.runFor(2500);
-  await expect(page.locator('[data-unit=e0] .unit-target-marks')).toHaveClass(/invalid/);
+  await expect(page.locator('[data-unit=e0]')).toHaveAttribute('aria-pressed', 'false');
+  await expect(page.locator('[data-unit=e1]')).toHaveAttribute('aria-pressed', 'true');
   await page.getByRole('button', { name: /^灰の砲術師を攻撃対象にする/ }).click();
   await page.keyboard.press('z');
   await page.keyboard.press('h');
@@ -353,7 +354,8 @@ test('ordinary snapshot import resets stale invalid targets to the loaded actor 
   await page.keyboard.press('z');
   await page.keyboard.press('h');
   await page.clock.runFor(2500);
-  await expect(page.locator('[data-unit=e0] .unit-target-marks')).toHaveClass(/invalid/);
+  await expect(page.locator('[data-unit=e0]')).toHaveAttribute('aria-pressed', 'false');
+  await expect(page.locator('[data-unit=e1]')).toHaveAttribute('aria-pressed', 'true');
   const restored = targetBoundaryState();
   restored.selected = 1;
   restored.allies[1].executionHeld = false;
