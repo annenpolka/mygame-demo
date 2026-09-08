@@ -121,7 +121,7 @@ export function AtbTimeline({
           .map(({ p, index, start, cost }) => (
             <div
               key={p.key}
-              className={`atb-reservation ${a.draft?.some((d) => d.key === p.key) ? 'draft' : 'committed'} ${index > 1 && q.some(isHandoff) ? 'will-reset' : ''}`}
+              className={`atb-reservation ${a.draft?.some((d) => d.key === p.key) ? 'draft' : 'committed'}`}
               style={{ gridColumn: `${start + 1} / span ${cost}` }}
               title={`${index}. ${stepName(a, p)} · ${cost} ATB${p.kind === 'skill' ? ` → ${targetName(s, p.target)}` : ''}`}
             >
@@ -158,7 +158,7 @@ export function AtbTimeline({
         </span>
         <span>
           {q.some(isHandoff)
-            ? '交代は先頭優先 · 後続は交代開始時に解除'
+            ? '交代は先頭優先 · 後続の予約を保持'
             : `行動コスト ${offset} / ${s.config.atbMax} ATB · ${q.length}手（所持 ${a.atb.toFixed(1)}）`}
         </span>
         <span className="atb-free-steps">

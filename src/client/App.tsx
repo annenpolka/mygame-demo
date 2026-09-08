@@ -1612,7 +1612,7 @@ export function App() {
                   <Key>3</Key> または <Key>Q</Key>
                   <Key>E</Key> で交代を先頭に予約。{SKILLS.handoff.cost} ATB・発動
                   {SKILLS.handoff.cast}
-                  秒で交代し、開始時に後続の予約を解除します。満杯でも交代を積めます。
+                  秒で交代し、両方のキャラの予約を保持します。満杯でも交代を積めます。
                 </p>
                 <p>
                   <Key>Z</Key> 基本技、<Key>X</Key> 主力技、<Key>C</Key> 防御を下書きに追加。

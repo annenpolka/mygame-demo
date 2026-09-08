@@ -3,6 +3,7 @@ import { runManualProbes } from '../scripts/balance/manual-probes';
 import { stateHash } from '../src/ai/runner';
 import { runReplay } from '../src/lab/session';
 import { parseRecording } from '../src/lab/validation';
+import { SKILLS } from '../src/content/data';
 
 const study = runManualProbes();
 
@@ -34,7 +35,7 @@ describe('synthetic manual handoff comparison', () => {
       } else {
         expect(m.handoffAtbSpent).toBe(1);
         expect(m.greatHealAtbSpent).toBe(2);
-        expect(m.requestToSelected!.realSeconds).toBeGreaterThanOrEqual(0.6);
+        expect(m.requestToSelected!.realSeconds).toBeGreaterThanOrEqual(SKILLS.handoff.cast);
         expect(m.skillInput!.realSeconds - m.selected!.realSeconds).toBeCloseTo(0.35, 8);
         expect(m.effectiveHeal!.realSeconds).toBeGreaterThan(m.skillInput!.realSeconds);
         expect(m.requestToEffectiveHeal!.realSeconds).toBeGreaterThan(

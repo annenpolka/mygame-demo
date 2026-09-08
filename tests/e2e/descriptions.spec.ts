@@ -8,7 +8,9 @@ test('help reflects current combat rules and the configured focus drain', async 
   const help = page.getByRole('dialog', { name: '操作説明' });
   await expect(help).toContainText('前列は全職の威力×1.25');
   await expect(help).toContainText('スロー中は毎実秒7');
-  await expect(help).toContainText('発動0.6秒で交代');
+  await expect(help).toContainText('発動0.3秒で交代');
+  await expect(help).toContainText('両方のキャラの予約を保持');
+  await expect(help).not.toContainText('開始時に後続の予約を解除');
   await expect(help).toContainText('支払い済みATBは戻りません');
   await expect(help).toContainText('○／Bは戻る専用');
   await expect(help).toContainText('Bは確定した後続の取消');

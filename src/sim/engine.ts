@@ -321,7 +321,7 @@ export function command(s: State, c: Command): boolean {
         skillId: 'handoff',
         target: { kind: 'ally', id: c.id },
       });
-      emit(s, 'system', `${s.allies[c.id].name}へ交代予約：1 ATB・先頭優先。開始時に後続を解除`);
+      emit(s, 'system', `${s.allies[c.id].name}へ交代予約：1 ATB・先頭優先。前後の予約を保持`);
       return true;
     }
     case 'time': {
@@ -569,7 +569,6 @@ function resolve(s: State, a: Ally, action: Action) {
       s.allies[action.target.id].hp > 0
     ) {
       s.selected = action.target.id;
-      s.allies[s.selected].plan = s.allies[s.selected].plan?.filter((p) => !p.auto);
       s.handoffSlow = BATTLE_TIMING.handoffSlow;
       emit(s, 'system', `${s.allies[s.selected].name}へ交代：引継ぎスロー`);
     } else emit(s, 'system', '交代先が不在のため交代を中止');
@@ -748,7 +747,7 @@ function tickAlly(s: State, a: Ally, dt: number) {
       if (isHandoff(p)) s.pendingSelect = null;
       emit(s, 'system', `${a.name}：「${stepName(a, p)}」の予約を解除（対象・武器・残数を確認）`);
     },
-    handoff: (removed) => emit(s, 'system', `交代開始：後続${removed}手を解除`),
+    handoff: () => emit(s, 'system', '交代開始：予約を保持'),
   });
 }
 function startEnemyCast(s: State, e: Enemy) {

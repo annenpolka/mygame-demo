@@ -105,7 +105,9 @@ function runProbe(initial: State, policy: (typeof policies)[number]) {
 
 /** Twenty-four small mechanistic probes; this does not optimize global balance. */
 export function runBreakProbes() {
-  if (VERSION !== 'orchestra-15' || BATTLE_TIMING.breakDuration !== 12)
+  // orchestra-16 changes manual handoffs; this all-AI fixture never issues one.
+  // Archived orchestra-15 results remain immutable and carry their own hashes.
+  if (!['orchestra-15', 'orchestra-16'].includes(VERSION) || BATTLE_TIMING.breakDuration !== 12)
     throw new Error('Review the frozen break probe conditions for this combat version.');
   const frozenRules = playRules();
   const runs = [2000, 5000, 10000].flatMap((hp) =>

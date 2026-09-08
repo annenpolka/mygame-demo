@@ -87,7 +87,7 @@ export interface PlanTiming {
   ends: number;
   ready: number;
   linked: boolean;
-  status: 'scheduled' | 'held' | 'draft' | 'invalid' | 'reset';
+  status: 'scheduled' | 'held' | 'draft' | 'invalid';
 }
 /** Conditional on visible targets and current party supply remaining unchanged.
  * Uses the runtime scheduler; future damage, interruption, and AI decisions are not predicted.
@@ -162,10 +162,6 @@ export function planTiming(
       },
       discarded: (p) => {
         byKey.get(p.key)!.status = 'invalid';
-      },
-      handoff: () => {
-        for (const r of results)
-          if (!Number.isFinite(r.starts) && r.status !== 'draft') r.status = 'reset';
       },
     });
     if (head && head.kind !== 'skill' && !planned(a).some((p) => p.key === head.key)) {

@@ -19,7 +19,7 @@ export function HandoffStatus({ state: s, cancel }: { state: State; cancel: () =
         <span>
           {a.action?.skillId === 'handoff'
             ? `交代中 · あと${remaining.toFixed(1)}秒`
-            : `先頭優先・${SKILLS.handoff.cost} ATB${a.atb < SKILLS.handoff.cost ? '充填待ち' : ''} · 開始時に後続を解除`}
+            : `先頭優先・${SKILLS.handoff.cost} ATB${a.atb < SKILLS.handoff.cost ? '充填待ち' : ''} · 後続の予約を保持`}
         </span>
         <button disabled={a.action?.skillId === 'handoff'} onClick={cancel}>
           交代予約を取消

@@ -167,7 +167,7 @@ export interface ExecutionHooks {
   moved?: () => void;
   shifted?: () => void;
   discarded?: (p: PlannedStep) => void;
-  handoff?: (removed: number) => void;
+  handoff?: () => void;
 }
 /** Shared fixed-interval scheduler for runtime, UI arrival times, and AI forecasts.
  * Charging is integrated by the caller from the beginning-of-interval party bonus.
@@ -238,12 +238,10 @@ export function advanceExecution(
       pop(a);
       h.discarded?.(head);
     } else if (a.atb + 1e-9 >= SKILLS.handoff.cost && h.start(head, 1)) {
-      const removed = pendingSteps(a).length - 1;
-      a.plan = [];
-      a.queued = null;
-      a.nextRow = null;
-      a.nextSlot = null;
-      h.handoff?.(removed);
+      // Only the handoff leaves the queue. Retain the actor's subsequent work,
+      // sequence ownership and any direct weapon change waiting behind it.
+      pop(a);
+      h.handoff?.();
     }
     return;
   }

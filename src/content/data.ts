@@ -1,7 +1,7 @@
 import { COMBAT_RULES, percent } from './rules';
 import type { Config, Formation, Preset, Skill, Weapon } from '../sim/types';
 
-export const VERSION = 'orchestra-15';
+export const VERSION = 'orchestra-16';
 export const DT = 1 / 60;
 export const BATTLE_TIMING = {
   enemyWindupScale: 1.6,
@@ -277,14 +277,14 @@ SKILLS.handoff = {
   id: 'handoff',
   name: 'キャラ交代',
   cost: 1,
-  cast: 0.6,
+  cast: 0.3,
   recovery: 0,
   power: 0,
   chain: 0,
   hold: 0,
   effect: 'handoff',
   target: 'ally',
-  description: '先頭で交代。開始時に後続予約を解除する。',
+  description: '先頭で交代。交代前後の仲間の予約を残す。',
 };
 
 export const WEAPONS: Record<string, Weapon> = Object.fromEntries(

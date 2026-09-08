@@ -33,7 +33,7 @@ describe('manual actor control', () => {
       expect(s.events.filter((e) => e.type === 'action' && e.source === `a${id}`)).toHaveLength(1);
     },
   );
-  it('switching selection releases the old actor and finishes the new actor’s current action without starting another', () => {
+  it('switching selection releases the old actor and finishes the new actor’s reserved sequence without generating another', () => {
     const s = createState();
     command(s, { type: 'start' });
     s.enemies.forEach((e) => (e.nextAttack = 999));
@@ -45,9 +45,9 @@ describe('manual actor control', () => {
     step(s);
     expect(s.allies[0].action?.skillId).toBe('handoff');
     expect(s.allies[1].action?.skillId).toBe('spark');
-    advance(s, 3);
+    advance(s, 8);
     expect(s.allies[1].action).toBeNull();
-    expect(s.events.filter((e) => e.type === 'action' && e.source === 'a1')).toHaveLength(1);
+    expect(s.events.filter((e) => e.type === 'action' && e.source === 'a1')).toHaveLength(3);
   });
 });
 describe('live AI viewing', () => {

@@ -695,9 +695,6 @@ body:has(.loadout-modal) {
   margin-left: auto;
   white-space: nowrap;
 }
-.atb-reservation.will-reset {
-  opacity: 0.4;
-}
 .atb-cell {
   position: relative;
   background: #4f657055;

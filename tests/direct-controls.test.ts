@@ -168,7 +168,10 @@ describe('direct battle controls', () => {
     advance(s, 2);
     expect(s.selected).toBe(1);
     expect(s.pendingSelect).toBeNull();
+    expect(a.nextSlot).toBe(1);
+    advance(s, 2);
     expect(a.nextSlot).toBeNull();
+    expect(a.slot).toBe(1);
   });
 
   it('rejects removed stop mode in commands, snapshots and replay inputs', () => {

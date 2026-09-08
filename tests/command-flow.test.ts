@@ -163,7 +163,7 @@ describe('one-ATB handoff at the head of the stack', () => {
       ).toEqual(s);
     },
   );
-  it('can exceed both limits, waits for the committed attack, then pays and clears the following plans', () => {
+  it('can exceed both limits, waits for the committed attack, then pays and retains the following plans', () => {
     const s = battle(),
       a = s.allies[0];
     add(s);
@@ -183,7 +183,7 @@ describe('one-ATB handoff at the head of the stack', () => {
     expect(a.action).toBeNull();
     step(s);
     expect(a.action?.skillId).toBe('handoff');
-    expect(planned(a)).toHaveLength(0);
+    expect(planned(a)).toHaveLength(4);
     expect(a.atb).toBeCloseTo(atb + DT * s.config.atbRate - 1);
     untilHandoff(s);
     expect(s.selected).toBe(1);
@@ -192,7 +192,7 @@ describe('one-ATB handoff at the head of the stack', () => {
       s.events.filter((e) => e.source === 'a0' && e.type === 'action').map((e) => e.text),
     ).toHaveLength(2);
   });
-  it('waits for 1 ATB even when idle and has a committed 0.6-second action', () => {
+  it('waits for 1 ATB even when idle and has a committed 0.3-second action', () => {
     const s = battle(),
       a = s.allies[0];
     a.atb = 0;
