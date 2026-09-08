@@ -1,0 +1,128 @@
+/* UI motion only. Battle clocks, gauges and command hit areas remain authoritative. */
+:root {
+  --ui-fast: 120ms;
+  --ui-enter: 180ms;
+  --ui-ease: cubic-bezier(0.2, 0.7, 0.2, 1);
+  --ui-state-transition:
+    background-color var(--ui-fast) ease-out, border-color var(--ui-fast) ease-out,
+    color var(--ui-fast) ease-out, box-shadow var(--ui-fast) ease-out,
+    opacity var(--ui-fast) ease-out;
+}
+
+/* The existing global reduced-motion rule also cancels animations already in progress. */
+@media (prefers-reduced-motion: no-preference) {
+  .app button {
+    transition:
+      var(--ui-state-transition),
+      transform 70ms ease-out;
+  }
+
+  .app :is(input, select, textarea, summary),
+  .app .battle-lane,
+  .app .field-unit,
+  .app .field-unit-info,
+  .app .field-symbol,
+  .app .pad-command-area,
+  .app .pad-auxiliary,
+  .app .pad-plan,
+  .app .pad-plan-list > li,
+  .app .atb-reservation,
+  .app .watch-light,
+  .app .formation-actor,
+  .app .loadout-notice {
+    transition: var(--ui-state-transition);
+  }
+
+  /* Focus outlines, menu coordinates and all meter widths change immediately. */
+  .near-command-buttons,
+  .pad-options,
+  .pad-log,
+  .atb-reservation,
+  .atb-no-cost,
+  .pad-plan-empty,
+  .watch-console,
+  .encounter-picker,
+  .ready-bar,
+  .loadout-visual [role='tabpanel'],
+  .target-symbol-help[open] > div,
+  .timeline-events[open] [role='list'] {
+    animation: ui-content-in var(--ui-fast) ease-out;
+  }
+
+  /* Tint the backdrop while leaving dialog geometry and focus management intact. */
+  .modal-backdrop,
+  .timeline-backdrop,
+  .playtest-backdrop,
+  .pause-screen {
+    animation: ui-backdrop-in var(--ui-fast) ease-out;
+  }
+
+  .loadout-modal,
+  .loot-modal,
+  .result-modal,
+  .help-modal,
+  .battle-history,
+  .playtest-notes {
+    animation: ui-panel-in var(--ui-enter) var(--ui-ease);
+  }
+
+  .lab-drawer {
+    animation: ui-drawer-in var(--ui-enter) var(--ui-ease);
+  }
+
+  .toast,
+  .loadout-notice {
+    animation: ui-notice-in var(--ui-enter) var(--ui-ease);
+  }
+}
+
+@keyframes ui-content-in {
+  from {
+    opacity: 0.55;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes ui-backdrop-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes ui-panel-in {
+  from {
+    opacity: 0.65;
+    translate: 0 4px;
+  }
+  to {
+    opacity: 1;
+    translate: 0 0;
+  }
+}
+
+@keyframes ui-drawer-in {
+  from {
+    opacity: 0.65;
+    translate: 8px 0;
+  }
+  to {
+    opacity: 1;
+    translate: 0 0;
+  }
+}
+
+@keyframes ui-notice-in {
+  from {
+    opacity: 0;
+    translate: 0 4px;
+  }
+  to {
+    opacity: 1;
+    translate: 0 0;
+  }
+}

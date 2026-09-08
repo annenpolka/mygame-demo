@@ -24,3 +24,4 @@ import './field-spacing.css';
 import './near-command-menu.css';
 import './battle-viewport.css';
 import './mobile-battle-fit.css';
+import './motion.css';
