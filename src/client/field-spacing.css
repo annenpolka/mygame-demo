@@ -1,0 +1,102 @@
+/* Reserve a full-size place for every party member, even before a lane fills. */
+.battle-layout .battlefield {
+  --field-unit-height: 136px;
+}
+.battle-layout .horizontal-field {
+  height: auto;
+  min-height: 0;
+  align-items: stretch;
+}
+.battle-layout .battle-lane {
+  grid-template-rows: 27px repeat(3, minmax(var(--field-unit-height), auto));
+  align-content: start;
+  gap: 8px;
+  padding: 0 7px 8px;
+}
+.battle-layout .battlefield .field-unit {
+  grid-template-columns: 64px minmax(0, 1fr);
+  grid-template-rows: 18px minmax(0, 1fr);
+  min-height: var(--field-unit-height);
+  align-items: center;
+  gap: 2px 7px;
+  padding: 3px 7px 21px;
+  scroll-margin-block: 12px;
+}
+.battle-layout .battlefield .field-unit .field-symbol,
+.battle-layout .battlefield .unit-figure,
+.battle-layout .battlefield .unit-target-marks {
+  width: 64px;
+  height: 68px;
+  align-self: center;
+}
+.battle-layout .battlefield .field-unit-info {
+  gap: 2px;
+}
+.battle-layout .battlefield .field-unit-info strong {
+  font-size: 11px;
+  line-height: 1.5;
+}
+.battle-layout .battlefield .field-unit-info > small {
+  display: block;
+  min-height: 14px;
+  font-size: 9px;
+}
+.battle-layout .battlefield .unit-gauge small {
+  font-size: 9px;
+  white-space: normal;
+  overflow-wrap: anywhere;
+}
+.battle-layout .battlefield .unit-intent {
+  font-size: 10px;
+  line-height: 16px;
+}
+.battle-layout .battlefield .unit-incoming {
+  font-size: 9px !important;
+}
+.battle-layout .battlefield .unit-telegraph small {
+  font-size: 9px;
+  white-space: normal;
+  overflow: visible;
+  text-overflow: clip;
+}
+.battle-layout .battlefield .fx-shield-caption {
+  display: initial;
+}
+
+@media (max-width: 800px) {
+  .battle-layout .battlefield {
+    --field-unit-height: 256px;
+  }
+  .battle-layout .battle-lane {
+    grid-template-rows: 32px repeat(3, minmax(var(--field-unit-height), auto));
+    padding-inline: 6px;
+  }
+  .battle-layout .battlefield .field-unit {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-rows: 32px 68px minmax(0, 1fr);
+    gap: 3px;
+    padding: 3px 1px 8px;
+    text-align: center;
+  }
+  .battle-layout .battlefield .field-unit .field-symbol,
+  .battle-layout .battlefield .unit-target-marks {
+    justify-self: center;
+  }
+  .battle-layout .battlefield .unit-intent {
+    font-size: 9px;
+    line-height: 14px;
+  }
+  .battle-layout .battlefield .field-unit-info > small {
+    white-space: normal;
+    overflow: visible;
+    text-overflow: clip;
+  }
+  .battle-layout .battlefield .unit-gauges {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 3px;
+  }
+  .battle-layout .battlefield .fx-shield-caption {
+    display: none;
+  }
+}

@@ -1,6 +1,7 @@
 import { test, expect, type Page } from '@playwright/test';
 import { createState, command } from '../../src/sim/engine';
 import type { State } from '../../src/sim/types';
+import { expectFullSizeFieldAndReachableLog } from './field-layout';
 test.beforeEach(async ({ page }) => {
   await page.clock.install({ time: new Date('2026-01-01T00:00:00Z') });
   await page.goto('/');
@@ -303,14 +304,11 @@ for (const [id, label, confirm, back] of [
     expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(
       true,
     );
-    const bottom = await page
-      .locator('.log-container')
-      .evaluate((el) => el.getBoundingClientRect().bottom + scrollY);
+    await expectFullSizeFieldAndReachableLog(page);
     await page.screenshot({
       path: test.info().outputPath(`sequence-palette-${label}.png`),
       fullPage: true,
     });
-    expect(bottom).toBeLessThanOrEqual(752);
     await press(page, 9);
     await expect(page.getByRole('dialog', { name: '休憩ポーズ' })).toBeVisible();
     await press(page, back);
@@ -608,7 +606,9 @@ for (const [width, height] of [
   [1440, 900],
   [390, 844],
 ])
-  test(`palette, four drafts and auxiliary menu fit ${width}x${height}`, async ({ page }) => {
+  test(`full-size battlefield, four drafts and auxiliary menu remain reachable at ${width}x${height}`, async ({
+    page,
+  }) => {
     await page.setViewportSize({ width, height });
     await start(page);
     for (let i = 0; i < 4; i++) await page.keyboard.press('c');
@@ -617,12 +617,7 @@ for (const [width, height] of [
       true,
     );
     await page.screenshot({ path: test.info().outputPath(`palette-${width}.png`), fullPage: true });
-    if (width > 800)
-      expect(
-        await page
-          .locator('.log-container')
-          .evaluate((el) => el.getBoundingClientRect().bottom + scrollY),
-      ).toBeLessThanOrEqual(height);
+    await expectFullSizeFieldAndReachableLog(page);
     await page.keyboard.press('i');
     await expect(page.getByRole('group', { name: '補助メニュー', exact: true })).toBeVisible();
     await page

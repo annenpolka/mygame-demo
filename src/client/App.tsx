@@ -25,6 +25,7 @@ import { WatchPlayer, type WatchPlanning } from '../ai/watch-player';
 import type { PolicyId } from '../ai/policies';
 import { WatchConsole } from './WatchConsole';
 import { PadBattleConsole } from './PadBattleConsole';
+import { NearCommandMenu } from './NearCommandMenu';
 import {
   battleInput,
   type BattleAction,
@@ -86,6 +87,7 @@ export function App() {
   const [padOpen, setPadOpen] = useState(false);
   const [pending, setPending] = useState<string | null>(null);
   const [battleUI, storeBattleUI] = useState(newBattlePad);
+  const [commandLayout, setCommandLayout] = useState<'desk' | 'shelf' | 'orbit'>('orbit');
   const battleUIRef = useRef(battleUI);
   const setBattleUI = (update: BattlePad | ((previous: BattlePad) => BattlePad)) => {
     const next = typeof update === 'function' ? update(battleUIRef.current) : update;
@@ -1113,8 +1115,50 @@ export function App() {
             </div>
           )}
 
+          {!watching && (s.phase === 'ready' || s.phase === 'battle') && (
+            <div className="command-layout-picker" role="group" aria-label="メニュー位置">
+              <span>メニュー位置</span>
+              {(
+                [
+                  ['desk', '下の操作盤'],
+                  ['shelf', '足元にまとめる'],
+                  ['orbit', '周囲に展開'],
+                ] as const
+              ).map(([mode, label]) => (
+                <button
+                  key={mode}
+                  aria-pressed={commandLayout === mode}
+                  onClick={() => setCommandLayout(mode)}
+                >
+                  {label}
+                </button>
+              ))}
+              <small>
+                {commandLayout === 'desk'
+                  ? '配置を切り替えて比較できます'
+                  : '同じ技・同じ操作で比較。狭い画面では戦場の下にまとめます'}
+              </small>
+            </div>
+          )}
           <Battlefield
             state={s}
+            commandLayout={!watching && s.phase === 'battle' ? commandLayout : 'desk'}
+            renderCommands={
+              !watching && s.phase === 'battle' && commandLayout !== 'desk'
+                ? (field) => (
+                    <NearCommandMenu
+                      state={s}
+                      ui={battleUI}
+                      mode={commandLayout}
+                      field={field}
+                      keyboard={!padActive}
+                      bindings={gamepad.bindings}
+                      family={gamepad.family}
+                      act={applyBattleInput}
+                    />
+                  )
+                : undefined
+            }
             pending={shownPending ? SKILLS[shownPending] : null}
             aim={aim}
             targets={s.phase === 'battle' && !watching ? paletteTargets(s, battleUI) : null}
@@ -1161,6 +1205,7 @@ export function App() {
         ) : s.phase === 'battle' ? (
           <PadBattleConsole
             state={s}
+            showSkills={commandLayout === 'desk'}
             keyboard={!padActive}
             ui={battleUI}
             bindings={gamepad.bindings}

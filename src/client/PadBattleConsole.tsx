@@ -38,6 +38,7 @@ export function PadGlyph({
   );
 }
 interface Props {
+  showSkills?: boolean;
   keyboard?: boolean;
   state: State;
   ui: BattlePad;
@@ -52,6 +53,7 @@ interface Props {
   select: (id: number) => void;
 }
 export function PadBattleConsole({
+  showSkills = true,
   state: s,
   keyboard = false,
   ui,
@@ -75,7 +77,7 @@ export function PadBattleConsole({
     )
       return;
     const root = consoleRoot.current;
-    const source = root?.querySelector(`[data-skill-id="${ui.feedback.skillId}"] .skill-icon`);
+    const source = document.querySelector(`[data-skill-id="${ui.feedback.skillId}"] .skill-icon`);
     const destination = [
       ...(root?.querySelectorAll('[data-plan-status="draft"] .plan-skill-token') ?? []),
     ].at(-1);
@@ -103,15 +105,23 @@ export function PadBattleConsole({
     return () => animation.cancel();
   }, [ui.stamp]);
   useEffect(() => {
-    if (!matchMedia('(max-width: 800px)').matches) return;
+    if (showSkills && !matchMedia('(max-width: 800px)').matches) return;
     const root = consoleRoot.current;
     const active =
       ui.page === 'target'
         ? document.querySelector('.battlefield.targeting')
         : ui.page === 'queue'
           ? (root?.querySelector('.pad-plan-list .selected') ?? root?.querySelector('.pad-plan'))
-          : root?.querySelector(ui.page === 'command' ? '.pad-command-area' : '.pad-auxiliary');
-    active?.scrollIntoView({ block: 'nearest', inline: 'nearest', behavior: 'instant' });
+          : ui.page === 'command'
+            ? showSkills
+              ? root?.querySelector('.pad-command-area')
+              : document.querySelector('[data-menu-location]')
+            : root?.querySelector('.pad-auxiliary');
+    // Near menus update their anchor during layout; scroll after that position is applied.
+    const frame = requestAnimationFrame(() =>
+      active?.scrollIntoView({ block: 'nearest', inline: 'nearest', behavior: 'instant' }),
+    );
+    return () => cancelAnimationFrame(frame);
   }, [ui.page, ui.key, s.selected]);
   useEffect(() => {
     // Directional navigation scrolls its own list without moving native keyboard focus.
@@ -287,86 +297,93 @@ export function PadBattleConsole({
             </small>
           </div>
           <div className="pad-command-root">
-            <div className="command-diamond">
-              {commandCards.map((card) => {
-                const skill = card.skillId ? SKILLS[card.skillId] : undefined;
-                const preview = skill ? skillPreview(s, ui, skill.id) : null;
-                const candidate = !!preview?.candidateTarget;
-                const retry = candidate && ui.targetRecovery?.skillId === skill?.id;
-                const reason = skill ? unavailable(s, skill.id) : undefined;
-                const failed = ui.feedback?.kind === 'blocked' && ui.feedback.skillId === skill?.id;
-                return (
-                  <button
-                    key={card.action}
-                    className={`direct-command command-${card.action} ${candidate ? 'candidate-command' : ''} ${reason || failed ? 'blocked-command' : ''}`}
-                    data-skill-id={skill?.id}
-                    data-candidate={candidate || undefined}
-                    title={
-                      skill
-                        ? `${skill.name} · ${preview?.label} · ${skill.cost} ATB · ${skillTiming(skill)}${reason ? ` · ${reason}` : ''}`
-                        : card.title
-                    }
-                    style={{
-                      gridArea: keyboard
-                        ? card.action === 'basic'
-                          ? 'confirm'
-                          : card.action
-                        : (['south', 'east', 'west', 'north'][
-                            bindings[card.action === 'basic' ? 'confirm' : card.action]
-                          ] ?? card.fallback),
-                    }}
-                    onClick={() => act(card.action)}
-                    aria-label={
-                      skill
-                        ? `${card.title}：${skill.name}、${preview?.label}、${skill.cost} ATB${candidate ? (retry ? '。同じ技をもう一度押すと追加' : '。押すと対象候補を確認') : ''}${reason ? `。${reason}` : ''}`
-                        : card.title
-                    }
-                  >
-                    {card.action === 'basic' ? (
-                      keyboard ? (
-                        <kbd className="pad-glyph keyboard-glyph">Z</kbd>
-                      ) : ui.page === 'command' ? (
-                        glyph('confirm')
-                      ) : (
-                        <span className="command-context">
-                          対象選択時
-                          <br />
-                          {glyph('confirm')}
-                        </span>
-                      )
-                    ) : (
-                      glyph(card.action)
-                    )}
-                    <SkillIcon skillId={skill?.id} symbol={skill ? undefined : 'back'} />
-                    <span className="command-identity">
-                      <strong>{skill?.name ?? card.title}</strong>
-                      {skill && (
-                        <span className="command-cost">
-                          <span className="skill-cost" aria-hidden="true">
-                            {Array.from({ length: skill.cost }, (_, i) => (
-                              <i key={i} />
-                            ))}
+            {showSkills ? (
+              <div className="command-diamond">
+                {commandCards.map((card) => {
+                  const skill = card.skillId ? SKILLS[card.skillId] : undefined;
+                  const preview = skill ? skillPreview(s, ui, skill.id) : null;
+                  const candidate = !!preview?.candidateTarget;
+                  const retry = candidate && ui.targetRecovery?.skillId === skill?.id;
+                  const reason = skill ? unavailable(s, skill.id) : undefined;
+                  const failed =
+                    ui.feedback?.kind === 'blocked' && ui.feedback.skillId === skill?.id;
+                  return (
+                    <button
+                      key={card.action}
+                      className={`direct-command command-${card.action} ${candidate ? 'candidate-command' : ''} ${reason || failed ? 'blocked-command' : ''}`}
+                      data-skill-id={skill?.id}
+                      data-candidate={candidate || undefined}
+                      title={
+                        skill
+                          ? `${skill.name} · ${preview?.label} · ${skill.cost} ATB · ${skillTiming(skill)}${reason ? ` · ${reason}` : ''}`
+                          : card.title
+                      }
+                      style={{
+                        gridArea: keyboard
+                          ? card.action === 'basic'
+                            ? 'confirm'
+                            : card.action
+                          : (['south', 'east', 'west', 'north'][
+                              bindings[card.action === 'basic' ? 'confirm' : card.action]
+                            ] ?? card.fallback),
+                      }}
+                      onClick={() => act(card.action)}
+                      aria-label={
+                        skill
+                          ? `${card.title}：${skill.name}、${preview?.label}、${skill.cost} ATB${candidate ? (retry ? '。同じ技をもう一度押すと追加' : '。押すと対象候補を確認') : ''}${reason ? `。${reason}` : ''}`
+                          : card.title
+                      }
+                    >
+                      {card.action === 'basic' ? (
+                        keyboard ? (
+                          <kbd className="pad-glyph keyboard-glyph">Z</kbd>
+                        ) : ui.page === 'command' ? (
+                          glyph('confirm')
+                        ) : (
+                          <span className="command-context">
+                            対象選択時
+                            <br />
+                            {glyph('confirm')}
                           </span>
+                        )
+                      ) : (
+                        glyph(card.action)
+                      )}
+                      <SkillIcon skillId={skill?.id} symbol={skill ? undefined : 'back'} />
+                      <span className="command-identity">
+                        <strong>{skill?.name ?? card.title}</strong>
+                        {skill && (
+                          <span className="command-cost">
+                            <span className="skill-cost" aria-hidden="true">
+                              {Array.from({ length: skill.cost }, (_, i) => (
+                                <i key={i} />
+                              ))}
+                            </span>
+                          </span>
+                        )}
+                      </span>
+                      {retry && (
+                        <span className="command-condition">
+                          <SkillIcon symbol="retry" />
                         </span>
                       )}
-                    </span>
-                    {retry && (
-                      <span className="command-condition">
-                        <SkillIcon symbol="retry" />
-                      </span>
-                    )}
-                    {(reason || failed) && (
-                      <span className="command-condition">
-                        <SkillIcon symbol="blocked" />
-                      </span>
-                    )}
-                  </button>
-                );
-              })}
-              <div className="diamond-center" aria-hidden="true">
-                ◈
+                      {(reason || failed) && (
+                        <span className="command-condition">
+                          <SkillIcon symbol="blocked" />
+                        </span>
+                      )}
+                    </button>
+                  );
+                })}
+                <div className="diamond-center" aria-hidden="true">
+                  ◈
+                </div>
               </div>
-            </div>
+            ) : (
+              <p className="near-menu-desk-note">
+                {a.name}の近くで技を選べます。移動・装備・補助・予約も引き続き操作できます。
+              </p>
+            )}
             <div className="pad-direction-commands" aria-label="即時操作">
               <button
                 onClick={() => act('rowBack')}
@@ -400,16 +417,18 @@ export function PadBattleConsole({
                 {glyph('weapon')}
                 <SkillIcon symbol="weapon" />
               </button>
-              <button
-                onClick={() => act('potion')}
-                data-skill-id="potion"
-                aria-label={`救急薬：${skillPreview(s, ui, 'potion').label}、${SKILLS.potion.cost} ATB${unavailable(s, 'potion') ? `。${unavailable(s, 'potion')}` : ''}`}
-                title={`救急薬 → ${skillPreview(s, ui, 'potion').label}`}
-              >
-                {keyboard && <kbd className="pad-glyph keyboard-glyph">V</kbd>}
-                <SkillIcon skillId="potion" />
-                {!keyboard && <span>救急薬</span>}
-              </button>
+              {showSkills && (
+                <button
+                  onClick={() => act('potion')}
+                  data-skill-id="potion"
+                  aria-label={`救急薬：${skillPreview(s, ui, 'potion').label}、${SKILLS.potion.cost} ATB${unavailable(s, 'potion') ? `。${unavailable(s, 'potion')}` : ''}`}
+                  title={`救急薬 → ${skillPreview(s, ui, 'potion').label}`}
+                >
+                  {keyboard && <kbd className="pad-glyph keyboard-glyph">V</kbd>}
+                  <SkillIcon skillId="potion" />
+                  {!keyboard && <span>救急薬</span>}
+                </button>
+              )}
             </div>
           </div>
           <div

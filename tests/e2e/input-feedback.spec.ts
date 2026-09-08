@@ -65,6 +65,7 @@ for (const width of [1366, 390]) {
     page,
   }) => {
     await page.setViewportSize({ width, height: width === 390 ? 844 : 752 });
+    await page.getByRole('button', { name: '下の操作盤', exact: true }).click();
     const console = page.locator('.pad-console');
     const panel = page.locator('.pad-auxiliary');
     const target = page.getByRole('button', { name: /^リネを支援対象にする/ });

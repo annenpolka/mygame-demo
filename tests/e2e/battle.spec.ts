@@ -1,6 +1,7 @@
 import { test, expect, type Page } from '@playwright/test';
 import { command, createState } from '../../src/sim/engine';
 import type { State } from '../../src/sim/types';
+import { expectFullSizeFieldAndReachableLog } from './field-layout';
 
 const drafts = (page: Page) => page.locator('.pad-plan-list li[data-plan-status=draft]');
 const clockSeconds = async (page: Page) => {
@@ -214,8 +215,7 @@ test('horizontal battlefield, enemy-based range targeting, and a glanceable desk
   await page.getByRole('button', { name: /^主力技：円弧斬り、/ }).click();
 
   await expect(page.locator('.pad-plan-list')).toContainText('円弧斬り');
-  const logBox = await page.locator('.log-container').boundingBox();
-  expect(logBox!.y + logBox!.height).toBeLessThanOrEqual(900);
+  await expectFullSizeFieldAndReachableLog(page);
   await page.screenshot({ path: 'test-results/horizontal-desktop.png', fullPage: true });
 });
 

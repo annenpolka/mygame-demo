@@ -5,7 +5,7 @@ import { COMBAT_RULES, percent } from '../content/rules';
 import { HandoffStatus } from './HandoffStatus';
 import { executionStatus } from './timing';
 import { canAppend, planned, stepName } from '../sim/plan';
-import { useEffect, useRef, type CSSProperties } from 'react';
+import { useEffect, useRef, type CSSProperties, type ReactNode, type RefObject } from 'react';
 import { BattleEffects } from './effects/BattleEffects';
 import { UnitEmblem } from './effects/UnitEmblem';
 import { UnitTargetMarks, SkillIcon } from './TargetVisuals';
@@ -29,6 +29,8 @@ export function Battlefield({
   confirmLabel = 'Enter',
   backLabel = 'Esc',
   navigationLabel = '矢印：駒の位置へ移動 · , 味方 / . 敵',
+  commandLayout = 'desk',
+  renderCommands,
 }: {
   state: State;
   pending: Skill | null;
@@ -44,6 +46,8 @@ export function Battlefield({
   confirmLabel?: string;
   backLabel?: string;
   navigationLabel?: string;
+  commandLayout?: 'desk' | 'shelf' | 'orbit';
+  renderCommands?: (field: RefObject<HTMLDivElement | null>) => ReactNode;
 }) {
   const field = useRef<HTMLDivElement>(null);
   const tracks = Math.max(
@@ -102,6 +106,7 @@ export function Battlefield({
       aria-label="敵味方の前後列"
       style={{ '--field-tracks': tracks } as CSSProperties}
       data-density={tracks}
+      data-command-layout={commandLayout}
     >
       {palette ? (
         <div className="palette-target-bar">
@@ -449,6 +454,7 @@ export function Battlefield({
             </section>
           );
         })}
+        {renderCommands?.(field)}
         <BattleEffects
           state={s}
           cues={effects}

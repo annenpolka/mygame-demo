@@ -1,6 +1,7 @@
 import { expect, test, type Page } from '@playwright/test';
 import { readFile } from 'node:fs/promises';
 import { parseNotes, exportNotes } from '../../src/lab/playtest';
+import { expectFullSizeFieldAndReachableLog } from './field-layout';
 async function exportBook(page: Page) {
   const waiting = page.waitForEvent('download');
   await page.getByRole('button', { name: '印をJSON保存', exact: true }).click();
@@ -31,9 +32,7 @@ test('mark, comment, reload and take over an earlier auxiliary panel while retai
   await page.clock.runFor(1000);
   await expect(page.locator('.battle-clock strong')).not.toHaveText(clock);
   await expect(page.getByRole('dialog', { name: '休憩ポーズ' })).toHaveCount(0);
-  expect(
-    await page.locator('.log-container').evaluate((e) => e.getBoundingClientRect().bottom),
-  ).toBeLessThanOrEqual(752);
+  await expectFullSizeFieldAndReachableLog(page);
   await page.keyboard.press('Shift+M');
   const notes = page.getByRole('dialog', { name: '気になった場面' });
   await expect(notes).toBeVisible();
