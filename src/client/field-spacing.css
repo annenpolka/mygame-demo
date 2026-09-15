@@ -57,6 +57,28 @@
 .battle-layout .battlefield .unit-incoming {
   font-size: 9px !important;
 }
+/* Whether a guard lands before the telegraphed hit: a symbol and words, not colour alone. */
+.battle-layout .battlefield .unit-guard-forecast {
+  display: inline-block;
+  max-width: 100%;
+  padding: 0 4px;
+  border: 1px solid currentColor;
+  border-radius: 3px;
+  font-size: 11px;
+  font-style: normal;
+  font-weight: 700;
+  line-height: 12px;
+  white-space: normal;
+  overflow-wrap: anywhere;
+}
+.battle-layout .battlefield .unit-guard-forecast[data-guard='ready'] {
+  color: #9fe3b8;
+  background: #12382a;
+}
+.battle-layout .battlefield .unit-guard-forecast[data-guard='late'] {
+  color: #ffd08a;
+  background: #3d2614;
+}
 .battle-layout .battlefield .unit-telegraph small {
   font-size: 9px;
   white-space: normal;
