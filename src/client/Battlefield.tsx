@@ -4,6 +4,7 @@ import type { BattlePad, PaletteCursor, UnitTarget } from '../input/battle-pad';
 import { COMBAT_RULES, percent } from '../content/rules';
 import { HandoffStatus } from './HandoffStatus';
 import { executionStatus } from './timing';
+import { guardForecast, guardForecastDetail, guardForecastText } from './guard-forecast';
 import { canAppend, planned, stepName } from '../sim/plan';
 import { useEffect, useId, useRef, type CSSProperties, type RefObject } from 'react';
 import { BattleEffects } from './effects/BattleEffects';
@@ -95,6 +96,9 @@ export function Battlefield({
       </span>
     );
   };
+  // Only the manually controlled ally takes guard input; AI allies plan their own reactions.
+  const guard =
+    s.phase === 'battle' && s.controlMode === 'manual' ? guardForecast(s, s.selected) : null;
   if (palette) aim = palette.target;
   const active = (!!pending || !!palette) && s.phase === 'battle';
   const full = !palette && !canAppend(s.allies[s.selected], s.config, pending?.cost ?? 0);
@@ -212,7 +216,17 @@ export function Battlefield({
                           id={targetable ? `field-target-ally-${a.id}` : undefined}
                           data-unit={`a${a.id}`}
                           data-moving={movement?.phase === 'moving' || undefined}
-                          aria-describedby={movement ? `${movementId}-${a.id}` : undefined}
+                          aria-describedby={
+                            [
+                              movement && `${movementId}-${a.id}`,
+                              guard &&
+                                a.id === s.selected &&
+                                !(targetable && !palette) &&
+                                `${movementId}-guard`,
+                            ]
+                              .filter(Boolean)
+                              .join(' ') || undefined
+                          }
                           data-target={marked ? 'ally' : undefined}
                           data-editing={(!!palette && aimed) || undefined}
                           data-candidate={candidate || undefined}
@@ -288,21 +302,38 @@ export function Battlefield({
                                 <i className="manual-tag">手動</i>
                               )}
                             </strong>
-                            <small
-                              title={
-                                a.action
-                                  ? `${executionStatus(a, s.config, s)} → ${targetName(s, a.action.target)}`
-                                  : undefined
-                              }
-                            >
-                              {targetable && !palette
-                                ? `HP ${Math.ceil(a.hp)} / ${a.maxHp}`
-                                : s.phase === 'battle'
-                                  ? a.action && (s.controlMode === 'ai' || a.id !== s.selected)
-                                    ? `AI → ${targetName(s, a.action.target)} · ${executionStatus(a, s.config, s)}`
-                                    : executionStatus(a, s.config, s)
-                                  : w.archetype}
-                            </small>
+                            {guard && a.id === s.selected && !(targetable && !palette) ? (
+                              // The ATB band repeats this ally's status; a threat shows the guard outcome here.
+                              <small className="unit-guard-line">
+                                <em
+                                  className="unit-guard-forecast"
+                                  data-guard={guard.ready ? 'ready' : 'late'}
+                                  data-source={guard.source}
+                                  title={guardForecastDetail(guard)}
+                                >
+                                  {guardForecastText(guard)}
+                                </em>
+                                <span id={`${movementId}-guard`} className="sr-only">
+                                  {guardForecastDetail(guard)}
+                                </span>
+                              </small>
+                            ) : (
+                              <small
+                                title={
+                                  a.action
+                                    ? `${executionStatus(a, s.config, s)} → ${targetName(s, a.action.target)}`
+                                    : undefined
+                                }
+                              >
+                                {targetable && !palette
+                                  ? `HP ${Math.ceil(a.hp)} / ${a.maxHp}`
+                                  : s.phase === 'battle'
+                                    ? a.action && (s.controlMode === 'ai' || a.id !== s.selected)
+                                      ? `AI → ${targetName(s, a.action.target)} · ${executionStatus(a, s.config, s)}`
+                                      : executionStatus(a, s.config, s)
+                                    : w.archetype}
+                              </small>
+                            )}
                             <span className="unit-gauges">
                               <UnitGauge
                                 label={`${a.name}のHP`}
